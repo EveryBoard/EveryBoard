@@ -1,0 +1,15 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "rootDir": "..",
+        "paths": {
+            "@everyboard/games": ["src/index.ts"],
+            "@everyboard/lib": ["../lib/src/index.ts"],
+            "@everyboard/lib/testing": ["../lib/src/testing.ts"]
+        }
+    },
+    "include": ["src/**/*.ts"]
+}

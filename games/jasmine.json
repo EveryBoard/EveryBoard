@@ -1,0 +1,15 @@
+{
+  "spec_dir": "src",
+  "jsLoader": "require",
+  "spec_files": ["**/*.spec.ts"],
+  "requires": [
+    "ts-node/register/type-check",
+    "tsconfig-paths/register"
+  ],
+  "helpers": ["browser-setup.ts", "coverage-setup.ts"],
+  "env": {
+    "forbidDuplicateNames": false,
+    "random": true,
+    "stopSpecOnExpectationFailure": false
+  }
+}

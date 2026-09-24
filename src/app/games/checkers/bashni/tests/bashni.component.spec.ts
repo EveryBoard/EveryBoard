@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../../jscaip/Coord';
+import { Coord } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
+import { BashniRules } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { CheckersFailure } from '../../common/CheckersFailure';
-import { CheckersMove } from '../../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
-import { BashniRules } from '../BashniRules';
 import { BashniComponent } from '../bashni.component';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;

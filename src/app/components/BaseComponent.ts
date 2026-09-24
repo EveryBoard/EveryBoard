@@ -1,6 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { ArrayUtils, MGPOptional, Utils } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../jscaip/Player';
 
 export abstract class BaseComponent {
 

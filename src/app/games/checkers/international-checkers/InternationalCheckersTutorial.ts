@@ -1,14 +1,14 @@
+
+import { Coord } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
+import { InternationalCheckersRules } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../jscaip/Coord';
-import { CheckersConfig } from '../common/AbstractCheckersRules';
-import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
-
-import { InternationalCheckersRules } from './InternationalCheckersRules';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);

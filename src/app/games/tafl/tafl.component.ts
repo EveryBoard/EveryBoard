@@ -1,26 +1,26 @@
+
+import { AIConfig } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RelativePlayer } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TaflConfig } from '@everyboard/games';
+import { TaflEscapeThenPieceThenControlHeuristic } from '@everyboard/games';
+import { TaflMove } from '@everyboard/games';
+import { TaflMoveGenerator } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games';
+import { TaflPieceAndControlHeuristic } from '@everyboard/games';
+import { TaflPieceAndInfluenceHeuristic } from '@everyboard/games';
+import { TaflPieceHeuristic } from '@everyboard/games';
+import { TaflRules } from '@everyboard/games';
+import { TaflState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AIConfig } from '../../jscaip/AI/AIConfig';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RelativePlayer } from '../../jscaip/RelativePlayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { TaflConfig } from './TaflConfig';
-import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceThenControlHeuristic';
-import { TaflMove } from './TaflMove';
-import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { TaflPawn } from './TaflPawn';
-import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
-import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { TaflRules } from './TaflRules';
-import { TaflState } from './TaflState';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>

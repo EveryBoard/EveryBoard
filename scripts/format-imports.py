@@ -19,6 +19,7 @@ from pathlib import Path
 # The "internal" libraries of the project
 PROJECT_LIBS = [
     "@everyboard/lib",
+    "@everyboard/games",
 ]
 
 # The files that should not be touched

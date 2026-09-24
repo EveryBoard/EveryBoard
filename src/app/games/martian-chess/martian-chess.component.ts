@@ -1,24 +1,24 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { MartianChessComponentUtils } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games';
+import { MartianChessMoveGenerator } from '@everyboard/games';
+import { MartianChessPiece } from '@everyboard/games';
+import { MartianChessMoveResult, MartianChessRules } from '@everyboard/games';
+import { MartianChessScoreHeuristic } from '@everyboard/games';
+import { MartianChessState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
-import { MartianChessComponentUtils } from './MartianChessComponentUtils';
-import { MartianChessMove } from './MartianChessMove';
-import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
-import { MartianChessPiece } from './MartianChessPiece';
-import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
-import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
-import { MartianChessState } from './MartianChessState';
 import { MartianChessDroneComponent } from './martian-chess-drone.component';
 import { MartianChessPawnComponent } from './martian-chess-pawn.component';
 import { MartianChessQueenComponent } from './martian-chess-queen.component';

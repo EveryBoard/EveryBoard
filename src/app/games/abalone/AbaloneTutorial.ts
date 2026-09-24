@@ -1,14 +1,14 @@
+
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { AbaloneMove } from '@everyboard/games';
+import { AbaloneRules } from '@everyboard/games';
+import { AbaloneState } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-
-import { AbaloneMove } from './AbaloneMove';
-import { AbaloneRules } from './AbaloneRules';
-import { AbaloneState } from './AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
