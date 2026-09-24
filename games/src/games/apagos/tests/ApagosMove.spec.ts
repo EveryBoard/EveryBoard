@@ -3,7 +3,7 @@ import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Player } from '../../../jscaip/Player';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';

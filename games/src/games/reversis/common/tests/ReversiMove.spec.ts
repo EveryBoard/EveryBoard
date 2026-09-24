@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../../jscaip/tests/MoveTestUtils';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ToricReversiRules } from '../../toric-reversi/ToricReversiRules';
 import { AbstractReversiRules } from '../AbstractReversiRules';

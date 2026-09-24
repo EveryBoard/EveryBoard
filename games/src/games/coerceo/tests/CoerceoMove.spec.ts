@@ -2,7 +2,7 @@
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
