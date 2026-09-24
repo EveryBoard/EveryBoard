@@ -839,7 +839,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
 });
 
 
-describe('ConnectNRules (TORUS)', () => {
+describe('ConnectNRules (TORIC)', () => {
 
     let rules: ConnectNRules;
     const squareTopology: SquareTopology = new SquareTopology();
@@ -853,7 +853,7 @@ describe('ConnectNRules (TORUS)', () => {
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'SQUARE',
-            shape: 'TORUS',
+            shape: 'TORIC',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -899,7 +899,7 @@ describe('ConnectNRules (TORUS)', () => {
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'SQUARE',
-            shape: 'TORUS',
+            shape: 'TORIC',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -945,7 +945,7 @@ describe('ConnectNRules (TORUS)', () => {
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'SQUARE',
-            shape: 'TORUS',
+            shape: 'TORIC',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([

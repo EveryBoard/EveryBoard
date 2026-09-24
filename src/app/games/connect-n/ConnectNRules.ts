@@ -38,13 +38,13 @@ export const TopologyNamer: Record<TopologyID, Localized> = {
     'TRIANGULAR': () => $localize`Triangular`,
 };
 
-export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORUS';
+export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORIC';
 
 export const Shapes: Record<ShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
-    'TORUS': () => $localize`TORUS`,
+    'TORIC': () => $localize`Toric`,
 };
 
 export type ConnectNConfig = {
@@ -161,7 +161,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                 return new RectangularShape(config.boardSize, config.boardSize, topology);
             } case 'HEXAGONAL': {
                 return new HexagonalShape(config.boardSize, topology);
-            } case 'TORUS': {
+            } case 'TORIC': {
                 return new TorusShape(config.boardSize, config.boardSize, topology);
             } default: {
                 Utils.expectToBe(config.shape, 'TRIANGULAR');
