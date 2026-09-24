@@ -147,8 +147,8 @@ jobs:
           java-version: '21'
       - name: Setup dependencies (install dependencies)
         run: npm ci
-      - name: Build lib
-        run: cd lib && npm run build
+      - name: Build dependencies
+        run: npm run dependencies:build
       - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
