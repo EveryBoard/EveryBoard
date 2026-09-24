@@ -3,7 +3,7 @@ import { MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';

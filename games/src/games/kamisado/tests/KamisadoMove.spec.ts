@@ -2,7 +2,7 @@
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
-import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils.spec';
 import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 import { KamisadoRules } from '../KamisadoRules';

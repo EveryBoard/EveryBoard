@@ -3,7 +3,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils.spec';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsulePiece } from '../EncapsulePiece';

@@ -2,7 +2,7 @@
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Ordinal } from '../../../jscaip/Ordinal';
-import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils';
+import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils.spec';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
