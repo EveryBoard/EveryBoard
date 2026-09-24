@@ -2,11 +2,11 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { DummyHeuristic } from '../../../jscaip/AI/DummyHeuristic';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiamMove } from '../DiamMove';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
     public constructor() {

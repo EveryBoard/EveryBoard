@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
-import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { CheckersControlPlusDominationHeuristic } from '../CheckersControlPlusDominationHeuristic';
 import { CheckersMove } from '../CheckersMove';

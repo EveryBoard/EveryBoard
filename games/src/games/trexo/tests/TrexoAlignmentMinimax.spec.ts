@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoRules } from '../TrexoRules';
 import { TrexoState } from '../TrexoState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class TrexoAlignmentMinimax extends Minimax<TrexoMove, TrexoState> {
     public constructor() {

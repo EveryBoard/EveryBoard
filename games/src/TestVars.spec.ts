@@ -1,3 +1,1 @@
-export namespace TestVars {
-    export let slowTests: boolean = false;
-}
+export const TestVars: { slowTests: boolean } = { slowTests: false };

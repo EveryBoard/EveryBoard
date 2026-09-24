@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { GameStatus } from '../../GameStatus';
 import { Move } from '../../Move';
 import { Rules } from '../../Rules';
-import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { GameState } from '../../state/GameState';
 import { GameNode } from '../GameNode';
 

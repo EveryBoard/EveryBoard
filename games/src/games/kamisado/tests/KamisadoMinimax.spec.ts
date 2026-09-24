@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
 import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoState } from '../KamisadoState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {
     public constructor() {

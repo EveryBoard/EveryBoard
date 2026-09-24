@@ -5,13 +5,13 @@ import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamPiece } from '../SiamPiece';
 import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
 import { SiamState } from '../SiamState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

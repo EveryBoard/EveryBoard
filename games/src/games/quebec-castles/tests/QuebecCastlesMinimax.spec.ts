@@ -1,11 +1,11 @@
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
 import { DummyHeuristic } from '../../../jscaip/AI/DummyHeuristic';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class QuebecCastlesMinimax extends Minimax<QuebecCastlesMove, QuebecCastlesState, QuebecCastlesConfig> {
     public constructor() {

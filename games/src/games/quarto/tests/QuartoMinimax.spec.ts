@@ -3,13 +3,13 @@ import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const ____: QuartoPiece = QuartoPiece.EMPTY;
 const AAAA: QuartoPiece = QuartoPiece.AAAA;

@@ -3,11 +3,11 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { DummyHeuristic } from '../../../jscaip/AI/DummyHeuristic';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class PentagoDummyMinimax extends Minimax<PentagoMove, PentagoState> {
     public constructor() {

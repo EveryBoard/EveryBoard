@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SaharaMobilityHeuristic } from '../SaharaMobilityHeuristic';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 import { SaharaRules } from '../SaharaRules';
 import { SaharaState } from '../SaharaState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class SaharaMobilityMinimax extends Minimax<SaharaMove, SaharaState> {
     public constructor() {

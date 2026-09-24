@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractGoMinimax } from '../../AbstractGoMinimax';
 import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
-import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { TriangularGoHeuristic } from '../TriangularGoHeuristic';
 import { TriangularGoMoveGenerator } from '../TriangularGoMoveGenerator';
 
