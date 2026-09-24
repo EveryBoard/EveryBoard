@@ -15,7 +15,7 @@ import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
+import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectNFailure } from '../ConnectNFailure';
 import { ConnectNMove } from '../ConnectNMove';
@@ -39,7 +39,7 @@ describe('ConnectNRules (SQUARE)', () => {
      */
 
     let rules: ConnectNRules;
-    const defaultTopology: SquareTopology = new SquareTopology();
+    const defaultTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
     const defaultShape: TopologicShape<Direction> = new RectangularShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
@@ -842,7 +842,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
 describe('ConnectNRules (TORIC)', () => {
 
     let rules: ConnectNRules;
-    const squareTopology: SquareTopology = new SquareTopology();
+    const squareTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -852,7 +852,7 @@ describe('ConnectNRules (TORIC)', () => {
         // Given an  config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'SQUARE',
+            topology: 'SQUARE (8)',
             shape: 'TORIC',
         };
 

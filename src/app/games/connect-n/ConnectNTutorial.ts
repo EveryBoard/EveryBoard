@@ -7,7 +7,7 @@ import { RectangularShape } from '../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
-import { SquareTopology } from '../../jscaip/topology/SquareTopology';
+import { OrdinalSquareTopology } from '../../jscaip/topology/OrdinalSquareTopology';
 import { Topology } from '../../jscaip/topology/Topology';
 
 import { ConnectNMove } from './ConnectNMove';
@@ -17,7 +17,7 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const defaultTopology: Topology<Direction> = new SquareTopology();
+const defaultTopology: Topology<Direction> = new OrdinalSquareTopology();
 const defaultShape: TopologicShape<Direction> = new RectangularShape(
     defaultConfig.boardSize,
     defaultConfig.boardSize,

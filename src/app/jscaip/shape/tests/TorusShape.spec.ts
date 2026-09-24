@@ -5,14 +5,14 @@ import { Coord } from '../../Coord';
 import { Direction } from '../../Direction';
 import { Ordinal } from '../../Ordinal';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
-import { SquareTopology } from '../../topology/SquareTopology';
+import { OrdinalSquareTopology } from '../../topology/OrdinalSquareTopology';
 import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { TorusShape } from '../TorusShape';
 
 describe('TorusShape (with Square Topology)', () => {
 
-    const topology: Topology<Direction> = new SquareTopology();
+    const topology: Topology<Direction> = new OrdinalSquareTopology();
 
     describe('getCenters', () => {
 
