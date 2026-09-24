@@ -3,7 +3,7 @@
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
     <g [attr.transform]="getBoardTransformation()">
-        @for (coordAndContent of state.getCoordsAndContents(); track coordAndContent.coord.toString()) {
+        @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
             <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                (click)="onClick(coordAndContent.coord)"
                [attr.transform]="getPieceTranslation(coordAndContent.coord)">
@@ -121,7 +121,7 @@
             <g>
                 <g id="capture-of-player-{{ player.toString() }}"
                    [attr.transform]="getCapturesTransformation(player)">
-                    @for (value of state.getCapturesOf(player); track $index; let piece = $index) {
+                    @for (value of state().getCapturesOf(player); track $index; let piece = $index) {
                         <g>
                             @if (value > 0) {
                                 <g [attr.transform]="getTranslationAtXY(0, 2 * piece)">

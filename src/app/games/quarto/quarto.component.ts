@@ -62,11 +62,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             }],
         };
         this.encoder = QuartoMove.encoder;
-        this.pieceInHand = this.getState().pieceInHand;
+        this.pieceInHand = this.state().pieceInHand;
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: QuartoState = this.getState();
+        const state: QuartoState = this.state();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         const config: QuartoConfig = this.config();
@@ -82,7 +82,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (this.board[coord.y][coord.x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(coord); // let's show the user his decision
-            if (this.getState().turn === 15) {
+            if (this.state().turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(coord.x, coord.y, QuartoPiece.EMPTY);

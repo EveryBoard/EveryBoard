@@ -290,7 +290,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig);
 
             // Then the store should contain newScore +difference
-            const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
+            const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().state();
             const newScore: number = newState.scores.get(currentPlayer);
             const difference: number = newScore - initialScore;
             mancalaTestUtils.expectStoreContentToBe(currentPlayer, ' ' + newScore + ' ', ' +' + difference + ' ');

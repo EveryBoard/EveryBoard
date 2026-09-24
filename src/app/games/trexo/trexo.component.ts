@@ -149,7 +149,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: TrexoState = this.getState();
+        const state: TrexoState = this.state();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
         this.currentPlayerClass = this.getPlayerClass(state.getCurrentPlayer());
@@ -174,7 +174,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
-            for (const coordAndContent of this.getState().getCoordsAndContents()) {
+            for (const coordAndContent of this.state().getCoordsAndContents()) {
                 const coord: Coord = coordAndContent.coord;
                 const stackHeight: number = coordAndContent.content.getHeight();
                 maxZ = Math.max(maxZ, stackHeight);
@@ -188,13 +188,13 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
 
     private extractMoveFromState(x: number, y: number, z: number): TrexoMove {
-        const piece: TrexoPiece = this.getState().getPieceAtXYZ(x, y, z);
+        const piece: TrexoPiece = this.state().getPieceAtXYZ(x, y, z);
         const pieceCoord: Coord = new Coord(x, y);
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
         for (const dir of Ordinal.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
             if (TrexoState.isOnBoard(neighborCoord)) {
-                const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);
+                const neighborStack: TrexoPieceStack = this.state().getPieceAt(neighborCoord);
                 if (neighborStack.getHeight() > z) {
                     const neighborPiece: TrexoPiece = neighborStack.getPieceAt(z);
                     if (neighborPiece.tileId === piece.tileId) {
@@ -237,7 +237,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 return this.cancelMove();
             }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
-                const isPlayerZero: boolean = this.getState().getCurrentPlayer() === Player.ZERO;
+                const isPlayerZero: boolean = this.state().getCurrentPlayer() === Player.ZERO;
                 const first: Coord = isPlayerZero ? clicked : dropped;
                 const second: Coord = isPlayerZero ? dropped : clicked;
                 const move: TrexoMove = TrexoMove.from(first, second).get();
@@ -250,7 +250,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
 
     private deselectPiece(): void {
-        const z: number = this.getState().getPieceAt(this.droppedPiece.get()).getHeight();
+        const z: number = this.state().getPieceAt(this.droppedPiece.get()).getHeight();
         const y: number = this.droppedPiece.get().y;
         const x: number = this.droppedPiece.get().x;
         const pieceOnBoard: PieceOnBoard[][][] = this.pieceOnBoard();
@@ -263,7 +263,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
 
     private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
-            const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
+            const pieceHeight: number = this.state().getPieceAt(clicked).getHeight();
             const pieceOnBoard: PieceOnBoard[][][] = this.pieceOnBoard();
             if (pieceOnBoard.length <= pieceHeight) {
                 pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
@@ -311,7 +311,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
 
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const piece: Coord = new Coord(x, y);
-        const pieceOwner: PlayerOrNone = this.getState().getPieceAtXYZ(x, y, z).owner;
+        const pieceOwner: PlayerOrNone = this.state().getPieceAtXYZ(x, y, z).owner;
         let classes: string[] = [this.getPlayerClass(pieceOwner)];
         classes = classes.concat(this.getSpaceClasses(x, y));
         if (this.victoryCoords.some((coord: Coord) => coord.equals(piece))) {

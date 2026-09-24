@@ -54,7 +54,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ConnectSixState = this.getState();
+        const state: ConnectSixState = this.state();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
@@ -74,11 +74,11 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().turn === 0) {
+        if (this.state().turn === 0) {
             const move: ConnectSixMove = ConnectSixFirstMove.of(coord);
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(coord).isPlayer()) {
+            if (this.state().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
                 if (this.droppedCoord.equalsValue(coord)) {
@@ -96,10 +96,10 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const owner: PlayerOrNone = this.state().getPieceAt(coord);
         const classes: string[] = [];
         if (this.droppedCoord.equalsValue(coord)) {
-            classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
+            classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
             classes.push('highlighted-stroke');
         } else {
             classes.push(this.getPlayerClass(owner));

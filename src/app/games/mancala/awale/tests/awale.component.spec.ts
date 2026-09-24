@@ -117,7 +117,7 @@ describe('AwaleComponent', () => {
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],
             ], 1, PlayerNumberMap.of(2, 0));
-            const actualState: MancalaState = testUtils.getGameComponent().getState();
+            const actualState: MancalaState = testUtils.getGameComponent().state();
             expect(actualState).toEqual(expectedState);
         }));
 
