@@ -2,9 +2,9 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (coord of state.allCoords(); track coord.toString()) {
+    @for (coord of state().allCoords(); track coord.toString()) {
         <g>
-            @let spaceContent = state.getPieceAt(coord);
+            @let spaceContent = state().getPieceAt(coord);
             <g id="click-{{ coord.x }}-{{ coord.y }}"
                (click)="onClick(coord.x, coord.y)"
                [attr.transform]="getHexaCenterTranslationAt(coord)">
