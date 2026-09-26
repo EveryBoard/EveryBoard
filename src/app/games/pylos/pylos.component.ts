@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -318,9 +318,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private async onCaptureClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         const moveAttempt: PylosMoveAttempt = this.moveAttempt();
-        if (moveAttempt.phase !== 'capturing') {
-            throw new Error('PylosComponent: capture click outside capture phase');
-        }
+        Utils.assert(moveAttempt.phase === 'capturing', 'PylosComponent: capture click outside capture phase');
         const captureIndex: number = moveAttempt.captures.findIndex(
             (capture: PylosCoord) => capture.equals(clickedCoord),
         );
@@ -328,7 +326,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.moveAttempt.set({
                 ...moveAttempt,
                 constructedState: moveAttempt.constructedState.dropCurrentPlayersPieceAt(clickedCoord),
-                captures: moveAttempt.captures.filter((_capture: PylosCoord, index: number) => index !== captureIndex),
+                captures: moveAttempt.captures.filter(
+                    (_capture: PylosCoord, index: number) => index !== captureIndex,
+                ),
             });
             return MGPValidation.SUCCESS;
         }
@@ -511,9 +511,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private mustDisplayLandingCoord(coord: PylosCoord): boolean {
         const moveAttempt: PylosMoveAttempt = this.moveAttempt();
         if (moveAttempt.phase === 'climbing') {
-            if (moveAttempt.startingCoord.equals(coord)) {
-                return true;
-            }
             return moveAttempt.startingCoord.z < coord.z;
         } else {
             return true;
