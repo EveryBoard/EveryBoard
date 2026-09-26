@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, Signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -19,6 +19,38 @@ import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosRules } from './PylosRules';
 import { PylosState } from './PylosState';
 
+interface PylosSidePieceView {
+    readonly id: string;
+    readonly cx: number;
+    readonly cy: number;
+    readonly radius: number;
+    readonly playerClass: string;
+}
+
+interface PylosRenderedSpace {
+    readonly kind: 'piece' | 'landing';
+    readonly coord: PylosCoord;
+    readonly key: string;
+    readonly cx: number;
+    readonly cy: number;
+    readonly radius: number;
+    readonly classes: ReadonlyArray<string>;
+}
+
+interface PylosHighCaptureView {
+    readonly id: string;
+    readonly radius: number;
+    readonly x: number;
+    readonly y: number;
+}
+
+interface PylosCapturableView {
+    readonly coord: PylosCoord;
+    readonly id: string;
+    readonly radius: number;
+    readonly transform: string;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pylos',
@@ -29,9 +61,15 @@ import { PylosState } from './PylosState';
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
     // 4*100 for each pieces at z=0 level + 2*4 for each direction there is stroke
-    protected readonly boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
-    protected readonly pieceRowHeight: number = this.SPACE_SIZE / 2;
-    protected readonly boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
+    private readonly boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+    private readonly pieceRowHeight: number = this.SPACE_SIZE / 2;
+    private readonly boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
+
+    protected readonly boardTranslation: string =
+        this.getSVGTranslation(this.STROKE_WIDTH / 2, (this.STROKE_WIDTH / 2) + this.pieceRowHeight);
+    protected readonly captureValidationTranslation: string = this.getTranslationAtXY(4, 4);
+    private readonly writableBoardRotation: WritableSignal<string> = signal(this.getBoardRotation(Player.ZERO));
+    protected readonly boardRotation: Signal<string> = this.writableBoardRotation.asReadonly();
 
     protected override computeViewBox(): ViewBox {
         return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
@@ -39,23 +77,125 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private readonly constructedState: WritableSignal<PylosState> = signal(this.state());
 
-    private readonly lastLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly lastStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly lastFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly lastSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly highCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly displayedLastMove: WritableSignal<MGPOptional<PylosMove>> = signal(MGPOptional.empty());
 
-    protected readonly capturables: WritableSignal<Set<PylosCoord>> = signal(new Set());
+    private readonly capturables: WritableSignal<Set<PylosCoord>> = signal(new Set());
 
     private readonly chosenStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly chosenLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly chosenLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
     private readonly chosenFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
     private readonly chosenSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
 
-    private readonly captured: WritableSignal<ReadonlyArray<PylosCoord>> = signal([]);
-    private readonly lastMoved: WritableSignal<ReadonlyArray<PylosCoord>> = signal([]);
+    private readonly captured: Signal<ReadonlyArray<PylosCoord>> = computed(() => {
+        const displayedLastMove: MGPOptional<PylosMove> = this.displayedLastMove();
+        if (displayedLastMove.isAbsent()) {
+            return [];
+        }
+        const move: PylosMove = displayedLastMove.get();
+        const captures: PylosCoord[] = [];
+        if (move.firstCapture.isPresent()) {
+            captures.push(move.firstCapture.get());
+        }
+        if (move.secondCapture.isPresent()) {
+            captures.push(move.secondCapture.get());
+        }
+        return captures;
+    });
+
+    private readonly lastMoved: Signal<ReadonlyArray<PylosCoord>> = computed(() => {
+        const displayedLastMove: MGPOptional<PylosMove> = this.displayedLastMove();
+        if (displayedLastMove.isAbsent()) {
+            return [];
+        }
+        const move: PylosMove = displayedLastMove.get();
+        if (move.startingCoord.isPresent()) {
+            return [move.landingCoord, move.startingCoord.get()];
+        }
+        return [move.landingCoord];
+    });
 
     private readonly remainingPieces: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(15, 15));
+
+    protected readonly sidePieces: Signal<ReadonlyArray<PylosSidePieceView>> = computed(() => {
+        const remainingPieces: PlayerNumberMap = this.remainingPieces();
+        const pieces: PylosSidePieceView[] = [];
+        for (const player of Player.PLAYERS) {
+            const numberOfPieces: number = remainingPieces.get(player);
+            for (let index: number = 0; index < numberOfPieces; index++) {
+                pieces.push({
+                    id: `piece-${ player.toString() }-${ index }`,
+                    cx: (this.SPACE_SIZE / 4) +
+                        ((this.boardWidth - (this.SPACE_SIZE / 4)) * (index / 15)),
+                    cy: this.getPiecesCyForPlayer(player),
+                    radius: (this.SPACE_SIZE / 4) - this.STROKE_WIDTH,
+                    playerClass: this.getPlayerClass(player),
+                });
+            }
+        }
+        return pieces;
+    });
+
+    protected readonly spaces: Signal<ReadonlyArray<PylosRenderedSpace>> = computed(() => {
+        const spaces: PylosRenderedSpace[] = [];
+        for (let z: number = 0; z < 3; z++) {
+            for (const y of PylosState.getLevelRange(z)) {
+                for (const x of PylosState.getLevelRange(z)) {
+                    const coord: PylosCoord = new PylosCoord(x, y, z);
+                    if (this.mustDraw(coord) === false) {
+                        continue;
+                    }
+                    if (this.isOccupied(coord)) {
+                        spaces.push(this.createRenderedSpace(coord, 'piece', this.getPieceClasses(coord)));
+                    } else if (this.mustDisplayLandingCoord(coord)) {
+                        spaces.push(this.createRenderedSpace(coord, 'landing', this.getSquareClasses(coord)));
+                    }
+                }
+            }
+        }
+        return spaces;
+    });
+
+    protected readonly highCaptureMarker: Signal<MGPOptional<PylosHighCaptureView>> = computed(() => {
+        const displayedLastMove: MGPOptional<PylosMove> = this.displayedLastMove();
+        if (displayedLastMove.isAbsent()) {
+            return MGPOptional.empty();
+        }
+        const firstCapture: MGPOptional<PylosCoord> = displayedLastMove.get().firstCapture;
+        if (firstCapture.isAbsent() || this.mustDrawCapturedCoord(firstCapture.get())) {
+            return MGPOptional.empty();
+        }
+        const coord: PylosCoord = firstCapture.get();
+        const radius: number = this.getPieceRadius(coord.z);
+        return MGPOptional.of({
+            id: `highCapture-${ coord.x }-${ coord.y }-${ coord.z }`,
+            radius,
+            x: this.getPieceCx(coord.x, coord.z) - radius,
+            y: this.getPieceCy(coord.y, coord.z) - radius,
+        });
+    });
+
+    protected readonly captureValidationVisible: Signal<boolean> =
+        computed(() => this.chosenLandingCoord().isPresent());
+
+    protected readonly captureValidationButtonClasses: Signal<string> = computed(() => {
+        if (this.chosenFirstCapture().isPresent() || this.chosenSecondCapture().isPresent()) {
+            return '';
+        }
+        return 'semi-transparent';
+    });
+
+    protected readonly capturableMarkers: Signal<ReadonlyArray<PylosCapturableView>> = computed(() =>
+        this.capturables().toList().map((coord: PylosCoord): PylosCapturableView => {
+            const radius: number = this.getPieceRadius(coord.z);
+            return {
+                coord,
+                id: `capturable-${ coord.x }-${ coord.y }-${ coord.z }`,
+                radius,
+                transform: this.getSVGTranslation(this.getPieceCx(coord.x, coord.z),
+                                                  this.getPieceCy(coord.y, coord.z)),
+            };
+        }),
+    );
 
     public constructor() {
         super('Pylos');
@@ -76,7 +216,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.hasAsymmetricBoard = true;
     }
 
-    protected getPiecesCyForPlayer(player: Player): number {
+    public override setPointOfView(pointOfView: Player): void {
+        super.setPointOfView(pointOfView);
+        this.writableBoardRotation.set(this.getBoardRotation(pointOfView));
+    }
+
+    private getBoardRotation(pointOfView: Player): string {
+        return `rotate(${ pointOfView.getValue() * 180 } ${ this.boardWidth / 2 } ${ this.boardHeight / 2 })`;
+    }
+
+    private getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
             return this.pieceRowHeight / 2;
         } else {
@@ -84,12 +233,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
 
-    protected getLevelRange(z: number): number[] {
-        return PylosState.getLevelRange(z);
-    }
-
-    protected mustDraw(x: number, y: number, z: number): boolean {
-        const coord: PylosCoord = new PylosCoord(x, y, z);
+    private mustDraw(coord: PylosCoord): boolean {
         if (this.constructedState().getPieceAt(coord).isPlayer()) {
             return true;
         }
@@ -137,7 +281,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
-        // Starting do describe a climbing move
+        // Starting to describe a climbing move
         this.chosenStartingCoord.set(MGPOptional.of(clickedCoord));
         this.constructedState.set(this.state().removePieceAt(clickedCoord));
         return MGPValidation.SUCCESS;
@@ -173,14 +317,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private updateCapturableList(): void {
         this.capturables.set(this.constructedState().getFreeToMoves());
-    }
-
-    protected getCaptureValidationButtonClasses(): string {
-        if (this.chosenFirstCapture().isPresent() || this.chosenSecondCapture().isPresent()) {
-            return '';
-        } else {
-            return 'semi-transparent';
-        }
     }
 
     @ClickHandler(() => `#capture-validation`)
@@ -232,8 +368,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
 
-    protected getSquareClasses(x: number, y: number, z: number): string[] {
-        const coord: PylosCoord = new PylosCoord(x, y, z);
+    private getSquareClasses(coord: PylosCoord): string[] {
         if (this.captured().some((c: PylosCoord) => c.equals(coord))) {
             return ['captured-fill'];
         }
@@ -251,36 +386,43 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenStartingCoord().equalsValue(coord);
     }
 
-    protected getPieceRadius(z: number): number {
+    private getPieceRadius(z: number): number {
         // 0.45 so that the radius take 90% of the place the square had
         // 0.05 so that it become 5% bigger at each level
         return this.SPACE_SIZE * (0.45 + (z * 0.025));
     }
 
-    protected getPieceCx(x: number, _y: number, z: number): number {
+    private getPieceCx(x: number, z: number): number {
         // Level one pieces must look like they are in between level zero pieces
         const levelOffset: number = z * 0.5 * this.SPACE_SIZE;
         const localPieceCenter: number = this.SPACE_SIZE / 2;
         return localPieceCenter + levelOffset + (x * this.SPACE_SIZE);
     }
 
-    protected getPieceCy(_x: number, y: number, z: number): number {
+    private getPieceCy(y: number, z: number): number {
         // Level one pieces must look like they are in between level zero pieces
         const levelOffset: number = z * 0.5 * this.SPACE_SIZE;
         const localPieceCenter: number = this.SPACE_SIZE / 2;
         return localPieceCenter + levelOffset + (y * this.SPACE_SIZE);
     }
 
-    protected getPieceCxByCoord(coord: PylosCoord): number {
-        return this.getPieceCx(coord.x, coord.y, coord.z);
+    private createRenderedSpace(coord: PylosCoord,
+                                kind: 'piece' | 'landing',
+                                classes: ReadonlyArray<string>)
+    : PylosRenderedSpace
+    {
+        return {
+            kind,
+            coord,
+            key: `${ coord.x }-${ coord.y }-${ coord.z }`,
+            cx: this.getPieceCx(coord.x, coord.z),
+            cy: this.getPieceCy(coord.y, coord.z),
+            radius: this.getPieceRadius(coord.z),
+            classes,
+        };
     }
 
-    protected getPieceCyByCoord(coord: PylosCoord): number {
-        return this.getPieceCy(coord.x, coord.y, coord.z);
-    }
-
-    protected isOccupied(x: number, y: number, z: number): boolean {
-        const coord: PylosCoord = new PylosCoord(x, y, z);
+    private isOccupied(coord: PylosCoord): boolean {
         if (this.justClimbed(coord)) {
             return false;
         }
@@ -289,10 +431,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return reallyOccupied || landingCoord;
     }
 
-    protected getPieceClasses(x: number, y: number, z: number): string[] {
-        const c: PylosCoord = new PylosCoord(x, y, z);
+    private getPieceClasses(c: PylosCoord): string[] {
         const classes: string[] = [this.getPieceFillClass(c)];
-        if (this.lastLandingCoord().equalsValue(c) || this.lastStartingCoord().equalsValue(c)) {
+        if (this.lastMoved().some((coord: PylosCoord) => coord.equals(c))) {
             classes.push('last-move-stroke');
         }
         if (this.chosenStartingCoord().equalsValue(c) || this.chosenLandingCoord().equalsValue(c)) {
@@ -309,15 +450,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.getPlayerClass(this.state().getCurrentPlayer());
         }
         return this.getPlayerClass(this.state().getPieceAt(c));
-    }
-
-    protected getPlayerSidePieces(player: Player): number[] {
-        const nPieces: number = this.remainingPieces().get(player);
-        const pieces: number[] = [];
-        for (let i: number = 0; i < nPieces; i++) {
-            pieces.push(i);
-        }
-        return pieces;
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -339,54 +471,25 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     protected override async showLastMove(move: PylosMove): Promise<void> {
-        this.lastStartingCoord.set(move.startingCoord);
-        this.lastLandingCoord.set(MGPOptional.of(move.landingCoord));
-        this.lastFirstCapture.set(move.firstCapture);
-        this.lastSecondCapture.set(move.secondCapture);
-        if (this.lastFirstCapture().isPresent() &&
-            this.mustDrawCoord(this.lastFirstCapture().get()) === false)
-        {
-            this.highCapture.set(this.lastFirstCapture());
-        }
-        const captured: PylosCoord[] = [];
-        if (move.firstCapture.isPresent()) {
-            captured.push(move.firstCapture.get());
-        }
-        if (move.secondCapture.isPresent()) {
-            captured.push(move.secondCapture.get());
-        }
-        this.captured.set(captured);
-        const lastMoved: PylosCoord[] = [move.landingCoord];
-        if (move.startingCoord.isPresent()) {
-            lastMoved.push(move.startingCoord.get());
-        }
-        this.lastMoved.set(lastMoved);
+        this.displayedLastMove.set(MGPOptional.of(move));
     }
 
     public override hideLastMove(): void {
-        this.lastStartingCoord.set(MGPOptional.empty());
-        this.lastLandingCoord.set(MGPOptional.empty());
-        this.lastFirstCapture.set(MGPOptional.empty());
-        this.lastSecondCapture.set(MGPOptional.empty());
-        this.highCapture.set(MGPOptional.empty());
-        this.lastMoved.set([]);
-        this.captured.set([]);
+        this.displayedLastMove.set(MGPOptional.empty());
     }
 
-    private mustDrawCoord(coord: PylosCoord): boolean {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const z: number = coord.z;
-        return this.mustDraw(x, y, z);
+    private mustDrawCapturedCoord(coord: PylosCoord): boolean {
+        const state: PylosState = this.state();
+        return state.getPieceAt(coord).isPlayer() || state.isLandable(coord);
     }
 
-    protected mustDisplayLandingCoord(x: number, y: number, z: number): boolean {
+    private mustDisplayLandingCoord(coord: PylosCoord): boolean {
         if (this.chosenStartingCoord().isPresent()) {
-            if (this.chosenStartingCoord().equalsValue(new PylosCoord(x, y, z))) {
+            if (this.chosenStartingCoord().equalsValue(coord)) {
                 return true;
             }
             const startingZ: number = this.chosenStartingCoord().get().z;
-            return startingZ < z;
+            return startingZ < coord.z;
         } else {
             return true;
         }
