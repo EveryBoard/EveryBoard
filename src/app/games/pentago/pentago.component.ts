@@ -97,8 +97,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.victoryCoords = this.rules.getVictoryCoords(this.getState());
+        this.victoryCoords = this.rules.getVictoryCoords(this.state());
     }
 
     protected override async showLastMove(move: PentagoMove): Promise<void> {
@@ -200,14 +199,14 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
-        if (this.state.board[y][x].isPlayer()) {
+        if (this.state().board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (this.currentDrop.equalsValue(coord)) {
             return this.cancelMove();
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
-        const state: PentagoState = this.getState();
+        const state: PentagoState = this.state();
         const postDropState: PentagoState = state.applyLegalDrop(drop);
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop);
@@ -243,7 +242,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const x: number = coord.x;
         const y: number = coord.y;
         const classes: string[] = [];
-        const player: string = this.getPlayerClass(this.state.board[y][x]);
+        const player: string = this.getPlayerClass(this.state().board[y][x]);
         classes.push(player);
         if (this.lastDrop.equalsValue(coord)) {
             classes.push('last-move-stroke');
