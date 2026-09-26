@@ -139,7 +139,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         // Starting do describe a climbing move
         this.chosenStartingCoord = MGPOptional.of(clickedCoord);
-        this.constructedState = this.constructedState.removePieceAt(clickedCoord);
+        this.constructedState = this.state().removePieceAt(clickedCoord);
         return MGPValidation.SUCCESS;
     }
 

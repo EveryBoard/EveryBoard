@@ -262,6 +262,18 @@ describe('PylosComponent', () => {
             testUtils.expectElementToHaveClasses('#drop-3-3-0', ['base', 'mid-stroke', 'moved-fill']);
         }));
 
+        it('should restore the previous starting piece when selecting another one', fakeAsync(async() => {
+            // Given a board where either of two pieces can be selected for climbing
+            await testUtils.setupState(climbableState);
+
+            // When selecting one piece, then selecting another one instead
+            await testUtils.expectClickSuccess('#piece-0-0-0');
+            await testUtils.expectClickSuccess('#piece-3-3-0');
+
+            // Then the first piece should still support this valid landing coord
+            testUtils.expectElementToExist('#drop-0-0-1');
+        }));
+
         it('should no longer display unlandable coord', fakeAsync(async() => {
             // Given a board on which a climbing is possible
             const initialBoard: PlayerOrNone[][][] = [
