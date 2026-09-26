@@ -3,7 +3,8 @@
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
 
-    <g [attr.transform]="boardRotation()">
+    <g id="reserve-pieces"
+       [attr.transform]="boardRotation()">
         @for (piece of sidePieces(); track piece.id) {
             <circle [id]="piece.id"
                     [attr.cx]="piece.cx"

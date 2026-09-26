@@ -64,13 +64,19 @@ describe('PylosComponent', () => {
 
     it('should rotate the reserve pieces for Player.ONE', fakeAsync(async() => {
         // Given the board viewed by Player.ZERO
-        expect(testUtils.findElement('svg > g:first-of-type').attributes.transform).toBe('rotate(0 204 254)');
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(0 204 254)');
 
         // When playing as Player.ONE
         await testUtils.getWrapper().setRole(Player.ONE);
 
         // Then the reserve pieces should be rotated to match the player's point of view
-        expect(testUtils.findElement('svg > g:first-of-type').attributes.transform).toBe('rotate(180 204 254)');
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(180 204 254)');
+
+        // When observing the game
+        await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+
+        // Then the reserve pieces should return to their default orientation
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(0 204 254)');
     }));
 
     describe('First click', () => {

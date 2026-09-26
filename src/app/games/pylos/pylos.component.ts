@@ -51,6 +51,27 @@ interface PylosCapturableView {
     readonly transform: string;
 }
 
+interface PylosIdleMoveAttempt {
+    readonly phase: 'idle';
+    readonly constructedState: PylosState;
+}
+
+interface PylosClimbingMoveAttempt {
+    readonly phase: 'climbing';
+    readonly constructedState: PylosState;
+    readonly startingCoord: PylosCoord;
+}
+
+interface PylosCapturingMoveAttempt {
+    readonly phase: 'capturing';
+    readonly constructedState: PylosState;
+    readonly startingCoord: MGPOptional<PylosCoord>;
+    readonly landingCoord: PylosCoord;
+    readonly captures: ReadonlyArray<PylosCoord>;
+}
+
+type PylosMoveAttempt = PylosIdleMoveAttempt | PylosClimbingMoveAttempt | PylosCapturingMoveAttempt;
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pylos',
@@ -75,16 +96,17 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
     }
 
-    private readonly constructedState: WritableSignal<PylosState> = signal(this.state());
-
     private readonly displayedLastMove: WritableSignal<MGPOptional<PylosMove>> = signal(MGPOptional.empty());
 
-    private readonly capturables: WritableSignal<Set<PylosCoord>> = signal(new Set());
+    private readonly moveAttempt: WritableSignal<PylosMoveAttempt> = signal(this.createIdleMoveAttempt());
 
-    private readonly chosenStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly chosenLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly chosenFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    private readonly chosenSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly capturables: Signal<Set<PylosCoord>> = computed(() => {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase === 'capturing') {
+            return moveAttempt.constructedState.getFreeToMoves();
+        }
+        return new Set();
+    });
 
     private readonly captured: Signal<ReadonlyArray<PylosCoord>> = computed(() => {
         const displayedLastMove: MGPOptional<PylosMove> = this.displayedLastMove();
@@ -114,7 +136,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return [move.landingCoord];
     });
 
-    private readonly remainingPieces: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(15, 15));
+    private readonly remainingPieces: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(
+        PylosRules.PIECES_PER_PLAYER,
+        PylosRules.PIECES_PER_PLAYER,
+    ));
 
     protected readonly sidePieces: Signal<ReadonlyArray<PylosSidePieceView>> = computed(() => {
         const remainingPieces: PlayerNumberMap = this.remainingPieces();
@@ -125,7 +150,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                 pieces.push({
                     id: `piece-${ player.toString() }-${ index }`,
                     cx: (this.SPACE_SIZE / 4) +
-                        ((this.boardWidth - (this.SPACE_SIZE / 4)) * (index / 15)),
+                        ((this.boardWidth - (this.SPACE_SIZE / 4)) *
+                         (index / PylosRules.PIECES_PER_PLAYER)),
                     cy: this.getPiecesCyForPlayer(player),
                     radius: (this.SPACE_SIZE / 4) - this.STROKE_WIDTH,
                     playerClass: this.getPlayerClass(player),
@@ -175,10 +201,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     });
 
     protected readonly captureValidationVisible: Signal<boolean> =
-        computed(() => this.chosenLandingCoord().isPresent());
+        computed(() => this.moveAttempt().phase === 'capturing');
 
     protected readonly captureValidationButtonClasses: Signal<string> = computed(() => {
-        if (this.chosenFirstCapture().isPresent() || this.chosenSecondCapture().isPresent()) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase === 'capturing' && moveAttempt.captures.length > 0) {
             return '';
         }
         return 'semi-transparent';
@@ -234,7 +261,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private mustDraw(coord: PylosCoord): boolean {
-        if (this.constructedState().getPieceAt(coord).isPlayer()) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.constructedState.getPieceAt(coord).isPlayer()) {
             return true;
         }
         if (this.justClimbed(coord)) {
@@ -243,12 +271,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.isCaptured(coord)) {
             return true;
         }
-        return this.chosenLandingCoord().isAbsent() && this.constructedState().isLandable(coord);
+        return moveAttempt.phase !== 'capturing' && moveAttempt.constructedState.isLandable(coord);
     }
 
     private isCaptured(coord: PylosCoord): boolean {
-        return this.chosenFirstCapture().equalsValue(coord) ||
-               this.chosenSecondCapture().equalsValue(coord);
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        return moveAttempt.phase === 'capturing' &&
+               moveAttempt.captures.some((capture: PylosCoord) => capture.equals(coord));
     }
 
     @ClickHandler((x: number, y: number, z: number) => `#piece-${ x }-${ y }-${ z }`)
@@ -259,112 +288,107 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (this.chosenStartingCoord().equalsValue(coord)) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase === 'climbing' && moveAttempt.startingCoord.equals(coord)) {
             return this.cancelMove();
         }
-        if (this.chosenLandingCoord().isPresent()) {
+        if (moveAttempt.phase === 'capturing') {
             // Starting to select capture
-            if (this.isSupporting(coord, this.constructedState())) {
+            if (moveAttempt.constructedState.isSupporting(coord)) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
             return this.onCaptureClick(coord);
         } else {
-            if (this.isSupporting(coord, this.state())) {
+            if (this.state().isSupporting(coord)) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
             return this.onClimbClick(coord);
         }
     }
 
-    private isSupporting(clickedCoord: PylosCoord, state: PylosState): boolean {
-        return state.isSupporting(clickedCoord);
-    }
-
     private async onClimbClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         // Starting to describe a climbing move
-        this.chosenStartingCoord.set(MGPOptional.of(clickedCoord));
-        this.constructedState.set(this.state().removePieceAt(clickedCoord));
+        this.moveAttempt.set({
+            phase: 'climbing',
+            startingCoord: clickedCoord,
+            constructedState: this.state().removePieceAt(clickedCoord),
+        });
         return MGPValidation.SUCCESS;
     }
 
     private async onCaptureClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
-        if (this.chosenFirstCapture().equalsValue(clickedCoord)) {
-            this.chosenFirstCapture.set(MGPOptional.empty());
-            this.constructedState.set(this.constructedState().dropCurrentPlayersPieceAt(clickedCoord));
-            this.updateCapturableList();
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase !== 'capturing') {
+            throw new Error('PylosComponent: capture click outside capture phase');
+        }
+        const captureIndex: number = moveAttempt.captures.findIndex(
+            (capture: PylosCoord) => capture.equals(clickedCoord),
+        );
+        if (captureIndex !== -1) {
+            this.moveAttempt.set({
+                ...moveAttempt,
+                constructedState: moveAttempt.constructedState.dropCurrentPlayersPieceAt(clickedCoord),
+                captures: moveAttempt.captures.filter((_capture: PylosCoord, index: number) => index !== captureIndex),
+            });
             return MGPValidation.SUCCESS;
         }
-        if (this.chosenSecondCapture().equalsValue(clickedCoord)) {
-            this.chosenSecondCapture.set(MGPOptional.empty());
-            this.constructedState.set(this.constructedState().dropCurrentPlayersPieceAt(clickedCoord));
-            this.updateCapturableList();
-            return MGPValidation.SUCCESS;
-        }
-        if (this.chosenFirstCapture().isAbsent()) { // First capture
-            this.chosenFirstCapture.set(MGPOptional.of(clickedCoord));
-            this.constructedState.set(this.constructedState().removePieceAt(clickedCoord));
-            this.updateCapturableList();
-            return MGPValidation.SUCCESS;
-        }
-        if (this.chosenSecondCapture().isAbsent()) { // Last capture
-            this.chosenSecondCapture.set(MGPOptional.of(clickedCoord));
-            this.constructedState.set(this.constructedState().removePieceAt(clickedCoord));
-            this.updateCapturableList();
+        if (moveAttempt.captures.length < 2) {
+            this.moveAttempt.set({
+                ...moveAttempt,
+                constructedState: moveAttempt.constructedState.removePieceAt(clickedCoord),
+                captures: [...moveAttempt.captures, clickedCoord],
+            });
             return MGPValidation.SUCCESS;
         }
         return this.cancelMove(PylosMoveFailure.MUST_CAPTURE_MAXIMUM_TWO_PIECES());
     }
 
-    private updateCapturableList(): void {
-        this.capturables.set(this.constructedState().getFreeToMoves());
-    }
-
     @ClickHandler(() => `#capture-validation`)
     protected async validateCapture(): Promise<MGPValidation> {
-        if (this.chosenFirstCapture().isAbsent() && this.chosenSecondCapture().isAbsent()) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase !== 'capturing' || moveAttempt.captures.length === 0) {
             return MGPValidation.SUCCESS;
         }
-        if (this.chosenFirstCapture().isPresent() && this.chosenSecondCapture().isAbsent()) {
-            return this.concludeMoveWithCapture([this.chosenFirstCapture().get()]);
-        }
-        if (this.chosenFirstCapture().isAbsent() && this.chosenSecondCapture().isPresent()) {
-            return this.concludeMoveWithCapture([this.chosenSecondCapture().get()]);
-        }
-        return this.concludeMoveWithCapture([this.chosenFirstCapture().get(), this.chosenSecondCapture().get()]);
+        return this.concludeMoveWithCapture(moveAttempt);
     }
 
-    private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
-        if (this.chosenStartingCoord().isAbsent()) {
-            const move: PylosMove = PylosMove.ofDrop(this.chosenLandingCoord().get(), captures);
+    private async concludeMoveWithCapture(moveAttempt: PylosCapturingMoveAttempt): Promise<MGPValidation> {
+        if (moveAttempt.startingCoord.isAbsent()) {
+            const move: PylosMove = PylosMove.ofDrop(moveAttempt.landingCoord, [...moveAttempt.captures]);
             return this.chooseMove(move);
         } else {
-            const move: PylosMove = PylosMove.ofClimb(this.chosenStartingCoord().get(),
-                                                      this.chosenLandingCoord().get(),
-                                                      captures);
+            const move: PylosMove = PylosMove.ofClimb(moveAttempt.startingCoord.get(),
+                                                      moveAttempt.landingCoord,
+                                                      [...moveAttempt.captures]);
             return this.chooseMove(move);
         }
     }
 
     public override cancelMoveAttempt(): void {
-        this.constructedState.set(this.state());
-        this.chosenStartingCoord.set(MGPOptional.empty());
-        this.chosenLandingCoord.set(MGPOptional.empty());
-        this.chosenFirstCapture.set(MGPOptional.empty());
-        this.chosenSecondCapture.set(MGPOptional.empty());
-        this.capturables.set(new Set());
+        this.moveAttempt.set(this.createIdleMoveAttempt());
     }
 
     @ClickHandler((x: number, y: number, z: number) => `#drop-${ x }-${ y }-${ z }`)
     protected async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (PylosRules.canCapture(this.constructedState(), coord)) {
-            this.chosenLandingCoord.set(MGPOptional.of(coord));
-            this.constructedState.set(this.constructedState().dropCurrentPlayersPieceAt(coord));
-            this.updateCapturableList();
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (PylosRules.canCapture(moveAttempt.constructedState, coord)) {
+            this.moveAttempt.set({
+                phase: 'capturing',
+                startingCoord: moveAttempt.phase === 'climbing' ?
+                    MGPOptional.of(moveAttempt.startingCoord) :
+                    MGPOptional.empty(),
+                landingCoord: coord,
+                constructedState: moveAttempt.constructedState.dropCurrentPlayersPieceAt(coord),
+                captures: [],
+            });
             return MGPValidation.SUCCESS; // now player can click on their captures
         } else {
-            this.chosenLandingCoord.set(MGPOptional.of(coord));
-            return this.concludeMoveWithCapture([]);
+            if (moveAttempt.phase === 'climbing') {
+                const move: PylosMove = PylosMove.ofClimb(moveAttempt.startingCoord, coord, []);
+                return this.chooseMove(move);
+            }
+            return this.chooseMove(PylosMove.ofDrop(coord, []));
         }
     }
 
@@ -382,8 +406,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private justClimbed(coord: PylosCoord): boolean {
-        return this.chosenLandingCoord().isPresent() &&
-               this.chosenStartingCoord().equalsValue(coord);
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        return moveAttempt.phase === 'capturing' && moveAttempt.startingCoord.equalsValue(coord);
     }
 
     private getPieceRadius(z: number): number {
@@ -427,7 +451,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return false;
         }
         const reallyOccupied: boolean = this.state().getPieceAt(coord).isPlayer();
-        const landingCoord: boolean = this.chosenLandingCoord().equalsValue(coord);
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        const landingCoord: boolean = moveAttempt.phase === 'capturing' && moveAttempt.landingCoord.equals(coord);
         return reallyOccupied || landingCoord;
     }
 
@@ -436,7 +461,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.lastMoved().some((coord: PylosCoord) => coord.equals(c))) {
             classes.push('last-move-stroke');
         }
-        if (this.chosenStartingCoord().equalsValue(c) || this.chosenLandingCoord().equalsValue(c)) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        const startingCoord: boolean = moveAttempt.phase === 'climbing' && moveAttempt.startingCoord.equals(c);
+        const landingCoord: boolean = moveAttempt.phase === 'capturing' && moveAttempt.landingCoord.equals(c);
+        if (startingCoord || landingCoord) {
             classes.push('selected-stroke');
         }
         if (this.isCaptured(c)) {
@@ -446,23 +474,20 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private getPieceFillClass(c: PylosCoord): string {
-        if (this.chosenLandingCoord().equalsValue(c)) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase === 'capturing' && moveAttempt.landingCoord.equals(c)) {
             return this.getPlayerClass(this.state().getCurrentPlayer());
         }
         return this.getPlayerClass(this.state().getPieceAt(c));
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.constructedState.set(this.state());
+        this.moveAttempt.set(this.createIdleMoveAttempt());
         const repartition: PlayerNumberMap = this.state().getPiecesRepartition();
         this.remainingPieces.set(PlayerNumberMap.of(
-            15 - repartition.get(Player.ZERO),
-            15 - repartition.get(Player.ONE),
+            PylosRules.PIECES_PER_PLAYER - repartition.get(Player.ZERO),
+            PylosRules.PIECES_PER_PLAYER - repartition.get(Player.ONE),
         ));
-        this.updateScores();
-    }
-
-    private updateScores(): void {
         this.scores = MGPOptional.of(this.remainingPieces());
     }
 
@@ -484,15 +509,22 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private mustDisplayLandingCoord(coord: PylosCoord): boolean {
-        if (this.chosenStartingCoord().isPresent()) {
-            if (this.chosenStartingCoord().equalsValue(coord)) {
+        const moveAttempt: PylosMoveAttempt = this.moveAttempt();
+        if (moveAttempt.phase === 'climbing') {
+            if (moveAttempt.startingCoord.equals(coord)) {
                 return true;
             }
-            const startingZ: number = this.chosenStartingCoord().get().z;
-            return startingZ < coord.z;
+            return moveAttempt.startingCoord.z < coord.z;
         } else {
             return true;
         }
+    }
+
+    private createIdleMoveAttempt(): PylosIdleMoveAttempt {
+        return {
+            phase: 'idle',
+            constructedState: this.state(),
+        };
     }
 
 }
