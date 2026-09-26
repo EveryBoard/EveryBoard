@@ -79,7 +79,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: SiamState = this.getState();
+        const state: SiamState = this.state();
         this.board = state.board;
     }
 
@@ -116,7 +116,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         this.cancelMoveAttempt();
         const config: SiamConfig = this.config();
-        for (const move of SiamRules.get().getInsertions(this.getState(), config)) {
+        for (const move of SiamRules.get().getInsertions(this.state(), config)) {
             const target: Coord = move.coord.getNext(move.direction.get());
             // For every pushing insertion, we draw an arrow in case it will push a piece
             if (this.board[target.y][target.x] !== SiamPiece.EMPTY) {
@@ -159,8 +159,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 // Select the landing
                 this.selectedLanding = MGPOptional.of(clickedCoord);
                 const moves: SiamMove[] =
-                    SiamRules.get().getMovesBetween(this.getState(),
-                                                    this.getState().getPieceAt(this.selectedPiece.get()),
+                    SiamRules.get().getMovesBetween(this.state(),
+                                                    this.state().getPieceAt(this.selectedPiece.get()),
                                                     this.selectedPiece.get(),
                                                     clickedCoord);
                 if (moves.length === 0) {
@@ -168,7 +168,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 }
                 return this.performMoveOrShowOrientationArrows(moves);
             } else {
-                Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
+                Utils.assert(this.state().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
                 if (clickedPiece.getOwner().isNone()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -192,7 +192,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.selectedLanding = MGPOptional.of(clickedCoord);
         const config: SiamConfig = this.config();
         const insertions: SiamMove[] =
-            SiamRules.get().getInsertionsAt(this.getState(), clickedCoord.x, clickedCoord.y, config);
+            SiamRules.get().getInsertionsAt(this.state(), clickedCoord.x, clickedCoord.y, config);
         if (insertions.length === 0) {
             return this.changeMoveDestinationClick(clickedCoord);
         }
@@ -202,7 +202,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     private async changeMoveDestinationClick(clickedCoord: Coord): Promise<MGPValidation> {
         // The player clicked somewhere where there are no possible move, cancel the move
         this.cancelMoveAttempt();
-        const piece: SiamPiece = this.getState().getPieceAt(clickedCoord);
+        const piece: SiamPiece = this.state().getPieceAt(clickedCoord);
         if (piece.getOwner() === this.getCurrentPlayer()) {
             // The click was made on another piece of the player, likely to select it
             return this.doSquareClick(clickedCoord.x, clickedCoord.y);
@@ -228,7 +228,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private selectPiece(clickedCoord: Coord, clickedPiece: SiamPiece): MGPValidation {
         this.cancelMoveAttempt();
-        const state: SiamState = this.getState();
+        const state: SiamState = this.state();
         this.selectedPiece = MGPOptional.of(clickedCoord);
         const moves: SiamMove[] =
             SiamRules.get().getMovesFrom(state, clickedPiece, clickedCoord.x, clickedCoord.y);
@@ -297,7 +297,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const config: SiamConfig = this.config();
         const cx: number = config.width / 2;
         const offset: number = 1 / 2;
-        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
+        const pieceOnBoard: number = this.state().countPlayersPawn().get(player);
         const nbPieceToDraw: number = config.numberOfPiece - pieceOnBoard;
         const width: number = 1 + ((nbPieceToDraw - 1) * offset);
         let x: number;
@@ -344,7 +344,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public playerPieces(player: Player): number {
         const maxPiece: number = this.config().numberOfPiece;
-        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
+        const pieceOnBoard: number = this.state().countPlayersPawn().get(player);
         return maxPiece - pieceOnBoard;
     }
 

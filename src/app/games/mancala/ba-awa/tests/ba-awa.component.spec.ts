@@ -185,7 +185,7 @@ describe('BaAwaComponent', () => {
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],
             ], 11, PlayerNumberMap.of(1, 0));
-            const actualState: MancalaState = testUtils.getGameComponent().getState();
+            const actualState: MancalaState = testUtils.getGameComponent().state();
             expect(actualState).toEqual(expectedState);
         }));
 

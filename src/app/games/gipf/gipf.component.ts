@@ -86,7 +86,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
         this.SPACE_SIZE = 40;
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
         const size: number = this.SPACE_SIZE * 1.50;
         const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
         const origineY: number = - this.hexagonWidth;
@@ -95,7 +95,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
         this.scores = MGPOptional.of(this.constructedState.getScores());
         this.moveToInitialCaptureOrPlacementPhase();
     }
@@ -307,7 +307,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
         this.captured = new MGPMap();
         this.moved = [];
         this.initialCaptures = [];

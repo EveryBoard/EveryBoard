@@ -60,9 +60,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: PenteState = this.getState();
+        const state: PenteState = this.state();
         this.board = state.board;
-        this.scores = MGPOptional.of(this.getState().captures);
+        this.scores = MGPOptional.of(this.state().captures);
         const config: PenteConfig = this.config();
         this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();
@@ -90,7 +90,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public getSpaceClass(coord: Coord): string[] {
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const owner: PlayerOrNone = this.state().getPieceAt(coord);
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));
         if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {

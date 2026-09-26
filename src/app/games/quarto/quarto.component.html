@@ -3,7 +3,7 @@
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
     <g transform="translate(5 5)">
-        @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+        @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
             <g [attr.transform]="getTranslationAt(coordAndContent.coord)">
                 <rect id="click-coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                       (click)="clickCoord(coordAndContent.coord)"

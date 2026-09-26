@@ -50,7 +50,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ReversiState = this.getState();
+        const state: ReversiState = this.state();
 
         this.board = state.getCopiedBoard();
 
@@ -60,7 +60,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
 
     protected override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
-        const player: Player = this.getState().getCurrentOpponent();
+        const player: Player = this.state().getCurrentOpponent();
         this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.config());
     }
 

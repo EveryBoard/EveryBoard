@@ -161,11 +161,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.board = this.state.board;
-        const scoreZero: number = this.state.getScoreOf(Player.ZERO);
-        const scoreOne: number = this.state.getScoreOf(Player.ONE);
-        this.countDown = this.state.countDown;
+        this.board = this.state().board;
+        const scoreZero: number = this.state().getScoreOf(Player.ZERO);
+        const scoreOne: number = this.state().getScoreOf(Player.ONE);
+        this.countDown = this.state().countDown;
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
     }
 
@@ -231,7 +230,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     private getLegalLandings(coord: Coord): Coord[] {
-        const firstPiece: MartianChessPiece = this.state.getPieceAt(coord);
+        const firstPiece: MartianChessPiece = this.state().getPieceAt(coord);
         let landingSquares: Coord[];
         if (firstPiece === MartianChessPiece.PAWN) {
             landingSquares = Ordinal.DIAGONALS.map((d: Ordinal) => coord.getNext(d));
@@ -243,7 +242,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return landingSquares.filter((c: Coord) => {
             const moveCreated: MGPFallible<MartianChessMove> = MartianChessMove.from(coord, c);
             if (moveCreated.isSuccess()) {
-                return this.rules.isLegal(moveCreated.get(), this.getState()).isSuccess();
+                return this.rules.isLegal(moveCreated.get(), this.state()).isSuccess();
             } else {
                 return false;
             }
@@ -257,7 +256,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             let steps: number = 1;
             while (MartianChessState.isOnBoard(landing) && steps <= until) {
                 landings.push(landing);
-                if (this.getState().getPieceAt(landing) === MartianChessPiece.EMPTY) {
+                if (this.state().getPieceAt(landing) === MartianChessPiece.EMPTY) {
                     landing = landing.getNext(d);
                     steps++;
                 } else {
@@ -291,8 +290,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     private isOneOfUsersPieces(coord: Coord): boolean {
-        return this.state.getPieceAt(coord) !== MartianChessPiece.EMPTY &&
-               this.state.isInPlayerTerritory(coord);
+        return this.state().getPieceAt(coord) !== MartianChessPiece.EMPTY &&
+               this.state().isInPlayerTerritory(coord);
     }
 
     public override cancelMoveAttempt(): void {
@@ -302,7 +301,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     @ClickHandler(() => `#clock-or-count-down-view`)
     public async onClockClick(): Promise<MGPValidation> {
-        const canCallTheClock: boolean = this.getState().countDown.isAbsent();
+        const canCallTheClock: boolean = this.state().countDown.isAbsent();
         if (canCallTheClock) {
             this.callTheClock = this.callTheClock === false;
         }

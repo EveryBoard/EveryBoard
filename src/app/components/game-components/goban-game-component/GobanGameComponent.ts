@@ -31,8 +31,8 @@ export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
-        const height: number = this.getHeight();
-        const width: number = this.getWidth();
+        const height: number = this.height();
+        const width: number = this.width();
         this.hoshis = GobanUtils.getHoshis(width, height);
     }
 

@@ -151,8 +151,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];
-        for (const coord of this.getState().occupiedSpaces()) {
-            const stack: HivePieceStack = this.getState().getAt(coord);
+        for (const coord of this.state().occupiedSpaces()) {
+            const stack: HivePieceStack = this.state().getAt(coord);
             const x: number = coord.x;
             const y: number = coord.y;
             for (let z: number = 0; z < stack.size(); z++) {
@@ -162,26 +162,26 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             }
         }
         this.ground = this.getGround();
-        this.remainingStacks = this.getState().remainingPieces.toListOfStacks();
-        this.canPass = HiveRules.get().shouldPass(this.getState());
+        this.remainingStacks = this.state().remainingPieces.toListOfStacks();
+        this.canPass = HiveRules.get().shouldPass(this.state());
         const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node());
         switch (gameStatus) {
             case GameStatus.ONGOING:
                 break;
             case GameStatus.DRAW:
-                this.highlight(this.getState().queenBeeLocation(Player.ZERO).get(), 'victory-stroke');
-                this.highlight(this.getState().queenBeeLocation(Player.ONE).get(), 'victory-stroke');
+                this.highlight(this.state().queenBeeLocation(Player.ZERO).get(), 'victory-stroke');
+                this.highlight(this.state().queenBeeLocation(Player.ONE).get(), 'victory-stroke');
                 break;
             default:
                 // Zero or one won
                 const winner: Player = gameStatus.winner as Player;
                 const loser: Player = winner.getOpponent();
-                this.highlight(this.getState().queenBeeLocation(loser).get(), 'victory-stroke');
+                this.highlight(this.state().queenBeeLocation(loser).get(), 'victory-stroke');
         }
     }
 
     private highlight(coord: Coord, stroke: string): void {
-        const stackSize: number = this.getState().getAt(coord).size();
+        const stackSize: number = this.state().getAt(coord).size();
         if (stackSize-1 in this.layers) {
             this.layers[stackSize-1].highlight(coord, stroke);
         }
@@ -204,11 +204,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
         const spaceForRemainingPieces: number = this.SPACE_SIZE * 5.5;
         let spaceForZero: number = 0;
-        if (this.getState().remainingPieces.getAny(Player.ZERO).isPresent()) {
+        if (this.state().remainingPieces.getAny(Player.ZERO).isPresent()) {
             spaceForZero = spaceForRemainingPieces;
         }
         let spaceForOne: number = 0;
-        if (this.getState().remainingPieces.getAny(Player.ONE).isPresent()) {
+        if (this.state().remainingPieces.getAny(Player.ONE).isPresent()) {
             spaceForOne = spaceForRemainingPieces;
         }
 
@@ -234,7 +234,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private getPieceCoords(): CoordSet {
         const coords: Coord[] = this
-            .getState()
+            .state()
             .pieces
             .getKeySet()
             .toList();
@@ -252,7 +252,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private getAllNeighbors(): CoordSet {
         let neighbors: CoordSet = new CoordSet();
         for (const piece of this.getPieceCoords()) {
-            const pieceNeighboors: Coord[] = this.getState().emptyNeighbors(piece);
+            const pieceNeighboors: Coord[] = this.state().emptyNeighbors(piece);
             neighbors = neighbors.unionList(pieceNeighboors);
         }
         if (neighbors.isEmpty()) {
@@ -318,7 +318,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public getRemainingPieceHighlightTransform(piece: HivePiece): string {
         const transform: Coord = this.getRemainingPieceTransformAsCoord(piece);
-        const size: number = this.getState().remainingPieces.getQuantity(piece);
+        const size: number = this.state().remainingPieces.getQuantity(piece);
         return this.getSVGTranslation(transform.x, transform.y - (this.PIECE_HEIGHT * size));
     }
 
@@ -339,7 +339,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (piece.owner === this.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
+        if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.state())) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
         }
 
@@ -349,7 +349,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.cancelMoveAttempt();
             this.selectedRemaining = MGPOptional.of(piece);
             this.clearHighlights();
-            const possibleDropLocations: Coord[] = HiveRules.get().getPossibleDropLocations(this.getState()).toList();
+            const possibleDropLocations: Coord[] = HiveRules.get().getPossibleDropLocations(this.state()).toList();
             for (const coord of possibleDropLocations) {
                 this.ground.highlightStroke(coord, 'clickable-stroke');
             }
@@ -370,7 +370,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async select(coord: Coord): Promise<MGPValidation> {
-        const state: HiveState = this.getState();
+        const state: HiveState = this.state();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
             const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord);
@@ -404,7 +404,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
-        const state: HiveState = this.getState();
+        const state: HiveState = this.state();
         const piece: HivePiece = stack.topPiece();
         if (piece.owner === state.getCurrentOpponent()) {
             // If the stack clicked is not owned by the player,
@@ -449,7 +449,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     private getNextPossibleCoords(coord: Coord): Coord[] {
-        const state: HiveState = this.getState();
+        const state: HiveState = this.state();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         const moves: Set<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
         if (topPiece.kind === 'Spider') {
@@ -470,7 +470,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             return this.chooseMove(move);
         }
         const validity: MGPValidation =
-            HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.getState());
+            HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.state());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }

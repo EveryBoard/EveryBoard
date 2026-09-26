@@ -96,7 +96,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public animationOngoing: boolean = false;
 
-    public state: S;
+    public readonly state: Signal<S>;
 
     private readonly gameViewBoxRevision: WritableSignal<number> = signal(0);
 
@@ -115,6 +115,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
         this.rules = gameInfo.rules as R;
         this.node = signal(this.rules.getInitialNode(defaultConfig));
+        this.state = computed(() => this.node().gameState);
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 
@@ -236,10 +237,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public getCurrentOpponent(): Player {
         return this.node().gameState.getCurrentOpponent();
-    }
-
-    public getState(): S {
-        return this.node().gameState;
     }
 
     public getPreviousState(): S {
