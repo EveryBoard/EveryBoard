@@ -435,7 +435,7 @@ describe('DiaballikComponent', () => {
         // Given a non-interactive component
         testUtils.expectElementToExist('#translationCount');
         testUtils.expectElementToExist('#passCount');
-        testUtils.getGameComponent().setInteractive(false);
+        testUtils.getGameComponent().interactive.set(false);
 
         // When displaying it
         // Then there should be no translation or pass count

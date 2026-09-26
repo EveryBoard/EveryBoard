@@ -57,7 +57,7 @@ describe('DemoCardWrapperComponent', () => {
         const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
         expect(gameComponent.getPointOfView()).toBe(Player.ZERO);
         expect(gameComponent.isPlayerTurn()).withContext('Player should not be a player but an observer').toBeFalse();
-        expect(gameComponent.isInteractive()).withContext('Interactivity should still be turned on').toBeTrue();
+        expect(gameComponent.interactive()).withContext('Interactivity should still be turned on').toBeTrue();
     }));
 
     it('should simulate clicks', fakeAsync(async() => {
