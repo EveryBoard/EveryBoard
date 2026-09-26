@@ -1,7 +1,8 @@
+import { ComparableObject } from 'lib/dist';
 import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
 
-export class Arrow<T extends Direction> {
+export class Arrow<T extends Direction> implements ComparableObject {
 
     public transformation: string;
     public startCenter: Coord;
@@ -20,6 +21,13 @@ export class Arrow<T extends Direction> {
         this.transformation = rotation + ' ' + translation;
         this.startCenter = this.getCenterAt(this.start);
         this.landingCenter = this.getCenterAt(this.landing);
+    }
+
+    public equals(other: Arrow<T>): boolean {
+        return other != null &&
+            this.start.equals(other.start) &&
+            this.landing.equals(other.landing) &&
+            this.dir.equals(other.dir);
     }
 
 }

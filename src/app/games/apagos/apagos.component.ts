@@ -59,8 +59,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
 
-    private readonly TMP: WritableSignal<ApagosConfig> = signal(ApagosRules.get().getDefaultRulesConfig());
-
     private readonly apagosState: WritableSignal<ApagosState> = signal(
         ApagosRules.get().getInitialState(this.config()),
     );
