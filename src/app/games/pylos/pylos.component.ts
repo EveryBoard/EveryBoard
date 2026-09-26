@@ -37,20 +37,20 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
     }
 
-    protected readonly constructedState: WritableSignal<PylosState> = signal(this.state());
+    private readonly constructedState: WritableSignal<PylosState> = signal(this.state());
 
-    protected readonly lastLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly lastStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly lastFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly lastSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly lastLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly lastStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly lastFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly lastSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
     protected readonly highCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
 
     protected readonly capturables: WritableSignal<Set<PylosCoord>> = signal(new Set());
 
-    protected readonly chosenStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly chosenStartingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
     protected readonly chosenLandingCoord: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly chosenFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
-    protected readonly chosenSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly chosenFirstCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
+    private readonly chosenSecondCapture: WritableSignal<MGPOptional<PylosCoord>> = signal(MGPOptional.empty());
 
     private readonly captured: WritableSignal<ReadonlyArray<PylosCoord>> = signal([]);
     private readonly lastMoved: WritableSignal<ReadonlyArray<PylosCoord>> = signal([]);

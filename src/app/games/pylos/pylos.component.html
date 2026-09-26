@@ -62,11 +62,12 @@
             </g>
         }
         @if (highCapture().isPresent()) {
-            <rect id="highCapture-{{ highCapture().get().x }}-{{ highCapture().get().y }}-{{ highCapture().get().z }}"
-                  [attr.width]="getPieceRadius(highCapture().get().z) * 2"
-                  [attr.height]="getPieceRadius(highCapture().get().z) * 2"
-                  [attr.x]="getPieceCxByCoord(highCapture().get()) - getPieceRadius(highCapture().get().z)"
-                  [attr.y]="getPieceCyByCoord(highCapture().get()) - getPieceRadius(highCapture().get().z)"
+            @let capture = highCapture().get();
+            <rect id="highCapture-{{ capture.x }}-{{ capture.y }}-{{ capture.z }}"
+                  [attr.width]="getPieceRadius(capture.z) * 2"
+                  [attr.height]="getPieceRadius(capture.z) * 2"
+                  [attr.x]="getPieceCxByCoord(capture) - getPieceRadius(capture.z)"
+                  [attr.y]="getPieceCyByCoord(capture) - getPieceRadius(capture.z)"
                   class="base captured-fill mid-stroke"/>
         }
         @if (chosenLandingCoord().isPresent()) {
