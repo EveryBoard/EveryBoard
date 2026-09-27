@@ -89,7 +89,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
         ], 0),
-        move: CheckersMove.fromCapture([new Coord(1, 4), new Coord(3, 2)]),
+        move: CheckersMove.fromCaptureList([new Coord(1, 4), new Coord(3, 2)]),
     },
     promotionTest: {
         state: OddCheckersState.of([
@@ -115,7 +115,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
     },
     returnToStartCaptureTest: {
         state: OddCheckersState.of([
@@ -128,7 +128,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
         ], 0),
-        move: CheckersMove.fromCapture([
+        move: CheckersMove.fromCaptureList([
             new Coord(5, 4),
             new Coord(3, 2),
             new Coord(1, 4),
@@ -147,7 +147,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(0, 3)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(0, 3)]),
     },
     invalidThirdMoveTest: {
         start: new Coord(1, 4),
@@ -186,7 +186,7 @@ describe('BashniComponent', () => {
         await testUtils.setupState(state);
 
         // When doing it and using the king's ability to jump
-        const move: CheckersMove = CheckersMove.fromCapture([
+        const move: CheckersMove = CheckersMove.fromCaptureList([
             new Coord(5, 2),
             new Coord(3, 0),
             new Coord(0, 3),
@@ -213,7 +213,7 @@ describe('BashniComponent', () => {
         await testUtils.setupState(state);
 
         // When choosing the shorter capture: landing at (1, 4)
-        const move: CheckersMove = CheckersMove.fromCapture([
+        const move: CheckersMove = CheckersMove.fromCaptureList([
             new Coord(5, 0),
             new Coord(1, 4),
         ]);

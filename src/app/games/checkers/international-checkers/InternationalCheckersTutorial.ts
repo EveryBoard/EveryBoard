@@ -45,7 +45,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, U, _, U, _, U, _, U, _, U],
                 [U, _, U, _, U, _, U, _, U, _],
             ], 4),
-            CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 3)]),
+            CheckersMove.fromCaptureList([new Coord(0, 5), new Coord(2, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ).withPreviousMove(CheckersMove.fromStep(new Coord(2, 3), new Coord(1, 4))),
         TutorialStep.anyMove(
@@ -63,7 +63,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, U, _, U, _, U, _, U, _, U],
                 [U, _, U, _, U, _, U, _, U, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(7, 4), new Coord(9, 6)]),
+            CheckersMove.fromCaptureList([new Coord(7, 4), new Coord(9, 6)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -81,7 +81,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 7), new Coord(8, 5), new Coord(6, 3)]),
+            CheckersMove.fromCaptureList([new Coord(6, 7), new Coord(8, 5), new Coord(6, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -99,7 +99,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(8, 3), new Coord(6, 1)]),
+            CheckersMove.fromCaptureList([new Coord(6, 5), new Coord(8, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
@@ -164,7 +164,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(3, 2), new Coord(5, 0), new Coord(7, 2)]),
+            CheckersMove.fromCaptureList([new Coord(3, 2), new Coord(5, 0), new Coord(7, 2)]),
             $localize`Observe how your piece did not get a promotion despite having reached the last line.`,
         ),
         TutorialStep.anyMove(
@@ -182,7 +182,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 20),
-            CheckersMove.fromCapture([
+            CheckersMove.fromCaptureList([
                 new Coord(9, 6),
                 new Coord(6, 3),
                 new Coord(3, 6),

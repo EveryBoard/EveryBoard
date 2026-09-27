@@ -35,7 +35,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         new Coord(6, 4),
     ],
     firstPlayerSecondClicks: [new Coord(1, 3)],
-    secondMove: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
+    secondMove: CheckersMove.fromCaptureList([new Coord(2, 2), new Coord(0, 4)]),
     promotedPieceTest: {
         state: EvenCheckersState.of([
             [__, __, __, __, __, __, __],
@@ -91,7 +91,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
             [__, __, __, _U, __, _U, __],
             [_U, __, __, __, _U, __, _U],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 2), new Coord(0, 4)]),
     },
     promotionTest: {
         state: EvenCheckersState.of([
@@ -115,7 +115,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
             [__, __, __, __, __, _U, __],
             [__, __, __, __, __, __, __],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
     },
     returnToStartCaptureTest: {
         state: EvenCheckersState.of([
@@ -127,7 +127,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
             [__, __, __, _V, __, _V, __],
             [__, __, __, __, __, __, __],
         ], 0),
-        move: CheckersMove.fromCapture([
+        move: CheckersMove.fromCaptureList([
             new Coord(6, 4),
             new Coord(4, 2),
             new Coord(2, 4),
@@ -145,7 +145,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
             [__, __, __, __, __, _U, __],
             [__, __, __, __, __, __, __],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 2), new Coord(0, 4)]),
     },
     invalidThirdMoveTest: {
         start: new Coord(2, 4),
@@ -215,7 +215,7 @@ describe('LascaComponent', () => {
 
             // When doing the last capture
             const captures: Coord[] = [new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures);
+            const move: CheckersMove = CheckersMove.fromCaptureList(captures);
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-6', move);
