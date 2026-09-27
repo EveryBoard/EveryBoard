@@ -22,14 +22,14 @@ func TestConfigRoomFlow(t *testing.T) {
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	// Create the initial config room
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 	assert.Equal(t, model.StatusCreated, configRoom.Status, "created config room is not as expected")
 	assert.Equal(t, creator, configRoom.Creator, "created config room is not as expected")
 	assert.Equal(t, gameName, configRoom.GameName, "created config room is not as expected")
 
 	// Add a candidate
-	err = store.AddCandidate(configRoom, opponent, 42)
+	err = store.AddCandidate(configRoom, opponent, 42, nil)
 	require.NoError(t, err, "cannot add candidate")
 
 	// Select an opponent
@@ -104,13 +104,49 @@ func TestConfigRoomFlow(t *testing.T) {
 	require.Nil(t, configRoom, "config room still exists but should not")
 }
 
+func TestBotIdentifiersArePersistedInConfigRoomAndCandidate(t *testing.T) {
+	// Given a database and identifiers for a bot creator and candidate
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
+	candidate := model.MinimalUser{ID: "candidate", Name: "candidate", IsBot: true}
+	creatorBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Creator bot",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	candidateBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Candidate bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+
+	// When creating the config room and adding the candidate
+	configRoom, err := store.CreateConfigRoom(creator, "P4", creatorBotIdentifier)
+	require.NoError(t, err, "cannot create config room")
+	err = store.AddCandidate(configRoom, candidate, 42, candidateBotIdentifier)
+	require.NoError(t, err, "cannot add candidate")
+
+	// Then both identifiers should be restored from the database
+	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot get config room")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
+	var persistedCandidates []model.Candidate
+	err = store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+		persistedCandidates = append(persistedCandidates, candidate)
+		return nil
+	})
+	require.NoError(t, err, "cannot get candidates")
+	assert.Equal(t, creatorBotIdentifier, persistedConfigRoom.CreatorBotIdentifier)
+	require.Len(t, persistedCandidates, 1)
+	assert.Equal(t, candidateBotIdentifier, persistedCandidates[0].BotIdentifier)
+}
+
 func TestSelectOpponentRequiresCandidate(t *testing.T) {
 	// Given a config room with no candidates
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, "Go")
+	configRoom, err := store.CreateConfigRoom(creator, "Go", nil)
 	require.NoError(t, err, "cannot create config room")
 
 	// When selecting an opponent that never joined as a candidate
@@ -130,9 +166,9 @@ func TestRematchForCreator(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -163,9 +199,9 @@ func TestRematchForOpponent(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -208,14 +244,14 @@ func TestIterateOverConfigrooms(t *testing.T) {
 
 	// And when we add one and iterate again
 	creator1 := model.MinimalUser{ID: "foo", Name: "foo"}
-	_, err = store.CreateConfigRoom(creator1, gameName)
+	_, err = store.CreateConfigRoom(creator1, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 	// Then there should be one
 	expectConfigRooms(1)
 
 	// And when we add another one
 	creator2 := model.MinimalUser{ID: "bar", Name: "bar"}
-	_, err = store.CreateConfigRoom(creator2, gameName)
+	_, err = store.CreateConfigRoom(creator2, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 	// Then there should be two
 	expectConfigRooms(2)
@@ -227,16 +263,16 @@ func TestCandidatesFlow(t *testing.T) {
 	require.NoError(t, err, "cannot initialize db")
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 
 	// When doing an usual flow with candidates
 	// Then it should work as expected
 	candidate1 := model.MinimalUser{ID: "bar", Name: "bar"}
 	candidate2 := model.MinimalUser{ID: "baz", Name: "baz"}
-	err = store.AddCandidate(configRoom, candidate1, 0)
+	err = store.AddCandidate(configRoom, candidate1, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
-	err = store.AddCandidate(configRoom, candidate2, 0)
+	err = store.AddCandidate(configRoom, candidate2, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 
 	expectCandidates := func(count int) {
@@ -261,11 +297,11 @@ func TestPostgresApplyToCandidatesShouldAllowQueriesInCallback(t *testing.T) {
 	database := postgresTestStore(t)
 	creator := model.MinimalUser{ID: "creator", Name: "creator"}
 	candidate := model.MinimalUser{ID: "candidate", Name: "candidate"}
-	configRoom, err := database.CreateConfigRoom(creator, "Abalone")
+	configRoom, err := database.CreateConfigRoom(creator, "Abalone", nil)
 	require.NoError(t, err, "cannot create config room")
 	candidateElo, err := database.GetElo(configRoom.GameName, candidate)
 	require.NoError(t, err, "cannot create candidate Elo")
-	err = database.AddCandidate(configRoom, candidate, candidateElo.CurrentElo)
+	err = database.AddCandidate(configRoom, candidate, candidateElo.CurrentElo, nil)
 	require.NoError(t, err, "cannot add candidate")
 
 	// When querying the database from an ApplyToCandidates callback

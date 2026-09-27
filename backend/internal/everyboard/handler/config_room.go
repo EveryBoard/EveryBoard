@@ -43,7 +43,7 @@ func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *
 				if err != nil {
 					return err
 				}
-				if err = store.AddCandidate(configRoom, h.user, elo.CurrentElo); err != nil {
+				if err = store.AddCandidate(configRoom, h.user, elo.CurrentElo, botIdentifier); err != nil {
 					return err
 				}
 				currentGame := &model.CurrentGame{

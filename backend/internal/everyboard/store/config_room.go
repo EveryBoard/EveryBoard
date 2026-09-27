@@ -19,24 +19,25 @@ func (s *GORMStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error
 	return &configRoom, wrapError("GetConfigRoom", result.Error)
 }
 
-func (s *GORMStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
+func (s *GORMStore) CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {
 		return nil, err
 	}
 
 	configRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		Creator:              creator,
+		CreatorElo:           creatorElo.CurrentElo,
+		CreatorBotIdentifier: botIdentifier,
+		FirstPlayer:          model.FirstPlayerRandom,
+		ChosenOpponent:       nil,
+		ChosenOpponentElo:    nil,
+		Status:               model.StatusCreated,
+		GameType:             model.GameTypeStandard,
+		MoveDuration:         model.StandardMoveDuration,
+		GameDuration:         model.StandardGameDuration,
+		RulesConfig:          nil,
+		GameName:             gameName,
 	}
 
 	result := s.db.Create(&configRoom)
@@ -165,11 +166,12 @@ func (s *GORMStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 	return wrapError("ApplyToConfigRooms", applyToQueryResult(s.db, result, action))
 }
 
-func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	result := s.db.Create(&model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:        configRoom.ID,
+		User:          user,
+		Elo:           elo,
+		BotIdentifier: botIdentifier,
 	})
 	return wrapError("AddCandidate", result.Error)
 }

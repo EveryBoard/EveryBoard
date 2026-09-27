@@ -237,7 +237,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 				// Small delay to increase overlapping
 				time.Sleep(10 * time.Millisecond)
 
-				cr, err := s.CreateConfigRoom(user, gameName)
+				cr, err := s.CreateConfigRoom(user, gameName, nil)
 				if err != nil {
 					return err
 				}

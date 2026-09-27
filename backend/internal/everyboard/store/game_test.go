@@ -18,9 +18,9 @@ func TestDBGameFlow(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -77,9 +77,9 @@ func TestManyGameEvents(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -119,9 +119,9 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -151,9 +151,9 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0, nil)
 	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
 	require.NoError(t, err, "cannot select opponent")
@@ -182,7 +182,7 @@ func TestGameCreationWithoutOpponentFails(t *testing.T) {
 	require.NoError(t, err, "cannot initialize db")
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
-	configRoom, err := store.CreateConfigRoom(creator, gameName)
+	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 	configProposal := model.ConfigProposal{
 		GameType:     model.GameTypeCustom,
@@ -218,9 +218,9 @@ func TestListGamesNewestFirst(t *testing.T) {
 
 	players := []model.MinimalUser{{ID: "foo", Name: "foo"}, {ID: "bar", Name: "bar"}}
 	for _, beginning := range []int64{10, 20} {
-		configRoom, createErr := store.CreateConfigRoom(players[0], "P4")
+		configRoom, createErr := store.CreateConfigRoom(players[0], "P4", nil)
 		require.NoError(t, createErr, "cannot create config room")
-		require.NoError(t, store.AddCandidate(configRoom, players[1], 0), "cannot add candidate")
+		require.NoError(t, store.AddCandidate(configRoom, players[1], 0, nil), "cannot add candidate")
 		require.NoError(t, store.SelectOpponent(configRoom, players[1]), "cannot select opponent")
 		_, createErr = store.CreateGame(configRoom, beginning, true)
 		require.NoError(t, createErr, "cannot create game")

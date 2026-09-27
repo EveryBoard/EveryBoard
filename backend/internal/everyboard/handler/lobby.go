@@ -72,7 +72,7 @@ func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIden
 			return apperror.ErrorAlreadySubscribed
 		}
 
-		configRoom, err = store.CreateConfigRoom(h.user, gameName)
+		configRoom, err = store.CreateConfigRoom(h.user, gameName, botIdentifier)
 		if err != nil {
 			return err
 		}

@@ -4,7 +4,7 @@ import "github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 
 type ConfigRoomStore interface {
 	GetConfigRoom(gameID model.GameID) (*model.ConfigRoom, error)
-	CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error)
+	CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error)
 	DeleteConfigRoom(configRoom *model.ConfigRoom) error
 	SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error
 	RemoveOpponent(configRoom *model.ConfigRoom) error
@@ -14,7 +14,7 @@ type ConfigRoomStore interface {
 	FinishConfigRoom(configRoom *model.ConfigRoom) error
 	CreateRematch(configRoom *model.ConfigRoom, creator model.MinimalUser, game *model.Game) (*model.ConfigRoom, error)
 	ApplyToConfigRooms(action func(model.ConfigRoom) error) error
-	AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error
+	AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error
 	DeleteCandidate(configRoom *model.ConfigRoom, uid string) error
 	ApplyToCandidates(gameID model.GameID, action func(model.Candidate) error) error
 }

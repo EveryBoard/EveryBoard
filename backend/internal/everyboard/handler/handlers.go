@@ -65,6 +65,9 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 		return withMessageArgument(messageData, "message", h.handleChatSend)
 	case "Create":
 		return withMessagePayload(messageData, func(payload createPayload) error {
+			if payload.GameName == "" {
+				return apperror.ErrorInvalidData
+			}
 			return h.handleCreateGame(payload.GameName, payload.BotIdentifier)
 		})
 	case "SelectOpponent":

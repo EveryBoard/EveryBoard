@@ -165,25 +165,26 @@ func (s *FakeStore) ListGames() ([]model.Game, error) {
 	return games, nil
 }
 
-func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
+func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {
 		return nil, err
 	}
 	id := s.allocateID()
 	configRoom := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		ID:                   id,
+		Creator:              creator,
+		CreatorElo:           creatorElo.CurrentElo,
+		CreatorBotIdentifier: botIdentifier,
+		FirstPlayer:          model.FirstPlayerRandom,
+		ChosenOpponent:       nil,
+		ChosenOpponentElo:    nil,
+		Status:               model.StatusCreated,
+		GameType:             model.GameTypeStandard,
+		MoveDuration:         model.StandardMoveDuration,
+		GameDuration:         model.StandardGameDuration,
+		RulesConfig:          nil,
+		GameName:             gameName,
 	}
 	s.ConfigRooms[id] = configRoom
 	return configRoom, nil
@@ -289,11 +290,12 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 	return nil
 }
 
-func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:        configRoom.ID,
+		User:          user,
+		Elo:           elo,
+		BotIdentifier: botIdentifier,
 	})
 	return nil
 }

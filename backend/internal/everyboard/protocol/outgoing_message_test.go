@@ -1,10 +1,11 @@
 package protocol
 
 import (
-	"github.com/stretchr/testify/require"
+	"encoding/json"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/require"
 )
 
 func ExpectMarshallingToWorkAndTagToBe(t *testing.T, original OutgoingMessage, expectedJSON string, expectedTag string) {
@@ -61,7 +62,18 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":null,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+
+	configRoom.CreatorBotIdentifier = &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	ExpectMarshallingToWorkAndTagToBe(t,
+		ConfigRoomUpdateMessage{
+			GameID:     42,
+			ConfigRoom: configRoom,
+		},
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":{"displayName":"Perfect P4","parameters":{"version":1}},"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		ConfigRoomDeletedMessage{
