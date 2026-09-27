@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { EnumConfig } from '../../components/wrapper-components/rules-configuration/EnumConfig';
 import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';

@@ -5,9 +5,9 @@ import { NumberConfig } from '../../../components/wrapper-components/rules-confi
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
+import { TopologicReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
 
-export class ToricReversiRules extends AbstractReversiRules {
+export class ToricReversiRules extends TopologicReversiRules {
 
     private static singleton: MGPOptional<ToricReversiRules> = MGPOptional.empty();
 

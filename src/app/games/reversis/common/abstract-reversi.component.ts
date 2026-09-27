@@ -6,13 +6,13 @@ import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
-import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
+import { TopologicReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
 import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiState } from './ReversiState';
 
-export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
+export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     extends RectangularGameComponent<R,
                                      ReversiMove,
                                      ReversiState,
