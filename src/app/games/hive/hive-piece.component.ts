@@ -3,7 +3,7 @@ import { AfterContentChecked, Component, input, InputSignal } from '@angular/cor
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { HivePiece } from './HivePiece';
 

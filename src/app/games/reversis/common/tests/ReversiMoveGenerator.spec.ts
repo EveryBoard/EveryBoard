@@ -3,7 +3,7 @@ import { PlayerOrNone } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ToricReversiRules } from '../../toric-reversi/ToricReversiRules';
-import { AbstractReversiRules, ReversiConfig, ReversiNode } from '../AbstractReversiRules';
+import { TopologicReversiRules, ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 import { ReversiState } from '../ReversiState';
@@ -17,7 +17,7 @@ describe('ReversiMoveGenerator', () => {
     let moveGenerator: ReversiMoveGenerator;
     let defaultConfig: ReversiConfig;
 
-    const rules: AbstractReversiRules[] = [
+    const rules: TopologicReversiRules[] = [
         ReversiRules.get(),
         ToricReversiRules.get(),
     ];

@@ -1,5 +1,5 @@
 import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 interface Limits {
     minX: number;
@@ -24,6 +24,16 @@ export class ViewBox {
         const width: number = strokeWidth + limits.maxX - limits.minX;
         const height: number = strokeWidth + limits.maxY - limits.minY;
         return new ViewBox(left, up, width, height);
+    }
+
+    public static fromCoords(coords: Coord[]): ViewBox {
+        const limits: Limits = ViewBox.getLimits(coords);
+        return ViewBox.fromLimits(
+            limits.minX,
+            limits.maxX,
+            limits.minY,
+            limits.maxY,
+        );
     }
 
     private static getLimits(coords: Coord[]): Limits {

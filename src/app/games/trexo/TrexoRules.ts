@@ -4,7 +4,7 @@ import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
@@ -29,8 +29,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private static getOwner(piece: TrexoPieceStack): PlayerOrNone {
         return piece.getOwner();
     }
-    public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
-        new NInARowHelper(TrexoRules.getOwner, 5);
+    public static readonly TREXO_HELPER: OrdinalNInARowHelper<TrexoPieceStack> =
+        new OrdinalNInARowHelper(TrexoRules.getOwner, 5);
 
     public static getSquareScore(state: TrexoState, coord: Coord): number {
         return TrexoRules.TREXO_HELPER.getSquareScore(state, coord);

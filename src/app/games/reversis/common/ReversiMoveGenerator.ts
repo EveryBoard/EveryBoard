@@ -1,12 +1,12 @@
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 
-import { ReversiNode, ReversiMoveWithSwitched, ReversiConfig, AbstractReversiRules } from './AbstractReversiRules';
+import { ReversiNode, ReversiMoveWithSwitched, ReversiConfig, TopologicReversiRules } from './AbstractReversiRules';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 
 export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
 
-    public constructor(public readonly rules: AbstractReversiRules) {
+    public constructor(public readonly rules: TopologicReversiRules) {
         super();
     }
 
