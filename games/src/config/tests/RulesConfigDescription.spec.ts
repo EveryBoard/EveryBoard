@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable max-lines-per-function */
+import { MGPMap } from 'lib/dist';
 import { AbaloneRules } from '../../games/abalone/AbaloneRules';
 import { ApagosRules } from '../../games/apagos/ApagosRules';
 import { BashniRules } from '../../games/checkers/bashni/BashniRules';
@@ -53,64 +54,64 @@ import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../Rule
 import { RulesConfigDescription } from '../RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../RulesConfigDescriptionLocalizable';
 
-const partialGameInfo: { urlName: string; rules: AbstractRules }[] = [
-    { urlName: 'P4',                    rules: P4Rules.get()                    },
-    { urlName: 'Awale',                 rules: AwaleRules.get()                 },
-    { urlName: 'Quarto',                rules: QuartoRules.get()                },
-    { urlName: 'Tablut',                rules: TablutRules.get()                },
-    { urlName: 'Reversi',               rules: ReversiRules.get()               },
-    { urlName: 'Go',                    rules: GoRules.get()                    },
-    { urlName: 'Encapsule',             rules: EncapsuleRules.get()             },
-    { urlName: 'Siam',                  rules: SiamRules.get()                  },
-    { urlName: 'Sahara',                rules: SaharaRules.get()                },
-    { urlName: 'Pylos',                 rules: PylosRules.get()                 },
-    { urlName: 'Kamisado',              rules: KamisadoRules.get()              },
-    { urlName: 'Quixo',                 rules: QuixoRules.get()                 },
-    { urlName: 'Dvonn',                 rules: DvonnRules.get()                 },
-    { urlName: 'Epaminondas',           rules: EpaminondasRules.get()           },
-    { urlName: 'Gipf',                  rules: GipfRules.get()                  },
-    { urlName: 'Coerceo',               rules: CoerceoRules.get()               },
-    { urlName: 'Six',                   rules: SixRules.get()                   },
-    { urlName: 'LinesOfAction',         rules: LinesOfActionRules.get()         },
-    { urlName: 'Pentago',               rules: PentagoRules.get()               },
-    { urlName: 'Abalone',               rules: AbaloneRules.get()               },
-    { urlName: 'Yinsh',                 rules: YinshRules.get()                 },
-    { urlName: 'Apagos',                rules: ApagosRules.get()                },
-    { urlName: 'Diam',                  rules: DiamRules.get()                  },
-    { urlName: 'Brandhub',              rules: BrandhubRules.get()              },
-    { urlName: 'Conspirateurs',         rules: ConspirateursRules.get()         },
-    { urlName: 'Lodestone',             rules: LodestoneRules.get()             },
-    { urlName: 'MartianChess',          rules: MartianChessRules.get()          },
-    { urlName: 'Hnefatafl',             rules: HnefataflRules.get()             },
-    { urlName: 'Hive',                  rules: HiveRules.get()                  },
-    { urlName: 'Trexo',                 rules: TrexoRules.get()                 },
-    { urlName: 'Lasca',                 rules: LascaRules.get()                 },
-    { urlName: 'ConnectSix',            rules: ConnectSixRules.get()            },
-    { urlName: 'Pente',                 rules: PenteRules.get()                 },
-    { urlName: 'Teeko',                 rules: TeekoRules.get()                 },
-    { urlName: 'Kalah',                 rules: KalahRules.get()                 },
-    { urlName: 'Diaballik',             rules: DiaballikRules.get()             },
-    { urlName: 'BaAwa',                 rules: BaAwaRules.get()                 },
-    { urlName: 'Squarz',                rules: SquarzRules.get()                },
-    { urlName: 'Hexodia',               rules: HexodiaRules.get()               },
-    { urlName: 'TriangularGo',          rules: TriangularGoRules.get()          },
-    { urlName: 'InternationalCheckers', rules: InternationalCheckersRules.get() },
-    { urlName: 'QuebecCastles',         rules: QuebecCastlesRules.get()         },
-    { urlName: 'HexagonalGo',           rules: HexagonalGoRules.get()           },
-    { urlName: 'ToricReversi',          rules: ToricReversiRules.get()          },
-    { urlName: 'Bashni',                rules: BashniRules.get()                },
-    { urlName: 'ZoomedGo',              rules: ZoomedGoRules.get()              },
-];
+const gameRulesByURL: MGPMap<string, AbstractRules> = new MGPMap<string, AbstractRules>([
+    { key: 'P4',                    value: P4Rules.get()                    },
+    { key: 'Awale',                 value: AwaleRules.get()                 },
+    { key: 'Quarto',                value: QuartoRules.get()                },
+    { key: 'Tablut',                value: TablutRules.get()                },
+    { key: 'Reversi',               value: ReversiRules.get()               },
+    { key: 'Go',                    value: GoRules.get()                    },
+    { key: 'Encapsule',             value: EncapsuleRules.get()             },
+    { key: 'Siam',                  value: SiamRules.get()                  },
+    { key: 'Sahara',                value: SaharaRules.get()                },
+    { key: 'Pylos',                 value: PylosRules.get()                 },
+    { key: 'Kamisado',              value: KamisadoRules.get()              },
+    { key: 'Quixo',                 value: QuixoRules.get()                 },
+    { key: 'Dvonn',                 value: DvonnRules.get()                 },
+    { key: 'Epaminondas',           value: EpaminondasRules.get()           },
+    { key: 'Gipf',                  value: GipfRules.get()                  },
+    { key: 'Coerceo',               value: CoerceoRules.get()               },
+    { key: 'Six',                   value: SixRules.get()                   },
+    { key: 'LinesOfAction',         value: LinesOfActionRules.get()         },
+    { key: 'Pentago',               value: PentagoRules.get()               },
+    { key: 'Abalone',               value: AbaloneRules.get()               },
+    { key: 'Yinsh',                 value: YinshRules.get()                 },
+    { key: 'Apagos',                value: ApagosRules.get()                },
+    { key: 'Diam',                  value: DiamRules.get()                  },
+    { key: 'Brandhub',              value: BrandhubRules.get()              },
+    { key: 'Conspirateurs',         value: ConspirateursRules.get()         },
+    { key: 'Lodestone',             value: LodestoneRules.get()             },
+    { key: 'MartianChess',          value: MartianChessRules.get()          },
+    { key: 'Hnefatafl',             value: HnefataflRules.get()             },
+    { key: 'Hive',                  value: HiveRules.get()                  },
+    { key: 'Trexo',                 value: TrexoRules.get()                 },
+    { key: 'Lasca',                 value: LascaRules.get()                 },
+    { key: 'ConnectSix',            value: ConnectSixRules.get()            },
+    { key: 'Pente',                 value: PenteRules.get()                 },
+    { key: 'Teeko',                 value: TeekoRules.get()                 },
+    { key: 'Kalah',                 value: KalahRules.get()                 },
+    { key: 'Diaballik',             value: DiaballikRules.get()             },
+    { key: 'BaAwa',                 value: BaAwaRules.get()                 },
+    { key: 'Squarz',                value: SquarzRules.get()                },
+    { key: 'Hexodia',               value: HexodiaRules.get()               },
+    { key: 'TriangularGo',          value: TriangularGoRules.get()          },
+    { key: 'InternationalCheckers', value: InternationalCheckersRules.get() },
+    { key: 'QuebecCastles',         value: QuebecCastlesRules.get()         },
+    { key: 'HexagonalGo',           value: HexagonalGoRules.get()           },
+    { key: 'ToricReversi',          value: ToricReversiRules.get()          },
+    { key: 'Bashni',                value: BashniRules.get()                },
+    { key: 'ZoomedGo',              value: ZoomedGoRules.get()              },
+]);
 
 describe(`RulesConfigDescriptions`, () => {
 
-    for (const gameInfo of partialGameInfo) {
+    for (const urlName of gameRulesByURL.getKeyList()) {
 
         const rulesConfigDescription: RulesConfigDescription<RulesConfig> =
-            gameInfo.rules.getRulesConfigDescription();
+            gameRulesByURL.get(urlName).get().getRulesConfigDescription();
 
         if (rulesConfigDescription.getFields().length > 0) {
-            it(`should have internationalized fields of ${ gameInfo.urlName }`, () => {
+            it(`should have internationalized fields of ${ urlName }`, () => {
                 for (const field of rulesConfigDescription.getFields()) {
                     const defaultConfigDescription: DefaultConfigDescription =
                         rulesConfigDescription.defaultConfigDescription;
@@ -119,7 +120,7 @@ describe(`RulesConfigDescriptions`, () => {
             });
         }
 
-        it(`should have an internationalized name for each standard config of ${ gameInfo.urlName }`, () => {
+        it(`should have an internationalized name for each standard config of ${ urlName }`, () => {
             for (const standardConfig of rulesConfigDescription.getStandardConfigs()) {
                 expect(standardConfig.name().length).toBeGreaterThan(0);
             }
