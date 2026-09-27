@@ -195,7 +195,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     private getInteractivePlayerPieces(): Coord[] {
-        if (this.interactive === false) {
+        if (this.interactive() === false) {
             return [];
         }
         const coords: Coord[] = [];
