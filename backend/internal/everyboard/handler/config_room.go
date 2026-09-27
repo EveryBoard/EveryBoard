@@ -8,7 +8,8 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 
-func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID) error {
+func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *model.BotIdentifier) error {
+	// TODO: take BotIdentifier into account
 	uid := h.user.ID
 	// Subscribe before the transaction so that addBroadcastToConfigRoom below includes this connection.
 	// If the transaction fails, we unsubscribe.

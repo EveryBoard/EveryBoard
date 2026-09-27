@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -10,8 +9,84 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
+
+func TestSubscribeConfigRoomPayload(t *testing.T) {
+	gameIDJSON, err := model.GameID(42).MarshalJSON()
+	require.NoError(t, err)
+
+	tests := []struct {
+		name                  string
+		messageData           map[string]json.RawMessage
+		expectedBotIdentifier *model.BotIdentifier
+		expectedError         error
+	}{
+		{
+			name:                  "OmittedBotIdentifierIsNil",
+			messageData:           map[string]json.RawMessage{"gameId": gameIDJSON},
+			expectedBotIdentifier: nil,
+			expectedError:         nil,
+		},
+		{
+			name: "ExplicitNullBotIdentifierIsNil",
+			messageData: map[string]json.RawMessage{
+				"gameId":        gameIDJSON,
+				"botIdentifier": json.RawMessage(`null`),
+			},
+			expectedBotIdentifier: nil,
+			expectedError:         nil,
+		},
+		{
+			name: "ValidBotIdentifierIsDecoded",
+			messageData: map[string]json.RawMessage{
+				"gameId": gameIDJSON,
+				"botIdentifier": json.RawMessage(
+					`{"displayName":"Perfect P4","parameters":{"version":"1.0"}}`,
+				),
+			},
+			expectedBotIdentifier: &model.BotIdentifier{
+				DisplayName: "Perfect P4",
+				Parameters:  json.RawMessage(`{"version":"1.0"}`),
+			},
+			expectedError: nil,
+		},
+		{
+			name: "MalformedBotIdentifierIsRejected",
+			messageData: map[string]json.RawMessage{
+				"gameId":        gameIDJSON,
+				"botIdentifier": json.RawMessage(`{"displayName":42,"parameters":{}}`),
+			},
+			expectedBotIdentifier: nil,
+			expectedError:         apperror.ErrorInvalidData,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given message data with an optional bot identifier
+			actual := subscribeConfigRoomPayload{
+				GameID:        0,
+				BotIdentifier: nil,
+			}
+
+			// When decoding the subscription payload
+			err := withMessagePayload(test.messageData, func(payload subscribeConfigRoomPayload) error {
+				actual = payload
+				return nil
+			})
+
+			// Then the identifier should be decoded or rejected as expected
+			assert.Equal(t, test.expectedError, err)
+			if test.expectedError == nil {
+				assert.Equal(t, model.GameID(42), actual.GameID)
+				assert.Equal(t, test.expectedBotIdentifier, actual.BotIdentifier)
+			}
+		})
+	}
+}
 
 func TestHandlersDirectEdgeCases(t *testing.T) {
 	store, _ := store.InitDatabase(sqlite.Open(":memory:"))
