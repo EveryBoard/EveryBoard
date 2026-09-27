@@ -13,6 +13,11 @@ type subscribeConfigRoomPayload struct {
 	BotIdentifier *model.BotIdentifier `json:"botIdentifier"`
 }
 
+type createPayload struct {
+	GameName      string               `json:"gameName"`
+	BotIdentifier *model.BotIdentifier `json:"botIdentifier"`
+}
+
 func withMessageArgument[T any](
 	messageData map[string]json.RawMessage,
 	key string,
@@ -59,7 +64,9 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 	case "ChatSend":
 		return withMessageArgument(messageData, "message", h.handleChatSend)
 	case "Create":
-		return withMessageArgument(messageData, "gameName", h.handleCreateGame)
+		return withMessagePayload(messageData, func(payload createPayload) error {
+			return h.handleCreateGame(payload.GameName, payload.BotIdentifier)
+		})
 	case "SelectOpponent":
 		return withMessageArgument(messageData, "opponent", h.handleSelectOpponent)
 	case "ProposeConfig":

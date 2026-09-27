@@ -9,8 +9,12 @@ import (
 )
 
 func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *model.BotIdentifier) error {
-	// TODO: take BotIdentifier into account
 	uid := h.user.ID
+	err := h.validateBotIdentifier(botIdentifier)
+	if err != nil {
+		return err
+	}
+
 	// Subscribe before the transaction so that addBroadcastToConfigRoom below includes this connection.
 	// If the transaction fails, we unsubscribe.
 	if !h.subscriptions.Subscribe(h.connection, uid, gameID, session.SubscriptionToConfigRoom) {
@@ -18,7 +22,7 @@ func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *
 	}
 
 	var buf MsgBuffer
-	err := h.store.Transaction(func(store store.Store) error {
+	err = h.store.Transaction(func(store store.Store) error {
 		configRoom, err := store.GetConfigRoom(gameID)
 		if err != nil {
 			return err

@@ -39,14 +39,28 @@ func (h *Handler) handleSubscribeLobby() error {
 	return nil
 }
 
-func (h *Handler) handleCreateGame(gameName string) error {
+func (h *Handler) validateBotIdentifier(botIdentifier *model.BotIdentifier) error {
+	if !h.user.IsBot && botIdentifier != nil {
+		return apperror.ErrorInvalidData // user is not a bot but declares a bot identifier
+	}
+	if h.user.IsBot && botIdentifier == nil {
+		return apperror.ErrorInvalidData // user is a bot but does not declare a bot identifier
+	}
+	return nil
+}
+
+func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIdentifier) error {
+	err := h.validateBotIdentifier(botIdentifier)
+	if err != nil {
+		return err
+	}
 	if h.subscriptions.IsSubscribed(h.user.ID) {
 		return apperror.ErrorAlreadySubscribed
 	}
 
 	var configRoom *model.ConfigRoom
 	var buf MsgBuffer
-	err := h.store.Transaction(func(store store.Store) error {
+	err = h.store.Transaction(func(store store.Store) error {
 		// Contrary to other places where checking subscription is enough, we need to
 		// check that the creator does not have a current game. They could have
 		// created a game, left, and be trying to create a new one.
