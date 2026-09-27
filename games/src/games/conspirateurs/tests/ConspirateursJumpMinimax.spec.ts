@@ -1,12 +1,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursMove } from '../ConspirateursMove';
 import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
 import { ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ConspirateursJumpMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public constructor() {

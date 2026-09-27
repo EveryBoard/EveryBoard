@@ -3,13 +3,13 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikMove } from '../DiaballikMove';
 import { DiaballikMoveGenerator } from '../DiaballikMoveGenerator';
 import { DiaballikRules } from '../DiaballikRules';
 import { DiaballikState } from '../DiaballikState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class DiaballikDistanceMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
     public constructor(name: string, moveGenerator: MoveGenerator<DiaballikMove, DiaballikState>) {

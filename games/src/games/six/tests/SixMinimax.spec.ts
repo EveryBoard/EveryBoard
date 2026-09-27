@@ -4,12 +4,12 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { SixState } from '../SixState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

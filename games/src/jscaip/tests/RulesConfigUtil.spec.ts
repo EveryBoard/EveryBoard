@@ -2,9 +2,9 @@
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { NumberConfig } from '../../config/NumberConfig';
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
-import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../config/RulesConfig';
 
 describe('RulesConfig', () => {
 

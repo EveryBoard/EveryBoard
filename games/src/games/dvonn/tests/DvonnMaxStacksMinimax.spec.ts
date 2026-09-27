@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class DvonnMaxStacksMinimax extends Minimax<DvonnMove, DvonnState> {
     public constructor() {

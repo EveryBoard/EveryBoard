@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
     public constructor() {

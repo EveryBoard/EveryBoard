@@ -5,11 +5,11 @@ import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
 import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
+import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
 
 class HexodiaAlignmentMinimax extends Minimax<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
     public constructor() {

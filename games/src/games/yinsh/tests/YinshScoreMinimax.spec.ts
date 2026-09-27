@@ -2,13 +2,13 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { YinshMove } from '../YinshMove';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
 import { YinshRules } from '../YinshRules';
 import { YinshLegalityInformation } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
 import { YinshState } from '../YinshState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class YinshScoreMinimax extends Minimax<YinshMove, YinshState, EmptyRulesConfig, YinshLegalityInformation> {
     public constructor() {

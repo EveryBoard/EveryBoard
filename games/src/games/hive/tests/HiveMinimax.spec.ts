@@ -2,12 +2,12 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HiveMove } from '../HiveMove';
 import { HiveMoveGenerator } from '../HiveMoveGenerator';
 import { HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class HiveMinimax extends Minimax<HiveMove, HiveState> {
     public constructor() {

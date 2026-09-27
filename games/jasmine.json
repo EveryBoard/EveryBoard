@@ -1,9 +1,10 @@
 {
   "spec_dir": "src",
+  "jsLoader": "require",
   "spec_files": ["**/*.spec.ts"],
   "requires": [
-    "../node_modules/ts-node/register/type-check.js",
-    "../node_modules/tsconfig-paths/register.js"
+    "ts-node/register/type-check",
+    "tsconfig-paths/register"
   ],
   "helpers": ["browser-setup.ts", "coverage-setup.ts"],
   "env": {

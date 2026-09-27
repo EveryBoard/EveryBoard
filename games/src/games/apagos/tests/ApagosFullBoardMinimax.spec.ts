@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ApagosFullBoardHeuristic } from '../ApagosFullBoardHeuristic';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ApagosFullBoardMinimax extends Minimax<ApagosMove, ApagosState, ApagosConfig> {
     public constructor() {

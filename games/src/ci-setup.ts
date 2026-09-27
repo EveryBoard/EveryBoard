@@ -1,3 +1,1 @@
-import { TestVars } from './TestVars.spec';
-
-TestVars.slowTests = true;
+globalThis.everyboardRunSlowTests = true;

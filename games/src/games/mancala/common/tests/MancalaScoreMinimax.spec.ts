@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
-import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaConfig } from '../MancalaConfig';
 import { MancalaMove } from '../MancalaMove';
 import { MancalaMoveGenerator } from '../MancalaMoveGenerator';
