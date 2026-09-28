@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -184,7 +185,7 @@ func TestHandleBotIdentifierValidation(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			// Given a handler whose user and bot identifier do not match
-			h, _ := newTestHandler(t, test.user)
+			h, database := newTestHandler(t, test.user)
 
 			// When the user tries to create a game or subscribe to a config room
 			createErr := h.handleCreateGame("P4", test.botIdentifier)
@@ -193,8 +194,67 @@ func TestHandleBotIdentifierValidation(t *testing.T) {
 			// Then the declaration should be rejected
 			assert.Equal(t, apperror.ErrorInvalidData, createErr)
 			assert.Equal(t, apperror.ErrorInvalidData, subscribeErr)
+			assert.False(t, h.subscriptions.IsSubscribed(test.user.ID))
+			currentGame, err := database.GetCurrentGame(test.user)
+			require.NoError(t, err, "cannot get current game")
+			assert.Nil(t, currentGame)
+			rooms := 0
+			err = database.ApplyToConfigRooms(func(model.ConfigRoom) error {
+				rooms++
+				return nil
+			})
+			require.NoError(t, err, "cannot retrieve config rooms")
+			assert.Zero(t, rooms)
 		})
 	}
+}
+
+type failingAddCandidateStore struct {
+	store.Store
+}
+
+func (f failingAddCandidateStore) Transaction(action func(store.Store) error) error {
+	return action(f)
+}
+
+func (f failingAddCandidateStore) AddCandidate(
+	configRoom *model.ConfigRoom,
+	user model.MinimalUser,
+	elo float64,
+	botIdentifier *model.BotIdentifier,
+) error {
+	return errors.New("cannot persist candidate")
+}
+
+func TestHandleSubscribeConfigRoomRollsBackSubscriptionWhenCandidatePersistenceFails(t *testing.T) {
+	// Given a bot joining a room whose store cannot persist candidates
+	bot := model.MinimalUser{ID: "bot", Name: "bot", IsBot: true}
+	h, database := newTestHandler(t, bot)
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	configRoom, err := database.CreateConfigRoom(creator, "P4", nil)
+	require.NoError(t, err, "cannot create config room")
+	h.store = failingAddCandidateStore{Store: database}
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+
+	// When candidate persistence fails during subscription
+	err = h.handleSubscribeConfigRoom(configRoom.ID, botIdentifier)
+
+	// Then no subscription or participant state should remain
+	require.ErrorContains(t, err, "cannot persist candidate")
+	assert.False(t, h.subscriptions.IsSubscribed(bot.ID))
+	currentGame, getCurrentGameErr := database.GetCurrentGame(bot)
+	require.NoError(t, getCurrentGameErr, "cannot get current game")
+	assert.Nil(t, currentGame)
+	var candidates []model.Candidate
+	applyErr := database.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+		candidates = append(candidates, candidate)
+		return nil
+	})
+	require.NoError(t, applyErr, "cannot retrieve candidates")
+	assert.Empty(t, candidates)
 }
 
 func TestHandlersDirectEdgeCases(t *testing.T) {
