@@ -124,7 +124,21 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		GameUpdateMessage{
 			Game: game,
 		},
-		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerZeroElo":42,"playerOne":{"id":"bar","name":"bar"},"playerOneElo":100,"result":"InProgress","beginning":42}}`, "GameUpdate")
+		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerZeroElo":42,"playerZeroBotIdentifier":null,"playerOne":{"id":"bar","name":"bar"},"playerOneElo":100,"playerOneBotIdentifier":null,"result":"InProgress","beginning":42}}`, "GameUpdate")
+
+	game.PlayerZeroBotIdentifier = &model.BotIdentifier{
+		DisplayName: "Player zero bot",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	game.PlayerOneBotIdentifier = &model.BotIdentifier{
+		DisplayName: "Player one bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	ExpectMarshallingToWorkAndTagToBe(t,
+		GameUpdateMessage{
+			Game: game,
+		},
+		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerZeroElo":42,"playerZeroBotIdentifier":{"displayName":"Player zero bot","parameters":{"version":1}},"playerOne":{"id":"bar","name":"bar"},"playerOneElo":100,"playerOneBotIdentifier":{"displayName":"Player one bot","parameters":{"version":2}},"result":"InProgress","beginning":42}}`, "GameUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		GameEventMessage{

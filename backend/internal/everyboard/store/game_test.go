@@ -144,6 +144,66 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
 }
 
+func TestGameCreationPropagatesBotIdentifiers(t *testing.T) {
+	creatorBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Creator bot",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	opponentBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Opponent bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	tests := []struct {
+		name                         string
+		firstPlayer                  model.FirstPlayer
+		expectedPlayerZeroIdentifier *model.BotIdentifier
+		expectedPlayerOneIdentifier  *model.BotIdentifier
+	}{
+		{
+			name:                         "CreatorStarts",
+			firstPlayer:                  model.FirstPlayerCreator,
+			expectedPlayerZeroIdentifier: creatorBotIdentifier,
+			expectedPlayerOneIdentifier:  opponentBotIdentifier,
+		},
+		{
+			name:                         "OpponentStarts",
+			firstPlayer:                  model.FirstPlayerChosenOpponent,
+			expectedPlayerZeroIdentifier: opponentBotIdentifier,
+			expectedPlayerOneIdentifier:  creatorBotIdentifier,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given a config room with two bot participants
+			store, err := InitDatabase(sqlite.Open(":memory:"))
+			require.NoError(t, err, "cannot initialize db")
+			creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
+			opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+			configRoom, err := store.CreateConfigRoom(creator, "Go", creatorBotIdentifier)
+			require.NoError(t, err, "cannot create config room")
+			err = store.AddCandidate(configRoom, opponent, 0, opponentBotIdentifier)
+			require.NoError(t, err, "cannot add candidate")
+			err = store.SelectOpponent(configRoom, opponent)
+			require.NoError(t, err, "cannot select opponent")
+			configRoom.FirstPlayer = test.firstPlayer
+
+			// When creating and retrieving the game
+			game, err := store.CreateGame(configRoom, 42, true)
+			require.NoError(t, err, "cannot create game")
+			persistedGame, err := store.GetGame(game.GameID)
+			require.NoError(t, err, "cannot retrieve game")
+			require.NotNil(t, persistedGame, "game should exist")
+
+			// Then identifiers should follow the same ordering as their players
+			assert.Equal(t, test.expectedPlayerZeroIdentifier, game.PlayerZeroBotIdentifier)
+			assert.Equal(t, test.expectedPlayerOneIdentifier, game.PlayerOneBotIdentifier)
+			assert.Equal(t, test.expectedPlayerZeroIdentifier, persistedGame.PlayerZeroBotIdentifier)
+			assert.Equal(t, test.expectedPlayerOneIdentifier, persistedGame.PlayerOneBotIdentifier)
+		})
+	}
+}
+
 func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	// Given a db with a config room where a random player (set to false) will start
 	store, err := InitDatabase(sqlite.Open(":memory:"))

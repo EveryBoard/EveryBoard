@@ -340,29 +340,37 @@ func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 
 	var playerZero model.MinimalUser
 	var playerZeroElo float64
+	var playerZeroBotIdentifier *model.BotIdentifier
 	var playerOne model.MinimalUser
 	var playerOneElo float64
+	var playerOneBotIdentifier *model.BotIdentifier
 	if starter == model.FirstPlayerCreator {
 		playerZero = configRoom.Creator
 		playerZeroElo = configRoom.CreatorElo
+		playerZeroBotIdentifier = configRoom.CreatorBotIdentifier
 		playerOne = *configRoom.ChosenOpponent
 		playerOneElo = *configRoom.ChosenOpponentElo
+		playerOneBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 	} else {
 		playerZero = *configRoom.ChosenOpponent
 		playerZeroElo = *configRoom.ChosenOpponentElo
+		playerZeroBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 		playerOne = configRoom.Creator
 		playerOneElo = configRoom.CreatorElo
+		playerOneBotIdentifier = configRoom.CreatorBotIdentifier
 	}
 
 	game := &model.Game{
-		GameID:        configRoom.ID,
-		GameName:      configRoom.GameName,
-		PlayerZero:    playerZero,
-		PlayerZeroElo: playerZeroElo,
-		PlayerOne:     playerOne,
-		PlayerOneElo:  playerOneElo,
-		Result:        model.ResultInProgress,
-		Beginning:     now,
+		GameID:                  configRoom.ID,
+		GameName:                configRoom.GameName,
+		PlayerZero:              playerZero,
+		PlayerZeroElo:           playerZeroElo,
+		PlayerZeroBotIdentifier: playerZeroBotIdentifier,
+		PlayerOne:               playerOne,
+		PlayerOneElo:            playerOneElo,
+		PlayerOneBotIdentifier:  playerOneBotIdentifier,
+		Result:                  model.ResultInProgress,
+		Beginning:               now,
 	}
 	s.Games[configRoom.ID] = game
 	return game, nil
