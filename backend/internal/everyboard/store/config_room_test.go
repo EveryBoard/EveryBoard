@@ -245,6 +245,91 @@ func TestRematchForOpponent(t *testing.T) {
 	assert.Equal(t, configRoom.GameName, rematch.GameName, "rematch config room not as expected")
 }
 
+func TestRematchPropagatesBotIdentifiers(t *testing.T) {
+	creatorBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Creator bot",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	opponentBotIdentifier := &model.BotIdentifier{
+		DisplayName: "Opponent bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	tests := []struct {
+		name                                string
+		rematchCreatorIsOriginalCreator     bool
+		expectedCreatorBotIdentifier        *model.BotIdentifier
+		expectedChosenOpponentBotIdentifier *model.BotIdentifier
+	}{
+		{
+			name:                                "OriginalCreatorCreatesRematch",
+			rematchCreatorIsOriginalCreator:     true,
+			expectedCreatorBotIdentifier:        creatorBotIdentifier,
+			expectedChosenOpponentBotIdentifier: opponentBotIdentifier,
+		},
+		{
+			name:                                "OriginalOpponentCreatesRematch",
+			rematchCreatorIsOriginalCreator:     false,
+			expectedCreatorBotIdentifier:        opponentBotIdentifier,
+			expectedChosenOpponentBotIdentifier: creatorBotIdentifier,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given a completed participation between two bots
+			store, err := InitDatabase(sqlite.Open(":memory:"))
+			require.NoError(t, err, "cannot initialize db")
+			creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
+			opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+			configRoom, err := store.CreateConfigRoom(creator, "Go", creatorBotIdentifier)
+			require.NoError(t, err, "cannot create config room")
+			err = store.AddCandidate(configRoom, opponent, 0, opponentBotIdentifier)
+			require.NoError(t, err, "cannot add candidate")
+			err = store.SelectOpponent(configRoom, opponent)
+			require.NoError(t, err, "cannot select opponent")
+			game, err := store.CreateGame(configRoom, 42, true)
+			require.NoError(t, err, "cannot create game")
+			rematchCreator := opponent
+			if test.rematchCreatorIsOriginalCreator {
+				rematchCreator = creator
+			}
+
+			// When creating the rematch config room
+			rematch, err := store.CreateRematch(configRoom, rematchCreator, game)
+			require.NoError(t, err, "cannot create rematch")
+			persistedRematch, err := store.GetConfigRoom(rematch.ID)
+			require.NoError(t, err, "cannot retrieve rematch")
+			require.NotNil(t, persistedRematch, "rematch should exist")
+
+			// Then both identifiers should follow their users into the rematch
+			assert.Equal(t, test.expectedCreatorBotIdentifier, rematch.CreatorBotIdentifier)
+			assert.Equal(t, test.expectedChosenOpponentBotIdentifier, rematch.ChosenOpponentBotIdentifier)
+			assert.Equal(t, test.expectedCreatorBotIdentifier, persistedRematch.CreatorBotIdentifier)
+			assert.Equal(t, test.expectedChosenOpponentBotIdentifier,
+				persistedRematch.ChosenOpponentBotIdentifier)
+
+			// When creating the game associated with the rematch
+			rematchGame, err := store.CreateGame(rematch, 43, true)
+			require.NoError(t, err, "cannot create rematch game")
+			persistedRematchGame, err := store.GetGame(rematchGame.GameID)
+			require.NoError(t, err, "cannot retrieve rematch game")
+			require.NotNil(t, persistedRematchGame, "rematch game should exist")
+			expectedPlayerZeroBotIdentifier := test.expectedCreatorBotIdentifier
+			expectedPlayerOneBotIdentifier := test.expectedChosenOpponentBotIdentifier
+			if rematch.FirstPlayer == model.FirstPlayerChosenOpponent {
+				expectedPlayerZeroBotIdentifier = test.expectedChosenOpponentBotIdentifier
+				expectedPlayerOneBotIdentifier = test.expectedCreatorBotIdentifier
+			}
+
+			// Then CreateGame should automatically order and persist the snapshots
+			assert.Equal(t, expectedPlayerZeroBotIdentifier, rematchGame.PlayerZeroBotIdentifier)
+			assert.Equal(t, expectedPlayerOneBotIdentifier, rematchGame.PlayerOneBotIdentifier)
+			assert.Equal(t, expectedPlayerZeroBotIdentifier, persistedRematchGame.PlayerZeroBotIdentifier)
+			assert.Equal(t, expectedPlayerOneBotIdentifier, persistedRematchGame.PlayerOneBotIdentifier)
+		})
+	}
+}
+
 func TestIterateOverConfigrooms(t *testing.T) {
 	gameName := "Go"
 	// Given an empty database

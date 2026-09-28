@@ -247,12 +247,18 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
+	var creatorBotIdentifier *model.BotIdentifier
+	var chosenOpponentBotIdentifier *model.BotIdentifier
 	if game.PlayerZero.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
 		chosenOpponent = game.PlayerOne
+		creatorBotIdentifier = game.PlayerZeroBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerOneBotIdentifier
 	} else {
 		firstPlayer = model.FirstPlayerCreator
 		chosenOpponent = game.PlayerZero
+		creatorBotIdentifier = game.PlayerOneBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerZeroBotIdentifier
 	}
 
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
@@ -262,18 +268,20 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	id := s.allocateID()
 	rematch := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		ID:                          id,
+		Creator:                     creator,
+		CreatorElo:                  creatorElo.CurrentElo,
+		CreatorBotIdentifier:        creatorBotIdentifier,
+		FirstPlayer:                 firstPlayer,
+		ChosenOpponent:              &chosenOpponent,
+		ChosenOpponentElo:           &chosenOpponentElo.CurrentElo,
+		ChosenOpponentBotIdentifier: chosenOpponentBotIdentifier,
+		Status:                      model.StatusStarted,
+		GameType:                    configRoom.GameType,
+		MoveDuration:                configRoom.MoveDuration,
+		GameDuration:                configRoom.GameDuration,
+		RulesConfig:                 configRoom.RulesConfig,
+		GameName:                    configRoom.GameName,
 	}
 	s.ConfigRooms[id] = rematch
 	return rematch, nil

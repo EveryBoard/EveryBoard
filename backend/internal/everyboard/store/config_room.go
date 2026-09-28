@@ -145,43 +145,52 @@ func (s *GORMStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 	// Get the new elo of the creator of the rematch
 	creatorElo, err := s.GetElo(configRoom.GameName, creator)
 	if err != nil {
-		return nil, wrapError("CreateRematchConfigRoom", err)
+		return nil, wrapError("CreateRematch", err)
 	}
 
-	// Compute who is the new opponent and who plays first
+	// Compute who is the new opponent, who plays first, and the bot identifiers
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
+	var creatorBotIdentifier *model.BotIdentifier
+	var chosenOpponentBotIdentifier *model.BotIdentifier
 	if game.PlayerZero.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
 		chosenOpponent = game.PlayerOne
+		creatorBotIdentifier = game.PlayerZeroBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerOneBotIdentifier
 	} else {
 		firstPlayer = model.FirstPlayerCreator
 		chosenOpponent = game.PlayerZero
+		creatorBotIdentifier = game.PlayerOneBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerZeroBotIdentifier
 	}
 
 	// Get the new elo of the opponent
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
 	if err != nil {
-		return nil, wrapError("CreateRematchConfigRoom", err)
+		return nil, wrapError("CreateRematch", err)
 	}
 
 	// Create the config room for the rematch, as every game needs an associated config room
 	rematchConfigRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		Creator:                     creator,
+		CreatorElo:                  creatorElo.CurrentElo,
+		CreatorBotIdentifier:        creatorBotIdentifier,
+		FirstPlayer:                 firstPlayer,
+		ChosenOpponent:              &chosenOpponent,
+		ChosenOpponentElo:           &chosenOpponentElo.CurrentElo,
+		ChosenOpponentBotIdentifier: chosenOpponentBotIdentifier,
+		Status:                      model.StatusStarted,
+		GameType:                    configRoom.GameType,
+		MoveDuration:                configRoom.MoveDuration,
+		GameDuration:                configRoom.GameDuration,
+		RulesConfig:                 configRoom.RulesConfig,
+		GameName:                    configRoom.GameName,
 	}
 	result := s.db.Create(&rematchConfigRoom)
-	return &rematchConfigRoom, wrapError("CreateRematchConfigRoom", result.Error)
+	return &rematchConfigRoom, wrapError("CreateRematch", result.Error)
 }
+
 func (s *GORMStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) error {
 	result := s.db.Model(&model.ConfigRoom{}).Where("status != ?", model.StatusFinished)
 	return wrapError("ApplyToConfigRooms", applyToQueryResult(s.db, result, action))
