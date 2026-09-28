@@ -138,6 +138,28 @@ func TestBotIdentifiersArePersistedInConfigRoomAndCandidate(t *testing.T) {
 	assert.Equal(t, creatorBotIdentifier, persistedConfigRoom.CreatorBotIdentifier)
 	require.Len(t, persistedCandidates, 1)
 	assert.Equal(t, candidateBotIdentifier, persistedCandidates[0].BotIdentifier)
+
+	// When selecting the bot candidate
+	err = store.SelectOpponent(configRoom, candidate)
+	require.NoError(t, err, "cannot select bot candidate")
+	persistedConfigRoom, err = store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot get config room after selecting candidate")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
+
+	// Then the candidate identifier should be copied to the chosen opponent
+	assert.Equal(t, candidateBotIdentifier, configRoom.ChosenOpponentBotIdentifier)
+	assert.Equal(t, candidateBotIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
+
+	// When removing the chosen opponent
+	err = store.RemoveOpponent(configRoom)
+	require.NoError(t, err, "cannot remove bot opponent")
+	persistedConfigRoom, err = store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot get config room after removing opponent")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
+
+	// Then the chosen-opponent identifier should be cleared
+	assert.Nil(t, configRoom.ChosenOpponentBotIdentifier)
+	assert.Nil(t, persistedConfigRoom.ChosenOpponentBotIdentifier)
 }
 
 func TestSelectOpponentRequiresCandidate(t *testing.T) {

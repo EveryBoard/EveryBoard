@@ -62,7 +62,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":null,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":null,"chosenOpponent":null,"chosenOpponentElo":null,"chosenOpponentBotIdentifier":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	configRoom.CreatorBotIdentifier = &model.BotIdentifier{
 		DisplayName: "Perfect P4",
@@ -73,7 +73,22 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":{"displayName":"Perfect P4","parameters":{"version":1}},"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":{"displayName":"Perfect P4","parameters":{"version":1}},"chosenOpponent":null,"chosenOpponentElo":null,"chosenOpponentBotIdentifier":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+
+	chosenOpponent := model.MinimalUser{ID: "bar", Name: "bar", IsBot: true}
+	chosenOpponentElo := 42.0
+	configRoom.ChosenOpponent = &chosenOpponent
+	configRoom.ChosenOpponentElo = &chosenOpponentElo
+	configRoom.ChosenOpponentBotIdentifier = &model.BotIdentifier{
+		DisplayName: "Opponent bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	ExpectMarshallingToWorkAndTagToBe(t,
+		ConfigRoomUpdateMessage{
+			GameID:     42,
+			ConfigRoom: configRoom,
+		},
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"creatorBotIdentifier":{"displayName":"Perfect P4","parameters":{"version":1}},"chosenOpponent":{"id":"bar","name":"bar","isBot":true},"chosenOpponentElo":42,"chosenOpponentBotIdentifier":{"displayName":"Opponent bot","parameters":{"version":2}},"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		ConfigRoomDeletedMessage{
@@ -86,7 +101,18 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			Candidate: minimalUser,
 			Elo:       42.0,
 		},
-		`{"candidate":{"id":"foo","name":"foo"},"elo":42}`, "CandidateJoined")
+		`{"candidate":{"id":"foo","name":"foo"},"elo":42,"botIdentifier":null}`, "CandidateJoined")
+
+	ExpectMarshallingToWorkAndTagToBe(t,
+		CandidateJoinedMessage{
+			Candidate: minimalUser,
+			Elo:       42.0,
+			BotIdentifier: &model.BotIdentifier{
+				DisplayName: "Perfect P4",
+				Parameters:  json.RawMessage(`{"version":1}`),
+			},
+		},
+		`{"candidate":{"id":"foo","name":"foo"},"elo":42,"botIdentifier":{"displayName":"Perfect P4","parameters":{"version":1}}}`, "CandidateJoined")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		CandidateLeftMessage{

@@ -36,7 +36,7 @@ func autoMigrate(db *gorm.DB, migrations ...migration) error {
 	return nil
 }
 
-// Initialize the database given a dialector, which will either be in-memory
+// InitDatabase initializes the database given a dialector, which will either be in-memory
 // SQLite for testing (sqlite.Open(":memory:")) or another DB for production (e.g., postgres.Open("some-dsn").)
 func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 	db, err := gorm.Open(dialector, &gorm.Config{

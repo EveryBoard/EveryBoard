@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
@@ -9,9 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *GORMStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error) {
+func (s *GORMStore) GetConfigRoom(gameID model.GameID) (*model.ConfigRoom, error) {
 	var configRoom model.ConfigRoom
-	result := s.db.First(&configRoom, "id = ?", gameId)
+	result := s.db.First(&configRoom, "id = ?", gameID)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -60,25 +61,45 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	candidateElo := candidate.Elo
-	result = s.db.Model(&model.ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(model.ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
+	var botIdentifierJSON any
+	if candidate.BotIdentifier != nil {
+		serializedIdentifier, err := json.Marshal(candidate.BotIdentifier)
+		if err != nil {
+			return wrapError("SelectOpponent", err)
+		}
+		botIdentifierJSON = serializedIdentifier
+	}
+	result = s.db.
+		Model(&model.ConfigRoom{}).
+		Where("id = ?", configRoom.ID).
+		Updates(map[string]any{
+			"chosen_opponent_id":             opponent.ID,
+			"chosen_opponent_name":           opponent.Name,
+			"chosen_opponent_is_bot":         opponent.IsBot,
+			"chosen_opponent_elo":            candidate.Elo,
+			"chosen_opponent_bot_identifier": botIdentifierJSON,
+		})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
 	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	configRoom.ChosenOpponentElo = &candidate.Elo
+	configRoom.ChosenOpponentBotIdentifier = candidate.BotIdentifier
 	return nil
 }
 
 func (s *GORMStore) RemoveOpponent(configRoom *model.ConfigRoom) error {
 	// A bit ugly because setting ChosenOpponent to nil will make gorm ignore this field...
 	result := s.db.Model(configRoom).Updates(map[string]any{
-		"chosen_opponent_id":   nil,
-		"chosen_opponent_name": nil,
-		"chosen_opponent_elo":  nil,
+		"chosen_opponent_id":             nil,
+		"chosen_opponent_name":           nil,
+		"chosen_opponent_is_bot":         nil,
+		"chosen_opponent_elo":            nil,
+		"chosen_opponent_bot_identifier": nil,
 	})
 	configRoom.ChosenOpponent = nil
 	configRoom.ChosenOpponentElo = nil
+	configRoom.ChosenOpponentBotIdentifier = nil
 	return wrapError("RemoveOpponent", result.Error)
 }
 
@@ -181,7 +202,7 @@ func (s *GORMStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) er
 	return wrapError("DeleteCandidate", result.Error)
 }
 
-func (s *GORMStore) ApplyToCandidates(gameId model.GameID, action func(model.Candidate) error) error {
-	result := s.db.Model(&model.Candidate{}).Where("game_id = ?", gameId)
+func (s *GORMStore) ApplyToCandidates(gameID model.GameID, action func(model.Candidate) error) error {
+	result := s.db.Model(&model.Candidate{}).Where("game_id = ?", gameID)
 	return wrapError("ApplyToCandidates", applyToQueryResult(s.db, result, action))
 }

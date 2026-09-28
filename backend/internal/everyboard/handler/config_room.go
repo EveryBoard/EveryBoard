@@ -11,6 +11,12 @@ import (
 func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *model.BotIdentifier) error {
 	uid := h.user.ID
 	err := h.validateBotIdentifier(botIdentifier)
+	// Note: we require the creator to redeclare its bot identifier. But we
+	// don't actually check if it matches, as we will ignore the bot identifier
+	// declared here. The one that matters is the one declared at creation. The
+	// reasoning is that while we could check it again, there's no point in
+	// doing it; we already have the information. If the creator bot wants to
+	// lie now, it's okay because this lie will never be propagated.
 	if err != nil {
 		return err
 	}
@@ -54,7 +60,11 @@ func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *
 					Role:     model.UserRoleCandidate,
 				}
 				// h.connection is already subscribed, so this broadcast includes the new user
-				h.bufferBroadcastToConfigRoom(&buf, gameID, protocol.CandidateJoinedMessage{Candidate: h.user, Elo: elo.CurrentElo})
+				h.bufferBroadcastToConfigRoom(&buf, gameID, protocol.CandidateJoinedMessage{
+					Candidate:     h.user,
+					Elo:           elo.CurrentElo,
+					BotIdentifier: botIdentifier,
+				})
 				if err = h.setCurrentGame(&buf, store, h.user, currentGame); err != nil {
 					return err
 				}
@@ -68,7 +78,11 @@ func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *
 				if err != nil {
 					return err
 				}
-				buf.addSend(h.connection, protocol.CandidateJoinedMessage{Candidate: candidate.User, Elo: elo.CurrentElo})
+				buf.addSend(h.connection, protocol.CandidateJoinedMessage{
+					Candidate:     candidate.User,
+					Elo:           elo.CurrentElo,
+					BotIdentifier: candidate.BotIdentifier,
+				})
 				return nil
 			})
 
