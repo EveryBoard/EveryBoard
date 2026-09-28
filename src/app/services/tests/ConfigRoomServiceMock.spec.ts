@@ -54,7 +54,7 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 
     public mockCandidateJoined(user: MinimalUser, elo: number): void {
         Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
-        this.subscribedCallback.get().candidateJoined({ user, elo });
+        this.subscribedCallback.get().candidateJoined({ user, elo, botIdentifier: null });
     }
 
     public mockCandidateLeft(candidate: MinimalUser): void {

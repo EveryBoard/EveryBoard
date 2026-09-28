@@ -10,9 +10,11 @@ export class ConfigRoomMocks {
         return {
             creator: UserMocks.CREATOR_MINIMAL_USER,
             creatorElo: 0,
+            creatorBotIdentifier: null,
 
             chosenOpponent: null,
             chosenOpponentElo: null,
+            chosenOpponentBotIdentifier: null,
             status: Status.CREATED,
 
             // We don't want the first player to be random here, to minimize non-deterministic tests

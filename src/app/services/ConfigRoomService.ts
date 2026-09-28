@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { BotIdentifier } from '../domain/BotIdentifier';
 import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 
-export type Candidate = { user: MinimalUser; elo: number };
+export type Candidate = { user: MinimalUser; elo: number; botIdentifier: BotIdentifier | null };
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
@@ -54,7 +55,11 @@ export class ConfigRoomService extends AbstractConfigRoomService {
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
-                candidateJoined({ user: message.getArgument('candidate'), elo: message.getArgument('elo') });
+                candidateJoined({
+                    user: message.getArgument('candidate'),
+                    elo: message.getArgument('elo'),
+                    botIdentifier: message.getOptionalArgument('botIdentifier'),
+                });
             });
         const candidateLeftSubscription: Subscription =
             this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {

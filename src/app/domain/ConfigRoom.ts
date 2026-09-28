@@ -1,14 +1,17 @@
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 
+import { BotIdentifier } from './BotIdentifier';
 import { MinimalUser } from './MinimalUser';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export type ConfigRoom = {
     readonly creator: MinimalUser;
     readonly creatorElo: number;
+    readonly creatorBotIdentifier: BotIdentifier | null;
 
     readonly chosenOpponent: MinimalUser | null;
     readonly chosenOpponentElo: number | null;
+    readonly chosenOpponentBotIdentifier: BotIdentifier | null;
     readonly status: Status;
 
     readonly firstPlayer: FirstPlayer;
