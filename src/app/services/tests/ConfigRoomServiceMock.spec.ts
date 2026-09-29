@@ -2,6 +2,7 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../domain/BotIdentifier';
 import { ConfigProposal, ConfigRoom } from '../../domain/ConfigRoom';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { AbstractConfigRoomService, Candidate } from '../ConfigRoomService';
@@ -52,9 +53,9 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
         this.subscribedCallback.get().configRoomUpdate(configRoom);
     }
 
-    public mockCandidateJoined(user: MinimalUser, elo: number): void {
+    public mockCandidateJoined(user: MinimalUser, elo: number, botIdentifier: BotIdentifier | null = null): void {
         Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
-        this.subscribedCallback.get().candidateJoined({ user, elo, botIdentifier: null });
+        this.subscribedCallback.get().candidateJoined({ user, elo, botIdentifier });
     }
 
     public mockCandidateLeft(candidate: MinimalUser): void {

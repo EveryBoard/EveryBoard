@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../../domain/BotIdentifier';
 import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -240,6 +241,24 @@ describe('GameCreationComponent', () => {
                 // Then the component displays the elo
                 const eloComponent: EloComponent = testUtils.findElementByDirective(EloComponent).componentInstance;
                 expect(eloComponent.elo()).toBe(42.1);
+            }));
+
+            it('should display a bot candidate using its bot display name', fakeAsync(async() => {
+                // Given a component that is loaded and a bot candidate identifier
+                await awaitComponentInitialization();
+                const botCandidate: MinimalUser = { ...candidate, isBot: true };
+                const botIdentifier: BotIdentifier = {
+                    displayName: 'Perfect P4',
+                    parameters: { version: 1 },
+                };
+
+                // When the bot candidate arrives
+                configRoomService.mockCandidateJoined(botCandidate, 42.1, botIdentifier);
+
+                // Then its bot display name is shown instead of its account name
+                const candidateElement: HTMLElement = findElement('#candidate_' + candidate.name).nativeElement;
+                expect(candidateElement.innerText).toContain(botIdentifier.displayName);
+                expect(candidateElement.innerText).not.toContain(candidate.name);
             }));
         });
 

@@ -29,7 +29,7 @@
                                                   i18n>It is your turn.</span>
                                         } @else {
                                             <span id="opponentTurn"
-                                                  i18n>It is {{ currentUser?.name }}'s turn.</span>
+                                                  i18n>It is {{ getUserDisplayName(currentUser) }}'s turn.</span>
                                         }
                                     </p>
                                 }
@@ -44,7 +44,7 @@
                                         <p [id]="'player-' + playerSlug + '-indicator'"
                                            class="has-text-black is-size-5"
                                            [ngClass]="player.getHTMLClass('-bg-darker')">
-                                            <span [id]="'player-' + playerSlug + '-name'">{{ playerData.get().name }}</span> (<app-elo [elo]="getPlayerElo(player)"/>)
+                                            <span [id]="'player-' + playerSlug + '-name'">{{ getPlayerDisplayName(player) }}</span> (<app-elo [elo]="getPlayerElo(player)"/>)
                                         </p>
                                     }
                                     @if (gameComponent && gameComponent.hasScores()) {
@@ -100,7 +100,7 @@
                                     } @else if (isWin()) {
                                         @if (isPlaying() === false) {
                                             <p class="title"
-                                               i18n>{{ getWinner().name }} won.</p>
+                                               i18n>{{ getUserDisplayName(getWinner()) }} won.</p>
                                         } @else if (getWinner().name === getPlayer().name) {
                                             <p class="title"
                                                id="youWonIndicator"
@@ -113,11 +113,11 @@
                                     } @else if (isTimeout()) {
                                         @if (isPlaying() === false) {
                                             <p class="title"
-                                               i18n>{{ getLoser().name }} has reached their time limit.</p>
+                                               i18n>{{ getUserDisplayName(getLoser()) }} has reached their time limit.</p>
                                         } @else if (getWinner().name === getPlayer().name) {
                                             <p class="title"
                                                id="youWonIndicator"
-                                               i18n>{{ getLoser().name }} has reached their time limit. You won.</p>
+                                               i18n>{{ getUserDisplayName(getLoser()) }} has reached their time limit. You won.</p>
                                         } @else {
                                             <p class="title"
                                                id="youLostIndicator"
@@ -131,7 +131,7 @@
                                         } @else {
                                             <p class="title"
                                                id="resignIndicator"
-                                               i18n>{{ getLoser().name }} has resigned.</p>
+                                               i18n>{{ getUserDisplayName(getLoser()) }} has resigned.</p>
                                         }
                                     }
                                 </div>

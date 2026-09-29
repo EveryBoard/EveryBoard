@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../../domain/BotIdentifier';
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
@@ -48,7 +49,7 @@ type GameCreationViewInfo = {
     gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string; isBot: boolean; elo: number }[];
+    candidates: { name: string; displayName: string; isBot: boolean; elo: number }[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] };
 }
@@ -232,10 +233,11 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
-        this.viewInfo.creator = configRoom.creator.name;
+        this.viewInfo.creator = this.getDisplayName(configRoom.creator, configRoom.creatorBotIdentifier);
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
             return {
                 name: c.user.name,
+                displayName: this.getDisplayName(c.user, c.botIdentifier),
                 isBot: c.user.isBot ?? false,
                 elo: c.elo,
             };
@@ -246,7 +248,14 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             this.viewInfo.moveDuration = configRoom.moveDuration;
             this.viewInfo.gameDuration = configRoom.gameDuration;
             this.viewInfo.gameType = configRoom.gameType;
-            this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
+            if (configRoom.chosenOpponent == null) {
+                this.viewInfo.chosenOpponent = undefined;
+            } else {
+                this.viewInfo.chosenOpponent = this.getDisplayName(
+                    configRoom.chosenOpponent,
+                    configRoom.chosenOpponentBotIdentifier,
+                );
+            }
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
         }
         switch (configRoom.gameType) {
@@ -261,6 +270,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 break;
         }
         this.cdr.detectChanges();
+    }
+
+    private getDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
+        return botIdentifier?.displayName ?? user.name;
     }
 
     private setDataForCreator(configRoom: ConfigRoom): void {

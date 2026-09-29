@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../../domain/BotIdentifier';
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -401,6 +402,31 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#player-one-indicator');
             const opponentIndicator: HTMLElement = testUtils.findElement('#player-one-name').nativeElement;
             expect(opponentIndicator.innerText).toBe(UserMocks.OPPONENT_AUTH_USER.username.get());
+
+            await receiveEndGame();
+        }));
+
+        it('should show a bot display name instead of its account name', fakeAsync(async() => {
+            // Given a started game with a bot player identifier
+            const botIdentifier: BotIdentifier = {
+                displayName: 'Perfect Quarto',
+                parameters: { version: 1 },
+            };
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, {
+                ...PreparationOptions.withoutClocks,
+                game: {
+                    ...GameMocks.STARTED,
+                    playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
+                    playerOneBotIdentifier: botIdentifier,
+                },
+            });
+
+            // When viewing the active game
+            const opponentIndicator: HTMLElement = testUtils.findElement('#player-one-name').nativeElement;
+
+            // Then the bot display name is shown instead of its account name
+            expect(opponentIndicator.innerText).toBe(botIdentifier.displayName);
+            expect(opponentIndicator.innerText).not.toContain(GameMocks.STARTED.playerOne.name);
 
             await receiveEndGame();
         }));

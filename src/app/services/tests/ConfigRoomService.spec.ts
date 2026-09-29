@@ -119,7 +119,7 @@ describe('ConfigRoomService', () => {
 
             // When a candidate joins
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
-            const botIdentifier: BotIdentifier | null = null;;
+            const botIdentifier: BotIdentifier | null = null;
             addCandidate(candidate, botIdentifier);
             // Then we are notified about it
             expect(candidates.length).toBe(1);
