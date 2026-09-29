@@ -67,7 +67,7 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 		if err != nil {
 			return wrapError("SelectOpponent", err)
 		}
-		botIdentifierJSON = serializedIdentifier
+		botIdentifierJSON = string(serializedIdentifier)
 	}
 	result = s.db.
 		Model(&model.ConfigRoom{}).

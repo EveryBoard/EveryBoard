@@ -425,3 +425,28 @@ func TestPostgresApplyToCandidatesShouldAllowQueriesInCallback(t *testing.T) {
 	require.NoError(t, err, "candidate Elo lookup should succeed during iteration")
 	require.Equal(t, 1, seenCandidates, "should iterate over the candidate")
 }
+
+func TestPostgresSelectOpponentPersistsBotIdentifier(t *testing.T) {
+	// Given a PostgreSQL database containing a bot candidate
+	database := postgresTestStore(t)
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	candidate := model.MinimalUser{ID: "candidate", Name: "candidate", IsBot: true}
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Candidate bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	configRoom, err := database.CreateConfigRoom(creator, "Abalone", nil)
+	require.NoError(t, err, "cannot create config room")
+	err = database.AddCandidate(configRoom, candidate, 42, botIdentifier)
+	require.NoError(t, err, "cannot add candidate")
+
+	// When selecting the bot candidate
+	err = database.SelectOpponent(configRoom, candidate)
+	require.NoError(t, err, "cannot select bot candidate")
+	persistedConfigRoom, err := database.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot retrieve config room")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
+
+	// Then PostgreSQL should persist and restore the candidate's identifier
+	assert.Equal(t, botIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
+}
