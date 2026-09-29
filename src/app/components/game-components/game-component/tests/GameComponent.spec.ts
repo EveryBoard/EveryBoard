@@ -17,7 +17,7 @@ import {
     getShallowestMinimaxOptions,
     SlowTest,
     UNIVERSAL_SELF_PLAY_PLIES,
-} from '@everyboard/games';
+} from '@everyboard/games/testing';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../../games/abalone/abalone.component';
