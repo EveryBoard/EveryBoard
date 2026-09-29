@@ -13,7 +13,7 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
+import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNMove } from '../ConnectNMove';
@@ -26,7 +26,7 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const squareTopology: SquareTopology = new SquareTopology();
+const squareTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
 const triangularTopology: TriangularTopology = new TriangularTopology();
 const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
 const rectangularShape: TopologicShape<Direction> = new RectangularShape(
@@ -35,7 +35,7 @@ const rectangularShape: TopologicShape<Direction> = new RectangularShape(
     squareTopology,
 );
 
-describe('ConnectNComponent (SQUARE)', () => {
+describe('ConnectNComponent (SQUARE 8)', () => {
 
     let testUtils: ComponentTestUtils<ConnectNComponent>;
 

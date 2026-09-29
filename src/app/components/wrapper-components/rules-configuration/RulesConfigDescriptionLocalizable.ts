@@ -14,6 +14,6 @@ export class RulesConfigDescriptionLocalizable {
 
     public static readonly NUMBER_OF_PIECES_ROWS: () => string = () => $localize`Number of pieces rows`;
 
-    public static readonly TORIC: () => string = () => $localize`Toric`;
+    public static readonly TORIC: () => string = () => $localize`Toric`; // TODO: TORIC or Torus ?
 
 }

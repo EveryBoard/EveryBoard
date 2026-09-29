@@ -1,4 +1,6 @@
-import { Utils } from '@everyboard/lib';
+import { computed, Signal } from '@angular/core';
+
+import { Set, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
@@ -12,7 +14,8 @@ import { SquareLayout } from '../../../jscaip/layout/SquareLayout';
 import { TriangularLayout } from '../../../jscaip/layout/TriangularLayout';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
+import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { OrthogonalSquareTopology } from '../../../jscaip/topology/OrthogonalSquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ViewBox } from '../GameComponentUtils';
@@ -35,6 +38,10 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
         new Coord(0, 0),
         FlatHexaOrientation.INSTANCE,
     );
+
+    protected readonly coordsAndContents: Signal<Set<{ coord: Coord; content: P }>> = computed(() => {
+        return new Set(this.state().getCoordsAndContents());
+    });
 
     public computeViewBox(): ViewBox {
         const globalViewBox: ViewBox = ViewBox.fromCoords(
@@ -66,7 +73,9 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
     private getLayout(): Layout {
         const state: TopologicGameState<P> = this.state();
         const topology: Topology<Direction> = state.getTopology();
-        if (topology instanceof SquareTopology) {
+        if (topology instanceof OrdinalSquareTopology ||
+            topology instanceof OrthogonalSquareTopology
+        ) {
             return this.squareLayout;
         } else if (topology instanceof TriangularTopology) {
             return this.triangularLayout;

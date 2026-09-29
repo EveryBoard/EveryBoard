@@ -4,13 +4,13 @@ import { Player, PlayerOrNone } from './Player';
 
 export class FourStatePiece implements ComparableObject {
 
-    public static ZERO: FourStatePiece = new FourStatePiece(Player.ZERO, true);
+    public static ZERO: FourStatePiece = new FourStatePiece(Player.ZERO, true, 'O');
 
-    public static ONE: FourStatePiece = new FourStatePiece(Player.ONE, true);
+    public static ONE: FourStatePiece = new FourStatePiece(Player.ONE, true, 'X');
 
-    public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, true);
+    public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, true, '_');
 
-    public static UNREACHABLE: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, false);
+    public static UNREACHABLE: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, false, 'N');
 
     public static ofPlayer(player: Player): FourStatePiece {
         switch (player) {
@@ -21,7 +21,7 @@ export class FourStatePiece implements ComparableObject {
         }
     }
 
-    private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean) {
+    private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean, public readonly str: String) {
     }
 
     public equals(other: FourStatePiece): boolean {

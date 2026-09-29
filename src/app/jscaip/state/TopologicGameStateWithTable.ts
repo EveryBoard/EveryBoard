@@ -18,6 +18,10 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
         super(gameStateWithTable.turn, topology, shape);
     }
 
+    public getCopiedBoard(): P[][] {
+        return this.gameStateWithTable.getCopiedBoard();
+    }
+
     public override getCoordsAndContents(): { coord: Coord; content: P }[] {
         return this.gameStateWithTable.getCoordsAndContents();
     }

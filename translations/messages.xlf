@@ -1428,14 +1428,20 @@
       <trans-unit id="8366240299234525015" datatype="html">
         <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
       </trans-unit>
-      <trans-unit id="8336049305072615544" datatype="html">
-        <source>Square</source>
+      <trans-unit id="6623830127801606607" datatype="html">
+        <source>Square (4)</source>
+      </trans-unit>
+      <trans-unit id="8278187099465500134" datatype="html">
+        <source>Square (8)</source>
       </trans-unit>
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
       </trans-unit>
       <trans-unit id="5440587977382249688" datatype="html">
         <source>Triangular</source>
+      </trans-unit>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
       </trans-unit>
       <trans-unit id="2986159287834234807" datatype="html">
         <source>N</source>

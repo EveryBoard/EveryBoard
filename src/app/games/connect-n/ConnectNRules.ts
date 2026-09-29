@@ -33,7 +33,8 @@ import { ConnectNMove } from './ConnectNMove';
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 
 export const TopologyNamer: Record<TopologyID, Localized> = {
-    'SQUARE': () => $localize`Square`,
+    'SQUARE (4)': () => $localize`Square (4)`,
+    'SQUARE (8)': () => $localize`Square (8)`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
 };
@@ -44,7 +45,7 @@ export const Shapes: Record<ShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
-    'TORUS': () => $localize`TORUS`,
+    'TORUS': () => $localize`Torus`,
 };
 
 export type ConnectNConfig = {
@@ -74,7 +75,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                 n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
                 dropAfterFirstTurn: new NumberConfig(2, () => $localize`Drop after first turn`, MGPValidators.range(2, 10)),
                 boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
-                topology: new EnumConfig('SQUARE', () => $localize`Space shape`, TopologyNamer),
+                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, TopologyNamer),
                 shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
             },
         });

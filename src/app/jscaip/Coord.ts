@@ -30,7 +30,7 @@ export class Coord extends Vector {
         return new Coord(combinedVector.x, combinedVector.y);
     }
 
-    public getNextToric(dir: Vector, boardWidth: number, boardHeight: number, distance?: number): Coord {
+    public getNextToric(dir: Vector, boardWidth: number, boardHeight: number, distance?: number): Coord { // TODO: kill ? not its place anymore ?
         const combinedVector: Vector = this.combine(dir, distance);
         const toricX: number = (combinedVector.x + boardWidth) % boardWidth;
         const toricY: number = (combinedVector.y + boardHeight) % boardHeight;

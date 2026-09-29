@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { EnumConfig } from '../../../components/wrapper-components/rules-configuration/EnumConfig';
 import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
+import { TopologicReversiRules, ReversiConfig, Shapes, TopologyNamer } from '../common/AbstractReversiRules';
 
-export class ToricReversiRules extends AbstractReversiRules {
+export class ToricReversiRules extends TopologicReversiRules {
 
     private static singleton: MGPOptional<ToricReversiRules> = MGPOptional.empty();
 
@@ -22,9 +22,9 @@ export class ToricReversiRules extends AbstractReversiRules {
         new RulesConfigDescription<ReversiConfig>({
             name: (): string => $localize`Toric Reversi`,
             config: {
-                width: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new NumberConfig(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
-                toric: new BooleanConfig(true, RulesConfigDescriptionLocalizable.TORIC),
+                boardSize: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
+                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, TopologyNamer),
+                shape: new EnumConfig('TORUS', () => $localize`Board shape`, Shapes),
             },
         });
 

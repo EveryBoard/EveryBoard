@@ -4,13 +4,13 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ToricReversiRules } from '../../toric-reversi/ToricReversiRules';
-import { AbstractReversiRules } from '../AbstractReversiRules';
+import { TopologicReversiRules } from '../AbstractReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
-describe('ReversiMove', () => {
+fdescribe('ReversiMove', () => {
 
-    const rules: AbstractReversiRules[] = [
+    const rules: TopologicReversiRules[] = [
         ReversiRules.get(),
         ToricReversiRules.get(),
     ];

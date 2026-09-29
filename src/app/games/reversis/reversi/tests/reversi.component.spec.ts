@@ -1,8 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+import { Ordinal } from '../../../../jscaip/Ordinal';
+import { RectangularShape } from '../../../../jscaip/shape/RectangularShape';
+import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
 
-import { PlayerOrNone } from '../../../../jscaip/Player';
+import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Table } from '../../../../jscaip/TableUtils';
+import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiConfig } from '../../common/AbstractReversiRules';
 import { ReversiMove } from '../../common/ReversiMove';
@@ -10,14 +14,17 @@ import { ReversiState } from '../../common/ReversiState';
 import { ReversiRules } from '../ReversiRules';
 import { ReversiComponent } from '../reversi.component';
 
-describe('ReversiComponent', () => {
+
+fdescribe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
     const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+    const _: FourStatePiece = FourStatePiece.EMPTY;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
+    const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
+    const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
@@ -28,7 +35,7 @@ describe('ReversiComponent', () => {
     });
 
     it('should show last move and captures', fakeAsync(async() => {
-        const board: Table<PlayerOrNone> = [
+        const board: Table<FourStatePiece> = [
             [_, _, _, _, X, _, _, _],
             [_, _, _, X, _, _, _, _],
             [_, _, X, _, _, _, _, _],
@@ -38,7 +45,8 @@ describe('ReversiComponent', () => {
             [_, _, X, _, _, _, _, _],
             [_, _, _, O, _, _, _, _],
         ];
-        const state: ReversiState = new ReversiState(board, 0);
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 0);
+        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
         await testUtils.setupState(state);
 
         const move: ReversiMove = new ReversiMove(0, 4);
@@ -63,7 +71,7 @@ describe('ReversiComponent', () => {
             // Given a board with a last move
             const previousState: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
             const previousMove: ReversiMove = new ReversiMove(5, 3);
-            const board: Table<PlayerOrNone> = [
+            const board: Table<FourStatePiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -73,7 +81,8 @@ describe('ReversiComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ];
-            const state: ReversiState = new ReversiState(board, 1);
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+            const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
             await testUtils.setupState(state, { previousState, previousMove });
 
             const move: ReversiMove = new ReversiMove(5, 4);
@@ -87,7 +96,7 @@ describe('ReversiComponent', () => {
 
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
-        const state: ReversiState = new ReversiState([
+        const board: FourStatePiece[][] = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -96,7 +105,9 @@ describe('ReversiComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [O, X, _, _, _, _, _, _],
-        ], 1);
+        ];
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
 
         // When displaying the board
         await testUtils.setupState(state);

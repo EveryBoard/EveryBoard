@@ -1821,6 +1821,14 @@
         <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
         <target>Vous devez placer exactement <x id="PH" equiv-text="numberOfPiece"/> pièces.</target>
       </trans-unit>
+      <trans-unit id="6623830127801606607" datatype="html">
+        <source>Square (4)</source>
+        <target>Carré (4)</target>
+      </trans-unit>
+      <trans-unit id="8278187099465500134" datatype="html">
+        <source>Square (8)</source>
+        <target>Carré (8)</target>
+      </trans-unit>
       <trans-unit id="8336049305072615544" datatype="html">
         <source>Square</source>
         <target>Carré</target>
