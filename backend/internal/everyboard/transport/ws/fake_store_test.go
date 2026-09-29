@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
@@ -196,15 +197,20 @@ func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 }
 
 func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
-	var candidateElo float64
+	var selectedCandidate *model.Candidate
 	for _, c := range s.Candidates[configRoom.ID] {
 		if c.User.ID == opponent.ID {
-			candidateElo = c.Elo
+			candidate := c
+			selectedCandidate = &candidate
 			break
 		}
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	if selectedCandidate == nil {
+		return apperror.ErrorNotAllowed
+	}
+	configRoom.ChosenOpponent = &selectedCandidate.User
+	configRoom.ChosenOpponentElo = &selectedCandidate.Elo
+	configRoom.ChosenOpponentBotIdentifier = selectedCandidate.BotIdentifier
 	return nil
 }
 

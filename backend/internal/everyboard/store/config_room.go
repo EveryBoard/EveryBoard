@@ -73,16 +73,16 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 		Model(&model.ConfigRoom{}).
 		Where("id = ?", configRoom.ID).
 		Updates(map[string]any{
-			"chosen_opponent_id":             opponent.ID,
-			"chosen_opponent_name":           opponent.Name,
-			"chosen_opponent_is_bot":         opponent.IsBot,
+			"chosen_opponent_id":             candidate.User.ID,
+			"chosen_opponent_name":           candidate.User.Name,
+			"chosen_opponent_is_bot":         candidate.User.IsBot,
 			"chosen_opponent_elo":            candidate.Elo,
 			"chosen_opponent_bot_identifier": botIdentifierJSON,
 		})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	configRoom.ChosenOpponent = &opponent
+	configRoom.ChosenOpponent = &candidate.User
 	configRoom.ChosenOpponentElo = &candidate.Elo
 	configRoom.ChosenOpponentBotIdentifier = candidate.BotIdentifier
 	return nil

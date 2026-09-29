@@ -126,12 +126,13 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 		if err = store.SelectOpponent(configRoom, opponent); err != nil {
 			return err
 		}
+		selectedOpponent := *configRoom.ChosenOpponent
 
 		currentGameCreator := &model.CurrentGame{
 			GameID:   configRoom.ID,
 			GameName: configRoom.GameName,
 			Creator:  h.user,
-			Opponent: &opponent,
+			Opponent: &selectedOpponent,
 			Role:     model.UserRoleCreator,
 		}
 		if err = h.updateCurrentGame(&buf, store, h.user, currentGameCreator); err != nil {
@@ -142,10 +143,10 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 			GameID:   configRoom.ID,
 			GameName: configRoom.GameName,
 			Creator:  h.user,
-			Opponent: &opponent,
+			Opponent: &selectedOpponent,
 			Role:     model.UserRoleChosenOpponent,
 		}
-		if err = h.updateCurrentGame(&buf, store, opponent, currentGameOpponent); err != nil {
+		if err = h.updateCurrentGame(&buf, store, selectedOpponent, currentGameOpponent); err != nil {
 			return err
 		}
 

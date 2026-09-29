@@ -181,6 +181,32 @@ func TestSelectOpponentRequiresCandidate(t *testing.T) {
 	require.Nil(t, configRoom.ChosenOpponent, "missing candidate was selected as opponent")
 }
 
+func TestSelectOpponentUsesPersistedCandidateUser(t *testing.T) {
+	// Given a persisted bot candidate
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	candidate := model.MinimalUser{ID: "candidate", Name: "Persisted name", IsBot: true}
+	configRoom, err := store.CreateConfigRoom(creator, "Go", nil)
+	require.NoError(t, err, "cannot create config room")
+	err = store.AddCandidate(configRoom, candidate, 42, nil)
+	require.NoError(t, err, "cannot add candidate")
+	clientOpponent := model.MinimalUser{ID: candidate.ID, Name: "Forged name", IsBot: false}
+
+	// When selecting it using conflicting client-provided fields
+	err = store.SelectOpponent(configRoom, clientOpponent)
+	require.NoError(t, err, "cannot select opponent")
+	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot retrieve config room")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
+
+	// Then both representations use the persisted candidate as their authority
+	require.NotNil(t, configRoom.ChosenOpponent)
+	require.NotNil(t, persistedConfigRoom.ChosenOpponent)
+	assert.Equal(t, candidate, *configRoom.ChosenOpponent)
+	assert.Equal(t, candidate, *persistedConfigRoom.ChosenOpponent)
+}
+
 func TestRematchForCreator(t *testing.T) {
 	// Given a db with a config room and a game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
