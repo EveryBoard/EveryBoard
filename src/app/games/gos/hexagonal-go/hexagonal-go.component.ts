@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { GroupData } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { GoLegalityInformation } from '@everyboard/games';
@@ -19,6 +18,7 @@ import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
 

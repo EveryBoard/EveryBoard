@@ -2,9 +2,9 @@ import { NgClass } from '@angular/common';
 import { AfterContentChecked, Component, input, InputSignal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { HivePiece } from '@everyboard/games';
 
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 
 @Component({

@@ -1,4 +1,4 @@
-/* eslint-disable max-lines-per-function */
+
 import { Coord } from '@everyboard/games';
 import { TaflPawn } from '@everyboard/games';
 import { TaflState } from '@everyboard/games';

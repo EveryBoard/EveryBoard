@@ -5,7 +5,6 @@ import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { GipfCapture } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { FlatHexaOrientation } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -20,6 +19,7 @@ import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';

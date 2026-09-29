@@ -6,7 +6,6 @@ import { Ordinal } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { EmptyRulesConfig } from '@everyboard/games';
-import { MartianChessComponentUtils } from '@everyboard/games';
 import { MartianChessMove } from '@everyboard/games';
 import { MartianChessMoveGenerator } from '@everyboard/games';
 import { MartianChessPiece } from '@everyboard/games';
@@ -19,6 +18,7 @@ import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
+import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessDroneComponent } from './martian-chess-drone.component';
 import { MartianChessPawnComponent } from './martian-chess-pawn.component';
 import { MartianChessQueenComponent } from './martian-chess-queen.component';

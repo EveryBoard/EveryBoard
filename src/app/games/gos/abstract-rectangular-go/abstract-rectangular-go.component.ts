@@ -12,12 +12,13 @@ import { GoMoveGenerator } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
 import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games';
-import { GoSubBoardHelper } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+
+import { GoSubBoardHelper } from './GoSubBoardHelper';
 
 
 export abstract class AbstractRectangularGoComponent

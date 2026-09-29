@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Coord } from '@everyboard/games';
 import { CoordSet } from '@everyboard/games';
 import { GameStatus } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { FlatHexaOrientation } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -20,6 +19,7 @@ import { HiveState } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 

@@ -2,7 +2,6 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
 import { DvonnMaxStacksHeuristic } from '@everyboard/games';
 import { DvonnMove } from '@everyboard/games';
@@ -14,6 +13,7 @@ import { DvonnState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 

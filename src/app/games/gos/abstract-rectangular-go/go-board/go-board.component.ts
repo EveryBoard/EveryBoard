@@ -5,11 +5,11 @@ import { Component, computed, input, InputSignal, output, OutputEmitterRef, Sign
 import { Coord } from '@everyboard/games';
 import { GoPiece } from '@everyboard/games';
 import { GoState } from '@everyboard/games';
-import { GoSubBoardHelper } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../../../components/game-components/base-game-component/BaseGameComponent';
 import { BlankGobanComponent } from '../../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { GoSubBoardHelper } from '../GoSubBoardHelper';
 
 @Component({
     selector: '[app-go-board]',

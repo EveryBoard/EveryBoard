@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -15,6 +14,7 @@ import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 

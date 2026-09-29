@@ -1,8 +1,8 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-import { Vector } from '../../../jscaip/Vector';
+import { Coord } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 
 export class GoSubBoardHelper {
 

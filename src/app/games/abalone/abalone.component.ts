@@ -5,7 +5,6 @@ import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
-import { HexaLayout } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
@@ -21,6 +20,7 @@ import { ScoreName } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

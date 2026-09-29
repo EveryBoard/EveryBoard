@@ -2,7 +2,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MoveGenerator, MoveTestUtils } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -12,6 +12,7 @@ import { MancalaDropResult, MancalaRules } from '@everyboard/games';
 import { MancalaState } from '@everyboard/games';
 import { MancalaConfig } from '@everyboard/games';
 import { MancalaFailure } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games/testing';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
 import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
