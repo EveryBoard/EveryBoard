@@ -428,7 +428,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
         await receiveSync();
         testUtils.expectElementToBeDisabled('#pass');
-        wrapper.gameComponent.canPass = true;
+        wrapper.gameComponent.canPass.set(true);
         spyOn(wrapper.gameComponent, 'pass').and.resolveTo(MGPValidation.SUCCESS);
         testUtils.detectChanges();
 

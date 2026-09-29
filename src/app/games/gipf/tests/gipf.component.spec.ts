@@ -30,7 +30,7 @@ describe('GipfComponent', () => {
     const P1Turn: number = P0Turn + 1;
 
     function expectToHaveArrow(start: Coord, end: Coord): void {
-        expect(testUtils.getGameComponent().arrows.some((arrow: Arrow<HexaDirection>) => {
+        expect(testUtils.getGameComponent().arrows().some((arrow: Arrow<HexaDirection>) => {
             return arrow.start.equals(start) && arrow.landing.equals(end);
         })).withContext('expected to have an arrow pointing from ' + start.toString() + ' to ' + end.toString())
             .toBeTrue();
@@ -69,7 +69,7 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click-6-3');
 
             // Then the possible pushing direction should be shown
-            expect(testUtils.getGameComponent().arrows.length).toBe(3);
+            expect(testUtils.getGameComponent().arrows().length).toBe(3);
             expectToHaveArrow(new Coord(6, 3), new Coord(5, 3));
             expectToHaveArrow(new Coord(6, 3), new Coord(6, 2));
             expectToHaveArrow(new Coord(6, 3), new Coord(5, 4));
@@ -321,7 +321,7 @@ describe('GipfComponent', () => {
             await testUtils.expectClickFailure('#click-6-3');
 
             // Then it should no longer be selected
-            expect(testUtils.getGameComponent().arrows.length).toBe(0);
+            expect(testUtils.getGameComponent().arrows().length).toBe(0);
         }));
 
         it('should not accept placement on a complete line', fakeAsync(async() => {
@@ -338,7 +338,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click-1-6');
-            expect(testUtils.getGameComponent().arrows.length).toBe(1);
+            expect(testUtils.getGameComponent().arrows().length).toBe(1);
             await testUtils.expectClickFailure('#click-2-5', GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
         }));
 
@@ -350,7 +350,7 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click-3-6');
 
             // Then the possible pushing direction should be shown
-            expect(testUtils.getGameComponent().arrows.length).toBe(3);
+            expect(testUtils.getGameComponent().arrows().length).toBe(3);
             expectToHaveArrow(new Coord(3, 6), new Coord(2, 6));
             expectToHaveArrow(new Coord(3, 6), new Coord(3, 5));
             expectToHaveArrow(new Coord(3, 6), new Coord(4, 5));
@@ -452,7 +452,7 @@ describe('GipfComponent', () => {
         const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
-        expect(testUtils.getGameComponent().possibleCaptures).toContain(new GipfCapture([
+        expect(testUtils.getGameComponent().possibleCaptures()).toContain(new GipfCapture([
             new Coord(3, 2),
             new Coord(3, 3),
             new Coord(3, 4),
@@ -513,7 +513,7 @@ describe('GipfComponent', () => {
 
         testUtils.expectElementToHaveClasses('#space-4-5', ['base']);
         testUtils.expectElementToHaveClasses('#space-3-3', ['base']);
-        expect(testUtils.getGameComponent().arrows.length).toBe(0);
+        expect(testUtils.getGameComponent().arrows().length).toBe(0);
     }));
 
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {

@@ -29,27 +29,29 @@ export abstract class AbstractRectangularGoComponent
                                GoLegalityInformation>
 {
 
-    protected ko: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly ko: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public captures: WritableSignal<Coord[]> = signal([]);
+    protected readonly captures: WritableSignal<Coord[]> = signal([]);
 
-    public displayedZooms: WritableSignal<number> = signal(1);
+    protected readonly displayedZooms: WritableSignal<number> = signal(1);
 
-    public abstract hover: ModelSignal<MGPOptional<Coord>>;
+    protected abstract hover: ModelSignal<MGPOptional<Coord>>;
 
-    public zooms: WritableSignal<ReadonlyArray<Table<GoState>>> = signal([]);
+    protected readonly zooms: WritableSignal<ReadonlyArray<Table<GoState>>> = signal([]);
 
     private readonly SUB_BOARD_SEPARATOR: number = 0.5 * this.SPACE_SIZE;
 
     private readonly ZOOM_SEPARATOR: number = this.SPACE_SIZE;
 
-    public constructor(urlName: string) {
+    protected constructor(urlName: string) {
         super(urlName);
         this.encoder = GoMove.encoder;
-        this.canPass = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.canPass.set(true);
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
         this.aiConfig = {
             minimax: [{
                 id: 'territory',
@@ -65,8 +67,10 @@ export abstract class AbstractRectangularGoComponent
             }],
         };
         this.encoder = GoMove.encoder;
-        this.canPass = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.canPass.set(true);
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     private static hash(state: GoState): string {
@@ -80,7 +84,7 @@ export abstract class AbstractRectangularGoComponent
         return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
-    public override computeViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
@@ -104,7 +108,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
-    public async onClick(coord: Coord): Promise<MGPValidation> {
+    protected async onClick(coord: Coord): Promise<MGPValidation> {
         const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
@@ -131,13 +135,15 @@ export abstract class AbstractRectangularGoComponent
         this.updateScores();
 
         this.ko.set(state.koCoord);
-        this.canPass = phase.allowsPass();
+        this.canPass.set(phase.allowsPass());
         this.createHoshis();
         this.cdr.detectChanges();
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.state().captured);
+        this.scores.set(
+            MGPOptional.of(this.state().captured),
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -171,7 +177,7 @@ export abstract class AbstractRectangularGoComponent
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
-    public translateZoom(zoom: number): string {
+    protected translateZoom(zoom: number): string {
         const translateX: number = this.xZoomTranslate(zoom);
         const translateY: number = this.yZoomTranslate(zoom);
         return `translate(${ translateX }, ${ translateY })`;
@@ -214,13 +220,13 @@ export abstract class AbstractRectangularGoComponent
         return translateY;
     }
 
-    public translateZoomBoard(zoom: number, subZoomX: number, subZoomY: number): string {
+    protected translateZoomBoard(zoom: number, subZoomX: number, subZoomY: number): string {
         const translateX: number = this.getTranslateXZoomBoard(zoom, subZoomX, subZoomY);
         const translateY: number = this.getTranslateYZoomBoard(zoom, subZoomX, subZoomY);
         return `translate(${ translateX }, ${ translateY })`;
     }
 
-    public onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: MGPOptional<Coord>): void {
+    protected onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: MGPOptional<Coord>): void {
         if (zoomedCoord.isPresent()) {
             const normalCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(zoomedCoord.get(), zx, zy, zoom);
             this.hover.set(MGPOptional.of(normalCoord));

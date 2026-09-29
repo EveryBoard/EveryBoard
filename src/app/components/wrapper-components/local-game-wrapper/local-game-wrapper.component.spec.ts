@@ -193,11 +193,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     }));
 
     it('should show score if needed', fakeAsync(async() => {
-        testUtils.getGameComponent().scores = MGPOptional.empty();
+        testUtils.getGameComponent().scores.set(MGPOptional.empty());
         testUtils.expectElementNotToExist('#score-0');
         testUtils.expectElementNotToExist('#score-1');
 
-        testUtils.getGameComponent().scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        testUtils.getGameComponent().scores.set(MGPOptional.of(PlayerNumberMap.of(0, 0)));
         testUtils.forceChangeDetection();
 
         testUtils.expectElementToExist('#score-0');

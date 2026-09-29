@@ -60,7 +60,9 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.hasAsymmetricBoard = true;
 
         // If your game has no scores in-game, disable the following:
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     /**

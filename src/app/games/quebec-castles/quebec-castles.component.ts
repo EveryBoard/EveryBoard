@@ -73,7 +73,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         };
         this.encoder = QuebecCastlesMove.encoder;
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     protected override computeViewBox(): ViewBox {

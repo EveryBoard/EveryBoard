@@ -19,15 +19,27 @@ import { GoSubBoardHelper } from '../GoSubBoardHelper';
 export class GoBoardComponent extends BaseGameComponent {
 
     // input coord match the zoom 0
-    public captures: InputSignal<Coord[]> = input.required();
+    public readonly captures: InputSignal<Coord[]> = input.required();
 
-    public ko: InputSignal<MGPOptional<Coord>> = input.required();
+    public readonly ko: InputSignal<MGPOptional<Coord>> = input.required();
 
-    public last: InputSignal<MGPOptional<Coord>> = input.required();
+    public readonly last: InputSignal<MGPOptional<Coord>> = input.required();
 
-    public hover: InputSignal<MGPOptional<Coord>> = input.required();
+    public readonly hover: InputSignal<MGPOptional<Coord>> = input.required();
 
-    public adaptedCaptures: Signal<Coord[]> = computed(() => {
+    public readonly state: InputSignal<GoState> = input.required();
+
+    public readonly zoom: InputSignal<number> = input.required();
+
+    public readonly zx: InputSignal<number> = input.required();
+
+    public readonly zy: InputSignal<number> = input.required();
+
+    public readonly clicked: OutputEmitterRef<Coord> = output<Coord>();
+
+    public readonly takeHover: OutputEmitterRef<MGPOptional<Coord>> = output<MGPOptional<Coord>>();
+
+    protected readonly adaptedCaptures: Signal<Coord[]> = computed(() => {
         return this
             .captures()
             .map((coord: Coord) => GoSubBoardHelper.fromNormalToZoomedCoord(coord, this.zx(), this.zy(), this.zoom()))
@@ -35,7 +47,7 @@ export class GoBoardComponent extends BaseGameComponent {
             .map((coord: MGPOptional<Coord>) => coord.get());
     });
 
-    public adaptedKo: Signal<MGPOptional<Coord>> = computed(() => {
+    protected readonly adaptedKo: Signal<MGPOptional<Coord>> = computed(() => {
         return GoSubBoardHelper.fromNormalToOptionalZoomedCoord(
             this.ko(),
             this.zx(),
@@ -44,7 +56,7 @@ export class GoBoardComponent extends BaseGameComponent {
         );
     });
 
-    public adaptedLast: Signal<MGPOptional<Coord>> = computed(() => {
+    private readonly adaptedLast: Signal<MGPOptional<Coord>> = computed(() => {
         return GoSubBoardHelper.fromNormalToOptionalZoomedCoord(
             this.last(),
             this.zx(),
@@ -53,7 +65,7 @@ export class GoBoardComponent extends BaseGameComponent {
         );
     });
 
-    public adaptedHover: Signal<MGPOptional<Coord>> = computed(() => {
+    protected readonly adaptedHover: Signal<MGPOptional<Coord>> = computed(() => {
         return GoSubBoardHelper.fromNormalToOptionalZoomedCoord(
             this.hover(),
             this.zx(),
@@ -62,21 +74,9 @@ export class GoBoardComponent extends BaseGameComponent {
         );
     });
 
-    public state: InputSignal<GoState> = input.required();
+    protected readonly GoPiece: typeof GoPiece = GoPiece;
 
-    public zoom: InputSignal<number> = input.required();
-
-    public zx: InputSignal<number> = input.required();
-
-    public zy: InputSignal<number> = input.required();
-
-    public clicked: OutputEmitterRef<Coord> = output<Coord>();
-
-    public takeHover: OutputEmitterRef<MGPOptional<Coord>> = output<MGPOptional<Coord>>();
-
-    public GoPiece: typeof GoPiece = GoPiece;
-
-    public onClick(coord: Coord): void {
+    protected onClick(coord: Coord): void {
         const zoomAdaptedCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(
             coord,
             this.zx(),
@@ -86,37 +86,37 @@ export class GoBoardComponent extends BaseGameComponent {
         this.clicked.emit(zoomAdaptedCoord);
     }
 
-    public getSpaceClass(coord: Coord): string {
+    protected getSpaceClass(coord: Coord): string {
         const piece: GoPiece = this.state().getPieceAt(coord);
         return this.getPlayerClass(piece.getOwner());
     }
 
-    public spaceIsFull(coord: Coord): boolean {
+    protected spaceIsFull(coord: Coord): boolean {
         const piece: GoPiece = this.state().getPieceAt(coord);
         return piece !== GoPiece.EMPTY && this.isTerritory(coord) === false;
     }
 
-    public isLastSpace(coord: Coord): boolean {
+    protected isLastSpace(coord: Coord): boolean {
         return this.adaptedLast().equalsValue(coord);
     }
 
-    public isDead(coord: Coord): boolean {
+    protected isDead(coord: Coord): boolean {
         return this.state().isDead(coord);
     }
 
-    public isTerritory(coord: Coord): boolean {
+    protected isTerritory(coord: Coord): boolean {
         return this.state().isTerritory(coord);
     }
 
-    public onMouseEnter(coord: Coord): void {
+    protected onMouseEnter(coord: Coord): void {
         return this.onOptionalMouseOver(MGPOptional.of(coord));
     }
 
-    public onOptionalMouseOver(coord: MGPOptional<Coord>): void {
+    protected onOptionalMouseOver(coord: MGPOptional<Coord>): void {
         this.takeHover.emit(coord);
     }
 
-    public onSVGLeave(): void {
+    protected onSVGLeave(): void {
         this.takeHover.emit(MGPOptional.empty());
     }
 

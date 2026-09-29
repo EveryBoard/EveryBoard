@@ -2,7 +2,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { GameState } from '../../../jscaip/state/GameState';
 
 import { GameComponent } from './GameComponent';
@@ -10,7 +9,6 @@ import { GameComponent } from './GameComponent';
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,
-                                              P,
                                               C extends RulesConfig = EmptyRulesConfig,
                                               L = void>
     extends GameComponent<R, M, S, C, L>
@@ -20,8 +18,6 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public override SPACE_SIZE: number = 100;
-
-    public board: Table<P>;
 
     protected getTriangleCornerCoordsAtXY(x: number, y: number): Coord[] {
         if ((x + y) % 2 === 0) {

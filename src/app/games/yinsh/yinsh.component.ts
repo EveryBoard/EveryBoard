@@ -115,8 +115,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             }],
         };
         this.encoder = YinshMove.encoder;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
-
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
@@ -127,7 +128,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const state: YinshState = this.state();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;
-        this.scores = MGPOptional.of(state.countScores());
+        this.scores.set(
+            MGPOptional.of(state.countScores()),
+        );
         this.moveToInitialCaptureOrMovePhase();
     }
 
