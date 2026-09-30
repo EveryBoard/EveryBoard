@@ -450,12 +450,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When player zero moves and the bot wins
             await receiveSync();
             await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+            const turnMessage: string = testUtils.findElement('#currentPlayerIndicator').nativeElement.innerText;
             await receiveAction(Player.ZERO, 'EndGame');
             await receiveGameUpdate({ ...botGame, result: GameResult.VICTORY_OF_ONE });
 
             // Then the turn and winner messages use the bot display name
-            const turnIndicator: HTMLElement = testUtils.findElement('#currentPlayerIndicator').nativeElement;
-            expect(turnIndicator.innerText).toBe(`It is ${ botIdentifier.displayName }'s turn.`);
+            expect(turnMessage).toBe(`It is ${ botIdentifier.displayName }'s turn.`);
             const winnerIndicator: HTMLElement = testUtils.findElement('#winnerIndicator').nativeElement;
             expect(winnerIndicator.innerText).toBe(`${ botIdentifier.displayName } won.`);
         }));

@@ -328,8 +328,7 @@ describe('GameCreationComponent', () => {
                 expect(component.configFormGroup.get('chosenOpponent')?.value).toBe(botCandidate.name);
                 expectElementToExist('#selected_' + botCandidate.name);
                 const firstPlayerButton: HTMLElement = findElement('#firstPlayerOpponent').nativeElement;
-                expect(firstPlayerButton.innerText).toContain(botIdentifier.displayName);
-                expect(firstPlayerButton.innerText).not.toContain(botCandidate.name);
+                expect(firstPlayerButton.textContent).toEqual(`${ botIdentifier.displayName } starts`);
             }));
 
             it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {

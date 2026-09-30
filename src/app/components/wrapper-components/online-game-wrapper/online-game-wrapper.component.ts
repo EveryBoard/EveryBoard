@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { getUserDisplayName } from '../../../domain/BotIdentifier';
+import { BotIdentifier, getUserDisplayName } from '../../../domain/BotIdentifier';
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -555,13 +555,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return '';
         }
         const game: Game = Utils.getNonNullable(this.game);
-        if (user.id === game.playerZero.id) {
-            return getUserDisplayName(user, game.playerZeroBotIdentifier);
-        } else if (user.id === game.playerOne.id) {
-            return getUserDisplayName(user, game.playerOneBotIdentifier);
-        } else {
-            return user.name;
-        }
+        const isPlayerZero: boolean = user.id === game.playerZero.id;
+        const isPlayerOne: boolean = user.id === game.playerOne.id;
+        Utils.assert(isPlayerZero || isPlayerOne, 'User should be a participant in the game');
+        const botIdentifier: BotIdentifier | null = isPlayerZero ?
+            game.playerZeroBotIdentifier :
+            game.playerOneBotIdentifier;
+        return getUserDisplayName(user, botIdentifier);
     }
 
     protected isHardDraw(): boolean {
