@@ -121,6 +121,106 @@ func TestClearCurrentGameOpponent(t *testing.T) {
 	assert.Nil(t, currentGame.Opponent, "current game opponent should have been cleared")
 }
 
+func TestUpdateCurrentGameBotIdentifiers(t *testing.T) {
+	// Given a current game without bot identifiers
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
+	opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+	currentGame := &model.CurrentGame{
+		GameID:                42,
+		User:                  creator,
+		GameName:              "Go",
+		Creator:               creator,
+		CreatorBotIdentifier:  nil,
+		Opponent:              nil,
+		OpponentBotIdentifier: nil,
+		Role:                  model.UserRoleCreator,
+	}
+	require.NoError(t, store.SetCurrentGame(currentGame), "cannot set current game")
+	creatorBotIdentifier := &model.BotIdentifier{DisplayName: "Creator bot", Parameters: []byte(`{}`)}
+	opponentBotIdentifier := &model.BotIdentifier{DisplayName: "Opponent bot", Parameters: []byte(`{}`)}
+	currentGame.CreatorBotIdentifier = creatorBotIdentifier
+	currentGame.Opponent = &opponent
+	currentGame.OpponentBotIdentifier = opponentBotIdentifier
+
+	// When adding bot identifiers to the current game
+	require.NoError(t, store.UpdateCurrentGame(creator, currentGame), "cannot update current game")
+	persistedCurrentGame, err := store.GetCurrentGame(creator)
+	require.NoError(t, err, "cannot retrieve current game")
+	require.NotNil(t, persistedCurrentGame)
+
+	// Then both identifiers should be persisted
+	assert.Equal(t, creatorBotIdentifier, persistedCurrentGame.CreatorBotIdentifier)
+	assert.Equal(t, opponentBotIdentifier, persistedCurrentGame.OpponentBotIdentifier)
+}
+
+func TestClearCurrentGameOpponentBotIdentifier(t *testing.T) {
+	// Given a current game with a bot opponent
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+	currentGame := &model.CurrentGame{
+		GameID:                42,
+		User:                  creator,
+		GameName:              "Go",
+		Creator:               creator,
+		CreatorBotIdentifier:  nil,
+		Opponent:              &opponent,
+		OpponentBotIdentifier: &model.BotIdentifier{DisplayName: "Opponent bot", Parameters: []byte(`{}`)},
+		Role:                  model.UserRoleCreator,
+	}
+	require.NoError(t, store.SetCurrentGame(currentGame), "cannot set current game")
+
+	// When removing the opponent
+	currentGame.Opponent = nil
+	currentGame.OpponentBotIdentifier = nil
+	require.NoError(t, store.UpdateCurrentGame(creator, currentGame), "cannot clear current game opponent")
+	persistedCurrentGame, err := store.GetCurrentGame(creator)
+	require.NoError(t, err, "cannot retrieve updated current game")
+	require.NotNil(t, persistedCurrentGame)
+
+	// Then its identifier should be cleared too
+	assert.Nil(t, persistedCurrentGame.Opponent)
+	assert.Nil(t, persistedCurrentGame.OpponentBotIdentifier)
+}
+
+func TestPostgresUpdateCurrentGamePersistsBotIdentifiers(t *testing.T) {
+	// Given a PostgreSQL database with a current game
+	database := postgresTestStore(t)
+	creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
+	opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+	configRoom, err := database.CreateConfigRoom(creator, "Go", nil)
+	require.NoError(t, err, "cannot create config room")
+	currentGame := &model.CurrentGame{
+		User:                  creator,
+		GameID:                configRoom.ID,
+		GameName:              configRoom.GameName,
+		Creator:               creator,
+		CreatorBotIdentifier:  nil,
+		Opponent:              nil,
+		OpponentBotIdentifier: nil,
+		Role:                  model.UserRoleCreator,
+	}
+	require.NoError(t, database.SetCurrentGame(currentGame), "cannot set current game")
+	creatorBotIdentifier := &model.BotIdentifier{DisplayName: "Creator bot", Parameters: []byte(`{}`)}
+	opponentBotIdentifier := &model.BotIdentifier{DisplayName: "Opponent bot", Parameters: []byte(`{}`)}
+	currentGame.CreatorBotIdentifier = creatorBotIdentifier
+	currentGame.Opponent = &opponent
+	currentGame.OpponentBotIdentifier = opponentBotIdentifier
+
+	// When updating the current game with bot identifiers
+	require.NoError(t, database.UpdateCurrentGame(creator, currentGame), "cannot update current game")
+	persistedCurrentGame, err := database.GetCurrentGame(creator)
+	require.NoError(t, err, "cannot retrieve current game")
+	require.NotNil(t, persistedCurrentGame)
+
+	// Then PostgreSQL should persist and restore both identifiers
+	assert.Equal(t, creatorBotIdentifier, persistedCurrentGame.CreatorBotIdentifier)
+	assert.Equal(t, opponentBotIdentifier, persistedCurrentGame.OpponentBotIdentifier)
+}
+
 func TestCurrentGameUserWithSameIDButDifferentMetadata(t *testing.T) {
 	// Given a current game for a user
 	store, err := InitDatabase(sqlite.Open(":memory:"))

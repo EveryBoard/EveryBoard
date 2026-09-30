@@ -78,11 +78,13 @@ func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIden
 		}
 
 		newCurrentGame := model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: gameName,
-			Creator:  h.user,
-			Opponent: nil,
-			Role:     model.UserRoleCreator,
+			GameID:                configRoom.ID,
+			GameName:              gameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              nil,
+			OpponentBotIdentifier: nil,
+			Role:                  model.UserRoleCreator,
 		}
 
 		buf.addSend(h.connection, protocol.GameCreatedMessage{GameID: configRoom.ID})

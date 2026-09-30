@@ -210,11 +210,13 @@ func (h *Handler) unsubscribe() error {
 						ConfigRoom: *configRoom,
 					})
 					newCreatorGame := &model.CurrentGame{
-						GameID:   configRoom.ID,
-						GameName: configRoom.GameName,
-						Creator:  configRoom.Creator,
-						Opponent: nil,
-						Role:     model.UserRoleCreator,
+						GameID:                configRoom.ID,
+						GameName:              configRoom.GameName,
+						Creator:               configRoom.Creator,
+						CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+						Opponent:              nil,
+						OpponentBotIdentifier: nil,
+						Role:                  model.UserRoleCreator,
 					}
 					if err = h.updateCurrentGame(&buf, store, configRoom.Creator, newCreatorGame); err != nil {
 						return err

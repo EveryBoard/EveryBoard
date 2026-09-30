@@ -129,8 +129,12 @@ func TestHandleCreateGamePersistsBotIdentifier(t *testing.T) {
 	err = h.handleSubscribeConfigRoom(persistedRooms[0].ID, botIdentifier)
 	require.NoError(t, err, "bot creator should be allowed to subscribe with its identifier")
 
-	// Then the creator identifier should be persisted
+	// Then the creator bot identifier should be persisted
 	assert.Equal(t, botIdentifier, persistedRooms[0].CreatorBotIdentifier)
+	currentGame, err := database.GetCurrentGame(bot)
+	require.NoError(t, err, "cannot retrieve bot current game")
+	require.NotNil(t, currentGame)
+	assert.Equal(t, botIdentifier, currentGame.CreatorBotIdentifier)
 }
 
 func TestHandleSubscribeConfigRoomPersistsBotIdentifier(t *testing.T) {
@@ -155,9 +159,14 @@ func TestHandleSubscribeConfigRoomPersistsBotIdentifier(t *testing.T) {
 	})
 	require.NoError(t, err, "cannot retrieve candidates")
 
-	// Then the candidate identifier should be persisted
+	// Then the candidate bot identifier should be persisted
 	require.Len(t, persistedCandidates, 1)
 	assert.Equal(t, botIdentifier, persistedCandidates[0].BotIdentifier)
+	currentGame, err := database.GetCurrentGame(bot)
+	require.NoError(t, err, "cannot retrieve bot current game")
+	require.NotNil(t, currentGame)
+	assert.Nil(t, currentGame.CreatorBotIdentifier)
+	assert.Nil(t, currentGame.OpponentBotIdentifier)
 }
 
 func TestHandleBotIdentifierValidation(t *testing.T) {
