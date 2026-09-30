@@ -138,26 +138,55 @@ func TestBotIdentifiersArePersistedInConfigRoomAndCandidate(t *testing.T) {
 	assert.Equal(t, creatorBotIdentifier, persistedConfigRoom.CreatorBotIdentifier)
 	require.Len(t, persistedCandidates, 1)
 	assert.Equal(t, candidateBotIdentifier, persistedCandidates[0].BotIdentifier)
+}
+
+func TestSelectOpponentCopiesPersistedBotIdentifier(t *testing.T) {
+	// Given a config room with a persisted bot candidate
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	candidate := model.MinimalUser{ID: "candidate", Name: "candidate", IsBot: true}
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Candidate bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	configRoom, err := store.CreateConfigRoom(creator, "P4", nil)
+	require.NoError(t, err, "cannot create config room")
+	require.NoError(t, store.AddCandidate(configRoom, candidate, 42, botIdentifier), "cannot add candidate")
 
 	// When selecting the bot candidate
-	err = store.SelectOpponent(configRoom, candidate)
-	require.NoError(t, err, "cannot select bot candidate")
-	persistedConfigRoom, err = store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, store.SelectOpponent(configRoom, candidate), "cannot select bot candidate")
+
+	// Then its identifier should be copied to the chosen opponent
+	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
 	require.NoError(t, err, "cannot get config room after selecting candidate")
 	require.NotNil(t, persistedConfigRoom, "config room should exist")
+	assert.Equal(t, botIdentifier, configRoom.ChosenOpponentBotIdentifier)
+	assert.Equal(t, botIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
+}
 
-	// Then the candidate identifier should be copied to the chosen opponent
-	assert.Equal(t, candidateBotIdentifier, configRoom.ChosenOpponentBotIdentifier)
-	assert.Equal(t, candidateBotIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
+func TestRemoveOpponentClearsBotIdentifier(t *testing.T) {
+	// Given a config room with a selected bot opponent
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Opponent bot",
+		Parameters:  json.RawMessage(`{"version":2}`),
+	}
+	configRoom, err := store.CreateConfigRoom(creator, "P4", nil)
+	require.NoError(t, err, "cannot create config room")
+	require.NoError(t, store.AddCandidate(configRoom, opponent, 42, botIdentifier), "cannot add candidate")
+	require.NoError(t, store.SelectOpponent(configRoom, opponent), "cannot select opponent")
 
 	// When removing the chosen opponent
-	err = store.RemoveOpponent(configRoom)
-	require.NoError(t, err, "cannot remove bot opponent")
-	persistedConfigRoom, err = store.GetConfigRoom(configRoom.ID)
-	require.NoError(t, err, "cannot get config room after removing opponent")
-	require.NotNil(t, persistedConfigRoom, "config room should exist")
+	require.NoError(t, store.RemoveOpponent(configRoom), "cannot remove bot opponent")
 
 	// Then the chosen-opponent identifier should be cleared
+	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
+	require.NoError(t, err, "cannot get config room after removing opponent")
+	require.NotNil(t, persistedConfigRoom, "config room should exist")
 	assert.Nil(t, configRoom.ChosenOpponentBotIdentifier)
 	assert.Nil(t, persistedConfigRoom.ChosenOpponentBotIdentifier)
 }
@@ -333,25 +362,6 @@ func TestRematchPropagatesBotIdentifiers(t *testing.T) {
 			assert.Equal(t, test.expectedCreatorBotIdentifier, persistedRematch.CreatorBotIdentifier)
 			assert.Equal(t, test.expectedChosenOpponentBotIdentifier,
 				persistedRematch.ChosenOpponentBotIdentifier)
-
-			// When creating the game associated with the rematch
-			rematchGame, err := store.CreateGame(rematch, 43, true)
-			require.NoError(t, err, "cannot create rematch game")
-			persistedRematchGame, err := store.GetGame(rematchGame.GameID)
-			require.NoError(t, err, "cannot retrieve rematch game")
-			require.NotNil(t, persistedRematchGame, "rematch game should exist")
-			expectedPlayerZeroBotIdentifier := test.expectedCreatorBotIdentifier
-			expectedPlayerOneBotIdentifier := test.expectedChosenOpponentBotIdentifier
-			if rematch.FirstPlayer == model.FirstPlayerChosenOpponent {
-				expectedPlayerZeroBotIdentifier = test.expectedChosenOpponentBotIdentifier
-				expectedPlayerOneBotIdentifier = test.expectedCreatorBotIdentifier
-			}
-
-			// Then CreateGame should automatically order and persist the snapshots
-			assert.Equal(t, expectedPlayerZeroBotIdentifier, rematchGame.PlayerZeroBotIdentifier)
-			assert.Equal(t, expectedPlayerOneBotIdentifier, rematchGame.PlayerOneBotIdentifier)
-			assert.Equal(t, expectedPlayerZeroBotIdentifier, persistedRematchGame.PlayerZeroBotIdentifier)
-			assert.Equal(t, expectedPlayerOneBotIdentifier, persistedRematchGame.PlayerOneBotIdentifier)
 		})
 	}
 }

@@ -431,6 +431,35 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
         }));
 
+        it('should show a bot display name in turn and winner messages', fakeAsync(async() => {
+            // Given an observer watching a game with a bot as player one
+            const botIdentifier: BotIdentifier = {
+                displayName: 'Perfect Quarto',
+                parameters: { version: 1 },
+            };
+            const botGame: Game = {
+                ...GameMocks.STARTED,
+                playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
+                playerOneBotIdentifier: botIdentifier,
+            };
+            await prepareTestUtilsFor(USER_OBSERVER, {
+                ...PreparationOptions.withoutClocks,
+                game: botGame,
+            });
+
+            // When player zero moves and the bot wins
+            await receiveSync();
+            await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+            await receiveAction(Player.ZERO, 'EndGame');
+            await receiveGameUpdate({ ...botGame, result: GameResult.VICTORY_OF_ONE });
+
+            // Then the turn and winner messages use the bot display name
+            const turnIndicator: HTMLElement = testUtils.findElement('#currentPlayerIndicator').nativeElement;
+            expect(turnIndicator.innerText).toBe(`It is ${ botIdentifier.displayName }'s turn.`);
+            const winnerIndicator: HTMLElement = testUtils.findElement('#winnerIndicator').nativeElement;
+            expect(winnerIndicator.innerText).toBe(`${ botIdentifier.displayName } won.`);
+        }));
+
     });
 
     it('should forbid making a move when it is not the turn of the player', fakeAsync(async() => {
