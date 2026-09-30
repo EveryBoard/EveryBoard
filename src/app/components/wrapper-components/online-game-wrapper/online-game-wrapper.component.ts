@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { BotIdentifier } from '../../../domain/BotIdentifier';
+import { getUserDisplayName } from '../../../domain/BotIdentifier';
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -544,9 +544,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     protected getPlayerDisplayName(player: Player): string {
         const game: Game = Utils.getNonNullable(this.game);
         if (player === Player.ZERO) {
-            return this.getDisplayName(game.playerZero, game.playerZeroBotIdentifier);
+            return getUserDisplayName(game.playerZero, game.playerZeroBotIdentifier);
         } else {
-            return this.getDisplayName(game.playerOne, game.playerOneBotIdentifier);
+            return getUserDisplayName(game.playerOne, game.playerOneBotIdentifier);
         }
     }
 
@@ -556,16 +556,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         const game: Game = Utils.getNonNullable(this.game);
         if (user.id === game.playerZero.id) {
-            return this.getDisplayName(user, game.playerZeroBotIdentifier);
+            return getUserDisplayName(user, game.playerZeroBotIdentifier);
         } else if (user.id === game.playerOne.id) {
-            return this.getDisplayName(user, game.playerOneBotIdentifier);
+            return getUserDisplayName(user, game.playerOneBotIdentifier);
         } else {
             return user.name;
         }
-    }
-
-    private getDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
-        return botIdentifier?.displayName ?? user.name;
     }
 
     protected isHardDraw(): boolean {

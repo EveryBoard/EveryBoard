@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { BotIdentifier } from '../../../domain/BotIdentifier';
+import { getUserDisplayName } from '../../../domain/BotIdentifier';
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
@@ -243,17 +243,17 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
-        this.viewInfo.creator = this.getDisplayName(configRoom.creator, configRoom.creatorBotIdentifier);
+        this.viewInfo.creator = getUserDisplayName(configRoom.creator, configRoom.creatorBotIdentifier);
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
             return {
                 name: c.user.name,
-                displayName: this.getDisplayName(c.user, c.botIdentifier),
+                displayName: getUserDisplayName(c.user, c.botIdentifier),
                 isBot: c.user.isBot ?? false,
                 elo: c.elo,
             };
         });
         this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
-        this.viewInfo.chosenOpponentDisplayName = configRoom.chosenOpponent == null ? undefined : this.getDisplayName(
+        this.viewInfo.chosenOpponentDisplayName = configRoom.chosenOpponent == null ? undefined : getUserDisplayName(
             configRoom.chosenOpponent, configRoom.chosenOpponentBotIdentifier);
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
@@ -275,10 +275,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 break;
         }
         this.cdr.detectChanges();
-    }
-
-    private getDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
-        return botIdentifier?.displayName ?? user.name;
     }
 
     private setDataForCreator(configRoom: ConfigRoom): void {

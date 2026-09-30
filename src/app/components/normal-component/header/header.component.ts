@@ -7,8 +7,7 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { BotIdentifier } from '../../../domain/BotIdentifier';
-import { MinimalUser } from '../../../domain/MinimalUser';
+import { getUserDisplayName } from '../../../domain/BotIdentifier';
 import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
@@ -45,7 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const currentGame: CurrentGame = this.currentGame().get();
         const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
         if (currentGame.role === 'Observer' || currentGame.role === 'Candidate') {
-            const creatorName: string = this.getDisplayName(
+            const creatorName: string = getUserDisplayName(
                 currentGame.creator,
                 currentGame.creatorBotIdentifier,
             );
@@ -55,17 +54,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
             return $localize`${gameName} (waiting for opponent)`;
         }
         const opponentName: string = this.connectedUser().id === currentGame.creator.id ?
-            this.getDisplayName(
+            getUserDisplayName(
                 Utils.getNonNullable(currentGame.opponent),
                 currentGame.opponentBotIdentifier,
             ) :
-            this.getDisplayName(currentGame.creator, currentGame.creatorBotIdentifier);
+            getUserDisplayName(currentGame.creator, currentGame.creatorBotIdentifier);
         return $localize`${gameName} against ${opponentName}`;
     });
-
-    private getDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
-        return botIdentifier?.displayName ?? user.name;
-    }
 
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
