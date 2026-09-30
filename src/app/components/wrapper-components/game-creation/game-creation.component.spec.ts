@@ -306,6 +306,32 @@ describe('GameCreationComponent', () => {
         });
 
         describe('Chosing Opponent', () => {
+            it('should keep the bot account name as the selection key and show its display name', fakeAsync(async() => {
+                // Given a creator and a bot candidate with a different display name
+                await awaitComponentInitialization();
+                const botCandidate: MinimalUser = { ...candidate, isBot: true };
+                const botIdentifier: BotIdentifier = {
+                    displayName: 'Perfect P4',
+                    parameters: { version: 1 },
+                };
+                configRoomService.mockCandidateJoined(botCandidate, 0, botIdentifier);
+
+                // When the creator selects the bot
+                await clickElement('#presenceOf_' + botCandidate.name);
+                await receiveConfigRoomUpdate({
+                    ...ConfigRoomMocks.getInitial(defaultConfig),
+                    chosenOpponent: botCandidate,
+                    chosenOpponentBotIdentifier: botIdentifier,
+                });
+
+                // Then the account name remains the selection key and the bot display name is presented
+                expect(component.configFormGroup.get('chosenOpponent')?.value).toBe(botCandidate.name);
+                expectElementToExist('#selected_' + botCandidate.name);
+                const firstPlayerButton: HTMLElement = findElement('#firstPlayerOpponent').nativeElement;
+                expect(firstPlayerButton.innerText).toContain(botIdentifier.displayName);
+                expect(firstPlayerButton.innerText).not.toContain(botCandidate.name);
+            }));
+
             it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
                 await awaitComponentInitialization();

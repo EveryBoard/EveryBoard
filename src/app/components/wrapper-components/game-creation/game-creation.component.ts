@@ -30,6 +30,13 @@ export class GameCreationComponentMessages {
     public static readonly GAME_DOES_NOT_EXIST_OR_UNKNOWN: Localized = () => $localize`The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.`;
 }
 
+type ViewInfoCandidate = {
+    name: string;
+    displayName: string;
+    isBot: boolean;
+    elo: number;
+}
+
 type GameCreationViewInfo = {
     userIsCreator: boolean;
     showCustomTime?: boolean;
@@ -49,8 +56,9 @@ type GameCreationViewInfo = {
     gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string; displayName: string; isBot: boolean; elo: number }[];
+    candidates: ViewInfoCandidate[];
     chosenOpponent?: string;
+    chosenOpponentDisplayName?: string;
     candidateClasses: { [key: string]: string[] };
 }
 @Component({
@@ -194,6 +202,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
+                this.viewInfo.chosenOpponentDisplayName = this.viewInfo.candidates
+                    .find((candidate: ViewInfoCandidate) => candidate.name === opponent)?.displayName;
                 const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
                 const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
@@ -242,20 +252,15 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 elo: c.elo,
             };
         });
+        this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
+        this.viewInfo.chosenOpponentDisplayName = configRoom.chosenOpponent == null ? undefined : this.getDisplayName(
+            configRoom.chosenOpponent, configRoom.chosenOpponentBotIdentifier);
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
             this.viewInfo.moveDuration = configRoom.moveDuration;
             this.viewInfo.gameDuration = configRoom.gameDuration;
             this.viewInfo.gameType = configRoom.gameType;
-            if (configRoom.chosenOpponent == null) {
-                this.viewInfo.chosenOpponent = undefined;
-            } else {
-                this.viewInfo.chosenOpponent = this.getDisplayName(
-                    configRoom.chosenOpponent,
-                    configRoom.chosenOpponentBotIdentifier,
-                );
-            }
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
         }
         switch (configRoom.gameType) {

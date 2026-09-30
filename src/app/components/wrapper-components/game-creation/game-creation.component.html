@@ -90,8 +90,8 @@
                                                 id="firstPlayerOpponent"
                                                 [ngClass]="viewInfo.firstPlayerClasses[FirstPlayer.CHOSEN_OPPONENT]"
                                                 (click)="selectFirstPlayer(FirstPlayer.CHOSEN_OPPONENT)">
-                                            @if (viewInfo.chosenOpponent) {
-                                                <ng-container i18n>{{ viewInfo.chosenOpponent }} starts</ng-container>
+                                            @if (viewInfo.chosenOpponentDisplayName) {
+                                                <ng-container i18n>{{ viewInfo.chosenOpponentDisplayName }} starts</ng-container>
                                             } @else {
                                                 <ng-container i18n>The opponent starts</ng-container>
                                             }
@@ -300,7 +300,7 @@
                             @if (viewInfo.creatorIsModifyingConfig) {
                                 <ng-container i18n>{{ viewInfo.creator }} is configuring the game.</ng-container>
                             } @else {
-                                <ng-container i18n>{{ viewInfo.creator }} has proposed a configuration to {{ viewInfo.chosenOpponent }}.</ng-container>
+                                <ng-container i18n>{{ viewInfo.creator }} has proposed a configuration to {{ viewInfo.chosenOpponentDisplayName }}.</ng-container>
                             }
                         </p>
                     </div>
