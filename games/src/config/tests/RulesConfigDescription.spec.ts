@@ -1,6 +1,7 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable max-lines-per-function */
-import { MGPMap } from 'lib/dist';
+import { MGPMap } from '@everyboard/lib';
+
 import { AbaloneRules } from '../../games/abalone/AbaloneRules';
 import { ApagosRules } from '../../games/apagos/ApagosRules';
 import { BashniRules } from '../../games/checkers/bashni/BashniRules';

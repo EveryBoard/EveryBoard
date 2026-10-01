@@ -1,8 +1,5 @@
+import { Coord, Table, TableUtils, Vector } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
-
-import { Coord } from '@everyboard/games';
-import { Vector } from '@everyboard/games';
-import { Table, TableUtils } from '@everyboard/games';
 
 export class GoSubBoardHelper {
 
