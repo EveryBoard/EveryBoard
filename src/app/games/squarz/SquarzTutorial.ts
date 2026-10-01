@@ -1,13 +1,13 @@
+
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { SquarzMove } from '@everyboard/games';
+import { SquarzConfig, SquarzRules } from '@everyboard/games';
+import { SquarzState } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-
-import { SquarzMove } from './SquarzMove';
-import { SquarzConfig, SquarzRules } from './SquarzRules';
-import { SquarzState } from './SquarzState';
 
 const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 const initialState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
