@@ -1,3 +1,4 @@
+// Provide the browser globals used by @everyboard/games when its Jasmine tests run in Node.js.
 import '@angular/localize/init';
 
 class MemoryStorage implements Storage {
