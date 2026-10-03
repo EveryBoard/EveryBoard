@@ -2,10 +2,11 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { RulesFailure, TaflConfig, TaflFailure, TaflMoveGenerator, TaflPawn, TaflRules } from '@everyboard/games';
-import { TaflMove } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
-import { TaflState } from '@everyboard/games';
+import { TaflConfig, TaflFailure, TaflMoveGenerator, TaflPawn, TaflRules } from '@everyboard/games/tafl';
+import { TaflMove } from '@everyboard/games/tafl';
+import { TaflState } from '@everyboard/games/tafl';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 

@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
-import { CheckersConfig } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
-import { InternationalCheckersRules } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games/checkers/common';
+import { CheckersMove } from '@everyboard/games/checkers/common';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games/checkers/common';
+import { InternationalCheckersRules } from '@everyboard/games/checkers/international-checkers';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

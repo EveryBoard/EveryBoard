@@ -4,9 +4,9 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
-import { TrexoMove } from '@everyboard/games';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games';
-import { TrexoFailure } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games/trexo';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games/trexo';
+import { TrexoFailure } from '@everyboard/games/trexo';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TrexoComponent } from '../trexo.component';

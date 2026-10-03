@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
-import { CheckersConfig } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersPiece, CheckersStack, OddCheckersState } from '@everyboard/games';
-import { BashniRules } from '@everyboard/games';
+import { BashniRules } from '@everyboard/games/checkers/bashni';
+import { CheckersConfig } from '@everyboard/games/checkers/common';
+import { CheckersMove } from '@everyboard/games/checkers/common';
+import { CheckersPiece, CheckersStack, OddCheckersState } from '@everyboard/games/checkers/common';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { ReversiRules } from '@everyboard/games';
+import { ReversiRules } from '@everyboard/games/reversis/reversi';
 
 import { AbstractReversiComponent } from '../common/abstract-reversi.component';
 

@@ -1,10 +1,15 @@
 
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
-import { LodestoneMove } from '@everyboard/games';
-import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '@everyboard/games';
-import { LodestoneRules } from '@everyboard/games';
-import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '@everyboard/games';
+import { LodestoneMove } from '@everyboard/games/lodestone';
+import {
+    LodestonePiece,
+    LodestonePieceLodestone,
+    LodestonePieceNone,
+    LodestonePiecePlayer,
+} from '@everyboard/games/lodestone';
+import { LodestoneRules } from '@everyboard/games/lodestone';
+import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '@everyboard/games/lodestone';
 import { MGPMap, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

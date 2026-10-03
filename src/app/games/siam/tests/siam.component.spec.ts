@@ -6,11 +6,11 @@ import { Orthogonal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { SiamMove } from '@everyboard/games';
-import { SiamPiece } from '@everyboard/games';
-import { SiamRules } from '@everyboard/games';
-import { SiamState } from '@everyboard/games';
-import { SiamFailure } from '@everyboard/games';
+import { SiamMove } from '@everyboard/games/siam';
+import { SiamPiece } from '@everyboard/games/siam';
+import { SiamRules } from '@everyboard/games/siam';
+import { SiamState } from '@everyboard/games/siam';
+import { SiamFailure } from '@everyboard/games/siam';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
