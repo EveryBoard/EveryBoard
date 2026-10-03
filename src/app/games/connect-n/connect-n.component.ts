@@ -14,7 +14,7 @@ import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
 import { ConnectNMove } from './ConnectNMove';
 import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
-import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
+import { ConnectNConfig, ConnectNRules } from '../../../../games/src/games/connect-n/ConnectNRules';
 
 @Component({
     selector: 'app-connect-n',

@@ -11,7 +11,7 @@ import { OrdinalSquareTopology } from '../../jscaip/topology/OrdinalSquareTopolo
 import { Topology } from '../../jscaip/topology/Topology';
 
 import { ConnectNMove } from './ConnectNMove';
-import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
+import { ConnectNConfig, ConnectNRules } from '../../../../games/src/games/connect-n/ConnectNRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;

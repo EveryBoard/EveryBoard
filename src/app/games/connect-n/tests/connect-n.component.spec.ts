@@ -17,7 +17,7 @@ import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTop
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNMove } from '../ConnectNMove';
-import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
+import { ConnectNConfig, ConnectNRules } from '../../../../../games/src/games/connect-n/ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
 

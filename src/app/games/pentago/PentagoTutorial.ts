@@ -1,13 +1,13 @@
+
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games';
+import { PentagoRules } from '@everyboard/games';
+import { PentagoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { PentagoMove } from './PentagoMove';
-import { PentagoRules } from './PentagoRules';
-import { PentagoState } from './PentagoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

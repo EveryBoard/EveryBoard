@@ -1,23 +1,23 @@
 import { Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
-import { FlatHexaOrientation } from '../../../jscaip/HexaOrientation';
-import { Move } from '../../../jscaip/Move';
-import { SuperRules } from '../../../jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { HexaLayout } from '../../../jscaip/layout/HexaLayout';
-import { Layout } from '../../../jscaip/layout/Layout';
-import { SquareLayout } from '../../../jscaip/layout/SquareLayout';
-import { TriangularLayout } from '../../../jscaip/layout/TriangularLayout';
-import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
-import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
-import { OrthogonalSquareTopology } from '../../../jscaip/topology/OrthogonalSquareTopology';
-import { Topology } from '../../../jscaip/topology/Topology';
-import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
+import { HexagonalTopology } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+import { OrthogonalSquareTopology } from '@everyboard/games';
+import { Topology } from '@everyboard/games';
+import { TriangularTopology } from '@everyboard/games';
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
+import { SquareLayout } from '../layout/SquareLayout';
+import { TriangularLayout } from '../layout/TriangularLayout';
+import { HexaLayout } from '../layout/HexaLayout';
+import { Layout } from '../layout/Layout';
 
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,

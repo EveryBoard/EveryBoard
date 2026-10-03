@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 
-import { Coord } from '../../jscaip/Coord';
+import { Coord } from '@everyboard/games';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessFace } from './martian-chess.component';

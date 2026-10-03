@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { DirectionFailure } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games';
+import { MartianChessPiece } from '@everyboard/games';
+import { MartianChessRules } from '@everyboard/games';
+import { MartianChessState } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessPiece } from '../MartianChessPiece';
-import { MartianChessRules } from '../MartianChessRules';
-import { MartianChessState } from '../MartianChessState';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 
 describe('MartianChessComponent', () => {
