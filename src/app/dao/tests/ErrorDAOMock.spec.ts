@@ -1,6 +1,6 @@
+import { ObservableSubject } from '@everyboard/games';
 import { JSONValue, MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { ObservableSubject } from '../../utils/ObservableSubject';
 import { ErrorDocument, MGPError } from '../ErrorDAO';
 
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';

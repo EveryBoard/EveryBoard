@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { Debug } from '@everyboard/games';
+
 import { BotIdentifier } from '../domain/BotIdentifier';
 import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 

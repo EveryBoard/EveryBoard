@@ -1,13 +1,13 @@
+
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { LinesOfActionMove } from '@everyboard/games';
+import { LinesOfActionRules } from '@everyboard/games';
+import { LinesOfActionState } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionState } from './LinesOfActionState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
