@@ -2,20 +2,20 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersMoveGenerator } from '@everyboard/games';
+import { Direction, DirectionFailure } from '@everyboard/games';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games';
+import { CheckersStack, CheckersState } from '@everyboard/games';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
-import { Player } from '../../../../jscaip/Player';
-import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
-import { CheckersFailure } from '../CheckersFailure';
-import { CheckersMove } from '../CheckersMove';
-import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
-import { CheckersStack, CheckersState } from '../CheckersState';
 import { CheckersComponent } from '../checkers.component';
 
 export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {

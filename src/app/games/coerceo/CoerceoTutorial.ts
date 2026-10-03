@@ -1,12 +1,12 @@
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games';
+import { CoerceoConfig, CoerceoRules } from '@everyboard/games';
+import { CoerceoState } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-
-import { CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
-import { CoerceoState } from './CoerceoState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

@@ -3,25 +3,25 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { P4Config, P4Rules } from '@everyboard/games';
+import { AIDepthLimitOptions, AIOptions, AbstractAI } from '@everyboard/games';
+import { MinimaxConfig } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { IterativeDeepeningMinimax } from '@everyboard/games';
+import { MCTS } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { P4Heuristic } from '@everyboard/games';
+import { P4Move } from '@everyboard/games';
+import { P4OrderedMoveGenerator } from '@everyboard/games';
+import { P4State } from '@everyboard/games';
 import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { GipfComponent } from '../../../games/gipf/gipf.component';
-import { P4Heuristic } from '../../../games/p4/P4Heuristic';
-import { P4Move } from '../../../games/p4/P4Move';
-import { P4OrderedMoveGenerator } from '../../../games/p4/P4OrderedMoveGenerator';
-import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
-import { P4State } from '../../../games/p4/P4State';
 import { P4Component } from '../../../games/p4/p4.component';
-import { AIDepthLimitOptions, AIOptions, AbstractAI } from '../../../jscaip/AI/AI';
-import { MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
@@ -155,7 +155,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Given a game
         // When displaying it
         // Then it is interactive
-        expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+        expect(testUtils.getGameComponent().interactive()).toBeTrue();
     }));
 
     it('should show draw', fakeAsync(async() => {
@@ -280,14 +280,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
             testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
 
             // When selecting only the AI without the depth for the current player
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
 
             // Then the game should not be interactive anymore
-            expect(testUtils.getGameComponent().isInteractive())
+            expect(testUtils.getGameComponent().interactive())
                 .withContext('Interactivity should be false')
                 .toBeFalse();
             // nor should it show the current player background
@@ -868,7 +868,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should highlight board in player 0 color when it is player 0 turn', () => {
             // Given a game which is initially interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
 
             // Then the game should have background for player 0
             testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
@@ -876,7 +876,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should highlight board in player 1 color when it is player 1 turn', fakeAsync(async() => {
             // Given a game which is initially interactive and it is Player.ONE's turn
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // Then the game should have background for player 1

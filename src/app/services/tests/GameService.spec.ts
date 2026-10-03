@@ -2,12 +2,12 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 
+import { Player } from '@everyboard/games';
 import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Game, GameEvent } from '../../domain/Game';
 import { GameMocks } from '../../domain/GameMocks.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { Player } from '../../jscaip/Player';
 import { BackendMessage, BackendService } from '../BackendService';
 import { GameService } from '../GameService';
 

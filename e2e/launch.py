@@ -11,6 +11,7 @@ import sys
 import traceback
 
 failed = False
+FRONTEND_START_TIMEOUT_SECONDS = 300
 
 def open_urls(process):
     for line in iter(process.stdout.readline, ""):
@@ -57,7 +58,8 @@ def run_e2e(only_scenario):
         backend_log_thread = threading.Thread(target=log, args=(backend_process,))
         backend_log_thread.start()
 
-        frontend_process = subprocess.Popen(['npm', 'run', 'start:emulator'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        frontend_process = subprocess.Popen(['npm', 'run', 'start:emulator'], stdout=subprocess.PIPE,
+                                            stderr=subprocess.STDOUT, universal_newlines=True)
 
         print('[e2e] Watching URLs')
         watch_thread = threading.Thread(target=open_urls, args=(frontend_process,))
@@ -65,11 +67,17 @@ def run_e2e(only_scenario):
 
         print('[e2e] Waiting for frontend to be reachable')
         connected = False
+        frontend_start_deadline = time.monotonic() + FRONTEND_START_TIMEOUT_SECONDS
         while connected == False:
+            frontend_return_code = frontend_process.poll()
+            if frontend_return_code != None:
+                raise RuntimeError(f'Frontend exited with code {frontend_return_code} before becoming reachable')
+            if time.monotonic() >= frontend_start_deadline:
+                raise TimeoutError(f'Frontend did not become reachable within {FRONTEND_START_TIMEOUT_SECONDS} seconds')
             time.sleep(5)
             try:
                 print('[e2e] Trying to connect...')
-                response = requests.get('http://localhost:4200')
+                response = requests.get('http://localhost:4200', timeout=5)
                 print(response)
                 connected = True
             except Exception as e:

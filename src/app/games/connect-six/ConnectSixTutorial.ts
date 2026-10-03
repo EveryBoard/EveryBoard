@@ -1,12 +1,12 @@
+import { Coord } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { ConnectSixDrops, ConnectSixFirstMove } from '@everyboard/games';
+import { ConnectSixRules } from '@everyboard/games';
+import { ConnectSixState } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { GobanConfig } from '../../jscaip/GobanConfig';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { ConnectSixDrops, ConnectSixFirstMove } from './ConnectSixMove';
-import { ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixState } from './ConnectSixState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

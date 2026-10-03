@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games';
+import { CoerceoConfig, CoerceoRules } from '@everyboard/games';
+import { CoerceoState } from '@everyboard/games';
+import { CoerceoFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../CoerceoMove';
-import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { CoerceoState } from '../CoerceoState';
 import { CoerceoComponent } from '../coerceo.component';
 
 describe('CoerceoComponent', () => {

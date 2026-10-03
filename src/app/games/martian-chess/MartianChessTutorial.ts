@@ -1,13 +1,13 @@
+
+import { Coord } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games';
+import { MartianChessPiece } from '@everyboard/games';
+import { MartianChessRules } from '@everyboard/games';
+import { MartianChessState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-
-import { MartianChessMove } from './MartianChessMove';
-import { MartianChessPiece } from './MartianChessPiece';
-import { MartianChessRules } from './MartianChessRules';
-import { MartianChessState } from './MartianChessState';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;

@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuartoHeuristic } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games';
+import { QuartoMoveGenerator } from '@everyboard/games';
+import { QuartoPiece } from '@everyboard/games';
+import { QuartoConfig, QuartoRules } from '@everyboard/games';
+import { QuartoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { QuartoHeuristic } from './QuartoHeuristic';
-import { QuartoMove } from './QuartoMove';
-import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { QuartoPiece } from './QuartoPiece';
-import { QuartoConfig, QuartoRules } from './QuartoRules';
-import { QuartoState } from './QuartoState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

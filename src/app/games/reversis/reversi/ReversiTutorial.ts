@@ -1,15 +1,15 @@
+import { ReversiConfig } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
+import { ReversiRules } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { RectangularShape } from '@everyboard/games';
+import { SimpleGameStateWithTable } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
-import { ReversiConfig } from '../common/AbstractReversiRules';
-import { ReversiMove } from '../common/ReversiMove';
-import { ReversiState } from '../common/ReversiState';
-
-import { ReversiRules } from './ReversiRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;

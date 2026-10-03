@@ -2,8 +2,9 @@ import { Component, input, InputSignal } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfig } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
+
 import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
 
 @Component({

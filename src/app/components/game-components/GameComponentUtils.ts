@@ -1,5 +1,6 @@
-import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/layout/HexaLayout';
+import { Coord } from '@everyboard/games';
+
+import { HexaLayout } from './layout/HexaLayout';
 
 interface Limits {
     minX: number;

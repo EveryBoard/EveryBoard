@@ -1,15 +1,15 @@
-/* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
-import { SimpleGameStateWithTable } from 'src/app/jscaip/state/SimpleGameStateWithTable';
 
-import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
-import { Ordinal } from '../../../../jscaip/Ordinal';
-import { Table } from '../../../../jscaip/TableUtils';
-import { TorusShape } from '../../../../jscaip/shape/TorusShape';
-import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
+import { fakeAsync } from '@angular/core/testing';
+
+
+import { FourStatePiece, Ordinal, Table } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
+import { SimpleGameStateWithTable } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+import { TorusShape } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { ReversiMove } from '../../common/ReversiMove';
-import { ReversiState } from '../../common/ReversiState';
 import { ToricReversiComponent } from '../toric-reversi.component';
 
 

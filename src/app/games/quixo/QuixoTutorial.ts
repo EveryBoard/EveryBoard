@@ -1,11 +1,11 @@
+import { Orthogonal } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { QuixoMove } from '@everyboard/games';
+import { QuixoRules } from '@everyboard/games';
+import { QuixoConfig, QuixoState } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { QuixoMove } from './QuixoMove';
-import { QuixoRules } from './QuixoRules';
-import { QuixoConfig, QuixoState } from './QuixoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

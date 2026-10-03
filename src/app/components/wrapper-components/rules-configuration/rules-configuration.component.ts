@@ -3,14 +3,14 @@ import { ChangeDetectionStrategy, Component, InputSignal, OnDestroy, OnInit, eff
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '@everyboard/games';
+import { EnumConfig } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
+import { Localized } from '@everyboard/games';
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
-import { EnumConfig } from './EnumConfig';
-import { RulesConfigDescription } from './RulesConfigDescription';
 
 const CUSTOM_CONFIG_NAME: string = '__custom__';
 

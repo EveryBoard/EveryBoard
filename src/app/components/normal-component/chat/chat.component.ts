@@ -5,9 +5,10 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
+import { Debug } from '@everyboard/games';
+
 import { Message } from '../../../domain/Message';
 import { ChatService } from '../../../services/ChatService';
-import { Debug } from '../../../utils/Debug';
 
 @Component({
     selector: 'app-chat',

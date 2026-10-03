@@ -1,19 +1,20 @@
 import { signal, WritableSignal } from '@angular/core';
 
+
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { TopologicReversiRules } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { ReversiConfig, ReversiLegalityInformation } from '@everyboard/games';
+import { ReversiHeuristic } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiMoveGenerator } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../../components/game-components/topologic-game-component/TopologicGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-
-import { TopologicReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
-import { ReversiHeuristic } from './ReversiHeuristic';
-import { ReversiMove } from './ReversiMove';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiState } from './ReversiState';
 
 export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     extends TopologicGameComponent<R,

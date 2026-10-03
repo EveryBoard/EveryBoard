@@ -1,15 +1,16 @@
 import { NgClass } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 
+
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
 import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 
 import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
 import { ConnectNMove } from './ConnectNMove';

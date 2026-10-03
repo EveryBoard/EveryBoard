@@ -1,9 +1,9 @@
 import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { GobanUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { GobanUtils } from '../../../../jscaip/GobanUtils';
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 
 @Component({

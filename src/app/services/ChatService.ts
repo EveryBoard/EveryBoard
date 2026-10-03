@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { Debug } from '@everyboard/games';
+
 import { Message } from '../domain/Message';
-import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 
