@@ -3,13 +3,14 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { RulesConfig } from '@everyboard/games';
+
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { P4Component } from '../../../games/p4/p4.component';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';

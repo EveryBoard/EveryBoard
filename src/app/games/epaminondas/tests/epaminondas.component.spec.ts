@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { Ordinal } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { EpaminondasMove } from '@everyboard/games';
+import { EpaminondasState } from '@everyboard/games';
+import { EpaminondasFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { EpaminondasFailure } from '../EpaminondasFailure';
-import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasComponent } from '../epaminondas.component';
 
 describe('EpaminondasComponent', () => {

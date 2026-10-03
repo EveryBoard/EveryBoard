@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { SquarzMove } from '@everyboard/games';
+import { SquarzConfig, SquarzRules } from '@everyboard/games';
+import { SquarzState } from '@everyboard/games';
+import { SquarzFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { SquarzFailure } from '../SquarzFailure';
-import { SquarzMove } from '../SquarzMove';
-import { SquarzConfig, SquarzRules } from '../SquarzRules';
-import { SquarzState } from '../SquarzState';
 import { SquarzComponent } from '../squarz.component';
 
 describe('SquarzComponent', () => {

@@ -7,27 +7,27 @@ import {
     WritableSignal,
 } from '@angular/core';
 
+import { AIConfig } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord3D } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AIConfig } from '../../../jscaip/AI/AIConfig';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { Coord3D } from '../../../jscaip/Coord3D';
-import { Move } from '../../../jscaip/Move';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { SuperRules } from '../../../jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ViewBox } from '../GameComponentUtils';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
-import { ScoreName } from './ScoreName';
 
 
 /**

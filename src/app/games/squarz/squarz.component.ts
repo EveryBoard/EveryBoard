@@ -1,21 +1,20 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { SquarzHeuristic } from '@everyboard/games';
+import { SquarzMove as SquarzMove } from '@everyboard/games';
+import { SquarzMoveGenerator } from '@everyboard/games';
+import { SquarzConfig, SquarzRules } from '@everyboard/games';
+import { SquarzState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { SquarzHeuristic } from './SquarzHeuristic';
-import { SquarzMove as SquarzMove } from './SquarzMove';
-import { SquarzMoveGenerator } from './SquarzMoveGenerator';
-import { SquarzConfig, SquarzRules } from './SquarzRules';
-import { SquarzState } from './SquarzState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

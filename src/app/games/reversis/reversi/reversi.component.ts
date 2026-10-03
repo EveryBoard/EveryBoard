@@ -1,9 +1,9 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { AbstractReversiComponent } from '../common/abstract-reversi.component';
+import { ReversiRules } from '@everyboard/games';
 
-import { ReversiRules } from './ReversiRules';
+import { AbstractReversiComponent } from '../common/abstract-reversi.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,6 +5,8 @@ import { loadTranslations } from '@angular/localize';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
+import { LocaleUtils } from '@everyboard/games';
+
 import { AppComponent } from './app/app.component';
 import { initializeFirebase, routes } from './app/app.routes';
 import { ChatService } from './app/services/ChatService';
@@ -13,7 +15,6 @@ import { ConnectedUserService } from './app/services/ConnectedUserService';
 import { GameService } from './app/services/GameService';
 import { ThemeService } from './app/services/ThemeService';
 import { UserService } from './app/services/UserService';
-import { LocaleUtils } from './app/utils/LocaleUtils';
 import { environment } from './environments/environment';
 
 registerLocaleData(localeFr);
