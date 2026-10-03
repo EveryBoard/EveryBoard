@@ -221,17 +221,15 @@ describe('HeaderComponent', () => {
         }));
 
         it('should display an opponent bot identifier in the current game label', fakeAsync(async() => {
-            // Given a connected creator
+            // Given a connected creator with a current opponent being a bot
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
-            testUtils.detectChanges();
-            tick(0);
-
-            // When their current opponent is a bot
             const currentGame: CurrentGame = {
                 ...CurrentGameMocks.CREATOR_WITH_OPPONENT,
                 opponentBotIdentifier: { displayName: 'Perfect P4', parameters: {} },
             };
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
+
+            // When displaying the current game link
             testUtils.detectChanges();
             tick(0);
 

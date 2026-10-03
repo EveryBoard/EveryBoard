@@ -550,10 +550,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    protected getUserDisplayName(user: MinimalUser | null): string {
-        if (user === null) {
-            return '';
-        }
+    protected getUserDisplayName(user: MinimalUser): string {
         const game: Game = Utils.getNonNullable(this.game);
         const isPlayerZero: boolean = user.id === game.playerZero.id;
         const isPlayerOne: boolean = user.id === game.playerOne.id;

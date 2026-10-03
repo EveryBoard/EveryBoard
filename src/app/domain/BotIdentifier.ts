@@ -8,5 +8,8 @@ export type BotIdentifier = {
 };
 
 export function getUserDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
-    return botIdentifier?.displayName ?? user.name;
+    if (botIdentifier === null) {
+        return user.name;
+    }
+    return botIdentifier.displayName;
 }

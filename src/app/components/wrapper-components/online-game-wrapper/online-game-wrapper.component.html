@@ -21,10 +21,10 @@
                                 <p class="subtitle mb-2"
                                    id="turn-number"
                                    i18n>Turn n°{{ getTurn() + 1 }}</p>
-                                @if (endGame === false) {
+                                @if (endGame === false && currentUser !== null) {
                                     <p class="subtitle mb-2"
                                        id="currentPlayerIndicator">
-                                        @if (currentUser?.name === getPlayer().name) {
+                                        @if (currentUser.name === getPlayer().name) {
                                             <span id="playerTurn"
                                                   i18n>It is your turn.</span>
                                         } @else {
