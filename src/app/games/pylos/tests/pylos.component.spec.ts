@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { PylosCoord } from '@everyboard/games';
 import { PylosMove, PylosMoveFailure } from '@everyboard/games';
