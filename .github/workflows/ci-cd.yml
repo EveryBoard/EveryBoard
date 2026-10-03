@@ -193,6 +193,8 @@ jobs:
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Run linter with config
         run: npm run lint
+      - name: Check games exports
+        run: npm run check:games-exports
 
   images:
     runs-on: ubuntu-24.04
