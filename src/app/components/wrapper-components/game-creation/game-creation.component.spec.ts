@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { P4Config, P4Rules } from '@everyboard/games';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from '../../../domain/ConfigRoom';

@@ -1,9 +1,9 @@
 
 import { PlayerNumberMap } from '@everyboard/games';
-import { GoPhase } from '@everyboard/games';
-import { GoPiece } from '@everyboard/games';
-import { GoState } from '@everyboard/games';
-import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games';
+import { GoPhase } from '@everyboard/games/gos';
+import { GoPiece } from '@everyboard/games/gos';
+import { GoState } from '@everyboard/games/gos';
+import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games/gos/hexagonal-go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

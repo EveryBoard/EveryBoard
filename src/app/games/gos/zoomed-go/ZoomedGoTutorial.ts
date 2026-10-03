@@ -1,11 +1,11 @@
 
 import { PlayerNumberMap } from '@everyboard/games';
-import { GoMove } from '@everyboard/games';
-import { GoPhase } from '@everyboard/games';
-import { GoPiece } from '@everyboard/games';
-import { GoState } from '@everyboard/games';
-import { RectangularGoConfig } from '@everyboard/games';
-import { ZoomedGoRules } from '@everyboard/games';
+import { GoMove } from '@everyboard/games/gos';
+import { GoPhase } from '@everyboard/games/gos';
+import { GoPiece } from '@everyboard/games/gos';
+import { GoState } from '@everyboard/games/gos';
+import { RectangularGoConfig } from '@everyboard/games/gos/abstract-rectangular-go';
+import { ZoomedGoRules } from '@everyboard/games/gos/zoomed-go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

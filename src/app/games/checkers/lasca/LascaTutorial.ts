@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
-import { CheckersConfig } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersPiece, CheckersStack, EvenCheckersState } from '@everyboard/games';
-import { LascaRules } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games/checkers/common';
+import { CheckersMove } from '@everyboard/games/checkers/common';
+import { CheckersPiece, CheckersStack, EvenCheckersState } from '@everyboard/games/checkers/common';
+import { LascaRules } from '@everyboard/games/checkers/lasca';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

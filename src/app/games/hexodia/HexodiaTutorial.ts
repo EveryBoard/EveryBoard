@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { FourStatePieceGameStateWithTable } from '@everyboard/games';
-import { HexodiaMove } from '@everyboard/games';
-import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
+import { HexodiaMove } from '@everyboard/games/hexodia';
+import { HexodiaConfig, HexodiaRules } from '@everyboard/games/hexodia';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

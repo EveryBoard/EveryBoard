@@ -1,10 +1,10 @@
 
 import { Coord } from '@everyboard/games';
-import { KamisadoColor } from '@everyboard/games';
-import { KamisadoMove } from '@everyboard/games';
-import { KamisadoPiece } from '@everyboard/games';
-import { KamisadoRules } from '@everyboard/games';
-import { KamisadoState } from '@everyboard/games';
+import { KamisadoColor } from '@everyboard/games/kamisado';
+import { KamisadoMove } from '@everyboard/games/kamisado';
+import { KamisadoPiece } from '@everyboard/games/kamisado';
+import { KamisadoRules } from '@everyboard/games/kamisado';
+import { KamisadoState } from '@everyboard/games/kamisado';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

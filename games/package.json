@@ -11,6 +11,10 @@
     "./testing": {
       "types": "./dist/testing.d.ts",
       "default": "./dist/testing.js"
+    },
+    "./*": {
+      "types": "./dist/games/*/index.d.ts",
+      "default": "./dist/games/*/index.js"
     }
   },
   "types": "./dist/index.d.ts",

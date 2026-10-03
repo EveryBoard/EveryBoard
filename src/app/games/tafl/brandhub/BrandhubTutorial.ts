@@ -1,9 +1,9 @@
 import { Coord } from '@everyboard/games';
-import { TaflPawn } from '@everyboard/games';
-import { TaflState } from '@everyboard/games';
-import { BrandhubMove } from '@everyboard/games';
-import { BrandhubRules } from '@everyboard/games';
-import { TaflConfig } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games/tafl';
+import { TaflState } from '@everyboard/games/tafl';
+import { TaflConfig } from '@everyboard/games/tafl';
+import { BrandhubMove } from '@everyboard/games/tafl/brandhub';
+import { BrandhubRules } from '@everyboard/games/tafl/brandhub';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

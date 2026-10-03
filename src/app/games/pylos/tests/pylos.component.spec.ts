@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { PylosCoord } from '@everyboard/games';
-import { PylosMove, PylosMoveFailure } from '@everyboard/games';
-import { PylosState } from '@everyboard/games';
-import { PylosFailure } from '@everyboard/games';
+import { PylosCoord } from '@everyboard/games/pylos';
+import { PylosMove, PylosMoveFailure } from '@everyboard/games/pylos';
+import { PylosState } from '@everyboard/games/pylos';
+import { PylosFailure } from '@everyboard/games/pylos';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PylosComponent } from '../pylos.component';

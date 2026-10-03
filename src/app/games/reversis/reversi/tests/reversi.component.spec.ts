@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { ReversiConfig } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
-import { ReversiRules } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/reversis/common';
+import { ReversiMove } from '@everyboard/games/reversis/common';
+import { ReversiState } from '@everyboard/games/reversis/common';
+import { ReversiRules } from '@everyboard/games/reversis/reversi';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiComponent } from '../reversi.component';

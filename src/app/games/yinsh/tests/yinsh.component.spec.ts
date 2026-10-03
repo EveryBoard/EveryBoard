@@ -5,11 +5,11 @@ import { Coord } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { YinshCapture, YinshMove } from '@everyboard/games';
-import { YinshPiece } from '@everyboard/games';
-import { YinshRules } from '@everyboard/games';
-import { YinshState } from '@everyboard/games';
-import { YinshFailure } from '@everyboard/games';
+import { YinshCapture, YinshMove } from '@everyboard/games/yinsh';
+import { YinshPiece } from '@everyboard/games/yinsh';
+import { YinshRules } from '@everyboard/games/yinsh';
+import { YinshState } from '@everyboard/games/yinsh';
+import { YinshFailure } from '@everyboard/games/yinsh';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
