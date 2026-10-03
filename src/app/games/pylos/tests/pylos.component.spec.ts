@@ -63,20 +63,23 @@ describe('PylosComponent', () => {
     });
 
     it('should rotate the reserve pieces for Player.ONE', fakeAsync(async() => {
+        function rotation(xRotation: number): string {
+            return `rotate(${xRotation} 204 254)`;
+        }
         // Given the board viewed by Player.ZERO
-        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(0 204 254)');
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe(rotation(0));
 
         // When playing as Player.ONE
         await testUtils.getWrapper().setRole(Player.ONE);
 
         // Then the reserve pieces should be rotated to match the player's point of view
-        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(180 204 254)');
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe(rotation(180));
 
         // When observing the game
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then the reserve pieces should return to their default orientation
-        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe('rotate(0 204 254)');
+        expect(testUtils.findElement('#reserve-pieces').attributes.transform).toBe(rotation(0));
     }));
 
     describe('First click', () => {
