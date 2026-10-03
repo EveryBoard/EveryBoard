@@ -1,11 +1,27 @@
 import { Coord, FlatHexaOrientation, HexaOrientation } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-export class HexaLayout {
+import { Coord } from '../Coord';
+import { FlatHexaOrientation, HexaOrientation } from '../HexaOrientation';
 
-    public constructor(public readonly size: number,
-                       public readonly origin: Coord,
-                       public readonly orientation: HexaOrientation) {
+import { BaseLayout } from './Layout';
+
+export class HexaLayout extends BaseLayout {
+
+    public constructor(
+        public readonly size: number,
+        public readonly origin: Coord,
+        public readonly orientation: HexaOrientation,
+    ) {
+        super();
+    }
+
+    public getTranslationCoordAt(coord: Coord): Coord {
+        return this.getCenterAt(coord);
+    }
+
+    public getPolygonCoordsAt(): Coord[] {
+        return this.getHexaPointsList();
     }
 
     public getCenterAt(coord: Coord): Coord {

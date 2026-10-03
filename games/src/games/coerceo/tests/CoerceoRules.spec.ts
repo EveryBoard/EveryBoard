@@ -428,7 +428,7 @@ describe('CoerceoRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should remove piece captured by tiles exchange, removing tile but no one win it', () => {
+        it('should remove piece captured by tiles exchange, removing tile but no one wins it', () => {
             // Given a board where a tile exchange could remove a tile
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

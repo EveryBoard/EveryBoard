@@ -18,7 +18,7 @@ import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { HexaLayout } from '../../components/game-components/HexaLayout';
+import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 
