@@ -54,20 +54,22 @@ func (r *Result) UnmarshalJSON(data []byte) error {
 }
 
 type Game struct {
-	GameID        GameID      `gorm:"index;not null;foreignKey:ConfigRoom;primaryKey;autoIncrement:false" json:"-"`
-	GameName      string      `gorm:"not null" json:"gameName"`
-	PlayerZero    MinimalUser `gorm:"embedded;embeddedPrefix:player_zero_;not null" json:"playerZero"`
-	PlayerZeroElo float64     `gorm:"not null" json:"playerZeroElo"`
-	PlayerOne     MinimalUser `gorm:"embedded;embeddedPrefix:player_one_;not null" json:"playerOne"`
-	PlayerOneElo  float64     `gorm:"not null" json:"playerOneElo"`
-	Result        Result      `gorm:"not null" json:"result"`
-	Beginning     int64       `gorm:"not null" json:"beginning"`
+	GameID                  GameID         `gorm:"index;not null;foreignKey:ConfigRoom;primaryKey;autoIncrement:false" json:"-"`
+	GameName                string         `gorm:"not null" json:"gameName"`
+	PlayerZero              MinimalUser    `gorm:"embedded;embeddedPrefix:player_zero_;not null" json:"playerZero"`
+	PlayerZeroElo           float64        `gorm:"not null" json:"playerZeroElo"`
+	PlayerZeroBotIdentifier *BotIdentifier `gorm:"serializer:json" json:"playerZeroBotIdentifier"`
+	PlayerOne               MinimalUser    `gorm:"embedded;embeddedPrefix:player_one_;not null" json:"playerOne"`
+	PlayerOneElo            float64        `gorm:"not null" json:"playerOneElo"`
+	PlayerOneBotIdentifier  *BotIdentifier `gorm:"serializer:json" json:"playerOneBotIdentifier"`
+	Result                  Result         `gorm:"not null" json:"result"`
+	Beginning               int64          `gorm:"not null" json:"beginning"`
 }
 
 var GameRows = []string{
 	"game_id", "game_name",
-	"player_zero_id", "player_zero_name", "player_zero_elo",
-	"player_one_id", "player_one_name", "player_one_elo",
+	"player_zero_id", "player_zero_name", "player_zero_elo", "player_zero_bot_identifier",
+	"player_one_id", "player_one_name", "player_one_elo", "player_one_bot_identifier",
 	"result", "beginning",
 }
 

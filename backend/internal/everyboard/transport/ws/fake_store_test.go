@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
@@ -165,25 +166,26 @@ func (s *FakeStore) ListGames() ([]model.Game, error) {
 	return games, nil
 }
 
-func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
+func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {
 		return nil, err
 	}
 	id := s.allocateID()
 	configRoom := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		ID:                   id,
+		Creator:              creator,
+		CreatorElo:           creatorElo.CurrentElo,
+		CreatorBotIdentifier: botIdentifier,
+		FirstPlayer:          model.FirstPlayerRandom,
+		ChosenOpponent:       nil,
+		ChosenOpponentElo:    nil,
+		Status:               model.StatusCreated,
+		GameType:             model.GameTypeStandard,
+		MoveDuration:         model.StandardMoveDuration,
+		GameDuration:         model.StandardGameDuration,
+		RulesConfig:          nil,
+		GameName:             gameName,
 	}
 	s.ConfigRooms[id] = configRoom
 	return configRoom, nil
@@ -195,15 +197,20 @@ func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 }
 
 func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
-	var candidateElo float64
+	var selectedCandidate *model.Candidate
 	for _, c := range s.Candidates[configRoom.ID] {
 		if c.User.ID == opponent.ID {
-			candidateElo = c.Elo
+			candidate := c
+			selectedCandidate = &candidate
 			break
 		}
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	if selectedCandidate == nil {
+		return apperror.ErrorNotAllowed
+	}
+	configRoom.ChosenOpponent = &selectedCandidate.User
+	configRoom.ChosenOpponentElo = &selectedCandidate.Elo
+	configRoom.ChosenOpponentBotIdentifier = selectedCandidate.BotIdentifier
 	return nil
 }
 
@@ -246,12 +253,18 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
+	var creatorBotIdentifier *model.BotIdentifier
+	var chosenOpponentBotIdentifier *model.BotIdentifier
 	if game.PlayerZero.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
 		chosenOpponent = game.PlayerOne
+		creatorBotIdentifier = game.PlayerZeroBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerOneBotIdentifier
 	} else {
 		firstPlayer = model.FirstPlayerCreator
 		chosenOpponent = game.PlayerZero
+		creatorBotIdentifier = game.PlayerOneBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerZeroBotIdentifier
 	}
 
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
@@ -261,18 +274,20 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	id := s.allocateID()
 	rematch := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		ID:                          id,
+		Creator:                     creator,
+		CreatorElo:                  creatorElo.CurrentElo,
+		CreatorBotIdentifier:        creatorBotIdentifier,
+		FirstPlayer:                 firstPlayer,
+		ChosenOpponent:              &chosenOpponent,
+		ChosenOpponentElo:           &chosenOpponentElo.CurrentElo,
+		ChosenOpponentBotIdentifier: chosenOpponentBotIdentifier,
+		Status:                      model.StatusStarted,
+		GameType:                    configRoom.GameType,
+		MoveDuration:                configRoom.MoveDuration,
+		GameDuration:                configRoom.GameDuration,
+		RulesConfig:                 configRoom.RulesConfig,
+		GameName:                    configRoom.GameName,
 	}
 	s.ConfigRooms[id] = rematch
 	return rematch, nil
@@ -289,11 +304,12 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 	return nil
 }
 
-func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:        configRoom.ID,
+		User:          user,
+		Elo:           elo,
+		BotIdentifier: botIdentifier,
 	})
 	return nil
 }
@@ -338,29 +354,37 @@ func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 
 	var playerZero model.MinimalUser
 	var playerZeroElo float64
+	var playerZeroBotIdentifier *model.BotIdentifier
 	var playerOne model.MinimalUser
 	var playerOneElo float64
+	var playerOneBotIdentifier *model.BotIdentifier
 	if starter == model.FirstPlayerCreator {
 		playerZero = configRoom.Creator
 		playerZeroElo = configRoom.CreatorElo
+		playerZeroBotIdentifier = configRoom.CreatorBotIdentifier
 		playerOne = *configRoom.ChosenOpponent
 		playerOneElo = *configRoom.ChosenOpponentElo
+		playerOneBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 	} else {
 		playerZero = *configRoom.ChosenOpponent
 		playerZeroElo = *configRoom.ChosenOpponentElo
+		playerZeroBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 		playerOne = configRoom.Creator
 		playerOneElo = configRoom.CreatorElo
+		playerOneBotIdentifier = configRoom.CreatorBotIdentifier
 	}
 
 	game := &model.Game{
-		GameID:        configRoom.ID,
-		GameName:      configRoom.GameName,
-		PlayerZero:    playerZero,
-		PlayerZeroElo: playerZeroElo,
-		PlayerOne:     playerOne,
-		PlayerOneElo:  playerOneElo,
-		Result:        model.ResultInProgress,
-		Beginning:     now,
+		GameID:                  configRoom.ID,
+		GameName:                configRoom.GameName,
+		PlayerZero:              playerZero,
+		PlayerZeroElo:           playerZeroElo,
+		PlayerZeroBotIdentifier: playerZeroBotIdentifier,
+		PlayerOne:               playerOne,
+		PlayerOneElo:            playerOneElo,
+		PlayerOneBotIdentifier:  playerOneBotIdentifier,
+		Result:                  model.ResultInProgress,
+		Beginning:               now,
 	}
 	s.Games[configRoom.ID] = game
 	return game, nil

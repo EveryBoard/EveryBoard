@@ -118,7 +118,7 @@ func TestMarshalGame(t *testing.T) {
 		Result:        ResultInProgress,
 		Beginning:     1000,
 	}
-	json := `{"gameName":"Go","playerZero":{"id":"zero","name":"alice"},"playerZeroElo":42,"playerOne":{"id":"one","name":"bob"},"playerOneElo":100,"result":"InProgress","beginning":1000}`
+	json := `{"gameName":"Go","playerZero":{"id":"zero","name":"alice"},"playerZeroElo":42,"playerZeroBotIdentifier":null,"playerOne":{"id":"one","name":"bob"},"playerOneElo":100,"playerOneBotIdentifier":null,"result":"InProgress","beginning":1000}`
 	ExpectMarshallingToWork(t, original, json)
 
 	// It should not allow to unmarshal, even a valid game

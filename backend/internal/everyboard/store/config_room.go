@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
@@ -9,9 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *GORMStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error) {
+func (s *GORMStore) GetConfigRoom(gameID model.GameID) (*model.ConfigRoom, error) {
 	var configRoom model.ConfigRoom
-	result := s.db.First(&configRoom, "id = ?", gameId)
+	result := s.db.First(&configRoom, "id = ?", gameID)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -19,24 +20,25 @@ func (s *GORMStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error
 	return &configRoom, wrapError("GetConfigRoom", result.Error)
 }
 
-func (s *GORMStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
+func (s *GORMStore) CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {
 		return nil, err
 	}
 
 	configRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		Creator:              creator,
+		CreatorElo:           creatorElo.CurrentElo,
+		CreatorBotIdentifier: botIdentifier,
+		FirstPlayer:          model.FirstPlayerRandom,
+		ChosenOpponent:       nil,
+		ChosenOpponentElo:    nil,
+		Status:               model.StatusCreated,
+		GameType:             model.GameTypeStandard,
+		MoveDuration:         model.StandardMoveDuration,
+		GameDuration:         model.StandardGameDuration,
+		RulesConfig:          nil,
+		GameName:             gameName,
 	}
 
 	result := s.db.Create(&configRoom)
@@ -59,25 +61,45 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	candidateElo := candidate.Elo
-	result = s.db.Model(&model.ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(model.ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
+	var botIdentifierJSON any
+	if candidate.BotIdentifier != nil {
+		serializedIdentifier, err := json.Marshal(candidate.BotIdentifier)
+		if err != nil {
+			return wrapError("SelectOpponent", err)
+		}
+		botIdentifierJSON = string(serializedIdentifier)
+	}
+	result = s.db.
+		Model(&model.ConfigRoom{}).
+		Where("id = ?", configRoom.ID).
+		Updates(map[string]any{
+			"chosen_opponent_id":             candidate.User.ID,
+			"chosen_opponent_name":           candidate.User.Name,
+			"chosen_opponent_is_bot":         candidate.User.IsBot,
+			"chosen_opponent_elo":            candidate.Elo,
+			"chosen_opponent_bot_identifier": botIdentifierJSON,
+		})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	configRoom.ChosenOpponent = &candidate.User
+	configRoom.ChosenOpponentElo = &candidate.Elo
+	configRoom.ChosenOpponentBotIdentifier = candidate.BotIdentifier
 	return nil
 }
 
 func (s *GORMStore) RemoveOpponent(configRoom *model.ConfigRoom) error {
 	// A bit ugly because setting ChosenOpponent to nil will make gorm ignore this field...
 	result := s.db.Model(configRoom).Updates(map[string]any{
-		"chosen_opponent_id":   nil,
-		"chosen_opponent_name": nil,
-		"chosen_opponent_elo":  nil,
+		"chosen_opponent_id":             nil,
+		"chosen_opponent_name":           nil,
+		"chosen_opponent_is_bot":         nil,
+		"chosen_opponent_elo":            nil,
+		"chosen_opponent_bot_identifier": nil,
 	})
 	configRoom.ChosenOpponent = nil
 	configRoom.ChosenOpponentElo = nil
+	configRoom.ChosenOpponentBotIdentifier = nil
 	return wrapError("RemoveOpponent", result.Error)
 }
 
@@ -123,53 +145,63 @@ func (s *GORMStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 	// Get the new elo of the creator of the rematch
 	creatorElo, err := s.GetElo(configRoom.GameName, creator)
 	if err != nil {
-		return nil, wrapError("CreateRematchConfigRoom", err)
+		return nil, wrapError("CreateRematch", err)
 	}
 
-	// Compute who is the new opponent and who plays first
+	// Compute who is the new opponent, who plays first, and the bot identifiers
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
+	var creatorBotIdentifier *model.BotIdentifier
+	var chosenOpponentBotIdentifier *model.BotIdentifier
 	if game.PlayerZero.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
 		chosenOpponent = game.PlayerOne
+		creatorBotIdentifier = game.PlayerZeroBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerOneBotIdentifier
 	} else {
 		firstPlayer = model.FirstPlayerCreator
 		chosenOpponent = game.PlayerZero
+		creatorBotIdentifier = game.PlayerOneBotIdentifier
+		chosenOpponentBotIdentifier = game.PlayerZeroBotIdentifier
 	}
 
 	// Get the new elo of the opponent
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
 	if err != nil {
-		return nil, wrapError("CreateRematchConfigRoom", err)
+		return nil, wrapError("CreateRematch", err)
 	}
 
 	// Create the config room for the rematch, as every game needs an associated config room
 	rematchConfigRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		Creator:                     creator,
+		CreatorElo:                  creatorElo.CurrentElo,
+		CreatorBotIdentifier:        creatorBotIdentifier,
+		FirstPlayer:                 firstPlayer,
+		ChosenOpponent:              &chosenOpponent,
+		ChosenOpponentElo:           &chosenOpponentElo.CurrentElo,
+		ChosenOpponentBotIdentifier: chosenOpponentBotIdentifier,
+		Status:                      model.StatusStarted,
+		GameType:                    configRoom.GameType,
+		MoveDuration:                configRoom.MoveDuration,
+		GameDuration:                configRoom.GameDuration,
+		RulesConfig:                 configRoom.RulesConfig,
+		GameName:                    configRoom.GameName,
 	}
 	result := s.db.Create(&rematchConfigRoom)
-	return &rematchConfigRoom, wrapError("CreateRematchConfigRoom", result.Error)
+	return &rematchConfigRoom, wrapError("CreateRematch", result.Error)
 }
+
 func (s *GORMStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) error {
 	result := s.db.Model(&model.ConfigRoom{}).Where("status != ?", model.StatusFinished)
 	return wrapError("ApplyToConfigRooms", applyToQueryResult(s.db, result, action))
 }
 
-func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	result := s.db.Create(&model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:        configRoom.ID,
+		User:          user,
+		Elo:           elo,
+		BotIdentifier: botIdentifier,
 	})
 	return wrapError("AddCandidate", result.Error)
 }
@@ -179,7 +211,7 @@ func (s *GORMStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) er
 	return wrapError("DeleteCandidate", result.Error)
 }
 
-func (s *GORMStore) ApplyToCandidates(gameId model.GameID, action func(model.Candidate) error) error {
-	result := s.db.Model(&model.Candidate{}).Where("game_id = ?", gameId)
+func (s *GORMStore) ApplyToCandidates(gameID model.GameID, action func(model.Candidate) error) error {
+	result := s.db.Model(&model.Candidate{}).Where("game_id = ?", gameID)
 	return wrapError("ApplyToCandidates", applyToQueryResult(s.db, result, action))
 }

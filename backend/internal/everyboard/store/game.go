@@ -9,9 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *GORMStore) GetGame(gameId model.GameID) (*model.Game, error) {
+func (s *GORMStore) GetGame(gameID model.GameID) (*model.Game, error) {
 	var game model.Game
-	result := s.db.First(&game, "game_id = ?", gameId)
+	result := s.db.First(&game, "game_id = ?", gameID)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -43,29 +43,37 @@ func (s *GORMStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 
 	var playerZero model.MinimalUser
 	var playerZeroElo float64
+	var playerZeroBotIdentifier *model.BotIdentifier
 	var playerOne model.MinimalUser
 	var playerOneElo float64
+	var playerOneBotIdentifier *model.BotIdentifier
 	if starter == model.FirstPlayerCreator {
 		playerZero = configRoom.Creator
 		playerZeroElo = configRoom.CreatorElo
+		playerZeroBotIdentifier = configRoom.CreatorBotIdentifier
 		playerOne = *configRoom.ChosenOpponent
 		playerOneElo = *configRoom.ChosenOpponentElo
+		playerOneBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 	} else {
 		playerZero = *configRoom.ChosenOpponent
 		playerZeroElo = *configRoom.ChosenOpponentElo
+		playerZeroBotIdentifier = configRoom.ChosenOpponentBotIdentifier
 		playerOne = configRoom.Creator
 		playerOneElo = configRoom.CreatorElo
+		playerOneBotIdentifier = configRoom.CreatorBotIdentifier
 	}
 
 	game := model.Game{
-		GameID:        configRoom.ID,
-		GameName:      configRoom.GameName,
-		PlayerZero:    playerZero,
-		PlayerZeroElo: playerZeroElo,
-		PlayerOne:     playerOne,
-		PlayerOneElo:  playerOneElo,
-		Result:        model.ResultInProgress,
-		Beginning:     now,
+		GameID:                  configRoom.ID,
+		GameName:                configRoom.GameName,
+		PlayerZero:              playerZero,
+		PlayerZeroElo:           playerZeroElo,
+		PlayerZeroBotIdentifier: playerZeroBotIdentifier,
+		PlayerOne:               playerOne,
+		PlayerOneElo:            playerOneElo,
+		PlayerOneBotIdentifier:  playerOneBotIdentifier,
+		Result:                  model.ResultInProgress,
+		Beginning:               now,
 	}
 	result := s.db.Create(&game)
 	return &game, wrapError("CreateGame", result.Error)
@@ -79,13 +87,13 @@ func (s *GORMStore) SetGameResult(game *model.Game, gameResult model.Result) err
 	return wrapError("SetResult", result.Error)
 }
 
-func (s *GORMStore) AddEvent(gameId model.GameID, event *model.GameEvent) error {
-	event.GameID = gameId
+func (s *GORMStore) AddEvent(gameID model.GameID, event *model.GameEvent) error {
+	event.GameID = gameID
 	result := s.db.Create(event)
 	return wrapError("AddEvent", result.Error)
 }
 
-func (s *GORMStore) ApplyToGameEvents(gameId model.GameID, action func(*model.GameEvent) error) error {
-	result := s.db.Model(&model.GameEvent{}).Where("game_id = ?", gameId).Order("timestamp ASC")
+func (s *GORMStore) ApplyToGameEvents(gameID model.GameID, action func(*model.GameEvent) error) error {
+	result := s.db.Model(&model.GameEvent{}).Where("game_id = ?", gameID).Order("timestamp ASC")
 	return wrapError("ApplyToGameEvents", applyToQueryResult(s.db, result, action))
 }

@@ -25,13 +25,15 @@ func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		User:     creator,
-		Creator:  creator,
-		GameName: "Go",
-		Opponent: nil,
-		Role:     UserRolePlayer,
+		User:                  creator,
+		Creator:               creator,
+		CreatorBotIdentifier:  nil,
+		GameName:              "Go",
+		Opponent:              nil,
+		OpponentBotIdentifier: nil,
+		Role:                  UserRolePlayer,
 	}
-	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"opponent":null,"role":"Player"}`
+	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"creatorBotIdentifier":null,"opponent":null,"opponentBotIdentifier":null,"role":"Player"}`
 	ExpectMarshallingToWork(t, original, json)
 }
 
@@ -48,12 +50,40 @@ func TestMarshalCurrentGameWithOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		User:     creator,
-		Creator:  creator,
+		User:                  creator,
+		Creator:               creator,
+		CreatorBotIdentifier:  nil,
+		Opponent:              &opponent,
+		OpponentBotIdentifier: nil,
+		GameName:              "Go",
+		Role:                  UserRolePlayer,
+	}
+	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"creatorBotIdentifier":null,"opponent":{"id":"bar","name":"bar"},"opponentBotIdentifier":null,"role":"Player"}`
+	ExpectMarshallingToWork(t, original, json)
+}
+
+func TestMarshalCurrentGameWithBotIdentifiers(t *testing.T) {
+	// Given a current game between two bots
+	creator := MinimalUser{ID: "foo", Name: "foo", IsBot: true}
+	opponent := MinimalUser{ID: "bar", Name: "bar", IsBot: true}
+	original := CurrentGame{
+		GameID:  42,
+		User:    creator,
+		Creator: creator,
+		CreatorBotIdentifier: &BotIdentifier{
+			DisplayName: "Creator bot",
+		},
 		Opponent: &opponent,
+		OpponentBotIdentifier: &BotIdentifier{
+			DisplayName: "Opponent bot",
+		},
 		GameName: "Go",
 		Role:     UserRolePlayer,
 	}
-	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"opponent":{"id":"bar","name":"bar"},"role":"Player"}`
+
+	// When marshaling the current game
+	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo","isBot":true},"creatorBotIdentifier":{"displayName":"Creator bot","parameters":null},"opponent":{"id":"bar","name":"bar","isBot":true},"opponentBotIdentifier":{"displayName":"Opponent bot","parameters":null},"role":"Player"}`
+
+	// Then both bot identifiers should be included
 	ExpectMarshallingToWork(t, original, json)
 }

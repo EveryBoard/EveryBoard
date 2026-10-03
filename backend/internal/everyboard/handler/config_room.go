@@ -8,17 +8,28 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 
-func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
+func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *model.BotIdentifier) error {
 	uid := h.user.ID
+	err := h.validateBotIdentifier(botIdentifier)
+	// Note: we require the creator to redeclare its bot identifier. But we
+	// don't actually check if it matches, as we will ignore the bot identifier
+	// declared here. The one that matters is the one declared at creation. The
+	// reasoning is that while we could check it again, there's no point in
+	// doing it; we already have the information. If the creator bot wants to
+	// lie now, it's okay because this lie will never be propagated.
+	if err != nil {
+		return err
+	}
+
 	// Subscribe before the transaction so that addBroadcastToConfigRoom below includes this connection.
 	// If the transaction fails, we unsubscribe.
-	if !h.subscriptions.Subscribe(h.connection, uid, gameId, session.SubscriptionToConfigRoom) {
+	if !h.subscriptions.Subscribe(h.connection, uid, gameID, session.SubscriptionToConfigRoom) {
 		return apperror.ErrorAlreadySubscribed
 	}
 
 	var buf MsgBuffer
-	err := h.store.Transaction(func(store store.Store) error {
-		configRoom, err := store.GetConfigRoom(gameId)
+	err = h.store.Transaction(func(store store.Store) error {
+		configRoom, err := store.GetConfigRoom(gameID)
 		if err != nil {
 			return err
 		}
@@ -29,7 +40,7 @@ func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
 		switch configRoom.Status {
 		case model.StatusCreated, model.StatusConfigProposed:
 			buf.addSend(h.connection, protocol.ConfigRoomUpdateMessage{
-				GameID:     gameId,
+				GameID:     gameID,
 				ConfigRoom: *configRoom,
 			})
 
@@ -38,24 +49,30 @@ func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
 				if err != nil {
 					return err
 				}
-				if err = store.AddCandidate(configRoom, h.user, elo.CurrentElo); err != nil {
+				if err = store.AddCandidate(configRoom, h.user, elo.CurrentElo, botIdentifier); err != nil {
 					return err
 				}
 				currentGame := &model.CurrentGame{
-					GameID:   gameId,
-					GameName: configRoom.GameName,
-					Creator:  configRoom.Creator,
-					Opponent: configRoom.ChosenOpponent,
-					Role:     model.UserRoleCandidate,
+					GameID:                gameID,
+					GameName:              configRoom.GameName,
+					Creator:               configRoom.Creator,
+					CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+					Opponent:              configRoom.ChosenOpponent,
+					OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+					Role:                  model.UserRoleCandidate,
 				}
 				// h.connection is already subscribed, so this broadcast includes the new user
-				h.bufferBroadcastToConfigRoom(&buf, gameId, protocol.CandidateJoinedMessage{Candidate: h.user, Elo: elo.CurrentElo})
+				h.bufferBroadcastToConfigRoom(&buf, gameID, protocol.CandidateJoinedMessage{
+					Candidate:     h.user,
+					Elo:           elo.CurrentElo,
+					BotIdentifier: botIdentifier,
+				})
 				if err = h.setCurrentGame(&buf, store, h.user, currentGame); err != nil {
 					return err
 				}
 			}
 
-			return store.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
+			return store.ApplyToCandidates(gameID, func(candidate model.Candidate) error {
 				if candidate.User.ID == uid {
 					return nil
 				}
@@ -63,12 +80,16 @@ func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
 				if err != nil {
 					return err
 				}
-				buf.addSend(h.connection, protocol.CandidateJoinedMessage{Candidate: candidate.User, Elo: elo.CurrentElo})
+				buf.addSend(h.connection, protocol.CandidateJoinedMessage{
+					Candidate:     candidate.User,
+					Elo:           elo.CurrentElo,
+					BotIdentifier: candidate.BotIdentifier,
+				})
 				return nil
 			})
 
 		case model.StatusStarted, model.StatusFinished:
-			buf.addSend(h.connection, protocol.ConfigRoomUpdateMessage{GameID: gameId, ConfigRoom: *configRoom})
+			buf.addSend(h.connection, protocol.ConfigRoomUpdateMessage{GameID: gameID, ConfigRoom: *configRoom})
 			return nil
 		}
 
@@ -84,7 +105,7 @@ func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
 }
 
 func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
-	_, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
+	_, gameID, subscribed := h.subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return apperror.ErrorNotSubscribed
 	}
@@ -93,7 +114,7 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 	var configRoom *model.ConfigRoom
 	err := h.store.Transaction(func(store store.Store) error {
 		var err error
-		configRoom, err = store.GetConfigRoom(gameId)
+		configRoom, err = store.GetConfigRoom(gameID)
 		if err != nil {
 			return err
 		}
@@ -107,26 +128,31 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 		if err = store.SelectOpponent(configRoom, opponent); err != nil {
 			return err
 		}
+		selectedOpponent := *configRoom.ChosenOpponent
 
 		currentGameCreator := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  h.user,
-			Opponent: &opponent,
-			Role:     model.UserRoleCreator,
+			GameID:                configRoom.ID,
+			GameName:              configRoom.GameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              &selectedOpponent,
+			OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+			Role:                  model.UserRoleCreator,
 		}
 		if err = h.updateCurrentGame(&buf, store, h.user, currentGameCreator); err != nil {
 			return err
 		}
 
 		currentGameOpponent := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  h.user,
-			Opponent: &opponent,
-			Role:     model.UserRoleChosenOpponent,
+			GameID:                configRoom.ID,
+			GameName:              configRoom.GameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              &selectedOpponent,
+			OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+			Role:                  model.UserRoleChosenOpponent,
 		}
-		if err = h.updateCurrentGame(&buf, store, opponent, currentGameOpponent); err != nil {
+		if err = h.updateCurrentGame(&buf, store, selectedOpponent, currentGameOpponent); err != nil {
 			return err
 		}
 
@@ -144,7 +170,7 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 }
 
 func (h *Handler) handleProposeConfig(config model.ConfigProposal) error {
-	_, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
+	_, gameID, subscribed := h.subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return apperror.ErrorNotSubscribed
 	}
@@ -153,7 +179,7 @@ func (h *Handler) handleProposeConfig(config model.ConfigProposal) error {
 	var configRoom *model.ConfigRoom
 	err := h.store.Transaction(func(store store.Store) error {
 		var err error
-		configRoom, err = store.GetConfigRoom(gameId)
+		configRoom, err = store.GetConfigRoom(gameID)
 		if err != nil {
 			return err
 		}
@@ -180,7 +206,7 @@ func (h *Handler) handleProposeConfig(config model.ConfigProposal) error {
 }
 
 func (h *Handler) handleReviewConfig() error {
-	_, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
+	_, gameID, subscribed := h.subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return apperror.ErrorNotSubscribed
 	}
@@ -189,7 +215,7 @@ func (h *Handler) handleReviewConfig() error {
 	var configRoom *model.ConfigRoom
 	err := h.store.Transaction(func(store store.Store) error {
 		var err error
-		configRoom, err = store.GetConfigRoom(gameId)
+		configRoom, err = store.GetConfigRoom(gameID)
 		if err != nil {
 			return err
 		}
@@ -214,7 +240,7 @@ func (h *Handler) handleReviewConfig() error {
 }
 
 func (h *Handler) handleAcceptConfig() error {
-	_, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
+	_, gameID, subscribed := h.subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return apperror.ErrorNotSubscribed
 	}
@@ -224,7 +250,7 @@ func (h *Handler) handleAcceptConfig() error {
 	var game *model.Game
 	err := h.store.Transaction(func(store store.Store) error {
 		var err error
-		configRoom, err = store.GetConfigRoom(gameId)
+		configRoom, err = store.GetConfigRoom(gameID)
 		if err != nil {
 			return err
 		}
@@ -266,22 +292,26 @@ func (h *Handler) handleAcceptConfig() error {
 		}
 
 		currentGameCreator := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  configRoom.Creator,
-			Opponent: configRoom.ChosenOpponent,
-			Role:     model.UserRolePlayer,
+			GameID:                configRoom.ID,
+			GameName:              configRoom.GameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              configRoom.ChosenOpponent,
+			OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+			Role:                  model.UserRolePlayer,
 		}
 		if err = h.updateCurrentGame(&buf, store, configRoom.Creator, currentGameCreator); err != nil {
 			return err
 		}
 
 		currentGameOpponent := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  configRoom.Creator,
-			Opponent: configRoom.ChosenOpponent,
-			Role:     model.UserRolePlayer,
+			GameID:                configRoom.ID,
+			GameName:              configRoom.GameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              configRoom.ChosenOpponent,
+			OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+			Role:                  model.UserRolePlayer,
 		}
 		if err = h.updateCurrentGame(&buf, store, *configRoom.ChosenOpponent, currentGameOpponent); err != nil {
 			return err

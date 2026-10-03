@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
+	"errors"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -10,28 +10,268 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
 
-func TestHandlersDirectEdgeCases(t *testing.T) {
-	store, _ := store.InitDatabase(sqlite.Open(":memory:"))
-	user := model.MinimalUser{ID: "user1", Name: "user1"}
+func TestSubscribeConfigRoomPayload(t *testing.T) {
+	gameIDJSON, err := model.GameID(42).MarshalJSON()
+	require.NoError(t, err)
 
-	newH := func() Handler {
-		subs := session.NewSubscriptionManager[*websocket.Conn]()
-		cm := session.NewConnectionManager[*websocket.Conn]()
-		return Handler{
-			connection:    &websocket.Conn{}, // Non-nil to be safe
-			user:          user,
-			store:         store,
-			connections:   &cm,
-			subscriptions: &subs,
-		}
+	tests := []struct {
+		name                  string
+		messageData           map[string]json.RawMessage
+		expectedBotIdentifier *model.BotIdentifier
+		expectedError         error
+	}{
+		{
+			name:                  "OmittedBotIdentifierIsNil",
+			messageData:           map[string]json.RawMessage{"gameId": gameIDJSON},
+			expectedBotIdentifier: nil,
+			expectedError:         nil,
+		},
+		{
+			name: "ExplicitNullBotIdentifierIsNil",
+			messageData: map[string]json.RawMessage{
+				"gameId":        gameIDJSON,
+				"botIdentifier": json.RawMessage(`null`),
+			},
+			expectedBotIdentifier: nil,
+			expectedError:         nil,
+		},
+		{
+			name: "ValidBotIdentifierIsDecoded",
+			messageData: map[string]json.RawMessage{
+				"gameId": gameIDJSON,
+				"botIdentifier": json.RawMessage(
+					`{"displayName":"Perfect P4","parameters":{"version":"1.0"}}`,
+				),
+			},
+			expectedBotIdentifier: &model.BotIdentifier{
+				DisplayName: "Perfect P4",
+				Parameters:  json.RawMessage(`{"version":"1.0"}`),
+			},
+			expectedError: nil,
+		},
+		{
+			name: "MalformedBotIdentifierIsRejected",
+			messageData: map[string]json.RawMessage{
+				"gameId":        gameIDJSON,
+				"botIdentifier": json.RawMessage(`{"displayName":42,"parameters":{}}`),
+			},
+			expectedBotIdentifier: nil,
+			expectedError:         apperror.ErrorInvalidData,
+		},
 	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given message data with an optional bot identifier
+			actual := subscribeConfigRoomPayload{
+				GameID:        0,
+				BotIdentifier: nil,
+			}
+
+			// When decoding the subscription payload
+			err := withMessagePayload(test.messageData, func(payload subscribeConfigRoomPayload) error {
+				actual = payload
+				return nil
+			})
+
+			// Then the identifier should be decoded or rejected as expected
+			assert.Equal(t, test.expectedError, err)
+			if test.expectedError == nil {
+				assert.Equal(t, model.GameID(42), actual.GameID)
+				assert.Equal(t, test.expectedBotIdentifier, actual.BotIdentifier)
+			}
+		})
+	}
+}
+
+func newTestHandler(
+	t *testing.T,
+	user model.MinimalUser,
+) (Handler, *store.GORMStore) {
+	t.Helper()
+	database, err := store.InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize database")
+	subs := session.NewSubscriptionManager[*websocket.Conn]()
+	connections := session.NewConnectionManager[*websocket.Conn]()
+	return Handler{
+		connection:    &websocket.Conn{},
+		user:          user,
+		store:         database,
+		connections:   &connections,
+		subscriptions: &subs,
+	}, database
+}
+
+func TestHandleCreateGamePersistsBotIdentifier(t *testing.T) {
+	// Given a bot handler and a bot identifier
+	bot := model.MinimalUser{ID: "bot", Name: "bot", IsBot: true}
+	h, database := newTestHandler(t, bot)
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+
+	// When the bot creates a game and resends its identifier when subscribing
+	err := h.handleCreateGame("P4", botIdentifier)
+	require.NoError(t, err, "bot should be allowed to create a game")
+	var persistedRooms []model.ConfigRoom
+	err = database.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
+		persistedRooms = append(persistedRooms, configRoom)
+		return nil
+	})
+	require.NoError(t, err, "cannot retrieve config rooms")
+	require.Len(t, persistedRooms, 1)
+	err = h.handleSubscribeConfigRoom(persistedRooms[0].ID, botIdentifier)
+	require.NoError(t, err, "bot creator should be allowed to subscribe with its identifier")
+
+	// Then the creator bot identifier should be persisted
+	assert.Equal(t, botIdentifier, persistedRooms[0].CreatorBotIdentifier)
+	currentGame, err := database.GetCurrentGame(bot)
+	require.NoError(t, err, "cannot retrieve bot current game")
+	require.NotNil(t, currentGame)
+	assert.Equal(t, botIdentifier, currentGame.CreatorBotIdentifier)
+}
+
+func TestHandleSubscribeConfigRoomPersistsBotIdentifier(t *testing.T) {
+	// Given a config room and a bot candidate
+	bot := model.MinimalUser{ID: "bot", Name: "bot", IsBot: true}
+	h, database := newTestHandler(t, bot)
+	creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: false}
+	configRoom, err := database.CreateConfigRoom(creator, "P4", nil)
+	require.NoError(t, err, "cannot create config room")
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+
+	// When the bot subscribes as a candidate
+	err = h.handleSubscribeConfigRoom(configRoom.ID, botIdentifier)
+	require.NoError(t, err, "bot should be allowed to subscribe")
+	var persistedCandidates []model.Candidate
+	err = database.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+		persistedCandidates = append(persistedCandidates, candidate)
+		return nil
+	})
+	require.NoError(t, err, "cannot retrieve candidates")
+
+	// Then the candidate bot identifier should be persisted
+	require.Len(t, persistedCandidates, 1)
+	assert.Equal(t, botIdentifier, persistedCandidates[0].BotIdentifier)
+	currentGame, err := database.GetCurrentGame(bot)
+	require.NoError(t, err, "cannot retrieve bot current game")
+	require.NotNil(t, currentGame)
+	assert.Nil(t, currentGame.CreatorBotIdentifier)
+	assert.Nil(t, currentGame.OpponentBotIdentifier)
+}
+
+func TestHandleBotIdentifierValidation(t *testing.T) {
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+	tests := []struct {
+		name          string
+		user          model.MinimalUser
+		botIdentifier *model.BotIdentifier
+	}{
+		{
+			name:          "BotWithoutIdentifier",
+			user:          model.MinimalUser{ID: "bot", Name: "bot", IsBot: true},
+			botIdentifier: nil,
+		},
+		{
+			name:          "HumanWithIdentifier",
+			user:          model.MinimalUser{ID: "human", Name: "human", IsBot: false},
+			botIdentifier: botIdentifier,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given a handler whose user and bot identifier do not match
+			h, database := newTestHandler(t, test.user)
+
+			// When the user tries to create a game or subscribe to a config room
+			createErr := h.handleCreateGame("P4", test.botIdentifier)
+			subscribeErr := h.handleSubscribeConfigRoom(42, test.botIdentifier)
+
+			// Then the declaration should be rejected
+			assert.Equal(t, apperror.ErrorInvalidData, createErr)
+			assert.Equal(t, apperror.ErrorInvalidData, subscribeErr)
+			assert.False(t, h.subscriptions.IsSubscribed(test.user.ID))
+			currentGame, err := database.GetCurrentGame(test.user)
+			require.NoError(t, err, "cannot get current game")
+			assert.Nil(t, currentGame)
+			rooms := 0
+			err = database.ApplyToConfigRooms(func(model.ConfigRoom) error {
+				rooms++
+				return nil
+			})
+			require.NoError(t, err, "cannot retrieve config rooms")
+			assert.Zero(t, rooms)
+		})
+	}
+}
+
+type failingAddCandidateStore struct {
+	store.Store
+}
+
+func (f failingAddCandidateStore) Transaction(action func(store.Store) error) error {
+	return action(f)
+}
+
+func (f failingAddCandidateStore) AddCandidate(
+	configRoom *model.ConfigRoom,
+	user model.MinimalUser,
+	elo float64,
+	botIdentifier *model.BotIdentifier,
+) error {
+	return errors.New("cannot persist candidate")
+}
+
+func TestHandleSubscribeConfigRoomRollsBackSubscriptionWhenCandidatePersistenceFails(t *testing.T) {
+	// Given a bot joining a room whose store cannot persist candidates
+	bot := model.MinimalUser{ID: "bot", Name: "bot", IsBot: true}
+	h, database := newTestHandler(t, bot)
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	configRoom, err := database.CreateConfigRoom(creator, "P4", nil)
+	require.NoError(t, err, "cannot create config room")
+	h.store = failingAddCandidateStore{Store: database}
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: "Perfect P4",
+		Parameters:  json.RawMessage(`{"version":1}`),
+	}
+
+	// When candidate persistence fails during subscription
+	err = h.handleSubscribeConfigRoom(configRoom.ID, botIdentifier)
+
+	// Then no subscription or participant state should remain
+	require.ErrorContains(t, err, "cannot persist candidate")
+	assert.False(t, h.subscriptions.IsSubscribed(bot.ID))
+	currentGame, getCurrentGameErr := database.GetCurrentGame(bot)
+	require.NoError(t, getCurrentGameErr, "cannot get current game")
+	assert.Nil(t, currentGame)
+	var candidates []model.Candidate
+	applyErr := database.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+		candidates = append(candidates, candidate)
+		return nil
+	})
+	require.NoError(t, applyErr, "cannot retrieve candidates")
+	assert.Empty(t, candidates)
+}
+
+func TestHandlersDirectEdgeCases(t *testing.T) {
+	user := model.MinimalUser{ID: "user1", Name: "user1"}
 
 	t.Run("HandleUnsubscribeNotSubscribed", func(t *testing.T) {
 		// Given a handler where we did not subscribe
-		h := newH()
+		h, _ := newTestHandler(t, user)
 		// When calling unsubscribe
 		err := h.unsubscribe()
 		// Then it should not result in an error
@@ -40,7 +280,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 
 	t.Run("HandleSubscribeGameDoesNotExist", func(t *testing.T) {
 		// Given a handler
-		h := newH()
+		h, _ := newTestHandler(t, user)
 		// When we subscribe to a non existing game
 		err := h.handleSubscribeGame(model.GameID(999))
 		// Then it should fail
@@ -49,7 +289,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 
 	t.Run("HandleSubscribeLobby", func(t *testing.T) {
 		// Given a handler
-		h := newH()
+		h, _ := newTestHandler(t, user)
 		// When we subscribe to the lobby
 		err := h.handleSubscribeLobby()
 		// Then it should succeed
@@ -57,34 +297,25 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 	})
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
-		h := newH()
-		store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1})
+		h, database := newTestHandler(t, user)
+		database.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1})
 		err := h.handleWithoutErrorSend("Create", map[string]json.RawMessage{"gameName": json.RawMessage(`"test"`)})
 		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 	})
 
 	t.Run("HandleSelectOpponentNotSubscribed", func(t *testing.T) {
-		h := newH()
+		h, _ := newTestHandler(t, user)
 		err := h.handleWithoutErrorSend("SelectOpponent", map[string]json.RawMessage{"opponent": json.RawMessage(`{"id":"other"}`)})
 		assert.Equal(t, apperror.ErrorNotSubscribed, err, "expected ErrorNotSubscribed")
 	})
 }
 
 func TestUnsubscribeDirect(t *testing.T) {
-	store, _ := store.InitDatabase(sqlite.Open(":memory:"))
 	user := model.MinimalUser{ID: "user1", Name: "user1"}
-	subs := session.NewSubscriptionManager[*websocket.Conn]()
-	cm := session.NewConnectionManager[*websocket.Conn]()
-	h := Handler{
-		connection:    &websocket.Conn{},
-		user:          user,
-		store:         store,
-		connections:   &cm,
-		subscriptions: &subs,
-	}
+	h, _ := newTestHandler(t, user)
 
 	t.Run("Lobby", func(t *testing.T) {
-		subs.Subscribe(h.connection, user.ID, model.GameIDLobby, session.SubscriptionToLobby)
+		h.subscriptions.Subscribe(h.connection, user.ID, model.GameIDLobby, session.SubscriptionToLobby)
 		err := h.unsubscribe()
 		assert.Nil(t, err, "unexpected error")
 	})

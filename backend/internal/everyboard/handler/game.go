@@ -40,11 +40,13 @@ func (h *Handler) handleSubscribeGame(gameId model.GameID) error {
 				return apperror.ErrorUnknownGame
 			}
 			cg := &model.CurrentGame{
-				GameID:   gameId,
-				GameName: game.GameName,
-				Creator:  configRoom.Creator,
-				Opponent: configRoom.ChosenOpponent,
-				Role:     model.UserRoleObserver,
+				GameID:                gameId,
+				GameName:              game.GameName,
+				Creator:               configRoom.Creator,
+				CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+				Opponent:              configRoom.ChosenOpponent,
+				OpponentBotIdentifier: configRoom.ChosenOpponentBotIdentifier,
+				Role:                  model.UserRoleObserver,
 			}
 			if err = h.setCurrentGame(&buf, store, h.user, cg); err != nil {
 				return err
@@ -369,22 +371,26 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 
 			// Set the current game of both players
 			cgZero := &model.CurrentGame{
-				GameID:   rematchGame.GameID,
-				GameName: rematchGame.GameName,
-				Creator:  creator,
-				Opponent: &opponent,
-				Role:     model.UserRolePlayer,
+				GameID:                rematchGame.GameID,
+				GameName:              rematchGame.GameName,
+				Creator:               creator,
+				CreatorBotIdentifier:  rematchConfigRoom.CreatorBotIdentifier,
+				Opponent:              &opponent,
+				OpponentBotIdentifier: rematchConfigRoom.ChosenOpponentBotIdentifier,
+				Role:                  model.UserRolePlayer,
 			}
 			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerZero, cgZero); err != nil {
 				return err
 			}
 
 			cgOne := &model.CurrentGame{
-				GameID:   rematchGame.GameID,
-				GameName: rematchGame.GameName,
-				Creator:  creator,
-				Opponent: &opponent,
-				Role:     model.UserRolePlayer,
+				GameID:                rematchGame.GameID,
+				GameName:              rematchGame.GameName,
+				Creator:               creator,
+				CreatorBotIdentifier:  rematchConfigRoom.CreatorBotIdentifier,
+				Opponent:              &opponent,
+				OpponentBotIdentifier: rematchConfigRoom.ChosenOpponentBotIdentifier,
+				Role:                  model.UserRolePlayer,
 			}
 			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerOne, cgOne); err != nil {
 				return err
