@@ -1,0 +1,24 @@
+FROM node:24-trixie-slim AS node
+
+FROM golang:1.26-trixie AS ci
+
+ENV PATH=/usr/local/bin:$PATH
+
+COPY --from=node /usr/local/ /usr/local/
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        bc \
+        openjdk-21-jre-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+COPY package.json package-lock.json ./
+RUN npm ci
+RUN npx firebase setup:emulators:firestore
+
+COPY backend/go.mod backend/go.sum ./backend/
+RUN cd backend && go mod download
+
+COPY . .

@@ -17,19 +17,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci
-      - name: Build lib
-        run: cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase config)
-        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Build
-        run: npm run build
+      - name: Build in the CI container
+        run: make ci-build
 
   tests-front:
     runs-on: ubuntu-24.04
@@ -37,97 +26,28 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup Java (for firebase emulator)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci
-      - name: Build dependencies
-        run: npm run dependencies:build
-      - name: Setup dependencies (setup dummy Firebase config)
-        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Run test suites
-        run: npm run libtest:ci && npm run gamestest:ci && npm run test:ci
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install python dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          python -m pip install -r scripts/requirements.txt
+      - name: Run test suites in the CI container
+        run: make ci-frontend
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
           path: coverage/
-      - name: Check coverage
-        run: |
-          source venv/bin/activate
-          python ./scripts/coverage.py check
 
   tests-back:
     runs-on: ubuntu-24.04
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: everyboard
-          POSTGRES_PASSWORD: everyboard
-          POSTGRES_DB: everyboard_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U everyboard -d everyboard_test"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup Java (for firebase emulator)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci  # Needed for auth tests
-      - name: Build
-        run: cd backend && make
-      - name: Test
-        run: cd backend && make test
-      - name: Test with PostgreSQL
-        env:
-          POSTGRES_TEST_DSN: postgresql://everyboard:everyboard@127.0.0.1:5432/everyboard_test?sslmode=disable
-        run: cd backend && make test-postgres
+      - name: Run backend checks in the CI container
+        run: make ci-backend
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-code-coverage-report.html
           path: backend/coverage.html
-      - name: Check coverage
-        run: cd backend && make check-coverage
-      - name: Check gofmt
-        run: cd backend && make check-fmt
 
   e2e:
     runs-on: ubuntu-24.04
@@ -180,19 +100,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci
-      - name: Build lib
-        run: cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase config)
-        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Run linter with config
-        run: npm run lint
+      - name: Run linter in the CI container
+        run: make ci-lint
 
   images:
     runs-on: ubuntu-24.04
@@ -200,8 +109,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Check the presence of all game images
-        run: ./scripts/check-images.sh
+      - name: Check game images in the CI container
+        run: make ci-images
 
   translations:
     runs-on: ubuntu-24.04
@@ -209,31 +118,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci
-      - name: Build lib
-        run: cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase config)
-        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Install python dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          python -m pip install -r scripts/requirements.txt
-      - name: Update translations
-        run: |
-          source venv/bin/activate
-          ./scripts/update-translations.sh
-      - name: Check completeness of translations
-        run: |
-          source venv/bin/activate
-          ./scripts/check-translations.sh
+      - name: Check translations in the CI container
+        run: make ci-translations
 
   deployment:
     runs-on: ubuntu-24.04
