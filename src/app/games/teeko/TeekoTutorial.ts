@@ -1,11 +1,11 @@
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { TeekoDropMove, TeekoTranslationMove } from '@everyboard/games';
+import { TeekoRules } from '@everyboard/games';
+import { TeekoState } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { TeekoDropMove, TeekoTranslationMove } from './TeekoMove';
-import { TeekoRules } from './TeekoRules';
-import { TeekoState } from './TeekoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

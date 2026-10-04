@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games';
+import { ConnectSixState } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixState } from '../ConnectSixState';
 import { ConnectSixComponent } from '../connect-six.component';
 
 describe('ConnectSixComponent', () => {

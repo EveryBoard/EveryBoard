@@ -1,24 +1,23 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { ConspirateursHeuristic } from '@everyboard/games';
+import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '@everyboard/games';
+import { ConspirateursMoveGenerator } from '@everyboard/games';
+import { ConspirateursRules } from '@everyboard/games';
+import { ConspirateursState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Vector } from '../../jscaip/Vector';
-
-import { ConspirateursHeuristic } from './ConspirateursHeuristic';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
-import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
-import { ConspirateursRules } from './ConspirateursRules';
-import { ConspirateursState } from './ConspirateursState';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][];
@@ -100,7 +99,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.getState()));
+        this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.state()));
     }
 
     protected override getScoreName(): ScoreName {
@@ -108,7 +107,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
 
     private updateViewInfo(): void {
-        const state: ConspirateursState = this.getState();
+        const state: ConspirateursState = this.state();
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         for (let y: number = 0; y < state.getHeight(); y++) {
@@ -148,7 +147,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
 
     private updateShelterHighlights(): void {
-        const state: ConspirateursState = this.getState();
+        const state: ConspirateursState = this.state();
         const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node());
         const gameFinished: boolean = gameStatus.isEndGame;
         this.victoriousCoords = [];
@@ -171,7 +170,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         if (this.isStartingCoordOfMovingPiece(coord)) {
             return false;
         }
-        return this.getState().getPieceAt(coord).isPlayer() ||
+        return this.state().getPieceAt(coord).isPlayer() ||
                this.isLandingCoordOfMovingPiece(coord);
     }
 
@@ -187,7 +186,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const piece: PlayerOrNone = this.getState().getPieceAt(coord);
+        const piece: PlayerOrNone = this.state().getPieceAt(coord);
         const classes: string[] = [
             this.getPlayerClass(piece),
         ];
@@ -274,7 +273,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     @ClickHandler((coord: Coord) => `#click-${ coord.x }-${ coord.y }`)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const state: ConspirateursState = this.getState();
+        const state: ConspirateursState = this.state();
         const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
@@ -302,7 +301,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
         const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
-        const state: ConspirateursState = this.getState();
+        const state: ConspirateursState = this.state();
         if (nextTarget.equals(jump.getEndingCoord())) {
             // double clicking on an early destination performs the jump
             return this.chooseMove(jump);
@@ -320,7 +319,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
 
     private async updateJump(jump: ConspirateursMoveJump): Promise<MGPValidation> {
-        const state: ConspirateursState = this.getState();
+        const state: ConspirateursState = this.state();
         if (this.rules.jumpHasPossibleNextTargets(jump, state)) {
             this.jumpInConstruction = MGPOptional.of(jump);
             this.updateViewInfo();

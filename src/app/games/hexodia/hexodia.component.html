@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g>
             @if (isReachable(coordAndContent.content)) {
                 <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"

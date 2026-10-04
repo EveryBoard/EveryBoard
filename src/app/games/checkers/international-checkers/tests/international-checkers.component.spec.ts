@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { DirectionFailure } from '@everyboard/games';
+import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
+import { InternationalCheckersRules } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { DirectionFailure } from '../../../../jscaip/Direction';
-import { PlayerMap, PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { CheckersConfig } from '../../common/AbstractCheckersRules';
-import { CheckersFailure } from '../../common/CheckersFailure';
-import { CheckersMove } from '../../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
-import { InternationalCheckersRules } from '../InternationalCheckersRules';
 import { InternationalCheckersComponent } from '../international-checkers.component';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;
@@ -457,7 +457,7 @@ describe('InternationalCheckersComponent', () => {
         it('should show possible selections when interactive', fakeAsync(async() => {
             // Given a state
             // When it is interactive
-            testUtils.getGameComponent().setInteractive(true);
+            testUtils.getGameComponent().interactive.set(true);
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-1-6', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-3-6', 'clickable-stroke');
@@ -471,7 +471,7 @@ describe('InternationalCheckersComponent', () => {
             const state: CheckersState = InternationalCheckersRules.get().getInitialState(defaultConfig);
 
             // When it is not interactive
-            testUtils.getGameComponent().setInteractive(false);
+            testUtils.getGameComponent().interactive.set(false);
             await testUtils.setupState(state);
 
             // Then it should not show possible selections

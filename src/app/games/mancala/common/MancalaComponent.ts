@@ -1,24 +1,23 @@
 import { computed, Signal } from '@angular/core';
 
+import { MoveGenerator } from '@everyboard/games';
+import { AIConfig } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaFailure } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '@everyboard/games';
+import { MancalaScoreHeuristic } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MoveGenerator } from '../../../jscaip/AI/AI';
-import { AIConfig } from '../../../jscaip/AI/AIConfig';
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-
-import { MancalaConfig } from './MancalaConfig';
-import { MancalaFailure } from './MancalaFailure';
-import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
-import { MancalaState } from './MancalaState';
 
 export type SeedDropResult = {
     houseToDistribute: Coord;
@@ -68,7 +67,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public readonly viewBoxWidth: Signal<number> = computed(() => this.viewBox().width - this.STROKE_WIDTH);
 
     private computeViewBoxWidth(): number {
-        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+        return 60 + ((2 + this.width()) * this.SPACE_SIZE);
     }
 
     protected override computeViewBox(): ViewBox {
@@ -130,11 +129,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
             captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who captures here is not important
             this.captured = captureResult.captureMap;
         }
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public override async updateBoard(triggerAnimation: boolean): Promise<void> {
-        const state: MancalaState = this.getState();
+        const state: MancalaState = this.state();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
             this.animationOngoing = true;
@@ -171,7 +170,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         const config: MancalaConfig = this.config();
-        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentOpponent()) {
+        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.state().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x, y);
@@ -215,13 +214,13 @@ export abstract class MancalaComponent<R extends MancalaRules>
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.config())) {
                 // Player has no more seed to distribute
-                return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+                return this.rules.isLegal(this.currentMove.get(), this.state(), config);
             } else {
                 // Player can still distribute
                 return MGPValidation.SUCCESS;
             }
         } else {
-            return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+            return this.rules.isLegal(this.currentMove.get(), this.state(), config);
         }
     }
 
@@ -324,12 +323,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        const width: number = this.getState().getWidth();
-        const height: number = this.getState().getHeight();
+        const width: number = this.width();
+        const height: number = this.height();
         this.captured = TableUtils.create(width, height, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public override cancelMoveAttempt(): void {
@@ -337,7 +336,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.droppedInStore = PlayerNumberMap.of(0, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public getSpaceClasses(x: number, y: number): string[] {
@@ -400,14 +399,14 @@ export abstract class MancalaComponent<R extends MancalaRules>
             Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
             return this.node().parent.get().gameState;
         } else {
-            if (this.constructedState.equals(this.getState())) {
+            if (this.constructedState.equals(this.state())) {
                 if (this.node().parent.isPresent()) {
                     return this.node().parent.get().gameState;
                 } else {
-                    return this.getState();
+                    return this.state();
                 }
             } else {
-                return this.getState();
+                return this.state();
             }
         }
     }

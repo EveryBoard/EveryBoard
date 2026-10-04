@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { TaflComponent } from '../tafl.component';
+import { BrandhubMove } from '@everyboard/games';
+import { BrandhubRules } from '@everyboard/games';
 
-import { BrandhubMove } from './BrandhubMove';
-import { BrandhubRules } from './BrandhubRules';
+import { TaflComponent } from '../tafl.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

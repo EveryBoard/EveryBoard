@@ -2,14 +2,14 @@ import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { AbstractNode, GameNode } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { Localized } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
-import { Move } from '../../../jscaip/Move';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
-import { Debug } from '../../../utils/Debug';
-import { Localized } from '../../../utils/LocaleUtils';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 
@@ -92,7 +92,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
-            const resultingState: GameState = this.gameComponent.getState();
+            const resultingState: GameState = this.gameComponent.state();
             const moveValidity: MGPValidation =
                 Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
             if (moveValidity.isSuccess()) {

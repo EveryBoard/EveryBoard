@@ -1,21 +1,20 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games';
+import { PentagoMoveGenerator } from '@everyboard/games';
+import { PentagoRules } from '@everyboard/games';
+import { PentagoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { PentagoMove } from './PentagoMove';
-import { PentagoMoveGenerator } from './PentagoMoveGenerator';
-import { PentagoRules } from './PentagoRules';
-import { PentagoState } from './PentagoState';
 
 interface ArrowInfo {
     path: string;
@@ -97,8 +96,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.victoryCoords = this.rules.getVictoryCoords(this.getState());
+        this.victoryCoords = this.rules.getVictoryCoords(this.state());
     }
 
     protected override async showLastMove(move: PentagoMove): Promise<void> {
@@ -200,14 +198,14 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
-        if (this.state.board[y][x].isPlayer()) {
+        if (this.state().board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (this.currentDrop.equalsValue(coord)) {
             return this.cancelMove();
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
-        const state: PentagoState = this.getState();
+        const state: PentagoState = this.state();
         const postDropState: PentagoState = state.applyLegalDrop(drop);
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop);
@@ -243,7 +241,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const x: number = coord.x;
         const y: number = coord.y;
         const classes: string[] = [];
-        const player: string = this.getPlayerClass(this.state.board[y][x]);
+        const player: string = this.getPlayerClass(this.state().board[y][x]);
         classes.push(player);
         if (this.lastDrop.equalsValue(coord)) {
             classes.push('last-move-stroke');

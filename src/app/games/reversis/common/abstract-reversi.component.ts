@@ -1,16 +1,16 @@
+
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from '@everyboard/games';
+import { ReversiHeuristic } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiMoveGenerator } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-
-import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
-import { ReversiHeuristic } from './ReversiHeuristic';
-import { ReversiMove } from './ReversiMove';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiState } from './ReversiState';
 
 export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     extends RectangularGameComponent<R,
@@ -50,7 +50,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ReversiState = this.getState();
+        const state: ReversiState = this.state();
 
         this.board = state.getCopiedBoard();
 
@@ -60,7 +60,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
 
     protected override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
-        const player: Player = this.getState().getCurrentOpponent();
+        const player: Player = this.state().getCurrentOpponent();
         this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.config());
     }
 

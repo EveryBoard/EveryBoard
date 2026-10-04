@@ -1,22 +1,21 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { PenteAlignmentHeuristic } from '@everyboard/games';
+import { PenteConfig } from '@everyboard/games';
+import { PenteMove } from '@everyboard/games';
+import { PenteMoveGenerator } from '@everyboard/games';
+import { PenteRules } from '@everyboard/games';
+import { PenteState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-
-import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
-import { PenteConfig } from './PenteConfig';
-import { PenteMove } from './PenteMove';
-import { PenteMoveGenerator } from './PenteMoveGenerator';
-import { PenteRules } from './PenteRules';
-import { PenteState } from './PenteState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,9 +59,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: PenteState = this.getState();
+        const state: PenteState = this.state();
         this.board = state.board;
-        this.scores = MGPOptional.of(this.getState().captures);
+        this.scores = MGPOptional.of(this.state().captures);
         const config: PenteConfig = this.config();
         this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();
@@ -90,7 +89,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public getSpaceClass(coord: Coord): string[] {
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const owner: PlayerOrNone = this.state().getPieceAt(coord);
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));
         if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
