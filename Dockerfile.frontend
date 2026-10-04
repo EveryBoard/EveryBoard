@@ -14,7 +14,7 @@ RUN npm ci \
 COPY . .
 RUN cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
 
-FROM frontend AS translations-ci
+FROM frontend AS python-ci
 
 ENV PATH=/opt/venv/bin:$PATH
 
@@ -24,16 +24,30 @@ RUN apt-get update \
         python3-pip \
         python3-venv \
     && python3 -m venv /opt/venv \
-    && pip install --no-cache-dir --requirement scripts/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
-FROM translations-ci AS ci
+FROM python-ci AS translations-ci
+
+RUN pip install --no-cache-dir --requirement scripts/requirements-translations.txt
+
+FROM python-ci AS ci
 
 ENV CHROME_BIN=/usr/bin/chromium
 
-RUN apt-get update \
+RUN pip install --no-cache-dir --requirement scripts/requirements.txt \
+    && apt-get update \
     && apt-get install --yes --no-install-recommends \
         chromium \
         openjdk-21-jre-headless \
     && rm -rf /var/lib/apt/lists/*
 RUN npx firebase setup:emulators:firestore
+
+FROM alpine:3.22 AS images-ci
+
+WORKDIR /workspace
+
+COPY scripts/check-images.sh ./scripts/check-images.sh
+COPY src/app/components/normal-component/pick-game/pick-game.component.ts \
+    ./src/app/components/normal-component/pick-game/pick-game.component.ts
+COPY src/assets/images/dark ./src/assets/images/dark
+COPY src/assets/images/light ./src/assets/images/light

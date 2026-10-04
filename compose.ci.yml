@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-      target: frontend
+      target: images-ci
     command: ./scripts/check-images.sh
 
   backend-tests:
