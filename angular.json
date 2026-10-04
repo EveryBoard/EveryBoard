@@ -177,6 +177,7 @@
               ]
             },
             "ci": {
+              "main": "src/test.ci.ts",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
