@@ -1,9 +1,6 @@
 import { Coord, FlatHexaOrientation, HexaOrientation } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-import { Coord } from '../Coord';
-import { FlatHexaOrientation, HexaOrientation } from '../HexaOrientation';
-
 import { BaseLayout } from './Layout';
 
 export class HexaLayout extends BaseLayout {

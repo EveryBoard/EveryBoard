@@ -5,16 +5,15 @@ import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
-
-import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
-import { ConnectNMove } from './ConnectNMove';
-import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
-import { ConnectNConfig, ConnectNRules } from '../../../../games/src/games/connect-n/ConnectNRules';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
+import { ConnectNAlignmentHeuristic } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games';
+import { ConnectNMoveGenerator } from '@everyboard/games';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
 
 @Component({
     selector: 'app-connect-n',

@@ -1,23 +1,24 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
-import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
-import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
-import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
-import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
-import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { HexagonalShape } from '@everyboard/games';
+import { RectangularShape } from '@everyboard/games';
+import { TopologicShape } from '@everyboard/games';
+import { TriangularShape } from '@everyboard/games';
+import { SimpleGameStateWithTable } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
+import { TopologicGameStateWithTable } from '@everyboard/games';
+import { HexagonalTopology } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+import { TriangularTopology } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ConnectNMove } from '../ConnectNMove';
-import { ConnectNConfig, ConnectNRules } from '../../../../../games/src/games/connect-n/ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
 

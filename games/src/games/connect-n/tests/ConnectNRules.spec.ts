@@ -898,7 +898,7 @@ describe('ConnectNRules (TORIC)', () => {
         // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'SQUARE',
+            topology: 'SQUARE (8)',
             shape: 'TORIC',
         };
 
@@ -944,7 +944,7 @@ describe('ConnectNRules (TORIC)', () => {
         // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'SQUARE',
+            topology: 'SQUARE (8)',
             shape: 'TORIC',
         };
 

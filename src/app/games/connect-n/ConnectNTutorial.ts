@@ -1,17 +1,17 @@
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { RectangularShape } from '@everyboard/games';
+import { TopologicShape } from '@everyboard/games';
+import { SimpleGameStateWithTable } from '@everyboard/games';
+import { TopologicGameStateWithTable } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games';
+import { Topology } from '@everyboard/games';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { RectangularShape } from '../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../jscaip/shape/Shape';
-import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
-import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
-import { OrdinalSquareTopology } from '../../jscaip/topology/OrdinalSquareTopology';
-import { Topology } from '../../jscaip/topology/Topology';
-
-import { ConnectNMove } from './ConnectNMove';
-import { ConnectNConfig, ConnectNRules } from '../../../../games/src/games/connect-n/ConnectNRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
