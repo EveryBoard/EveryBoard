@@ -11,7 +11,6 @@ ci-frontend:
 	$(CI_COMPOSE) run --build --rm --no-deps frontend-tests
 
 ci-backend:
-	touch backend/coverage.html
 	@trap '$(CI_COMPOSE) down --remove-orphans' EXIT; \
 		$(CI_COMPOSE) run --build --rm backend-tests
 

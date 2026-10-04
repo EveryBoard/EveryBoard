@@ -53,15 +53,10 @@ services:
       sh -c "cd backend && make build && make test &&
       POSTGRES_TEST_DSN='postgresql://everyboard:everyboard@postgres:5432/everyboard_test?sslmode=disable'
       make test-postgres &&
-      make check-coverage && go tool cover -html=coverage.out -o coverage.html &&
-      make check-fmt"
+      make check-coverage && make check-fmt"
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - type: bind
-        source: ./backend/coverage.html
-        target: /workspace/backend/coverage.html
 
   e2e:
     build:

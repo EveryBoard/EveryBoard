@@ -27,12 +27,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Run test suites in the CI container
         run: make ci-frontend
-      - name: Archive code coverage results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-coverage-report
-          path: coverage/
 
   tests-back:
     runs-on: ubuntu-24.04
@@ -41,12 +35,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Run backend checks in the CI container
         run: make ci-backend
-      - name: Archive code coverage results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-code-coverage-report.html
-          path: backend/coverage.html
 
   e2e:
     runs-on: ubuntu-24.04
