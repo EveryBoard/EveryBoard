@@ -12,13 +12,9 @@ function expectEqualityBetweenSetOfSets<T extends Comparable>(expected: T[][], a
         expect(index)
             .withContext(`Expected ${JSON.stringify(actualList)} to have a matching list`)
             .toBeGreaterThanOrEqual(0);
-
-        if (index >= 0) {
-            remainingExpected.splice(index, 1);
-        }
     }
     expect(remainingExpected)
-        .withContext('Some expected lists were not found')
+        .withContext('Some expected sets were not found')
         .toEqual([]);
 }
 
@@ -146,7 +142,7 @@ describe('Combinatorics', () => {
             expect(result).toEqual([]);
         });
 
-        it('should return one empty combination when selecting zero objects on a empty list', () => {
+        it('should return one empty set when selecting zero objects on a empty list', () => {
             // Given an empty list
             const items: string[] = [];
             const subsetSize: number = 0;
