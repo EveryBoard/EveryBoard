@@ -4,14 +4,14 @@ services:
   frontend-build:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: ci/Dockerfile.frontend
       target: frontend
     command: npm run build
 
   frontend-tests:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: ci/Dockerfile.frontend
       target: ci
     command: >-
       sh -c "npm run libtest:ci && npm run gamestest:ci && npm run test:ci &&
@@ -24,14 +24,14 @@ services:
   frontend-lint:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: ci/Dockerfile.frontend
       target: frontend
     command: npm run lint
 
   translations:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: ci/Dockerfile.frontend
       target: translations-ci
     command: >-
       sh -c "npm run dependencies:build && ./scripts/update-translations.sh &&
@@ -40,14 +40,14 @@ services:
   images:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: ci/Dockerfile.frontend
       target: images-ci
     command: ./scripts/check-images.sh
 
   backend-tests:
     build:
       context: .
-      dockerfile: Dockerfile.backend-ci
+      dockerfile: ci/Dockerfile.backend-ci
       target: ci
     command: >-
       sh -c "cd backend && make build && make test &&

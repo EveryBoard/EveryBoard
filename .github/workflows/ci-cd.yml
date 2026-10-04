@@ -22,7 +22,6 @@ jobs:
 
   tests-front:
     runs-on: ubuntu-24.04
-    needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -51,7 +50,6 @@ jobs:
 
   e2e:
     runs-on: ubuntu-24.04
-    needs: [build-front]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -96,7 +94,6 @@ jobs:
 
   linter:
     runs-on: ubuntu-24.04
-    needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -105,7 +102,6 @@ jobs:
 
   images:
     runs-on: ubuntu-24.04
-    needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -114,7 +110,6 @@ jobs:
 
   translations:
     runs-on: ubuntu-24.04
-    needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -140,6 +135,9 @@ jobs:
           cache: 'npm'
       - name: Setup dependencies (install JS dependencies)
         run: npm ci
+      - name: Install pinned deployment tools
+        working-directory: ci/deploy-tools
+        run: npm ci --allow-remote=all
       - name: Build lib
         run: cd lib && npm run build
       - name: Setup dependencies (setup Firebase config, master)
@@ -170,8 +168,7 @@ jobs:
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ "$result" == true ]; then
             # deploy frontend
-            npm install @angular-devkit/architect
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=production --dir dist/everyboard
+            NODE_PATH="$GITHUB_WORKSPACE/ci/deploy-tools/node_modules" ./node_modules/.bin/ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=production --dir dist/everyboard
             # deploy backend
             if ./scripts/backend_needs_deployment.sh https://server.everyboard.org; then
                 mkdir -p ~/.ssh/
@@ -203,8 +200,7 @@ jobs:
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ $result == true ]; then
             # deploy frontend
-            npm install @angular-devkit/architect
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=dev --dir dist/everyboard
+            NODE_PATH="$GITHUB_WORKSPACE/ci/deploy-tools/node_modules" ./node_modules/.bin/ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=dev --dir dist/everyboard
             # deploy backend
             if ./scripts/backend_needs_deployment.sh https://server-dev.everyboard.org; then
                 mkdir -p ~/.ssh/
@@ -245,6 +241,9 @@ jobs:
           cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Install pinned deployment tools
+        working-directory: ci/deploy-tools
+        run: npm ci --allow-remote=all
       - name: Build lib
         run: cd lib && npm run build
       - name: Setup dependencies (setup Firebase config, others)
@@ -273,9 +272,8 @@ jobs:
             status=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/user)
             [ "$status" = 200 ] || { echo "Netlify token rejected (HTTP $status)"; exit 1; }
             npm run build:netlify
-            npm install netlify-cli
             echo "deploying"
-            npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
+            ./ci/deploy-tools/node_modules/.bin/netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
             if ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then
                 mkdir -p ~/.ssh/
