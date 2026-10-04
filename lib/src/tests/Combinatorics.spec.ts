@@ -63,7 +63,7 @@ describe('Combinatorics', () => {
             const items: string[] = ['A', 'B', 'C', 'D'];
             const subsetSize: number = 2;
 
-            // When getting subsets of size two
+            // When selecting subsets of size two
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
             // Then it should give 6 results
@@ -78,7 +78,7 @@ describe('Combinatorics', () => {
             expectEqualityBetweenSetOfSets(expected, result);
         });
 
-        it('should return a list of singletons when asking for subset of size 1', () => {
+        it('should return a list of singletons when selecting subsets of size 1', () => {
             // Given a list of distinct objects
             const items: string[] = ['A', 'B', 'C'];
             const subsetSize: number = 1;
@@ -95,12 +95,12 @@ describe('Combinatorics', () => {
             expectEqualityBetweenSetOfSets(expected, result);
         });
 
-        it('should return one subset when asking for a subset size equal to the list size', () => {
+        it('should return one subset when selecting a subset size equal to the list size', () => {
             // Given a list of distinct objects
             const items: string[] = ['A', 'B', 'C'];
             const subsetSize: number = 3;
 
-            // When asking for a subset of size equal to the size of the list
+            // When selecting a subset of size equal to the size of the list
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
             // Then it should return only one subset
@@ -110,12 +110,12 @@ describe('Combinatorics', () => {
             expectEqualityBetweenSetOfSets(expected, result);
         });
 
-        it('should return empty list when asking for subset of size 0', () => {
+        it('should return empty list when selecting subset of size 0', () => {
             // Given a list of distinct objects
             const items: string[] = ['A', 'B', 'C'];
             const subsetSize: number = 0;
 
-            // When asking for subset of size 0
+            // When selecting subset of size 0
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
             // Then it should return the only possible subset of size zero: an empty list !
@@ -142,8 +142,8 @@ describe('Combinatorics', () => {
             // When selecting a negative number of objects
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should return no subset
-            expect(result).toEqual([[]]);
+            // Then it should return no subsets
+            expect(result).toEqual([]);
         });
 
         it('should return one empty combination when selecting zero objects on a empty list', () => {
@@ -158,7 +158,7 @@ describe('Combinatorics', () => {
             expect(result).toEqual([[]]);
         });
 
-        it('should return one empty combination when selecting one objects on a empty list', () => {
+        it('should return no subset when selecting one objects on a empty list', () => {
             // Given an empty list
             const items: string[] = [];
             const subsetSize: number = 1;
@@ -166,8 +166,8 @@ describe('Combinatorics', () => {
             // When selecting zero objects
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should return one empty list
-            expect(result).toEqual([[]]);
+            // Then it should return no subsets
+            expect(result).toEqual([]);
         });
     });
 
