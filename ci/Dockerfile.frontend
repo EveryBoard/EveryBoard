@@ -42,6 +42,26 @@ RUN pip install --no-cache-dir --requirement scripts/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 RUN npx firebase setup:emulators:firestore
 
+FROM golang:1.26-trixie AS e2e-backend-build
+
+ENV GOTOOLCHAIN=local
+
+WORKDIR /workspace
+
+COPY backend/go.mod backend/go.sum ./backend/
+RUN cd backend && go mod download
+
+COPY backend ./backend
+RUN cd backend && go build -o backend cmd/backend/main.go
+
+FROM ci AS e2e
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends chromium-driver \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=e2e-backend-build /workspace/backend/backend ./backend/backend
+
 FROM alpine:3.22 AS images-ci
 
 WORKDIR /workspace

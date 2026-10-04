@@ -63,6 +63,35 @@ services:
         source: ./backend/coverage.html
         target: /workspace/backend/coverage.html
 
+  e2e:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: e2e
+      network: host
+    command: sh -c "npm run dependencies:build && npm run e2e"
+    environment:
+      DB_HOST: postgres-e2e
+      E2E_EXTERNAL_POSTGRES: "true"
+      E2E_IN_DOCKER: "true"
+    depends_on:
+      postgres-e2e:
+        condition: service_healthy
+
+  postgres-e2e:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: everyboard_e2e
+      POSTGRES_PASSWORD: everyboard_e2e
+      POSTGRES_DB: everyboard_e2e
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U everyboard_e2e -d everyboard_e2e"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
+
   postgres:
     image: postgres:17
     environment:

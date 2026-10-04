@@ -53,44 +53,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Setup Java (for firebase emulator)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: Setup dependencies (install dependencies)
-        run: npm ci
-      - name: Build dependencies
-        run: npm run dependencies:build
-      - name: Setup dependencies (setup dummy Firebase config)
-        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install python dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          python -m pip install -r scripts/requirements.txt
-      - name: Install OS dependencies
-        run: sudo apt-get install -y libev-dev
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: Build backend
-        run: cd backend && make
-      - name: Run e2e tests
-        run: |
-          source venv/bin/activate
-          npm run e2e
+      - name: Run E2E checks in the CI container
+        run: make ci-e2e
 
   linter:
     runs-on: ubuntu-24.04
