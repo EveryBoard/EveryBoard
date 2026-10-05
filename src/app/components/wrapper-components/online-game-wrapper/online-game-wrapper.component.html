@@ -1,6 +1,6 @@
 @let gameName = getGameName();
 @if (gameName.isPresent()) {
-    @if (gameStarted === false) {
+    @if (gameStarted() === false) {
         <app-game-creation id="gameCreation"
                            [gameId]="gameId"
                            [rulesConfigDescription]="getRulesConfigDescription()"

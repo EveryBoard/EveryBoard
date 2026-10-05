@@ -83,7 +83,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public readonly game: WritableSignal<Game | null> = signal(null);
     public gameId!: string; // Initialized in ngOnInit
-    public gameStarted: boolean = false;
+    public readonly gameStarted: WritableSignal<boolean> = signal(false);
     private opponent: MinimalUser | null = null;
     public readonly currentUser: WritableSignal<MinimalUser | null> = signal(null);
 
@@ -135,9 +135,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     protected async startGame(configRoom: ConfigRoom): Promise<void> {
-        Utils.assert(this.gameStarted === false, 'Should not start already started game');
+        Utils.assert(this.gameStarted() === false, 'Should not start already started game');
         this.configRoom = configRoom;
-        this.gameStarted = true;
+        this.gameStarted.set(true);
 
         setTimeout(async() => {
             // the small waiting is there to make sure that the game component is loaded by view
