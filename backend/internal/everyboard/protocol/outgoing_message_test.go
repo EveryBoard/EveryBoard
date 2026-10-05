@@ -30,13 +30,11 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		GameName:     "Go",
 	}
 	game := model.Game{
-		GameName:      "Go",
-		PlayerZero:    minimalUser,
-		PlayerZeroElo: 42.0,
-		PlayerOne:     model.MinimalUser{ID: "bar", Name: "bar"},
-		PlayerOneElo:  100.0,
-		Result:        model.ResultInProgress,
-		Beginning:     42,
+		GameName:   "Go",
+		PlayerZero: model.PlayerInfo{User: minimalUser, Elo: 42.0},
+		PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "bar", Name: "bar"}, Elo: 100.0},
+		Result:     model.ResultInProgress,
+		Beginning:  42,
 	}
 	gameEvent := model.GameEvent{
 		Timestamp: 42,
@@ -86,7 +84,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		GameUpdateMessage{
 			Game: game,
 		},
-		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerZeroElo":42,"playerOne":{"id":"bar","name":"bar"},"playerOneElo":100,"result":"InProgress","beginning":42}}`, "GameUpdate")
+		`{"game":{"gameName":"Go","playerZero":{"user":{"id":"foo","name":"foo"},"elo":42},"playerOne":{"user":{"id":"bar","name":"bar"},"elo":100},"result":"InProgress","beginning":42}}`, "GameUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		GameEventMessage{

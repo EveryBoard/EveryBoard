@@ -246,12 +246,12 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
-	if game.PlayerZero.ID == creator.ID {
+	if game.PlayerZero.User.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
-		chosenOpponent = game.PlayerOne
+		chosenOpponent = game.PlayerOne.User
 	} else {
 		firstPlayer = model.FirstPlayerCreator
-		chosenOpponent = game.PlayerZero
+		chosenOpponent = game.PlayerZero.User
 	}
 
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
@@ -336,31 +336,23 @@ func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 		}
 	}
 
-	var playerZero model.MinimalUser
-	var playerZeroElo float64
-	var playerOne model.MinimalUser
-	var playerOneElo float64
+	var playerZero model.PlayerInfo
+	var playerOne model.PlayerInfo
 	if starter == model.FirstPlayerCreator {
-		playerZero = configRoom.Creator
-		playerZeroElo = configRoom.CreatorElo
-		playerOne = *configRoom.ChosenOpponent
-		playerOneElo = *configRoom.ChosenOpponentElo
+		playerZero = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
+		playerOne = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
 	} else {
-		playerZero = *configRoom.ChosenOpponent
-		playerZeroElo = *configRoom.ChosenOpponentElo
-		playerOne = configRoom.Creator
-		playerOneElo = configRoom.CreatorElo
+		playerZero = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
+		playerOne = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
 	}
 
 	game := &model.Game{
-		GameID:        configRoom.ID,
-		GameName:      configRoom.GameName,
-		PlayerZero:    playerZero,
-		PlayerZeroElo: playerZeroElo,
-		PlayerOne:     playerOne,
-		PlayerOneElo:  playerOneElo,
-		Result:        model.ResultInProgress,
-		Beginning:     now,
+		GameID:     configRoom.ID,
+		GameName:   configRoom.GameName,
+		PlayerZero: playerZero,
+		PlayerOne:  playerOne,
+		Result:     model.ResultInProgress,
+		Beginning:  now,
 	}
 	s.Games[configRoom.ID] = game
 	return game, nil

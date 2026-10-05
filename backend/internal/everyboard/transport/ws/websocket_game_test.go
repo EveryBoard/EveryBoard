@@ -77,8 +77,8 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
@@ -103,8 +103,8 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
@@ -147,8 +147,8 @@ func TestHandleGameEnd(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
@@ -177,8 +177,8 @@ func TestHandleGameEnd(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
-			PlayerOne:  model.MinimalUser{ID: uid, Name: uid},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "player0", Name: "player0"}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
@@ -207,8 +207,8 @@ func TestHandleGameEnd(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
@@ -299,8 +299,8 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			GameName:   "test-game",
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: opponent, Name: opponent},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: opponent, Name: opponent}},
 			Result:     model.ResultTimeoutOfOne,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
@@ -410,8 +410,8 @@ func TestSendMoveFromConfigRoomCreatorWhoIsNotGamePlayer(t *testing.T) {
 	fakeStore.SetGameForTest(gameID, &model.Game{
 		GameID:     gameID,
 		GameName:   "test-game",
-		PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
-		PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+		PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "player0", Name: "player0"}},
+		PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 		Result:     model.ResultInProgress,
 	})
 	fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{

@@ -347,7 +347,7 @@ func (sb ScenarioBuilder) SubscribeGame(userId string, gameId model.GameID) {
 
 	sb.subscribeGame(userId, gameId)
 
-	isObserver := game.PlayerZero.ID != userId && game.PlayerOne.ID != userId
+	isObserver := game.PlayerZero.User.ID != userId && game.PlayerOne.User.ID != userId
 	if isObserver {
 		currentGame := sb.fakeStore.CurrentGameForTest(userId)
 		expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
@@ -591,10 +591,10 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	// Find the opponent from the rematch game
 	var opponentId string
 	rematchGame := sb.fakeStore.GameForTest(rematchId)
-	if rematchGame.PlayerZero.ID == creator.ID {
-		opponentId = rematchGame.PlayerOne.ID
+	if rematchGame.PlayerZero.User.ID == creator.ID {
+		opponentId = rematchGame.PlayerOne.User.ID
 	} else {
-		opponentId = rematchGame.PlayerZero.ID
+		opponentId = rematchGame.PlayerZero.User.ID
 	}
 	currentGameOpponent := sb.fakeStore.CurrentGameForTest(opponentId)
 

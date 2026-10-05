@@ -129,12 +129,12 @@ func (s *GORMStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 	// Compute who is the new opponent and who plays first
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
-	if game.PlayerZero.ID == creator.ID {
+	if game.PlayerZero.User.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
-		chosenOpponent = game.PlayerOne
+		chosenOpponent = game.PlayerOne.User
 	} else {
 		firstPlayer = model.FirstPlayerCreator
-		chosenOpponent = game.PlayerZero
+		chosenOpponent = game.PlayerZero.User
 	}
 
 	// Get the new elo of the opponent

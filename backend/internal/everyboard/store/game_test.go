@@ -140,8 +140,8 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
@@ -172,8 +172,8 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationWithoutOpponentFails(t *testing.T) {

@@ -57,8 +57,8 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			GameName:   "testgame",
-			PlayerZero: model.MinimalUser{ID: "other1", Name: "Other 1"},
-			PlayerOne:  model.MinimalUser{ID: "other2", Name: "Other 2"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "other1", Name: "Other 1"}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "other2", Name: "Other 2"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
@@ -273,8 +273,8 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "other", Name: "other"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "other", Name: "other"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,

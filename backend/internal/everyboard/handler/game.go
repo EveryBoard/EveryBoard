@@ -31,7 +31,7 @@ func (h *Handler) handleSubscribeGame(gameId model.GameID) error {
 		}
 
 		// Let observers know their current game; players already know from game creation
-		if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
+		if game.PlayerZero.User.ID != h.user.ID && game.PlayerOne.User.ID != h.user.ID {
 			configRoom, err := store.GetConfigRoom(gameId)
 			if err != nil {
 				return err
@@ -111,7 +111,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 			return apperror.ErrorNotAllowed
 		}
 
-		result := getResult(&game.PlayerZero, &game.PlayerOne)
+		result := getResult(&game.PlayerZero.User, &game.PlayerOne.User)
 		switch {
 		case configRoom.Status == model.StatusStarted:
 			// first player to notify the end game, all good
@@ -131,14 +131,14 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 		var winner model.MinimalUser
 		var draw bool
 		if result.IsVictoryOfZero() {
-			winner = game.PlayerZero
-			loser = game.PlayerOne
+			winner = game.PlayerZero.User
+			loser = game.PlayerOne.User
 		} else if result.IsVictoryOfOne() {
-			winner = game.PlayerOne
-			loser = game.PlayerZero
+			winner = game.PlayerOne.User
+			loser = game.PlayerZero.User
 		} else if result.IsDraw() {
-			winner = game.PlayerZero
-			loser = game.PlayerOne
+			winner = game.PlayerZero.User
+			loser = game.PlayerOne.User
 			draw = true
 		} else {
 			return fmt.Errorf("doEndGame: game result is not finished")
@@ -175,11 +175,11 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 		finished = true
 
 		// Remove current game for everyone
-		if err = h.removeCurrentGame(&buf, store, game.PlayerZero); err != nil {
+		if err = h.removeCurrentGame(&buf, store, game.PlayerZero.User); err != nil {
 			return err
 		}
 
-		if err = h.removeCurrentGame(&buf, store, game.PlayerOne); err != nil {
+		if err = h.removeCurrentGame(&buf, store, game.PlayerOne.User); err != nil {
 			return err
 		}
 
@@ -262,7 +262,7 @@ func (h *Handler) addEvent(eventData model.EventPayload) error {
 		if game == nil {
 			return apperror.ErrorUnknownGame
 		}
-		if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
+		if game.PlayerZero.User.ID != h.user.ID && game.PlayerOne.User.ID != h.user.ID {
 			return apperror.ErrorNotAllowed
 		}
 		if !eventData.AllowedInConfigRoomStatus(configRoom.Status) {
@@ -361,10 +361,10 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 
 			creator := h.user
 			var opponent model.MinimalUser
-			if creator.ID == rematchGame.PlayerZero.ID {
-				opponent = rematchGame.PlayerOne
+			if creator.ID == rematchGame.PlayerZero.User.ID {
+				opponent = rematchGame.PlayerOne.User
 			} else {
-				opponent = rematchGame.PlayerZero
+				opponent = rematchGame.PlayerZero.User
 			}
 
 			// Set the current game of both players
@@ -375,7 +375,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 				Opponent: &opponent,
 				Role:     model.UserRolePlayer,
 			}
-			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerZero, cgZero); err != nil {
+			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerZero.User, cgZero); err != nil {
 				return err
 			}
 
@@ -386,7 +386,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 				Opponent: &opponent,
 				Role:     model.UserRolePlayer,
 			}
-			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerOne, cgOne); err != nil {
+			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerOne.User, cgOne); err != nil {
 				return err
 			}
 

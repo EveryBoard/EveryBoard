@@ -154,7 +154,7 @@ func (h *Handler) unsubscribe() error {
 			}
 			// Only remove the current game for observers; players must remain in game
 			// even if they close their tab, so they can't join a new game in another tab
-			if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
+			if game.PlayerZero.User.ID != h.user.ID && game.PlayerOne.User.ID != h.user.ID {
 				if err = h.removeCurrentGame(&buf, store, h.user); err != nil {
 					return err
 				}
