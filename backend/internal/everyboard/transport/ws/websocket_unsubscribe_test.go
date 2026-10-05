@@ -125,7 +125,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		}
 		// User should no longer be a candidate
 		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
-			assert.NotEqual(t, uid, cand.User.ID, "unsubscribed candidate should have been removed")
+			assert.NotEqual(t, uid, cand.PlayerInfo.User.ID, "unsubscribed candidate should have been removed")
 		}
 	})
 

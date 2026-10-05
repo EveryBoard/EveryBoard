@@ -330,7 +330,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 		// All configRoom subscribers (including the new one) see CandidateJoined
 		for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
 			expectMessage(sb.t, sb.getConnection(subscriber),
-				fmt.Sprintf(`["CandidateJoined",{"candidate":%s,"elo":0}]`, toJSON(sb.t, user)))
+				fmt.Sprintf(`["CandidateJoined",{"candidate":{"user":%s,"elo":0}}]`, toJSON(sb.t, user)))
 		}
 		// The new subscriber receives their CurrentGameUpdate
 		currentGame := sb.fakeStore.CurrentGameForTest(userId)

@@ -194,8 +194,8 @@ func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
 	var candidateElo float64
 	for _, c := range s.Candidates[configRoom.ID] {
-		if c.User.ID == opponent.ID {
-			candidateElo = c.Elo
+		if c.PlayerInfo.User.ID == opponent.ID {
+			candidateElo = c.PlayerInfo.Elo
 			break
 		}
 	}
@@ -287,9 +287,8 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 
 func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:     configRoom.ID,
+		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},
 	})
 	return nil
 }
@@ -297,7 +296,7 @@ func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.Minima
 func (s *FakeStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) error {
 	candidates := s.Candidates[configRoom.ID]
 	for i, c := range candidates {
-		if c.User.ID == uid {
+		if c.PlayerInfo.User.ID == uid {
 			s.Candidates[configRoom.ID] = append(candidates[:i], candidates[i+1:]...)
 			return nil
 		}

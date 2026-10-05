@@ -114,6 +114,16 @@ func TestConfigRoomHasAllDeclaredColumns(t *testing.T) {
 	}
 }
 
+func TestCandidateHasAllDeclaredColumns(t *testing.T) {
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	for _, column := range model.CandidateRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.Candidate{}, column),
+			"missing candidate column %s", column)
+	}
+}
+
 func TestSelectOpponentRequiresCandidate(t *testing.T) {
 	// Given a config room with no candidates
 	store, err := InitDatabase(sqlite.Open(":memory:"))
@@ -283,7 +293,7 @@ func TestPostgresApplyToCandidatesShouldAllowQueriesInCallback(t *testing.T) {
 	err = database.Transaction(func(transaction Store) error {
 		return transaction.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 			seenCandidates++
-			_, err := transaction.GetElo(configRoom.GameName, candidate.User)
+			_, err := transaction.GetElo(configRoom.GameName, candidate.PlayerInfo.User)
 			return err
 		})
 	})

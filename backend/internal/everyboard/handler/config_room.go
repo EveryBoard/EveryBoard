@@ -49,21 +49,19 @@ func (h *Handler) handleSubscribeConfigRoom(gameId model.GameID) error {
 					Role:     model.UserRoleCandidate,
 				}
 				// h.connection is already subscribed, so this broadcast includes the new user
-				h.bufferBroadcastToConfigRoom(&buf, gameId, protocol.CandidateJoinedMessage{Candidate: h.user, Elo: elo.CurrentElo})
+				h.bufferBroadcastToConfigRoom(&buf, gameId, protocol.CandidateJoinedMessage{
+					Candidate: model.PlayerInfo{User: h.user, Elo: elo.CurrentElo},
+				})
 				if err = h.setCurrentGame(&buf, store, h.user, currentGame); err != nil {
 					return err
 				}
 			}
 
 			return store.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
-				if candidate.User.ID == uid {
+				if candidate.PlayerInfo.User.ID == uid {
 					return nil
 				}
-				elo, err := store.GetElo(configRoom.GameName, candidate.User)
-				if err != nil {
-					return err
-				}
-				buf.addSend(h.connection, protocol.CandidateJoinedMessage{Candidate: candidate.User, Elo: elo.CurrentElo})
+				buf.addSend(h.connection, protocol.CandidateJoinedMessage{Candidate: candidate.PlayerInfo})
 				return nil
 			})
 
@@ -257,10 +255,10 @@ func (h *Handler) handleAcceptConfig() error {
 
 		// Updates the current game of both players, and remove the current game of all non-chosen candidates
 		if err = store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
-			if candidate.User.ID == configRoom.ChosenOpponent.User.ID {
+			if candidate.PlayerInfo.User.ID == configRoom.ChosenOpponent.User.ID {
 				return nil
 			}
-			return h.removeCurrentGame(&buf, store, candidate.User)
+			return h.removeCurrentGame(&buf, store, candidate.PlayerInfo.User)
 		}); err != nil {
 			return err
 		}

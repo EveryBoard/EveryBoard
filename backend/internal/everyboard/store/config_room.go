@@ -49,7 +49,7 @@ func (s *GORMStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
 	var candidate model.Candidate
 	result := s.db.
-		Where("game_id = ? AND user_id = ?", configRoom.ID, opponent.ID).
+		Where("game_id = ? AND player_id = ?", configRoom.ID, opponent.ID).
 		First(&candidate)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return apperror.ErrorNotAllowed
@@ -57,7 +57,7 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	chosenOpponent := model.PlayerInfo{User: opponent, Elo: candidate.Elo}
+	chosenOpponent := candidate.PlayerInfo
 	result = s.db.Model(&model.ConfigRoom{}).Where("id = ?", configRoom.ID).
 		Updates(model.ConfigRoom{ChosenOpponent: &chosenOpponent})
 	if result.Error != nil {
@@ -165,15 +165,14 @@ func (s *GORMStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 
 func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
 	result := s.db.Create(&model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:     configRoom.ID,
+		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},
 	})
 	return wrapError("AddCandidate", result.Error)
 }
 
 func (s *GORMStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) error {
-	result := s.db.Where("game_id = ? and user_id = ?", configRoom.ID, uid).Delete(&model.Candidate{})
+	result := s.db.Where("game_id = ? and player_id = ?", configRoom.ID, uid).Delete(&model.Candidate{})
 	return wrapError("DeleteCandidate", result.Error)
 }
 

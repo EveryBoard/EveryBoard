@@ -115,10 +115,9 @@ var ConfigRoomRows = []string{
 }
 
 type Candidate struct {
-	ID     uint64      `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
-	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
-	Elo    float64     `gorm:"not null" json:"elo"`
+	ID         uint64     `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	GameID     GameID     `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
+	PlayerInfo PlayerInfo `gorm:"embedded;embeddedPrefix:player_"`
 }
 
-var CandidateRows = []string{"id", "game_id", "user_id", "user_name", "elo"}
+var CandidateRows = []string{"id", "game_id", "player_id", "player_name", "player_elo"}

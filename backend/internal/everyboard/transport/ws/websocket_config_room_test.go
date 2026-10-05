@@ -98,7 +98,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		require.NotNil(t, msg, "expected message")
 		found := false
 		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
-			if cand.User.ID == "user_candidate" {
+			if cand.PlayerInfo.User.ID == "user_candidate" {
 				found = true
 				break
 			}
@@ -165,7 +165,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 			Status:  model.StatusCreated,
 		})
 		fakeStore.SetCandidatesForTest(configRoomID, []model.Candidate{
-			{User: model.MinimalUser{ID: "cand1", Name: "cand1"}},
+			{PlayerInfo: model.PlayerInfo{User: model.MinimalUser{ID: "cand1", Name: "cand1"}}},
 		})
 
 		c := dial("cand2")

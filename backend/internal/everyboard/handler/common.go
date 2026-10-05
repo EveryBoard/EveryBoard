@@ -183,7 +183,7 @@ func (h *Handler) unsubscribe() error {
 				h.bufferBroadcastToLobby(&buf, update)
 
 				if err = store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
-					return h.removeCurrentGame(&buf, store, candidate.User)
+					return h.removeCurrentGame(&buf, store, candidate.PlayerInfo.User)
 				}); err != nil {
 					return err
 				}
