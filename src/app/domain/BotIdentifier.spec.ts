@@ -3,7 +3,7 @@ import { MinimalUser } from './MinimalUser';
 
 describe('getUserDisplayName', () => {
 
-    it('should use the bot display name when an identifier is available', () => {
+    it('should return the identifier display name for a bot', () => {
         // Given a bot user and its identifier
         const user: MinimalUser = { id: 'bot-id', name: 'account-name', isBot: true };
         const botIdentifier: BotIdentifier = { displayName: 'Friendly Bot', parameters: {} };
@@ -15,7 +15,7 @@ describe('getUserDisplayName', () => {
         expect(displayName).toBe('Friendly Bot');
     });
 
-    it('should use the account name when no bot identifier is available', () => {
+    it('should return the account name for a human', () => {
         // Given a user without a bot identifier
         const user: MinimalUser = { id: 'user-id', name: 'account-name' };
 
