@@ -5,7 +5,18 @@ import (
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 )
+
+type subscribeConfigRoomPayload struct {
+	GameID        model.GameID         `json:"gameId"`
+	BotIdentifier *model.BotIdentifier `json:"botIdentifier"`
+}
+
+type createPayload struct {
+	GameName      string               `json:"gameName"`
+	BotIdentifier *model.BotIdentifier `json:"botIdentifier"`
+}
 
 func withMessageArgument[T any](
 	messageData map[string]json.RawMessage,
@@ -19,12 +30,33 @@ func withMessageArgument[T any](
 	return handle(*value)
 }
 
+func withMessagePayload[T any](
+	messageData map[string]json.RawMessage,
+	handle func(T) error,
+) error {
+	encoded, err := json.Marshal(messageData)
+	if err != nil {
+		return apperror.ErrorInvalidData
+	}
+
+	var payload T
+	if err := json.Unmarshal(encoded, &payload); err != nil {
+		return apperror.ErrorInvalidData
+	}
+	return handle(payload)
+}
+
 func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[string]json.RawMessage) error {
 	switch messageType {
 	case "SubscribeLobby":
 		return h.handleSubscribeLobby()
 	case "SubscribeConfigRoom":
-		return withMessageArgument(messageData, "gameId", h.handleSubscribeConfigRoom)
+		return withMessagePayload(messageData, func(payload subscribeConfigRoomPayload) error {
+			if payload.GameID == 0 {
+				return apperror.ErrorInvalidData
+			}
+			return h.handleSubscribeConfigRoom(payload.GameID, payload.BotIdentifier)
+		})
 	case "SubscribeGame":
 		return withMessageArgument(messageData, "gameId", h.handleSubscribeGame)
 	case "Unsubscribe":
@@ -32,7 +64,12 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 	case "ChatSend":
 		return withMessageArgument(messageData, "message", h.handleChatSend)
 	case "Create":
-		return withMessageArgument(messageData, "gameName", h.handleCreateGame)
+		return withMessagePayload(messageData, func(payload createPayload) error {
+			if payload.GameName == "" {
+				return apperror.ErrorInvalidData
+			}
+			return h.handleCreateGame(payload.GameName, payload.BotIdentifier)
+		})
 	case "SelectOpponent":
 		return withMessageArgument(messageData, "opponent", h.handleSelectOpponent)
 	case "ProposeConfig":

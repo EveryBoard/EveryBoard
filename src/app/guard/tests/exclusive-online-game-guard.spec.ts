@@ -64,6 +64,8 @@ describe('ExclusiveOnlineGameGuard', () => {
             role: 'Player',
             gameName: 'P4',
             creator: UserMocks.CREATOR_MINIMAL_USER,
+            creatorBotIdentifier: null,
+            opponentBotIdentifier: null,
         }));
 
         // When asking if user can go to a different part
@@ -83,6 +85,8 @@ describe('ExclusiveOnlineGameGuard', () => {
             role: 'Player',
             gameName: 'P4',
             creator: UserMocks.CREATOR_MINIMAL_USER,
+            creatorBotIdentifier: null,
+            opponentBotIdentifier: null,
         }));
 
         // When asking if user can go to a different part

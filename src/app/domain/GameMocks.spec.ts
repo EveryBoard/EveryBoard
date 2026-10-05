@@ -8,9 +8,11 @@ export class GameMocks {
         gameName: 'Quarto',
         playerZero: UserMocks.CREATOR_MINIMAL_USER,
         playerZeroElo: 0,
+        playerZeroBotIdentifier: null,
         result: GameResult.IN_PROGRESS,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         playerOneElo: 0,
+        playerOneBotIdentifier: null,
         beginning: 0,
     };
 
@@ -18,9 +20,11 @@ export class GameMocks {
         gameName: 'Quarto',
         playerZero: UserMocks.OTHER_CREATOR_MINIMAL_USER,
         playerZeroElo: 0,
+        playerZeroBotIdentifier: null,
         result: GameResult.IN_PROGRESS,
         playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         playerOneElo: 0,
+        playerOneBotIdentifier: null,
         beginning: 0,
     };
 }

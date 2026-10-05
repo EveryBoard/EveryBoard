@@ -9,6 +9,7 @@ import { QuartoMove } from '@everyboard/games';
 import { QuartoPiece } from '@everyboard/games';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../../domain/BotIdentifier';
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -403,6 +404,60 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(opponentIndicator.innerText).toBe(UserMocks.OPPONENT_AUTH_USER.username.get());
 
             await receiveEndGame();
+        }));
+
+        it('should show a bot display name instead of its account name', fakeAsync(async() => {
+            // Given a started game with a bot player identifier
+            const botIdentifier: BotIdentifier = {
+                displayName: 'Perfect Quarto',
+                parameters: { version: 1 },
+            };
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, {
+                ...PreparationOptions.withoutClocks,
+                game: {
+                    ...GameMocks.STARTED,
+                    playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
+                    playerOneBotIdentifier: botIdentifier,
+                },
+            });
+
+            // When viewing the active game
+            const opponentIndicator: HTMLElement = testUtils.findElement('#player-one-name').nativeElement;
+
+            // Then the bot display name is shown instead of its account name
+            expect(opponentIndicator.innerText).toBe(botIdentifier.displayName);
+            expect(opponentIndicator.innerText).not.toContain(GameMocks.STARTED.playerOne.name);
+
+            await receiveEndGame();
+        }));
+
+        it('should show a bot display name in turn and winner messages', fakeAsync(async() => {
+            // Given an observer watching a game with a bot as player one
+            const botIdentifier: BotIdentifier = {
+                displayName: 'Perfect Quarto',
+                parameters: { version: 1 },
+            };
+            const botGame: Game = {
+                ...GameMocks.STARTED,
+                playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
+                playerOneBotIdentifier: botIdentifier,
+            };
+            await prepareTestUtilsFor(USER_OBSERVER, {
+                ...PreparationOptions.withoutClocks,
+                game: botGame,
+            });
+
+            // When player zero moves and the bot wins
+            await receiveSync();
+            await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+            const turnMessage: string = testUtils.findElement('#currentPlayerIndicator').nativeElement.innerText;
+            await receiveAction(Player.ZERO, 'EndGame');
+            await receiveGameUpdate({ ...botGame, result: GameResult.VICTORY_OF_ONE });
+
+            // Then the turn and winner messages use the bot display name
+            expect(turnMessage).toBe(`It is ${ botIdentifier.displayName }'s turn.`);
+            const winnerIndicator: HTMLElement = testUtils.findElement('#winnerIndicator').nativeElement;
+            expect(winnerIndicator.innerText).toBe(`${ botIdentifier.displayName } won.`);
         }));
 
     });

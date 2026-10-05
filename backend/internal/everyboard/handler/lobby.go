@@ -39,14 +39,28 @@ func (h *Handler) handleSubscribeLobby() error {
 	return nil
 }
 
-func (h *Handler) handleCreateGame(gameName string) error {
+func (h *Handler) validateBotIdentifier(botIdentifier *model.BotIdentifier) error {
+	if !h.user.IsBot && botIdentifier != nil {
+		return apperror.ErrorInvalidData // user is not a bot but declares a bot identifier
+	}
+	if h.user.IsBot && botIdentifier == nil {
+		return apperror.ErrorInvalidData // user is a bot but does not declare a bot identifier
+	}
+	return nil
+}
+
+func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIdentifier) error {
+	err := h.validateBotIdentifier(botIdentifier)
+	if err != nil {
+		return err
+	}
 	if h.subscriptions.IsSubscribed(h.user.ID) {
 		return apperror.ErrorAlreadySubscribed
 	}
 
 	var configRoom *model.ConfigRoom
 	var buf MsgBuffer
-	err := h.store.Transaction(func(store store.Store) error {
+	err = h.store.Transaction(func(store store.Store) error {
 		// Contrary to other places where checking subscription is enough, we need to
 		// check that the creator does not have a current game. They could have
 		// created a game, left, and be trying to create a new one.
@@ -58,17 +72,19 @@ func (h *Handler) handleCreateGame(gameName string) error {
 			return apperror.ErrorAlreadySubscribed
 		}
 
-		configRoom, err = store.CreateConfigRoom(h.user, gameName)
+		configRoom, err = store.CreateConfigRoom(h.user, gameName, botIdentifier)
 		if err != nil {
 			return err
 		}
 
 		newCurrentGame := model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: gameName,
-			Creator:  h.user,
-			Opponent: nil,
-			Role:     model.UserRoleCreator,
+			GameID:                configRoom.ID,
+			GameName:              gameName,
+			Creator:               configRoom.Creator,
+			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Opponent:              nil,
+			OpponentBotIdentifier: nil,
+			Role:                  model.UserRoleCreator,
 		}
 
 		buf.addSend(h.connection, protocol.GameCreatedMessage{GameID: configRoom.ID})

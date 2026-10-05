@@ -13,6 +13,7 @@ import { Localized } from '@everyboard/games';
 import { RulesConfigDescription } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { getUserDisplayName } from '../../../domain/BotIdentifier';
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
@@ -27,6 +28,13 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 export class GameCreationComponentMessages {
 
     public static readonly GAME_DOES_NOT_EXIST_OR_UNKNOWN: Localized = () => $localize`The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.`;
+}
+
+type ViewInfoCandidate = {
+    name: string;
+    displayName: string;
+    isBot: boolean;
+    elo: number;
 }
 
 type GameCreationViewInfo = {
@@ -48,8 +56,9 @@ type GameCreationViewInfo = {
     gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string; isBot: boolean; elo: number }[];
+    candidates: ViewInfoCandidate[];
     chosenOpponent?: string;
+    chosenOpponentDisplayName?: string;
     candidateClasses: { [key: string]: string[] };
 }
 @Component({
@@ -193,6 +202,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
+                this.viewInfo.chosenOpponentDisplayName = this.viewInfo.candidates
+                    .find((candidate: ViewInfoCandidate) => candidate.name === opponent)?.displayName;
                 const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
                 const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
@@ -232,21 +243,24 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
-        this.viewInfo.creator = configRoom.creator.name;
+        this.viewInfo.creator = getUserDisplayName(configRoom.creator, configRoom.creatorBotIdentifier);
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
             return {
                 name: c.user.name,
+                displayName: getUserDisplayName(c.user, c.botIdentifier),
                 isBot: c.user.isBot ?? false,
                 elo: c.elo,
             };
         });
+        this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
+        this.viewInfo.chosenOpponentDisplayName = configRoom.chosenOpponent == null ? undefined : getUserDisplayName(
+            configRoom.chosenOpponent, configRoom.chosenOpponentBotIdentifier);
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
             this.viewInfo.moveDuration = configRoom.moveDuration;
             this.viewInfo.gameDuration = configRoom.gameDuration;
             this.viewInfo.gameType = configRoom.gameType;
-            this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
         }
         switch (configRoom.gameType) {

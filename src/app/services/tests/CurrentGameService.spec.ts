@@ -27,7 +27,15 @@ describe('CurrentGameService', () => {
     let backendService: BackendServiceMock;
 
     function buildCurrentGame(currentGame: Partial<CurrentGame>): CurrentGame {
-        return { creator: UserMocks.CREATOR_MINIMAL_USER, id: '1234', gameName: 'P4', role: 'Player', ...currentGame };
+        return {
+            creator: UserMocks.CREATOR_MINIMAL_USER,
+            creatorBotIdentifier: null,
+            opponentBotIdentifier: null,
+            id: '1234',
+            gameName: 'P4',
+            role: 'Player',
+            ...currentGame,
+        };
     }
 
     function withRole(role: UserRoleInPart): CurrentGame {

@@ -220,6 +220,46 @@ describe('HeaderComponent', () => {
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + currentGame.creator.name);
         }));
 
+        it('should display an opponent bot identifier in the current game label', fakeAsync(async() => {
+            // Given a connected creator with a current opponent being a bot
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITH_OPPONENT,
+                opponentBotIdentifier: { displayName: 'Perfect P4', parameters: {} },
+            };
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
+
+            // When displaying the current game link
+            testUtils.detectChanges();
+            tick(0);
+
+            // Then the current game label uses the bot display name
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against Perfect P4');
+        }));
+
+        it('should display a creator bot identifier in the current game label', fakeAsync(async() => {
+            // Given a connected observer
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            testUtils.detectChanges();
+            tick(0);
+
+            // When observing a game created by a bot
+            const observedGame: CurrentGame = {
+                ...CurrentGameMocks.OBSERVER,
+                creatorBotIdentifier: { displayName: 'MCTS Epaminondas', parameters: {} },
+            };
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(observedGame));
+            testUtils.detectChanges();
+            tick(0);
+
+            // Then the current game label uses the creator's bot display name
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const observedGameName: string = GameInfo.getByUrlName(observedGame.gameName).get().name;
+            expect(currentGameLink.nativeElement.innerText).toEqual(observedGameName + ' by MCTS Epaminondas');
+        }));
+
     });
 
     it('should unsubscribe from connectedUserService when destroying component', fakeAsync(async() => {
