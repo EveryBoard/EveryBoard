@@ -29,7 +29,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
 
-describe('ConnectNRules (SQUARE)', () => {
+describe('ConnectNRules (with default config)', () => {
     /**
      * Naming of cases, some of them will be used
      * A. double open: _ _ X X X X _ _
@@ -478,7 +478,7 @@ describe('ConnectNRules (SQUARE)', () => {
 });
 
 
-describe('ConnectNRules (HEXAGONAL)', () => {
+describe('ConnectNRules (with hexagonal config)', () => {
 
     let rules: ConnectNRules;
     const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
@@ -664,7 +664,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
 });
 
 
-describe('ConnectNRules (TRIANGULAR)', () => {
+describe('ConnectNRules (with triangular config)', () => {
 
     let rules: ConnectNRules;
     const triangularTopology: TriangularTopology = new TriangularTopology();
@@ -839,7 +839,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
 });
 
 
-describe('ConnectNRules (TORIC)', () => {
+describe('ConnectNRules (with rectangular torus config)', () => {
 
     let rules: ConnectNRules;
     const squareTopology: OrdinalSquareTopology = new OrdinalSquareTopology();

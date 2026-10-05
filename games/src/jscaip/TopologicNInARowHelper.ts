@@ -15,11 +15,7 @@ export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Di
         N: number,
         public readonly shape: TopologicShape<D>,
     ) {
-        super(getOwner, N);
-    }
-
-    protected override getDirections(): ReadonlyArray<D> {
-        return this.shape.getTopology().getDirections().toList();
+        super(getOwner, N, shape.getTopology().getDirections().toList());
     }
 
     protected override getNextCoord(coord: Coord, dir: D, distance: number = 1): MGPOptional<Coord> {
