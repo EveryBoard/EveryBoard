@@ -1,11 +1,7 @@
 import { JSONValue } from '@everyboard/lib';
 
 import { MinimalUser } from './MinimalUser';
-
-export type PlayerInfo = {
-    readonly user: MinimalUser;
-    readonly elo: number;
-};
+import { PlayerInfo } from './PlayerInfo';
 
 export type Game = {
     readonly gameName: string; // the type of game

@@ -68,7 +68,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:  model.StatusStarted,
 		})
 
@@ -87,7 +87,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:       configRoomID,
-			Creator:  model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator:  model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:   model.StatusCreated,
 			GameName: "test",
 		})
@@ -114,7 +114,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:  model.StatusFinished,
 		})
 
@@ -143,7 +143,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:  model.StatusConfigProposed,
 		})
 
@@ -161,7 +161,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:  model.StatusCreated,
 		})
 		fakeStore.SetCandidatesForTest(configRoomID, []model.Candidate{
@@ -201,7 +201,7 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: "other", Name: "other"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "other", Name: "other"}},
 			Status:  model.StatusCreated,
 		})
 
@@ -255,7 +255,7 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusStarted,
 		})
 

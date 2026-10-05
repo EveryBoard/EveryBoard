@@ -44,11 +44,11 @@ func (s *GORMStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 	var playerZero model.PlayerInfo
 	var playerOne model.PlayerInfo
 	if starter == model.FirstPlayerCreator {
-		playerZero = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
-		playerOne = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
+		playerZero = configRoom.Creator
+		playerOne = *configRoom.ChosenOpponent
 	} else {
-		playerZero = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
-		playerOne = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
+		playerZero = *configRoom.ChosenOpponent
+		playerOne = configRoom.Creator
 	}
 
 	game := model.Game{

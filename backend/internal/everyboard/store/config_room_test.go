@@ -25,7 +25,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
 	require.NoError(t, err, "cannot create config room")
 	assert.Equal(t, model.StatusCreated, configRoom.Status, "created config room is not as expected")
-	assert.Equal(t, creator, configRoom.Creator, "created config room is not as expected")
+	assert.Equal(t, creator, configRoom.Creator.User, "created config room is not as expected")
 	assert.Equal(t, gameName, configRoom.GameName, "created config room is not as expected")
 
 	// Add a candidate
@@ -39,7 +39,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	require.NoError(t, err, "cannot get config room")
 	require.NotNil(t, configRoom, "config room does not exist anymore")
 	require.NotNil(t, configRoom.ChosenOpponent, "selected opponent is not as expected")
-	assert.Equal(t, opponent, *configRoom.ChosenOpponent, "selected opponent is not as expected")
+	assert.Equal(t, opponent, configRoom.ChosenOpponent.User, "selected opponent is not as expected")
 
 	// Unselect them
 	err = store.RemoveOpponent(configRoom)
@@ -104,6 +104,16 @@ func TestConfigRoomFlow(t *testing.T) {
 	require.Nil(t, configRoom, "config room still exists but should not")
 }
 
+func TestConfigRoomHasAllDeclaredColumns(t *testing.T) {
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	for _, column := range model.ConfigRoomRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.ConfigRoom{}, column),
+			"missing config-room column %s", column)
+	}
+}
+
 func TestSelectOpponentRequiresCandidate(t *testing.T) {
 	// Given a config room with no candidates
 	store, err := InitDatabase(sqlite.Open(":memory:"))
@@ -144,10 +154,10 @@ func TestRematchForCreator(t *testing.T) {
 	rematch, err := store.CreateRematch(configRoom, creator, game)
 	require.NoError(t, err, "cannot create rematch")
 	assert.NotEqual(t, configRoom.ID, rematch.ID, "rematch config room not as expected")
-	assert.Equal(t, creator.ID, rematch.Creator.ID, "rematch config room not as expected")
+	assert.Equal(t, creator.ID, rematch.Creator.User.ID, "rematch config room not as expected")
 	require.NotNil(t, rematch.ChosenOpponent, "rematch config room not as expected")
 	require.NotNil(t, configRoom.ChosenOpponent, "rematch config room not as expected")
-	assert.Equal(t, configRoom.ChosenOpponent.ID, rematch.ChosenOpponent.ID, "rematch config room not as expected")
+	assert.Equal(t, configRoom.ChosenOpponent.User.ID, rematch.ChosenOpponent.User.ID, "rematch config room not as expected")
 	assert.Equal(t, model.StatusStarted, rematch.Status, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameType, rematch.GameType, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameDuration, rematch.GameDuration, "rematch config room not as expected")
@@ -177,9 +187,9 @@ func TestRematchForOpponent(t *testing.T) {
 	rematch, err := store.CreateRematch(configRoom, opponent, game)
 	require.NoError(t, err, "cannot create rematch")
 	assert.NotEqual(t, configRoom.ID, rematch.ID, "rematch config room not as expected")
-	assert.Equal(t, opponent.ID, rematch.Creator.ID, "rematch config room not as expected")
+	assert.Equal(t, opponent.ID, rematch.Creator.User.ID, "rematch config room not as expected")
 	require.NotNil(t, rematch.ChosenOpponent, "rematch config room not as expected")
-	assert.Equal(t, configRoom.Creator.ID, rematch.ChosenOpponent.ID, "rematch config room not as expected")
+	assert.Equal(t, configRoom.Creator.User.ID, rematch.ChosenOpponent.User.ID, "rematch config room not as expected")
 	assert.Equal(t, model.StatusStarted, rematch.Status, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameType, rematch.GameType, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameDuration, rematch.GameDuration, "rematch config room not as expected")

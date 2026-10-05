@@ -42,8 +42,8 @@ func (h *Handler) handleSubscribeGame(gameId model.GameID) error {
 			cg := &model.CurrentGame{
 				GameID:   gameId,
 				GameName: game.GameName,
-				Creator:  configRoom.Creator,
-				Opponent: configRoom.ChosenOpponent,
+				Creator:  configRoom.Creator.User,
+				Opponent: configRoom.ChosenOpponent.MinimalUserOrNil(),
 				Role:     model.UserRoleObserver,
 			}
 			if err = h.setCurrentGame(&buf, store, h.user, cg); err != nil {
@@ -106,7 +106,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 		if configRoom == nil || game == nil {
 			return apperror.ErrorUnknownGame
 		}
-		if configRoom.Creator.ID != h.user.ID && (configRoom.ChosenOpponent == nil || configRoom.ChosenOpponent.ID != h.user.ID) {
+		if configRoom.Creator.User.ID != h.user.ID && (configRoom.ChosenOpponent == nil || configRoom.ChosenOpponent.User.ID != h.user.ID) {
 			// Only a player can finish a game. And they have to play in the game
 			return apperror.ErrorNotAllowed
 		}
@@ -335,7 +335,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 				return apperror.ErrorNotAllowed
 			}
 			if configRoom.ChosenOpponent == nil ||
-				(configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID) {
+				(configRoom.Creator.User.ID != h.user.ID && configRoom.ChosenOpponent.User.ID != h.user.ID) {
 				// only a player can accept the rematch
 				return apperror.ErrorNotAllowed
 			}

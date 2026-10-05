@@ -326,7 +326,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 	sb.subscribeConfigRoom(userId, gameId)
 
 	user := sb.getUser(userId)
-	if userId != configRoom.Creator.ID {
+	if userId != configRoom.Creator.User.ID {
 		// All configRoom subscribers (including the new one) see CandidateJoined
 		for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
 			expectMessage(sb.t, sb.getConnection(subscriber),
@@ -447,8 +447,8 @@ func (sb ScenarioBuilder) ReviewConfig(userId string) {
 func (sb ScenarioBuilder) AcceptConfig(userId string) {
 	gameId := sb.getSubscribedGameId(userId)
 	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
-	userCreator := configRoom.Creator
-	userOpponent := *configRoom.ChosenOpponent
+	userCreator := configRoom.Creator.User
+	userOpponent := configRoom.ChosenOpponent.User
 
 	sendRawMessage(sb.t, sb.getConnection(userId), `["AcceptConfig"]`)
 

@@ -173,7 +173,7 @@ func (h *Handler) unsubscribe() error {
 				return nil
 			}
 
-			if configRoom.Creator.ID == h.user.ID {
+			if configRoom.Creator.User.ID == h.user.ID {
 				if err = store.DeleteConfigRoom(configRoom); err != nil {
 					return err
 				}
@@ -188,7 +188,7 @@ func (h *Handler) unsubscribe() error {
 					return err
 				}
 
-				return h.removeCurrentGame(&buf, store, configRoom.Creator)
+				return h.removeCurrentGame(&buf, store, configRoom.Creator.User)
 
 			} else {
 				if err = store.DeleteCandidate(configRoom, h.user.ID); err != nil {
@@ -196,7 +196,7 @@ func (h *Handler) unsubscribe() error {
 				}
 				h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.CandidateLeftMessage{Candidate: h.user})
 
-				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.ID == h.user.ID {
+				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.User.ID == h.user.ID {
 					if err = store.RemoveOpponent(configRoom); err != nil {
 						return err
 					}
@@ -212,11 +212,11 @@ func (h *Handler) unsubscribe() error {
 					newCreatorGame := &model.CurrentGame{
 						GameID:   configRoom.ID,
 						GameName: configRoom.GameName,
-						Creator:  configRoom.Creator,
+						Creator:  configRoom.Creator.User,
 						Opponent: nil,
 						Role:     model.UserRoleCreator,
 					}
-					if err = h.updateCurrentGame(&buf, store, configRoom.Creator, newCreatorGame); err != nil {
+					if err = h.updateCurrentGame(&buf, store, configRoom.Creator.User, newCreatorGame); err != nil {
 						return err
 					}
 				}

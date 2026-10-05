@@ -23,8 +23,7 @@ type FakeStore struct {
 func NewFakeStore() *FakeStore {
 	lobby := &model.ConfigRoom{
 		ID:          model.GameIDLobby,
-		Creator:     model.MinimalUser{Name: "", ID: ""},
-		CreatorElo:  0,
+		Creator:     model.PlayerInfo{User: model.MinimalUser{Name: "", ID: ""}, Elo: 0},
 		Status:      model.StatusFinished,
 		FirstPlayer: model.FirstPlayerRandom,
 		GameType:    model.GameTypeStandard,
@@ -172,18 +171,16 @@ func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string)
 	}
 	id := s.allocateID()
 	configRoom := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		ID:             id,
+		Creator:        model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		FirstPlayer:    model.FirstPlayerRandom,
+		ChosenOpponent: nil,
+		Status:         model.StatusCreated,
+		GameType:       model.GameTypeStandard,
+		MoveDuration:   model.StandardMoveDuration,
+		GameDuration:   model.StandardGameDuration,
+		RulesConfig:    nil,
+		GameName:       gameName,
 	}
 	s.ConfigRooms[id] = configRoom
 	return configRoom, nil
@@ -202,14 +199,12 @@ func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 			break
 		}
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	configRoom.ChosenOpponent = &model.PlayerInfo{User: opponent, Elo: candidateElo}
 	return nil
 }
 
 func (s *FakeStore) RemoveOpponent(configRoom *model.ConfigRoom) error {
 	configRoom.ChosenOpponent = nil
-	configRoom.ChosenOpponentElo = nil
 	return nil
 }
 
@@ -261,18 +256,19 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	id := s.allocateID()
 	rematch := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		ID:      id,
+		Creator: model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		ChosenOpponent: &model.PlayerInfo{
+			User: chosenOpponent,
+			Elo:  chosenOpponentElo.CurrentElo,
+		},
+		FirstPlayer:  firstPlayer,
+		Status:       model.StatusStarted,
+		GameType:     configRoom.GameType,
+		MoveDuration: configRoom.MoveDuration,
+		GameDuration: configRoom.GameDuration,
+		RulesConfig:  configRoom.RulesConfig,
+		GameName:     configRoom.GameName,
 	}
 	s.ConfigRooms[id] = rematch
 	return rematch, nil
@@ -339,11 +335,11 @@ func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 	var playerZero model.PlayerInfo
 	var playerOne model.PlayerInfo
 	if starter == model.FirstPlayerCreator {
-		playerZero = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
-		playerOne = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
+		playerZero = configRoom.Creator
+		playerOne = *configRoom.ChosenOpponent
 	} else {
-		playerZero = model.PlayerInfo{User: *configRoom.ChosenOpponent, Elo: *configRoom.ChosenOpponentElo}
-		playerOne = model.PlayerInfo{User: configRoom.Creator, Elo: configRoom.CreatorElo}
+		playerZero = *configRoom.ChosenOpponent
+		playerOne = configRoom.Creator
 	}
 
 	game := &model.Game{

@@ -69,6 +69,16 @@ func TestDBGameFlow(t *testing.T) {
 
 }
 
+func TestGameHasAllDeclaredColumns(t *testing.T) {
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	for _, column := range model.GameRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.Game{}, column),
+			"missing game column %s", column)
+	}
+}
+
 func TestManyGameEvents(t *testing.T) {
 	// Given a db with a game
 	store, err := InitDatabase(sqlite.Open(":memory:"))

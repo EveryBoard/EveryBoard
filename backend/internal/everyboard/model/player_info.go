@@ -5,7 +5,7 @@ type PlayerInfo struct {
 	Elo  float64     `json:"elo"`
 }
 
-func (p *PlayerInfo) MinimalUser() *MinimalUser {
+func (p *PlayerInfo) MinimalUserOrNil() *MinimalUser {
 	if p == nil {
 		return nil
 	}

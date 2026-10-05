@@ -61,7 +61,7 @@ describe('GameCreationComponent', () => {
         await clickElement('#presenceOf_' + candidate.name);
         configRoomService.mockConfigRoomUpdate({
             ...ConfigRoomMocks.getInitial(defaultConfig),
-            chosenOpponent: candidate,
+            chosenOpponent: { user: candidate, elo: 0 },
         });
     }
     async function clickElement(elementName: string): Promise<void> {
@@ -370,14 +370,14 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 });
 
                 // Then currentConfigRoom should be updated with the proposed config
                 const proposedConfig: ConfigRoom = {
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 };
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
@@ -400,7 +400,7 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     rulesConfig: proposedRulesConfig,
                     status: Status.CONFIG_PROPOSED,
                 });
@@ -434,7 +434,7 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 });
                 testUtils.detectChanges();

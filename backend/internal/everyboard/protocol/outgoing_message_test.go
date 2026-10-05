@@ -20,8 +20,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		Content:   "hello",
 	}
 	configRoom := model.ConfigRoom{
-		Creator:      minimalUser,
-		CreatorElo:   0.0,
+		Creator:      model.PlayerInfo{User: minimalUser, Elo: 0.0},
 		Status:       model.StatusCreated,
 		FirstPlayer:  model.FirstPlayerRandom,
 		GameType:     model.GameTypeStandard,
@@ -59,7 +58,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"user":{"id":"foo","name":"foo"},"elo":0},"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		ConfigRoomDeletedMessage{

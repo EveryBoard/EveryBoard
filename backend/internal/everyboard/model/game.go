@@ -53,11 +53,6 @@ func (r *Result) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PlayerInfo struct {
-	User MinimalUser `gorm:"embedded" json:"user"`
-	Elo  float64     `gorm:"not null" json:"elo"`
-}
-
 type Game struct {
 	GameID     GameID     `gorm:"index;not null;foreignKey:ConfigRoom;primaryKey;autoIncrement:false" json:"-"`
 	GameName   string     `gorm:"not null" json:"gameName"`
