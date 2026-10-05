@@ -205,7 +205,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-        expect(Utils.getNonNullable(wrapper.currentUser).name).toEqual('creator');
+        expect(Utils.getNonNullable(wrapper.currentUser()).name).toEqual('creator');
     }));
 
     it('should no longer have GameCreationComponent and should have QuartoComponent instead', fakeAsync(async() => {
