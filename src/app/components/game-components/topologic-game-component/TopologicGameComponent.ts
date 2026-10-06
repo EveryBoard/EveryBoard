@@ -1,4 +1,3 @@
-import { Utils } from '@everyboard/lib';
 
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
@@ -12,12 +11,14 @@ import { OrdinalSquareTopology } from '@everyboard/games';
 import { OrthogonalSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
 import { TriangularTopology } from '@everyboard/games';
+import { Utils } from '@everyboard/lib';
+
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
-import { SquareLayout } from '../layout/SquareLayout';
-import { TriangularLayout } from '../layout/TriangularLayout';
 import { HexaLayout } from '../layout/HexaLayout';
 import { Layout } from '../layout/Layout';
+import { SquareLayout } from '../layout/SquareLayout';
+import { TriangularLayout } from '../layout/TriangularLayout';
 
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,

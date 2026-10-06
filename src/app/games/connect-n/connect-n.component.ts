@@ -1,10 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 
-import { MGPValidation, Set } from '@everyboard/lib';
 
-import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
@@ -14,6 +11,10 @@ import { ConnectNAlignmentHeuristic } from '@everyboard/games';
 import { ConnectNMove } from '@everyboard/games';
 import { ConnectNMoveGenerator } from '@everyboard/games';
 import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+import { MGPValidation, Set } from '@everyboard/lib';
+
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 
 @Component({
     selector: 'app-connect-n',

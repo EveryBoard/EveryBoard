@@ -19,10 +19,10 @@ import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

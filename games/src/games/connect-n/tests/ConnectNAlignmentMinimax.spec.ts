@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { minimaxTest, SlowTest } from '@everyboard/games/testing';
 import { MGPOptional, Set } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
@@ -13,6 +12,7 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
