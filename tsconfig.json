@@ -31,6 +31,9 @@
       "noImplicitAny": false, // cannot be enabled if we want to access object fields with their name in a weakly-typed setting
       "typeRoots": [
         "node_modules/@types"
-      ]
+      ],
+      "types": [
+        "jasmine"
+      ],
     }
 }
