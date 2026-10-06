@@ -4,11 +4,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { DirectionFailure } from '@everyboard/games';
 import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
-import { CheckersConfig } from '@everyboard/games/checkers/common';
-import { CheckersMove } from '@everyboard/games/checkers/common';
-import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '@everyboard/games/checkers/common';
-import { CheckersFailure } from '@everyboard/games/checkers/common';
-import { LascaRules } from '@everyboard/games/checkers/lasca';
+import { CheckersConfig } from '@everyboard/games/lasca';
+import { CheckersMove } from '@everyboard/games/lasca';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '@everyboard/games/lasca';
+import { CheckersFailure } from '@everyboard/games/lasca';
+import { LascaRules } from '@everyboard/games/lasca';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

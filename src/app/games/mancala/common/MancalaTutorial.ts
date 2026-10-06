@@ -1,6 +1,6 @@
 import { Localized } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games/mancala/common';
-import { MancalaState } from '@everyboard/games/mancala/common';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/families/mancala';
+import { MancalaState } from '@everyboard/games/families/mancala';
 import { Utils } from '@everyboard/lib';
 
 import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

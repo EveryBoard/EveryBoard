@@ -1,8 +1,8 @@
 import { PlayerOrNone } from '@everyboard/games';
-import { ReversiConfig } from '@everyboard/games/reversis/common';
-import { ReversiMove } from '@everyboard/games/reversis/common';
-import { ReversiState } from '@everyboard/games/reversis/common';
-import { ReversiRules } from '@everyboard/games/reversis/reversi';
+import { ReversiConfig } from '@everyboard/games/reversi';
+import { ReversiMove } from '@everyboard/games/reversi';
+import { ReversiState } from '@everyboard/games/reversi';
+import { ReversiRules } from '@everyboard/games/reversi';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

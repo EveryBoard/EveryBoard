@@ -1,1 +1,0 @@
-export { InternationalCheckersRules } from './InternationalCheckersRules';

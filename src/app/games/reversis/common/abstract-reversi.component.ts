@@ -2,11 +2,11 @@
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from '@everyboard/games/reversis/common';
-import { ReversiHeuristic } from '@everyboard/games/reversis/common';
-import { ReversiMove } from '@everyboard/games/reversis/common';
-import { ReversiMoveGenerator } from '@everyboard/games/reversis/common';
-import { ReversiState } from '@everyboard/games/reversis/common';
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from '@everyboard/games/families/reversi';
+import { ReversiHeuristic } from '@everyboard/games/families/reversi';
+import { ReversiMove } from '@everyboard/games/families/reversi';
+import { ReversiMoveGenerator } from '@everyboard/games/families/reversi';
+import { ReversiState } from '@everyboard/games/families/reversi';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';

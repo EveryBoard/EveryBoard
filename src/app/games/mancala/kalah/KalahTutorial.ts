@@ -1,8 +1,8 @@
 import { PlayerNumberMap } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games/mancala/common';
-import { MancalaState } from '@everyboard/games/mancala/common';
-import { MancalaConfig } from '@everyboard/games/mancala/common';
-import { KalahRules } from '@everyboard/games/mancala/kalah';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/kalah';
+import { MancalaState } from '@everyboard/games/kalah';
+import { MancalaConfig } from '@everyboard/games/kalah';
+import { KalahRules } from '@everyboard/games/kalah';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

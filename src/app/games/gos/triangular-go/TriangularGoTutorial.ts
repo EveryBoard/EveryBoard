@@ -1,9 +1,9 @@
 
 import { PlayerNumberMap } from '@everyboard/games';
-import { GoPhase } from '@everyboard/games/gos';
-import { GoPiece } from '@everyboard/games/gos';
-import { GoState } from '@everyboard/games/gos';
-import { TriangularGoConfig, TriangularGoRules } from '@everyboard/games/gos/triangular-go';
+import { GoPhase } from '@everyboard/games/triangular-go';
+import { GoPiece } from '@everyboard/games/triangular-go';
+import { GoState } from '@everyboard/games/triangular-go';
+import { TriangularGoConfig, TriangularGoRules } from '@everyboard/games/triangular-go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { GoMove } from '@everyboard/games/gos';
-import { GoPhase } from '@everyboard/games/gos';
-import { GoPiece } from '@everyboard/games/gos';
-import { GoState } from '@everyboard/games/gos';
+import { GoMove } from '@everyboard/games/hexagonal-go';
+import { GoPhase } from '@everyboard/games/hexagonal-go';
+import { GoPiece } from '@everyboard/games/hexagonal-go';
+import { GoState } from '@everyboard/games/hexagonal-go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

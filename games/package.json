@@ -13,8 +13,8 @@
       "default": "./dist/testing.js"
     },
     "./*": {
-      "types": "./dist/games/*/index.d.ts",
-      "default": "./dist/games/*/index.js"
+      "types": "./dist/public/*.d.ts",
+      "default": "./dist/public/*.js"
     }
   },
   "types": "./dist/index.d.ts",
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "test:runner": "TS_NODE_PROJECT=tsconfig.test.json nyc --all --extension .ts --require ts-node/register/type-check --include 'src/**/*.ts' -x '**/*.spec.ts' -x '**/*-setup.ts' -x '**/index.ts' --reporter=lcov --reporter=text --reporter=text-summary jasmine",
+    "test:runner": "TS_NODE_PROJECT=tsconfig.test.json nyc --all --extension .ts --require ts-node/register/type-check --include 'src/**/*.ts' -x '**/*.spec.ts' -x '**/*-setup.ts' -x '**/index.ts' -x 'src/public/**' --reporter=lcov --reporter=text --reporter=text-summary jasmine",
     "test": "npm run test:runner -- --config=jasmine.json",
     "test:ci": "npm run test:runner -- --config=jasmine.ci.json",
     "coverage": "nyc --branches 97.37 --lines 97.86 --statements 97.66 --functions 94.93 check-coverage"

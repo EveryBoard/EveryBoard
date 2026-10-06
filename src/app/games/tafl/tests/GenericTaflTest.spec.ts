@@ -4,9 +4,9 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { RulesFailure } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
-import { TaflConfig, TaflFailure, TaflMoveGenerator, TaflPawn, TaflRules } from '@everyboard/games/tafl';
-import { TaflMove } from '@everyboard/games/tafl';
-import { TaflState } from '@everyboard/games/tafl';
+import { TaflConfig, TaflFailure, TaflMoveGenerator, TaflPawn, TaflRules } from '@everyboard/games/families/tafl';
+import { TaflMove } from '@everyboard/games/families/tafl';
+import { TaflState } from '@everyboard/games/families/tafl';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 

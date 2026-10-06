@@ -10,12 +10,12 @@ import { PlayerNumberMap } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games/mancala/common';
-import { MancalaState } from '@everyboard/games/mancala/common';
-import { MancalaConfig } from '@everyboard/games/mancala/common';
-import { MancalaFailure } from '@everyboard/games/mancala/common';
-import { KalahRules } from '@everyboard/games/mancala/kalah';
-import { KalahMoveGenerator } from '@everyboard/games/mancala/kalah';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/kalah';
+import { MancalaState } from '@everyboard/games/kalah';
+import { MancalaConfig } from '@everyboard/games/kalah';
+import { MancalaFailure } from '@everyboard/games/kalah';
+import { KalahRules } from '@everyboard/games/kalah';
+import { KalahMoveGenerator } from '@everyboard/games/kalah';
 
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

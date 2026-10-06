@@ -6,11 +6,11 @@ import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Direction, DirectionFailure } from '@everyboard/games';
-import { CheckersFailure } from '@everyboard/games/checkers/common';
-import { CheckersMove } from '@everyboard/games/checkers/common';
-import { CheckersMoveGenerator } from '@everyboard/games/checkers/common';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games/checkers/common';
-import { CheckersStack, CheckersState } from '@everyboard/games/checkers/common';
+import { CheckersFailure } from '@everyboard/games/families/checkers';
+import { CheckersMove } from '@everyboard/games/families/checkers';
+import { CheckersMoveGenerator } from '@everyboard/games/families/checkers';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games/families/checkers';
+import { CheckersStack, CheckersState } from '@everyboard/games/families/checkers';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 

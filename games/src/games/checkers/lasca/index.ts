@@ -1,1 +1,0 @@
-export { LascaRules } from './LascaRules';

@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { InternationalCheckersRules } from '@everyboard/games/checkers/international-checkers';
+import { InternationalCheckersRules } from '@everyboard/games/international-checkers';
 
 import { CheckersComponent } from '../common/checkers.component';
 

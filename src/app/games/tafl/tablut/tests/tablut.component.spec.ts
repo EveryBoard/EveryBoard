@@ -1,10 +1,10 @@
 
 import { Coord } from '@everyboard/games';
-import { TaflPawn } from '@everyboard/games/tafl';
-import { TaflState } from '@everyboard/games/tafl';
-import { TaflConfig } from '@everyboard/games/tafl';
-import { TablutMove } from '@everyboard/games/tafl/tablut';
-import { TablutRules } from '@everyboard/games/tafl/tablut';
+import { TaflPawn } from '@everyboard/games/tablut';
+import { TaflState } from '@everyboard/games/tablut';
+import { TaflConfig } from '@everyboard/games/tablut';
+import { TablutMove } from '@everyboard/games/tablut';
+import { TablutRules } from '@everyboard/games/tablut';
 
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';

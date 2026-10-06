@@ -3,8 +3,8 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games/reversis/common';
-import { ReversiState } from '@everyboard/games/reversis/common';
+import { ReversiMove } from '@everyboard/games/toric-reversi';
+import { ReversiState } from '@everyboard/games/toric-reversi';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ToricReversiComponent } from '../toric-reversi.component';

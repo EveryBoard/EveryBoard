@@ -18,16 +18,24 @@ type UnusedExport = ExportedSymbol & {
 const repositoryRoot: string = path.resolve(import.meta.dirname, '..');
 const gamesRoot: string = path.join(repositoryRoot, 'games');
 const gamesSourceRoot: string = path.join(gamesRoot, 'src/games');
+const publicRoot: string = path.join(gamesRoot, 'src/public');
 
 function findEntryPoints(): ReadonlyMap<string, string> {
     const entryPoints: Map<string, string> = new Map([
         ['@everyboard/games', path.join(gamesRoot, 'src/index.ts')],
         ['@everyboard/games/testing', path.join(gamesRoot, 'src/testing.ts')],
     ]);
-    const gameEntryPoints: string[] = ts.sys.readDirectory(gamesSourceRoot, ['.ts'])
-        .filter((fileName: string): boolean => path.basename(fileName) === 'index.ts');
+    const gameEntryPoints: string[] = ts.sys.readDirectory(publicRoot, ['.ts']);
     for (const entryPoint of gameEntryPoints) {
-        const gamePath: string = path.relative(gamesSourceRoot, path.dirname(entryPoint)).replaceAll(path.sep, '/');
+        const relativePath: string = path.relative(publicRoot, entryPoint);
+        const gamePath: string = relativePath.slice(0, -path.extname(relativePath).length).replaceAll(path.sep, '/');
+        const pathParts: string[] = gamePath.split('/');
+        if (pathParts.includes('common')) {
+            throw new Error(`Public games entry point must not be named common: ${relativePath}`);
+        }
+        if (pathParts.length > 1 && (pathParts.length !== 2 || pathParts[0] !== 'families')) {
+            throw new Error(`Unexpected nested public games entry point: ${relativePath}`);
+        }
         entryPoints.set(`@everyboard/games/${gamePath}`, entryPoint);
     }
     return entryPoints;
@@ -72,18 +80,81 @@ function isWithin(directory: string, fileName: string): boolean {
     return relativePath !== '..' && !relativePath.startsWith(`..${path.sep}`) && !path.isAbsolute(relativePath);
 }
 
-function validateExportLocation(moduleName: string, entryPoint: string, exported: ExportedSymbol): void {
+function familySourceDirectories(familyName: string, exports: readonly ExportedSymbol[]): readonly string[] {
+    const directories: readonly string[] = [
+        ...new Set(exports.map((exported: ExportedSymbol): string => path.dirname(exported.source))),
+    ];
+    const sourceSubtrees: Set<string> = new Set();
+    for (const directory of directories) {
+        const relativePath: string = path.relative(gamesSourceRoot, directory);
+        if (relativePath === '..' || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+            throw new Error(`The ${familyName} family exports a symbol from outside the games source directory.`);
+        }
+        sourceSubtrees.add(relativePath.split(path.sep)[0]);
+    }
+    if (sourceSubtrees.size !== 1) {
+        throw new Error(`The ${familyName} family exports symbols from unrelated game subtrees.`);
+    }
+    return directories;
+}
+
+function referencedFamily(entryPoint: string): string | undefined {
+    const contents: string = fs.readFileSync(entryPoint, 'utf8');
+    const sourceFile: ts.SourceFile = ts.createSourceFile(entryPoint, contents, ts.ScriptTarget.Latest, false);
+    for (const statement of sourceFile.statements) {
+        if (ts.isExportDeclaration(statement) &&
+            statement.moduleSpecifier !== undefined &&
+            ts.isStringLiteral(statement.moduleSpecifier) &&
+            statement.moduleSpecifier.text.startsWith('./families/')) {
+            return statement.moduleSpecifier.text.slice('./families/'.length);
+        }
+    }
+    return undefined;
+}
+
+function isOwnedByGame(gameName: string, fileName: string): boolean {
+    let directory: string = path.dirname(fileName);
+    while (isWithin(gamesSourceRoot, directory)) {
+        if (path.basename(directory) === gameName) {
+            return true;
+        }
+        const parent: string = path.dirname(directory);
+        if (parent === directory) {
+            break;
+        }
+        directory = parent;
+    }
+    return false;
+}
+
+function validateExportLocation(
+    moduleName: string,
+    entryPoint: string,
+    exported: ExportedSymbol,
+    familyDirectories: ReadonlyMap<string, readonly string[]>,
+): void {
     if (moduleName === '@everyboard/games' && isWithin(gamesSourceRoot, exported.source)) {
         throw new Error(
             `${exported.name} is game-specific and must not be exported from @everyboard/games; ` +
             `export it from its colocated game entry point instead.`,
         );
     }
-    if (moduleName !== '@everyboard/games' &&
-        moduleName !== '@everyboard/games/testing' &&
-        !isWithin(path.dirname(entryPoint), exported.source)) {
+    if (moduleName === '@everyboard/games' || moduleName === '@everyboard/games/testing') {
+        return;
+    }
+
+    const publicName: string = moduleName.slice('@everyboard/games/'.length);
+    if (publicName.startsWith('families/')) {
+        return;
+    }
+
+    const familyName: string | undefined = referencedFamily(entryPoint);
+    const directories: readonly string[] = familyName === undefined ? [] : familyDirectories.get(familyName) ?? [];
+    const isConcreteExport: boolean = isOwnedByGame(publicName, exported.source);
+    const isFamilyExport: boolean = directories.includes(path.dirname(exported.source));
+    if (!isConcreteExport && !isFamilyExport) {
         throw new Error(
-            `${moduleName} exports ${exported.name} from outside its game directory ` +
+            `${moduleName} exports ${exported.name} from outside its game or family ` +
             `(${path.relative(repositoryRoot, exported.source)}).`,
         );
     }
@@ -147,11 +218,22 @@ function main(): void {
     const program: ts.Program = loadGamesProgram();
     const usedByModule: ReadonlyMap<string, Set<string>> = findUsedExports();
     const unused: UnusedExport[] = [];
+    const familyDirectories: Map<string, readonly string[]> = new Map();
+
+    for (const [moduleName, entryPoint] of entryPoints) {
+        if (moduleName.startsWith('@everyboard/games/families/')) {
+            const familyName: string = moduleName.slice('@everyboard/games/families/'.length);
+            familyDirectories.set(
+                familyName,
+                familySourceDirectories(familyName, exportedSymbols(program, entryPoint)),
+            );
+        }
+    }
 
     for (const [moduleName, entryPoint] of entryPoints) {
         const used: Set<string> = usedByModule.get(moduleName) ?? new Set();
         for (const exported of exportedSymbols(program, entryPoint)) {
-            validateExportLocation(moduleName, entryPoint, exported);
+            validateExportLocation(moduleName, entryPoint, exported, familyDirectories);
             if (!used.has(exported.name)) {
                 unused.push({ moduleName, ...exported });
             }

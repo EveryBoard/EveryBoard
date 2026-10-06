@@ -7,17 +7,17 @@ import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MancalaConfig } from '@everyboard/games/mancala/common';
-import { MancalaFailure } from '@everyboard/games/mancala/common';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games/mancala/common';
+import { MancalaConfig } from '@everyboard/games/families/mancala';
+import { MancalaFailure } from '@everyboard/games/families/mancala';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/families/mancala';
 import {
     MancalaCaptureResult,
     MancalaDistributionResult,
     MancalaDropResult,
     MancalaRules,
-} from '@everyboard/games/mancala/common';
-import { MancalaScoreHeuristic } from '@everyboard/games/mancala/common';
-import { MancalaState } from '@everyboard/games/mancala/common';
+} from '@everyboard/games/families/mancala';
+import { MancalaScoreHeuristic } from '@everyboard/games/families/mancala';
+import { MancalaState } from '@everyboard/games/families/mancala';
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';

@@ -3,12 +3,12 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { AwaleRules } from '@everyboard/games/mancala/awale';
-import { AwaleMoveGenerator } from '@everyboard/games/mancala/awale';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games/mancala/common';
-import { MancalaState } from '@everyboard/games/mancala/common';
-import { MancalaConfig } from '@everyboard/games/mancala/common';
-import { MancalaFailure } from '@everyboard/games/mancala/common';
+import { AwaleRules } from '@everyboard/games/awale';
+import { AwaleMoveGenerator } from '@everyboard/games/awale';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/awale';
+import { MancalaState } from '@everyboard/games/awale';
+import { MancalaConfig } from '@everyboard/games/awale';
+import { MancalaFailure } from '@everyboard/games/awale';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';

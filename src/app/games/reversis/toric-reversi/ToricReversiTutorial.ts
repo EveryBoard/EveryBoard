@@ -1,8 +1,8 @@
 import { PlayerOrNone } from '@everyboard/games';
-import { ReversiConfig } from '@everyboard/games/reversis/common';
-import { ReversiMove } from '@everyboard/games/reversis/common';
-import { ReversiState } from '@everyboard/games/reversis/common';
-import { ToricReversiRules } from '@everyboard/games/reversis/toric-reversi';
+import { ReversiConfig } from '@everyboard/games/toric-reversi';
+import { ReversiMove } from '@everyboard/games/toric-reversi';
+import { ReversiState } from '@everyboard/games/toric-reversi';
+import { ToricReversiRules } from '@everyboard/games/toric-reversi';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

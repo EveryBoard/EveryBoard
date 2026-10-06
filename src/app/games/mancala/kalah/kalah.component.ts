@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { MancalaMove } from '@everyboard/games/mancala/common';
-import { KalahMoveGenerator } from '@everyboard/games/mancala/kalah';
-import { KalahRules } from '@everyboard/games/mancala/kalah';
+import { MancalaMove } from '@everyboard/games/kalah';
+import { KalahMoveGenerator } from '@everyboard/games/kalah';
+import { KalahRules } from '@everyboard/games/kalah';
 
 import { MancalaComponent } from '../common/MancalaComponent';
 import { NumberedCircleComponent } from '../common/numbered-circle.component';

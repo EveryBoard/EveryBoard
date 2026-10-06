@@ -1,1 +1,0 @@
-export { ReversiRules } from './ReversiRules';

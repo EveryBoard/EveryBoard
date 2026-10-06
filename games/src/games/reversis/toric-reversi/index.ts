@@ -1,1 +1,0 @@
-export { ToricReversiRules } from './ToricReversiRules';

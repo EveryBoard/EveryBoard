@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { TablutMove } from '@everyboard/games/tafl/tablut';
-import { TablutRules } from '@everyboard/games/tafl/tablut';
+import { TablutMove } from '@everyboard/games/tablut';
+import { TablutRules } from '@everyboard/games/tablut';
 
 import { TaflComponent } from '../tafl.component';
 

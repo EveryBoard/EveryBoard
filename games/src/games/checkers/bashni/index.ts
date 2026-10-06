@@ -1,1 +1,0 @@
-export { BashniRules } from './BashniRules';
