@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPUniqueList } from '../MGPUniqueList';
 import { Utils } from '../Utils';
 

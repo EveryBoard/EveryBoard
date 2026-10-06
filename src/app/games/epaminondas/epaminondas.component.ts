@@ -1,28 +1,27 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { EpaminondasAttackHeuristic } from '@everyboard/games';
+import { EpaminondasFailure } from '@everyboard/games';
+import { EpaminondasMove } from '@everyboard/games';
+import { EpaminondasMoveGenerator } from '@everyboard/games';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '@everyboard/games';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '@everyboard/games';
+import { EpaminondasPositionalHeuristic } from '@everyboard/games';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '@everyboard/games';
+import { EpaminondasState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
-import { EpaminondasFailure } from './EpaminondasFailure';
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';
-import { EpaminondasPositionalHeuristic } from './EpaminondasPositionalHeuristic';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
-import { EpaminondasState } from './EpaminondasState';
 
 export type PossibleMove = {
 
@@ -105,12 +104,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().getCopiedBoard();
+        this.board = this.state().getCopiedBoard();
         this.scores = this.getScores();
     }
 
     private getScores(): MGPOptional<PlayerNumberMap> {
-        const state: EpaminondasState = this.getState();
+        const state: EpaminondasState = this.state();
         const playerMap: PlayerNumberMap = PlayerNumberMap.of(
             state.countPieceOnBoard(Player.ZERO),
             state.countPieceOnBoard(Player.ONE),
@@ -127,7 +126,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             this.moveds.push(moved);
         }
         const previousNode: EpaminondasNode = this.node().parent.get();
-        const previousOpponent: Player = this.getState().getPreviousOpponent();
+        const previousOpponent: Player = this.state().getPreviousOpponent();
         while (previousNode.gameState.hasPieceAt(moved, previousOpponent)) {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
@@ -144,8 +143,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
-        const opponent: Player = this.getState().getCurrentOpponent();
-        const player: Player = this.getState().getCurrentPlayer();
+        const opponent: Player = this.state().getCurrentOpponent();
+        const player: Player = this.state().getCurrentPlayer();
         switch (this.board[y][x]) {
             case player:
                 this.firstPiece = MGPOptional.of(new Coord(x, y));
@@ -165,7 +164,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     private getPossibleMoves(): PossibleMove[] {
-        const state: EpaminondasState = this.getState();
+        const state: EpaminondasState = this.state();
         const possibleMoves: PossibleMove[] = [];
         for (const direction of Ordinal.ORDINALS) {
             const phalanxSize: number = this.countPhalanxSize(direction);
@@ -220,7 +219,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.chooseMove(validMoves[0].relatedMove);
         }
         const player: Player = this.getCurrentPlayer();
-        if (this.getState().getPieceAt(clicked) === player) {
+        if (this.state().getPieceAt(clicked) === player) {
             return this.firstClick(x, y);
         }
         if (clicked.isAlignedWith(firstPiece) === false) {
@@ -247,8 +246,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private countPhalanxSize(direction: Ordinal): number {
         let phalanxSize: number = 1;
         let coord: Coord = this.firstPiece.get().getNext(direction, 1);
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
-        while (this.getState().hasPieceAt(coord, currentPlayer)) {
+        const currentPlayer: Player = this.state().getCurrentPlayer();
+        while (this.state().hasPieceAt(coord, currentPlayer)) {
             phalanxSize++;
             coord = coord.getNext(direction, 1);
         }
@@ -294,7 +293,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public getHighlightedCoords(): Coord[] {
-        if (this.interactive === false) {
+        if (this.interactive() === false) {
             return [];
         }
         if (this.firstPiece.isPresent()) {
@@ -306,10 +305,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private getCurrentPlayerPieces(): Coord[] {
         const pieces: Coord[] = [];
-        const state: EpaminondasState = this.getState();
+        const state: EpaminondasState = this.state();
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.getWidth(); x++) {
+        for (let y: number = 0; y < this.height(); y++) {
+            for (let x: number = 0; x < this.width(); x++) {
                 if (this.board[y][x] === player) {
                     pieces.push(new Coord(x, y));
                 }

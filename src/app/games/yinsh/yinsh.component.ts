@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { YinshFailure } from '@everyboard/games';
+import { YinshCapture, YinshMove } from '@everyboard/games';
+import { YinshMoveGenerator } from '@everyboard/games';
+import { YinshPiece } from '@everyboard/games';
+import { YinshLegalityInformation, YinshRules } from '@everyboard/games';
+import { YinshScoreHeuristic } from '@everyboard/games';
+import { YinshState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RingComponent } from '../common/ring/ring.component';
-
-import { YinshFailure } from './YinshFailure';
-import { YinshCapture, YinshMove } from './YinshMove';
-import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { YinshPiece } from './YinshPiece';
-import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { YinshScoreHeuristic } from './YinshScoreHeuristic';
-import { YinshState } from './YinshState';
 
 interface ViewInfo {
     targets: Coord[];
@@ -120,11 +119,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: YinshState = this.getState();
+        const state: YinshState = this.state();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;
         this.scores = MGPOptional.of(state.countScores());
@@ -153,7 +152,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                     this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 break;
             case 'MOVE_START':
-                if (this.getState().isInitialPlacementPhase() === false) {
+                if (this.state().isInitialPlacementPhase() === false) {
                     this.selectableCoords =
                         this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 }
@@ -274,7 +273,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -486,7 +485,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         if (this.moveStart.equalsValue(coord)) {
             return this.cancelMove();
         }
-        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.getState().getCurrentPlayer());
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.state().getCurrentPlayer());
         if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
             this.cancelMoveAttempt();
             return this.selectMoveStart(coord);

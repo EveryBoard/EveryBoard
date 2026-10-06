@@ -1,9 +1,9 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { CheckersComponent } from '../common/checkers.component';
+import { LascaRules } from '@everyboard/games';
 
-import { LascaRules } from './LascaRules';
+import { CheckersComponent } from '../common/checkers.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

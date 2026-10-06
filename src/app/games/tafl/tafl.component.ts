@@ -1,26 +1,26 @@
+
+import { AIConfig } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RelativePlayer } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TaflConfig } from '@everyboard/games';
+import { TaflEscapeThenPieceThenControlHeuristic } from '@everyboard/games';
+import { TaflMove } from '@everyboard/games';
+import { TaflMoveGenerator } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games';
+import { TaflPieceAndControlHeuristic } from '@everyboard/games';
+import { TaflPieceAndInfluenceHeuristic } from '@everyboard/games';
+import { TaflPieceHeuristic } from '@everyboard/games';
+import { TaflRules } from '@everyboard/games';
+import { TaflState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AIConfig } from '../../jscaip/AI/AIConfig';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RelativePlayer } from '../../jscaip/RelativePlayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { TaflConfig } from './TaflConfig';
-import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceThenControlHeuristic';
-import { TaflMove } from './TaflMove';
-import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { TaflPawn } from './TaflPawn';
-import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
-import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { TaflRules } from './TaflRules';
-import { TaflState } from './TaflState';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
@@ -41,13 +41,13 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().getCopiedBoard();
+        this.board = this.state().getCopiedBoard();
         this.updateViewInfo();
         this.updateScores();
     }
 
     private updateScores(): void {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         const scoreZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const scoreOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
@@ -59,13 +59,13 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     protected override async showLastMove(move: M): Promise<void> {
         const previousState: TaflState = this.getPreviousState();
-        const opponent: Player = this.getState().getCurrentOpponent();
+        const opponent: Player = this.state().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.getEnd().getNext(orthogonal, 1);
             if (previousState.isOnBoard(captured)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
-                const currentPiece: TaflPawn = this.getState().getPieceAt(captured);
+                const currentPiece: TaflPawn = this.state().getPieceAt(captured);
                 const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
                     this.capturedCoords.push(captured);
@@ -82,10 +82,10 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
-        this.board = this.getState().getCopiedBoard();
-        for (let y: number = 0; y < this.getHeight(); y++) {
+        this.board = this.state().getCopiedBoard();
+        for (let y: number = 0; y < this.height(); y++) {
             const newLine: string[][] = [];
-            for (let x: number = 0; x < this.getWidth(); x++) {
+            for (let x: number = 0; x < this.width(); x++) {
                 let newSpace: string[] = [];
                 if (this.board[y][x].getOwner().isNone()) {
                     newSpace = [''];
@@ -139,7 +139,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
@@ -150,19 +150,19 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     public isThrone(x: number, y: number): boolean {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         return this.rules.isThrone(state, new Coord(x, y));
     }
 
     public isCentralThrone(x: number, y: number): boolean {
-        return this.getState().isCentralThrone(new Coord(x, y));
+        return this.state().isCentralThrone(new Coord(x, y));
     }
 
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: PlayerOrNone = this.getState().getAbsoluteOwner(coord);
+        const owner: PlayerOrNone = this.state().getAbsoluteOwner(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equalsValue(coord)) {
@@ -187,7 +187,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public getClickables(): Coord[] {
         if (this.chosen.isPresent()) {
             const coord: Coord = this.chosen.get();
-            const state: TaflState = this.getState();
+            const state: TaflState = this.state();
             return this.rules.getPossibleDestinations(coord, state, this.config());
         } else {
             return this.getInteractivePlayerPieces();
@@ -195,11 +195,11 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     private getInteractivePlayerPieces(): Coord[] {
-        if (this.interactive === false) {
+        if (this.interactive() === false) {
             return [];
         }
         const coords: Coord[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
+        for (let y: number = 0; y < this.height(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.pieceBelongsToCurrentPlayer(coord)) {

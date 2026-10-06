@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuartoHeuristic } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games';
+import { QuartoMoveGenerator } from '@everyboard/games';
+import { QuartoPiece } from '@everyboard/games';
+import { QuartoConfig, QuartoRules } from '@everyboard/games';
+import { QuartoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { QuartoHeuristic } from './QuartoHeuristic';
-import { QuartoMove } from './QuartoMove';
-import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { QuartoPiece } from './QuartoPiece';
-import { QuartoConfig, QuartoRules } from './QuartoRules';
-import { QuartoState } from './QuartoState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,11 +61,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             }],
         };
         this.encoder = QuartoMove.encoder;
-        this.pieceInHand = this.getState().pieceInHand;
+        this.pieceInHand = this.state().pieceInHand;
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: QuartoState = this.getState();
+        const state: QuartoState = this.state();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         const config: QuartoConfig = this.config();
@@ -82,7 +81,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (this.board[coord.y][coord.x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(coord); // let's show the user his decision
-            if (this.getState().turn === 15) {
+            if (this.state().turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(coord.x, coord.y, QuartoPiece.EMPTY);
