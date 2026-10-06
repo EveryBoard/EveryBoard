@@ -1,21 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GipfMove, GipfPlacement } from '@everyboard/games';
+import { GipfRules } from '@everyboard/games';
+import { GipfState } from '@everyboard/games';
+import { GipfFailure } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Arrow } from '../../../components/game-components/arrow-component/Arrow';
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { GipfFailure } from '../GipfFailure';
-import { GipfMove, GipfPlacement } from '../GipfMove';
-import { GipfRules } from '../GipfRules';
-import { GipfState } from '../GipfState';
 import { GipfComponent } from '../gipf.component';
 
 describe('GipfComponent', () => {

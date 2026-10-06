@@ -1,16 +1,16 @@
+
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { GipfMove, GipfPlacement } from '@everyboard/games';
+import { GipfRules } from '@everyboard/games';
+import { GipfState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-
-import { GipfMove, GipfPlacement } from './GipfMove';
-import { GipfRules } from './GipfRules';
-import { GipfState } from './GipfState';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

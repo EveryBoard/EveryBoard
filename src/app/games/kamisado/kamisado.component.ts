@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { KamisadoBoard } from '@everyboard/games';
+import { KamisadoFailure } from '@everyboard/games';
+import { KamisadoHeuristic } from '@everyboard/games';
+import { KamisadoMove, KamisadoPieceMove } from '@everyboard/games';
+import { KamisadoMoveGenerator } from '@everyboard/games';
+import { KamisadoPiece } from '@everyboard/games';
+import { KamisadoRules } from '@everyboard/games';
+import { KamisadoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Player } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { KamisadoBoard } from './KamisadoBoard';
-import { KamisadoFailure } from './KamisadoFailure';
-import { KamisadoHeuristic } from './KamisadoHeuristic';
-import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
-import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
-import { KamisadoPiece } from './KamisadoPiece';
-import { KamisadoRules } from './KamisadoRules';
-import { KamisadoState } from './KamisadoState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

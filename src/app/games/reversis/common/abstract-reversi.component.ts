@@ -1,16 +1,16 @@
+
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from '@everyboard/games';
+import { ReversiHeuristic } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiMoveGenerator } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-
-import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
-import { ReversiHeuristic } from './ReversiHeuristic';
-import { ReversiMove } from './ReversiMove';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiState } from './ReversiState';
 
 export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     extends RectangularGameComponent<R,
