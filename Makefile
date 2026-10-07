@@ -29,5 +29,6 @@ ci-e2e:
 
 ci-clean:
 	$(CI_COMPOSE) down --remove-orphans --volumes
+	$(CI_E2E_COMPOSE) down --remove-orphans --volumes
 
 .PHONY: ci ci-build ci-frontend ci-backend ci-lint ci-translations ci-images ci-e2e ci-clean

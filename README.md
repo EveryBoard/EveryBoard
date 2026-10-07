@@ -18,7 +18,4 @@ make ci
 ```
 
 Individual categories can be run with `make ci-build`, `make ci-frontend`, `make ci-backend`, `make ci-lint`,
-`make ci-translations`, and `make ci-images`. Run `make ci-clean` to remove the CI Compose resources.
-
-The end-to-end suite is not containerized yet. It continues to run with `npm run e2e` and remains a separate GitHub
-Actions job because its launcher currently manages its own PostgreSQL container and local processes.
+`make ci-translations`, `make ci-images`, and `make ci-e2e`. Run `make ci-clean` to remove the CI Compose resources.
