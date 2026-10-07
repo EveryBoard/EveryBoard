@@ -1,19 +1,18 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TeekoHeuristic } from '@everyboard/games';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '@everyboard/games';
+import { TeekoMoveGenerator } from '@everyboard/games';
+import { TeekoConfig, TeekoRules } from '@everyboard/games';
+import { TeekoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { TeekoHeuristic } from './TeekoHeuristic';
-import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
-import { TeekoMoveGenerator } from './TeekoMoveGenerator';
-import { TeekoConfig, TeekoRules } from './TeekoRules';
-import { TeekoState } from './TeekoState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +62,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         } else {
             this.moved = [];
         }
-        this.victory = this.rules.getVictoryCoord(this.getState());
+        this.victory = this.rules.getVictoryCoord(this.state());
     }
 
     public override async hideLastMove(): Promise<void> {
@@ -79,7 +78,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
-        if (this.getState().isInDropPhase()) {
+        if (this.state().isInDropPhase()) {
             const move: TeekoDropMove = TeekoDropMove.from(clickedCoord);
             return this.chooseMove(move);
         } else {
@@ -92,8 +91,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                     return this.chooseMove(move);
                 }
             } else {
-                const currentPlayer: Player = this.getState().getCurrentPlayer();
-                const clickedPiece: PlayerOrNone = this.getState().getPieceAt(clickedCoord);
+                const currentPlayer: Player = this.state().getCurrentPlayer();
+                const clickedPiece: PlayerOrNone = this.state().getPieceAt(clickedCoord);
                 if (clickedPiece === currentPlayer) {
                     this.selected = MGPOptional.of(clickedCoord);
                     return MGPValidation.SUCCESS;
@@ -108,7 +107,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
 
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const playerClass: string = this.getPlayerClass(this.getState().getPieceAt(coord));
+        const playerClass: string = this.getPlayerClass(this.state().getPieceAt(coord));
         const classes: string[] = [playerClass];
         if (this.victory.some((c: Coord) => c.equals(coord))) {
             classes.push('victory-stroke');

@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (coordAndContent of state.getCoordsAndContents(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g>
             @if (mustDraw(coordAndContent.coord)) {
                 <polygon id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
@@ -15,7 +15,7 @@
             }
         </g>
     }
-    @for (coordAndContent of state.getCoordsAndContents(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g>
             @if (isPyramid(coordAndContent.coord)) {
                 <polygon id="pyramid-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"

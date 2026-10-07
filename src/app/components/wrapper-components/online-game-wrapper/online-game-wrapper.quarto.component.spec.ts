@@ -3,6 +3,10 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { GameStatus } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games';
+import { QuartoPiece } from '@everyboard/games';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
@@ -10,11 +14,7 @@ import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { User } from '../../../domain/User';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { QuartoMove } from '../../../games/quarto/QuartoMove';
-import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
@@ -364,7 +364,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveSync();
 
             // Then the game is up to date
-            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
+            expect(testUtils.getWrapper().gameComponent.state().turn).toBe(2);
 
             await receiveEndGame();
         }));
@@ -380,7 +380,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveSync();
 
             // Then the game is up to date
-            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(3);
+            expect(testUtils.getWrapper().gameComponent.state().turn).toBe(3);
 
             await receiveEndGame();
         }));
@@ -1677,7 +1677,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When displaying it
             // Then it should be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
 
             await receiveEndGame();
         }));
@@ -1692,7 +1692,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().interactive()).toBeFalse();
 
             await receiveEndGame();
         }));
@@ -1707,7 +1707,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().interactive()).toBeFalse();
 
             await receiveEndGame();
         }));

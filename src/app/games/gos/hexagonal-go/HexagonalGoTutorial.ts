@@ -1,12 +1,12 @@
+
+import { PlayerNumberMap } from '@everyboard/games';
+import { GoPhase } from '@everyboard/games';
+import { GoPiece } from '@everyboard/games';
+import { GoState } from '@everyboard/games';
+import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-
-import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

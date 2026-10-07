@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { QuixoMove } from '@everyboard/games';
+import { QuixoState } from '@everyboard/games';
+import { QuixoFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { QuixoFailure } from '../QuixoFailure';
-import { QuixoMove } from '../QuixoMove';
-import { QuixoState } from '../QuixoState';
 import { QuixoComponent } from '../quixo.component';
 
 describe('QuixoComponent', () => {

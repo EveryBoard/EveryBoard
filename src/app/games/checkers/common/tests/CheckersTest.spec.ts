@@ -2,20 +2,20 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersMoveGenerator } from '@everyboard/games';
+import { Direction, DirectionFailure } from '@everyboard/games';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games';
+import { CheckersStack, CheckersState } from '@everyboard/games';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
-import { Player } from '../../../../jscaip/Player';
-import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
-import { CheckersFailure } from '../CheckersFailure';
-import { CheckersMove } from '../CheckersMove';
-import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
-import { CheckersStack, CheckersState } from '../CheckersState';
 import { CheckersComponent } from '../checkers.component';
 
 export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {
@@ -116,7 +116,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
         });
 
         async function clickOnOpponentPieceAndFail(): Promise<void> {
-            const state: CheckersState = testUtils.getGameComponent().getState();
+            const state: CheckersState = testUtils.getGameComponent().state();
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             for (const coord of state.allCoords()) {
                 const stack: CheckersStack = state.getPieceAt(coord);
@@ -153,7 +153,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should highlight possible clicks (at first turn)', fakeAsync(async() => {
                 // Given any board (here the initial step)
-                const state: CheckersState = testUtils.getGameComponent().getState();
+                const state: CheckersState = testUtils.getGameComponent().state();
 
                 // When displaying it
                 expectCoordsToBeTheOnlyClickable(state, entries.firstPlayerCoords);
@@ -161,7 +161,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should highlight possible step-landing after selecting normal piece', fakeAsync(async() => {
                 // Given any board where steps are possible (initial board)
-                const state: CheckersState = testUtils.getGameComponent().getState();
+                const state: CheckersState = testUtils.getGameComponent().state();
 
                 // When selecting a piece
                 const first: Coord = entries.firstPlayerCoords[0];
@@ -230,7 +230,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should forbid clicking on empty square', fakeAsync(async() => {
                 // Given any board
-                const state: CheckersState = testUtils.getGameComponent().getState();
+                const state: CheckersState = testUtils.getGameComponent().state();
 
                 // When clicking on an empty square
                 // Then it should fail
@@ -321,7 +321,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should show possible first-selection again when deselecting piece', fakeAsync(async() => {
                 // Given any board with a selected piece
-                const state: CheckersState = testUtils.getGameComponent().getState();
+                const state: CheckersState = testUtils.getGameComponent().state();
                 const firstClick: Coord = entries.firstPlayerCoords[0];
                 const firstClickId: string = `#coord-${ firstClick.x }-${ firstClick.y }`;
                 await testUtils.expectClickSuccess(firstClickId);
@@ -464,7 +464,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             function reverseCoord(coord: Coord): Coord {
                 const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
-                const state: CheckersState = gameComponent.getState();
+                const state: CheckersState = gameComponent.state();
                 const x: number = state.getWidth() - (1 + coord.x);
                 const y: number = state.getHeight() - (1 + coord.y);
                 return new Coord(x, y);
@@ -531,7 +531,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
             it('should adapt square translation to point of view', fakeAsync(async() => {
                 // Given the default point of view
                 const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
-                const state: CheckersState = gameComponent.getState();
+                const state: CheckersState = gameComponent.state();
                 const maxX: number = state.getWidth() - 1;
                 const maxY: number = state.getHeight() - 1;
                 const expectedTranslation: string = gameComponent.getTranslationAtXYZ(maxX, maxY, 0);
