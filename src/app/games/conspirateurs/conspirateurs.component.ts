@@ -13,7 +13,7 @@ import { ConspirateursMoveGenerator } from '@everyboard/games';
 import { ConspirateursRules } from '@everyboard/games';
 import { ConspirateursState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -46,7 +46,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     );
     protected readonly dropPhase: WritableSignal<boolean> = signal(true);
     protected readonly boardInfo: WritableSignal<Table<SquareInfo>> = signal([]);
-    protected readonly victory: WritableSignal<Coord[]> = signal([]);
+    protected readonly victory: WritableSignal<Set<Coord>> = signal(new Set());
     protected readonly viewInfoLastMoveArrow: WritableSignal<string> = signal('');
     protected readonly sidePieces: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(20, 20));
     private readonly selected: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
@@ -59,7 +59,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     private readonly lastDrop: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly lastJump: WritableSignal<MGPOptional<ConspirateursMoveJump>> = signal(MGPOptional.empty());
     private readonly lastStep: WritableSignal<MGPOptional<ConspirateursMoveSimple>> = signal(MGPOptional.empty());
-    private readonly victoriousCoords: WritableSignal<Coord[]> = signal([]);
+    private readonly victoriousCoords: WritableSignal<Set<Coord>> = signal(new Set());
 
     public constructor() {
         super('Conspirateurs');
@@ -156,7 +156,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 squareInfo.squareClasses.push('victory-fill');
             }
         }
-        this.victoriousCoords.set(victoriousCoords);
+        this.victoriousCoords.set(new Set(victoriousCoords));
     }
 
     public hasPieceToDraw(x: number, y: number): boolean {
@@ -193,7 +193,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             const currentPlayerFill: string = this.getPlayerClass(this.getCurrentPlayer());
             classes.push('selected-stroke', currentPlayerFill);
         }
-        if (this.victoriousCoords().some((c: Coord) => c.equals(coord))) {
+        if (this.victoriousCoords().contains(coord)) {
             classes.push('victory-stroke');
         }
         return classes;
@@ -205,7 +205,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             this.isPartOfLastMove(coord))
         {
             return ['moved-fill'];
-        } else if (this.victoriousCoords().some((c: Coord) => c.equals(coord))) {
+        } else if (this.victoriousCoords().contains(coord)) {
             return ['victory-fill'];
         } else {
             return [];
