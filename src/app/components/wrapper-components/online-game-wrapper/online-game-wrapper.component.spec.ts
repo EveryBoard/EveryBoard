@@ -3,13 +3,14 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { RulesConfig } from '@everyboard/games';
+
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { P4Component } from '../../../games/p4/p4.component';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';
@@ -142,7 +143,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component without accepted config
             await prepareComponent(false);
             // When the game is not started yet
-            expect(wrapper.gameStarted).toBeFalse();
+            expect(wrapper.gameStarted()).toBeFalse();
             // Then game creation should exist
             const gameCreationId: DebugElement = testUtils.findElement('#gameCreation');
             expect(gameCreationId).withContext('GameCreationComponent id should be present after ngOnInit').toBeTruthy();
@@ -155,7 +156,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component where the game is not started
             await prepareComponent(false);
             // When the game is not started yet
-            expect(wrapper.gameStarted).toBeFalse();
+            expect(wrapper.gameStarted()).toBeFalse();
             // Then the p4 and chat tags should not be present
             testUtils.expectElementNotToExist('app-p4');
             testUtils.expectElementNotToExist('app-chat');
@@ -175,7 +176,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.detectChanges();
 
             // Then game the game should appear
-            expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
+            expect(wrapper.gameStarted()).withContext('game should be started').toBeTrue();
             testUtils.expectElementNotToExist('#gameCreation');
             testUtils.expectElementToExist('#game');
             testUtils.expectElementToExist('app-p4');

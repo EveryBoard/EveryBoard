@@ -1,24 +1,23 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Line } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { DiaballikDistanceHeuristic } from '@everyboard/games/diaballik';
+import { DiaballikFailure } from '@everyboard/games/diaballik';
+import { DiaballikFilteredMoveGenerator } from '@everyboard/games/diaballik';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from '@everyboard/games/diaballik';
+import { DiaballikMoveGenerator } from '@everyboard/games/diaballik';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from '@everyboard/games/diaballik';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games/diaballik';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Line } from '../../jscaip/Line';
-import { Player } from '../../jscaip/Player';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
-import { DiaballikFailure } from './DiaballikFailure';
-import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,8 +37,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public stateInConstruction: DiaballikState;
 
-    public WIDTH: number;
-    public HEIGHT: number;
     public INDICATOR_SIZE: number = 20;
 
     public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -63,8 +60,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     public constructor() {
         super('Diaballik');
         this.hasAsymmetricBoard = true;
-        this.WIDTH = this.getState().getWidth();
-        this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
         this.aiConfig = {
             minimax: [
@@ -171,7 +166,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.stateInConstruction = this.getState();
+        this.stateInConstruction = this.state();
         this.currentSelection = MGPOptional.empty();
         this.hasMadePass = false;
         this.translationsMade = 0;
@@ -341,7 +336,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public showDoneButton(): boolean {
-        return this.interactive && this.subMoves.length >= 1;
+        return this.interactive() && this.subMoves.length >= 1;
     }
 
     @ClickHandler(() => `#done`)
@@ -359,8 +354,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public getBoardRotation(): string {
         const rotation: number = this.getPointOfView().getValue() * 180;
-        const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardWidth: number = this.width() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardHeight: number = this.height() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
         return `rotate(${rotation} ${centerX} ${centerY})`;

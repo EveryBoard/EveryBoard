@@ -1,6 +1,6 @@
-import { ComparableObject } from 'lib/dist';
-import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
+import { ComparableObject } from '@everyboard/lib';
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
 
 export class Arrow<T extends Direction> implements ComparableObject {
 

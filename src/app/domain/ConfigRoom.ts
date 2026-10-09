@@ -1,14 +1,12 @@
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
+import { RulesConfig } from '@everyboard/games';
 
-import { MinimalUser } from './MinimalUser';
+import { PlayerInfo } from './PlayerInfo';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export type ConfigRoom = {
-    readonly creator: MinimalUser;
-    readonly creatorElo: number;
+    readonly creator: PlayerInfo;
 
-    readonly chosenOpponent: MinimalUser | null;
-    readonly chosenOpponentElo: number | null;
+    readonly chosenOpponent: PlayerInfo | null;
     readonly status: Status;
 
     readonly firstPlayer: FirstPlayer;

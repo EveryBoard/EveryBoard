@@ -1,21 +1,20 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesMoveGenerator } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesState } from '@everyboard/games/quebec-castles';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
-import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
-import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
-import { QuebecCastlesState } from './QuebecCastlesState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -121,7 +120,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public isPlayerDropping(): boolean {
-        return this.isInteractive() && this.isDroppingGroup;
+        return this.interactive() && this.isDroppingGroup;
     }
 
     private getRotated(coord: Coord, center: Coord, rotationInRadius: number): Coord {
@@ -165,7 +164,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
         Utils.assert(config.dropMode !== 'AUTO' || config.playersPlaceCastle, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
-            this.rules.getExpectedDropsThisTurn(this.getState(), this.config());
+            this.rules.getExpectedDropsThisTurn(this.state(), this.config());
         if (expectedDropThisTurn === 1) {
             const chosenMove: QuebecCastlesDrop = QuebecCastlesDrop.of([coord]);
             return await this.chooseMove(chosenMove);
@@ -176,7 +175,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 this.dropped = this.dropped.removeElement(coord);
             } else {
                 if (0 < this.getNumberOfAwaitedDrop()) {
-                    const dropValidity: boolean = this.rules.isValidDrop(this.getState(), coord, currentPlayer, config);
+                    const dropValidity: boolean = this.rules.isValidDrop(this.state(), coord, currentPlayer, config);
                     if (dropValidity) {
                         this.constructedState = this.constructedState.setPieceAt(coord, currentPlayer);
                         this.dropped = this.dropped.addElement(coord);
@@ -188,7 +187,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public isPlayerCastle(player: Player, coord: Coord): boolean {
-        const castle: MGPOptional<Coord> = this.getState().castles.get(player);
+        const castle: MGPOptional<Coord> = this.state().castles.get(player);
         return castle.equalsValue(coord);
     }
 
@@ -222,7 +221,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private selectedCoord(coord: Coord): void {
         this.selected = MGPOptional.of(coord);
         const possibleLanding: Coord[] = this.rules
-            .getPossibleMovesFor(coord, this.getState())
+            .getPossibleMovesFor(coord, this.state())
             .map((move: QuebecCastlesTranslation) => move.getEnd());
         this.possibleLanding = new Set(possibleLanding);
     }
@@ -234,7 +233,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: QuebecCastlesState = this.getState();
+        const state: QuebecCastlesState = this.state();
         this.constructedState = state;
         this.board = state.getCopiedBoard();
         this.updateMissingPieces();
@@ -368,11 +367,11 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 y = this.upperCorner.y - halfRadius;
             }
         } else {
-            x = this.getState().getWidth() * 0.5 * this.SPACE_SIZE;
+            x = this.width() * 0.5 * this.SPACE_SIZE;
             if (this.getCurrentPlayer() === Player.ZERO) {
                 y = -halfRadius;
             } else {
-                y = (this.getState().getHeight() + 0.5) * this.SPACE_SIZE;
+                y = (this.height() + 0.5) * this.SPACE_SIZE;
             }
         }
         return 'translate(' + x + ', ' + y + ')';

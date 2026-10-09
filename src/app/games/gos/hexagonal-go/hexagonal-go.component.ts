@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/hexagonal-go';
+import { GoMove } from '@everyboard/games/hexagonal-go';
+import { GoPhase } from '@everyboard/games/hexagonal-go';
+import { GoPiece } from '@everyboard/games/hexagonal-go';
+import { GoState } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoHeuristic } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoMoveGenerator } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games/hexagonal-go';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { HexaLayout } from '../../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Debug } from '../../../utils/Debug';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-
-import { HexagonalGoHeuristic } from './HexagonalGoHeuristic';
-import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
-import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +71,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
 
     private setHexaLayout(): void {
         const halfStroke: number = this.STROKE_WIDTH / 2;
-        const configSize: number = Math.floor(this.getState().getWidth() / 2);
+        const configSize: number = Math.floor(this.state().getWidth() / 2);
         const hexaLayoutStartX: number =
             (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
         const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
@@ -94,7 +93,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
 
     protected override computeViewBox(): ViewBox {
         return ViewBox.fromHexa(
-            this.getState().allCoords(),
+            this.state().allCoords(),
             this.hexaLayout,
             this.STROKE_WIDTH,
         )
@@ -109,7 +108,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: GoState = this.getState();
+        const state: GoState = this.state();
         const phase: GoPhase = state.phase;
 
         this.hexaBoard = state.getCopiedBoard();
@@ -120,17 +119,17 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.state().captured);
     }
 
     protected override getScoreName(): ScoreName {
-        return this.getState().phase.getScoreName();
+        return this.state().phase.getScoreName();
     }
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         this.captures = [];
-        for (const coordAndContent of this.getState().getCoordsAndContents()) {
+        for (const coordAndContent of this.state().getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
             const isEmpty: boolean = this.hexaBoard[coord.y][coord.x] === GoPiece.EMPTY;
@@ -142,7 +141,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     public override async pass(): Promise<MGPValidation> {
-        const phase: GoPhase = this.getState().phase;
+        const phase: GoPhase = this.state().phase;
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
@@ -152,7 +151,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     public getPlayerClassAt(coord: Coord): string[] {
-        const piece: GoPiece = this.getState().getPieceAt(coord);
+        const piece: GoPiece = this.state().getPieceAt(coord);
         const classes: string[] = [];
         if (this.captures.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');

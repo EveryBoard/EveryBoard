@@ -1,8 +1,9 @@
-import { Coord } from '../../../jscaip/Coord';
-import { Move } from '../../../jscaip/Move';
-import { SuperRules } from '../../../jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 
 import { ModeConfig } from './ModeConfig';
@@ -47,7 +48,7 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;
-        const numberOfOffset: number = this.getState().getHeight()-y;
+        const numberOfOffset: number = this.state().getHeight()-y;
         const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
         const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * spaceHeight * z);
         return new Coord(xBase, yBase);

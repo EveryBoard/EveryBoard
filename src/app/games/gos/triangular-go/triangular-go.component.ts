@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/triangular-go';
+import { GoMove } from '@everyboard/games/triangular-go';
+import { GoPhase } from '@everyboard/games/triangular-go';
+import { GoPiece } from '@everyboard/games/triangular-go';
+import { GoState } from '@everyboard/games/triangular-go';
+import { TriangularGoHeuristic } from '@everyboard/games/triangular-go';
+import { TriangularGoMoveGenerator } from '@everyboard/games/triangular-go';
+import { TriangularGoConfig, TriangularGoRules } from '@everyboard/games/triangular-go';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { TableUtils } from '../../../jscaip/TableUtils';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
-import { Debug } from '../../../utils/Debug';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-
-import { TriangularGoHeuristic } from './TriangularGoHeuristic';
-import { TriangularGoMoveGenerator } from './TriangularGoMoveGenerator';
-import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,7 +79,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     protected override computeViewBox(): ViewBox {
-        const state: GoState = this.getState();
+        const state: GoState = this.state();
         const leftmostOccupiedX: number = TableUtils.getLeftmostMatchColumn(state.board, GoPiece.isReachable).get();
         const width: number = state.board[0].length;
         const occupiedWidth: number = width - leftmostOccupiedX;
@@ -102,7 +101,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: GoState = this.getState();
+        const state: GoState = this.state();
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
@@ -113,17 +112,17 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.state().captured);
     }
 
     protected override getScoreName(): ScoreName {
-        return this.getState().phase.getScoreName();
+        return this.state().phase.getScoreName();
     }
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         this.captures = [];
-        for (const coordAndContent of this.getState().getCoordsAndContents()) {
+        for (const coordAndContent of this.state().getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
             const isEmpty: boolean = this.board[coord.y][coord.x] === GoPiece.EMPTY;
@@ -135,7 +134,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     public override async pass(): Promise<MGPValidation> {
-        const phase: GoPhase = this.getState().phase;
+        const phase: GoPhase = this.state().phase;
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
@@ -145,7 +144,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     public getPlayerClassAt(coord: Coord): string[] {
-        const piece: GoPiece = this.getState().getPieceAt(coord);
+        const piece: GoPiece = this.state().getPieceAt(coord);
         const classes: string[] = [];
         if (this.captures.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');

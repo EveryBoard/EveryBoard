@@ -1,22 +1,21 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { DvonnMaxStacksHeuristic } from '@everyboard/games/dvonn';
+import { DvonnMove } from '@everyboard/games/dvonn';
+import { DvonnMoveGenerator } from '@everyboard/games/dvonn';
+import { DvonnPieceStack } from '@everyboard/games/dvonn';
+import { DvonnRules } from '@everyboard/games/dvonn';
+import { DvonnScoreHeuristic } from '@everyboard/games/dvonn';
+import { DvonnState } from '@everyboard/games/dvonn';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-
-import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
-import { DvonnMove } from './DvonnMove';
-import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnRules } from './DvonnRules';
-import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
-import { DvonnState } from './DvonnState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,14 +67,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             ],
         };
         this.encoder = DvonnMove.encoder;
-        this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
+        this.scores = MGPOptional.of(DvonnRules.getScores(this.state()));
 
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
-        this.state = this.getState();
-        this.hexaBoard = this.getState().board;
+        this.hexaBoard = this.state().board;
     }
 
     public override hideLastMove(): void {
@@ -84,15 +82,14 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.canPass = this.rules.canOnlyPass(this.state);
-        this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
+        this.canPass = this.rules.canOnlyPass(this.state());
+        this.scores = MGPOptional.of(DvonnRules.getScores(this.state()));
     }
 
     protected override async showLastMove(move: DvonnMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
-        const state: DvonnState = this.getState();
+        const state: DvonnState = this.state();
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
@@ -134,7 +131,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const legal: MGPValidation = this.rules.isMovablePiece(this.getState(), coord);
+        const legal: MGPValidation = this.rules.isMovablePiece(this.state(), coord);
         if (legal.isSuccess()) {
             this.chosen = MGPOptional.of(coord);
             return MGPValidation.SUCCESS;
@@ -144,7 +141,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        const state: DvonnState = this.getState();
+        const state: DvonnState = this.state();
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<DvonnMove> = DvonnMove.from(chosenPiece, chosenDestination);

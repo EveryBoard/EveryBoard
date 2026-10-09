@@ -1,22 +1,21 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, signal, Signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
+import { ApagosFailure } from '@everyboard/games/apagos';
+import { ApagosFullBoardHeuristic } from '@everyboard/games/apagos';
+import { ApagosMove } from '@everyboard/games/apagos';
+import { ApagosMoveGenerator } from '@everyboard/games/apagos';
+import { ApagosRightmostHeuristic } from '@everyboard/games/apagos';
+import { ApagosConfig, ApagosRules } from '@everyboard/games/apagos';
+import { ApagosSquare } from '@everyboard/games/apagos';
+import { ApagosState } from '@everyboard/games/apagos';
 import { ArrayUtils, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerMap } from '../../jscaip/PlayerMap';
-
-import { ApagosFailure } from './ApagosFailure';
-import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
-import { ApagosMove } from './ApagosMove';
-import { ApagosMoveGenerator } from './ApagosMoveGenerator';
-import { ApagosRightmostHeuristic } from './ApagosRightmostHeuristic';
-import { ApagosConfig, ApagosRules } from './ApagosRules';
-import { ApagosSquare } from './ApagosSquare';
-import { ApagosState } from './ApagosState';
 
 interface PieceInfo {
     transform: string;
@@ -176,7 +175,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.apagosState.set(this.getState());
+        this.apagosState.set(this.state());
         this.showPossibleDrops();
     }
 
@@ -323,7 +322,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                 classes.push('captured-stroke');
                 return classes;
             } else {
-                const opponent: Player = this.apagosState().getCurrentOpponent();
+                const opponent: Player = this.state().getCurrentOpponent();
                 if (opponent === Player.ZERO) zero++;
                 else one++;
             }
@@ -352,7 +351,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         if (this.selectedPiece().isPresent() && this.selectedPiece().get().square === x) {
             return this.cancelMove();
         }
-        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
+        const currentPlayer: Player = this.state().getCurrentPlayer();
         const square: ApagosSquare = this.board()[x];
         const nbPiecePresent: number = square.count(currentPlayer);
         if (nbPiecePresent <= 0) {
@@ -371,7 +370,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private showAndGetPossibleTranfers(): DropArrow[] {
         const displayableArrow: DropArrow[] = [];
         let landingX: number = this.selectedPiece().get().square - 1;
-        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
+        const currentPlayer: Player = this.state().getCurrentPlayer();
         while (0 <= landingX) {
             if (this.board()[landingX].isFull() === false) {
                 displayableArrow.push({

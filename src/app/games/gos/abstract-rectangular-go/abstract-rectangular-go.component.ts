@@ -1,24 +1,25 @@
 import { ModelSignal, signal, WritableSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/families/go';
+import { GoMove } from '@everyboard/games/families/go';
+import { GoPhase } from '@everyboard/games/families/go';
+import { GoPiece } from '@everyboard/games/families/go';
+import { GoState } from '@everyboard/games/families/go';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games/families/go';
+import { GoHeuristic } from '@everyboard/games/go';
+import { GoMoveGenerator } from '@everyboard/games/go';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-import { GoHeuristic } from '../go/GoHeuristic';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
 
-import { RectangularGoConfig, AbstractRectangularGoRules } from './AbstractRectangularGoRules';
 import { GoSubBoardHelper } from './GoSubBoardHelper';
+
 
 export abstract class AbstractRectangularGoComponent
     extends GobanGameComponent<AbstractRectangularGoRules,
@@ -84,9 +85,9 @@ export abstract class AbstractRectangularGoComponent
         const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
-        const normalWidth: number = this.getState().getWidth() * this.SPACE_SIZE;
+        const normalWidth: number = this.width() * this.SPACE_SIZE;
         const width: number = normalWidth + ((zooms - 1) * this.SUB_BOARD_SEPARATOR);
-        const normalHeight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        const normalHeight: number = this.height() * this.SPACE_SIZE;
         let height: number = zooms * normalHeight;
         height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
         height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
@@ -110,7 +111,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: GoState = this.getState();
+        const state: GoState = this.state();
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
@@ -137,18 +138,18 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.state().captured);
     }
 
     protected override getScoreName(): ScoreName {
-        return this.getState().phase.getScoreName();
+        return this.state().phase.getScoreName();
     }
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         const captures: Coord[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.getWidth(); x++) {
+        for (let y: number = 0; y < this.height(); y++) {
+            for (let x: number = 0; x < this.width(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
@@ -162,7 +163,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override async pass(): Promise<MGPValidation> {
-        const phase: GoPhase = this.getState().phase;
+        const phase: GoPhase = this.state().phase;
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
@@ -183,7 +184,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private yZoomTranslate(zoom: number): number {
-        const normalheight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        const normalheight: number = this.height() * this.SPACE_SIZE;
         let translate: number = (zoom) * normalheight;
         translate += (zoom) * this.ZOOM_SEPARATOR;
         translate += (zoom) * ((zoom) - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;

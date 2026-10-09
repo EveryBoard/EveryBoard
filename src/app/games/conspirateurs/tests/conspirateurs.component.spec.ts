@@ -1,13 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import {
+    ConspirateursMove,
+    ConspirateursMoveDrop,
+    ConspirateursMoveJump,
+    ConspirateursMoveSimple,
+} from '@everyboard/games/conspirateurs';
+import { ConspirateursState } from '@everyboard/games/conspirateurs';
+import { ConspirateursFailure } from '@everyboard/games/conspirateurs';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ConspirateursFailure } from '../ConspirateursFailure';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
-import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursComponent } from '../conspirateurs.component';
 
 describe('ConspirateursComponent', () => {

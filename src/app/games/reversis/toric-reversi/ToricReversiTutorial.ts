@@ -1,11 +1,11 @@
+import { PlayerOrNone } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/toric-reversi';
+import { ReversiMove } from '@everyboard/games/toric-reversi';
+import { ReversiState } from '@everyboard/games/toric-reversi';
+import { ToricReversiRules } from '@everyboard/games/toric-reversi';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { ReversiConfig } from '../common/AbstractReversiRules';
-import { ReversiMove } from '../common/ReversiMove';
-import { ReversiState } from '../common/ReversiState';
-
-import { ToricReversiRules } from './ToricReversiRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

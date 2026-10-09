@@ -1,16 +1,15 @@
+
+import { PlayerNumberMap } from '@everyboard/games';
+import { GoMove } from '@everyboard/games/go';
+import { GoPhase } from '@everyboard/games/go';
+import { GoPiece } from '@everyboard/games/go';
+import { GoState } from '@everyboard/games/go';
+import { RectangularGoConfig } from '@everyboard/games/go';
+import { GoRules } from '@everyboard/games/go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
-
-import { GoRules } from './GoRules';
-
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
