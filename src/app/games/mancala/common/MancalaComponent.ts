@@ -57,7 +57,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public constructor(urlName: string) {
         super(urlName);
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -152,7 +154,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
             this.opponentMoveIsBeingAnimated = false;
             this.animationOngoing = false;
         }
-        this.scores = MGPOptional.of(state.getScoresCopy());
+        this.scores.set(
+            MGPOptional.of(state.getScoresCopy()),
+        );
         this.changeVisibleState(state);
     }
 
@@ -380,7 +384,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getStoreContent(owner: Player): number {
-        return this.scores.get().get(owner) + this.droppedInStore.get(owner);
+        return this.scores().get().get(owner) + this.droppedInStore.get(owner);
     }
 
     public getStoreSecondaryContent(owner: Player): MGPOptional<string> {

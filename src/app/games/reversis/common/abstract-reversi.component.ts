@@ -40,7 +40,9 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
             }],
         };
         this.encoder = ReversiMove.encoder;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(2, 2)),
+        );
     }
 
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
@@ -54,8 +56,10 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
 
         this.board = state.getCopiedBoard();
 
-        this.scores = MGPOptional.of(state.countScore());
-        this.canPass = this.rules.playerCanOnlyPass(state, this.config());
+        this.scores.set(
+            MGPOptional.of(state.countScore()),
+        );
+        this.canPass.set(this.rules.playerCanOnlyPass(state, this.config()));
     }
 
     protected override async showLastMove(move: ReversiMove): Promise<void> {
@@ -85,7 +89,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     }
 
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass(), 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 

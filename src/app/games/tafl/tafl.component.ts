@@ -50,7 +50,9 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         const state: TaflState = this.state();
         const scoreZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const scoreOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne)),
+        );
     }
 
     protected override getScoreName(): ScoreName {

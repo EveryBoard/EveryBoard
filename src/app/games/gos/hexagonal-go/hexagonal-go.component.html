@@ -28,11 +28,12 @@
         </g>
     }
 
-    @if (last.isPresent() && state().isOnBoard(last.get())) {
-        <polygon id="last-{{ last.get().x }}-{{ last.get().y }}"
-                 [attr.transform]="getHexaCenterTranslationAt(last.get())"
+    @if (last().isPresent()) {
+        @let lastCoord = last().get();
+        <polygon id="last-{{ lastCoord.x }}-{{ lastCoord.y }}"
+                 [attr.transform]="getHexaCenterTranslationAt(lastCoord)"
                  [attr.points]="getHexaPoints()"
-                 [ngClass]="getPlayerClassAt(last.get())"
+                 [ngClass]="getPlayerClassAt(lastCoord)"
                  class="last-move-stroke big-stroke no-fill"/>
     }
 

@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { GroupData } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -15,7 +14,7 @@ import { HexagonalGoMoveGenerator } from '@everyboard/games';
 import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games';
 import { Debug } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { HexaLayout } from '../../../components/game-components/HexaLayout';
@@ -38,15 +37,11 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
                                                                  GoLegalityInformation>
 {
 
-    public boardInfo: GroupData<GoPiece>;
+    private readonly ko: Signal<MGPOptional<Coord>> = computed(() => this.state().koCoord);
 
-    public ko: MGPOptional<Coord> = MGPOptional.empty();
+    protected readonly last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public last: MGPOptional<Coord> = MGPOptional.empty();
-
-    public captures: Coord[]= [];
-
-    public GoPiece: typeof GoPiece = GoPiece;
+    private readonly captures: WritableSignal<Set<Coord>> = signal(new Set());
 
     public constructor() {
         super('HexagonalGo');
@@ -64,8 +59,10 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
             }],
         };
         this.encoder = GoMove.encoder;
-        this.canPass = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.canPass.set(true);
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
         this.setHexaLayout();
     }
 
@@ -82,13 +79,13 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     protected override async showLastMove(move: GoMove): Promise<void> {
-        this.last = MGPOptional.of(move.coord);
+        this.last.set(MGPOptional.of(move.coord));
         this.showCaptures();
     }
 
     public override hideLastMove(): void {
-        this.captures = [];
-        this.last = MGPOptional.empty();
+        this.captures.set(new Set());
+        this.last.set(MGPOptional.empty());
     }
 
     protected override computeViewBox(): ViewBox {
@@ -114,12 +111,13 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         this.hexaBoard = state.getCopiedBoard();
         this.updateScores();
 
-        this.ko = state.koCoord;
-        this.canPass = phase.allowsPass();
+        this.canPass.set(phase.allowsPass());
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.state().captured);
+        this.scores.set(
+            MGPOptional.of(this.state().captured),
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -128,16 +126,17 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
-        this.captures = [];
+        const captures: Coord[] = [];
         for (const coordAndContent of this.state().getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
             const isEmpty: boolean = this.hexaBoard[coord.y][coord.x] === GoPiece.EMPTY;
-            const isNotKo: boolean = this.ko.equalsValue(coord) === false;
+            const isNotKo: boolean = this.ko().equalsValue(coord) === false;
             if (wasOccupied && isEmpty && isNotKo) {
-                this.captures.push(coord);
+                captures.push(coord);
             }
         }
+        this.captures.set(new Set(captures));
     }
 
     public override async pass(): Promise<MGPValidation> {
@@ -153,7 +152,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public getPlayerClassAt(coord: Coord): string[] {
         const piece: GoPiece = this.state().getPieceAt(coord);
         const classes: string[] = [];
-        if (this.captures.some((c: Coord) => c.equals(coord))) {
+        if (this.captures().contains(coord)) {
             classes.push('captured-fill');
         }
         if (piece.isOccupied()) {
