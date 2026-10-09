@@ -269,7 +269,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	// When counting how many games were actually created
 	var configRooms []model.ConfigRoom
 	err = dbStore.ApplyToConfigRooms(func(cr model.ConfigRoom) error {
-		if cr.Creator.ID == user.ID {
+		if cr.Creator.User.ID == user.ID {
 			configRooms = append(configRooms, cr)
 		}
 		return nil

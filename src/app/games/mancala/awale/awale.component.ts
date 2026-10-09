@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { MancalaMove } from '@everyboard/games';
-import { AwaleMoveGenerator } from '@everyboard/games';
-import { AwaleRules } from '@everyboard/games';
+import { AwaleMoveGenerator } from '@everyboard/games/awale';
+import { AwaleRules } from '@everyboard/games/awale';
+import { MancalaMove } from '@everyboard/games/awale';
 
 import { MancalaComponent } from '../common/MancalaComponent';
 import { NumberedCircleComponent } from '../common/numbered-circle.component';

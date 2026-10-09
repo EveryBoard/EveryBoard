@@ -24,6 +24,7 @@
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
     "gamestest:ci": "cd games && npm ci && npm run test:ci && npm run coverage",
+    "check:games-exports": "node --import tsx scripts/check-games-exports.ts",
     "prelint": "npm run eslint-rules:test",
     "lint": "eslint \"**/*.ts\" \"src/app/**/*.html\" --quiet",
     "e2e": "python ./e2e/launch.py"
@@ -82,6 +83,7 @@
     "karma-jasmine-html-reporter": "^2.3.0",
     "karma-time-stats-reporter": "^0.1.0",
     "sass": "^1.103.1",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.68.0"
   }

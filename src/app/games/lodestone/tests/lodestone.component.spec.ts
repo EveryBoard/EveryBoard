@@ -6,10 +6,20 @@ import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { LodestoneMove } from '@everyboard/games';
-import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '@everyboard/games';
-import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '@everyboard/games';
-import { LodestoneFailure } from '@everyboard/games';
+import { LodestoneMove } from '@everyboard/games/lodestone';
+import {
+    LodestonePiece,
+    LodestonePieceLodestone,
+    LodestonePieceNone,
+    LodestonePiecePlayer,
+} from '@everyboard/games/lodestone';
+import {
+    LodestonePositions,
+    LodestonePressurePlateGroup,
+    LodestonePressurePlates,
+    LodestoneState,
+} from '@everyboard/games/lodestone';
+import { LodestoneFailure } from '@everyboard/games/lodestone';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

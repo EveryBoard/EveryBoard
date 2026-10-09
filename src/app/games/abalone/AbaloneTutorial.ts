@@ -2,9 +2,9 @@
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
-import { AbaloneMove } from '@everyboard/games';
-import { AbaloneRules } from '@everyboard/games';
-import { AbaloneState } from '@everyboard/games';
+import { AbaloneMove } from '@everyboard/games/abalone';
+import { AbaloneRules } from '@everyboard/games/abalone';
+import { AbaloneState } from '@everyboard/games/abalone';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

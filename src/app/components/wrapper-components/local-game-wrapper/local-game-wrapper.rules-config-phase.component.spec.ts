@@ -2,9 +2,9 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
-import { QuebecCastlesState } from '@everyboard/games';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesState } from '@everyboard/games/quebec-castles';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { QuebecCastlesComponent } from '../../../games/quebec-castles/quebec-castles.component';

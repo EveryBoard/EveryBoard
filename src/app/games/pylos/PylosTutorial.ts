@@ -1,9 +1,9 @@
 
 import { PlayerOrNone } from '@everyboard/games';
-import { PylosCoord } from '@everyboard/games';
-import { PylosMove } from '@everyboard/games';
-import { PylosRules } from '@everyboard/games';
-import { PylosState } from '@everyboard/games';
+import { PylosCoord } from '@everyboard/games/pylos';
+import { PylosMove } from '@everyboard/games/pylos';
+import { PylosRules } from '@everyboard/games/pylos';
+import { PylosState } from '@everyboard/games/pylos';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
