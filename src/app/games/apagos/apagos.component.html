@@ -2,39 +2,39 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
-        @for (x of ArrayUtils.range(remainingOne); track x) {
-            <circle [attr.cx]="getRemainingPieceCx(x)"
-                    [attr.cy]="PIECE_RADIUS"
-                    [attr.r]="PIECE_RADIUS - 5"
+    <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (boardWidth() / 2) + ' ' + (boardHeight() / 2) + ')'">
+        @for (remainingPieceOneCx of remainingPieceOneCxList(); track $index) {
+            <circle [attr.cx]="remainingPieceOneCx"
+                    [attr.cy]="pieceRadius()"
+                    [attr.r]="pieceRadius() - 5"
                     class="base mid-stroke player1-fill"/>
         }
-        @for (x of ArrayUtils.range(remainingZero); track x) {
-            <circle [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
-                    [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
-                    [attr.r]="PIECE_RADIUS - 5"
+        @for (remainingPieceZeroCx of remainingPieceZeroCxList(); track $index) {
+            <circle [attr.cx]="remainingPieceZeroCx"
+                    [attr.cy]="boardHeight() - pieceRadius()"
+                    [attr.r]="pieceRadius() - 5"
                     class="base mid-stroke player0-fill"/>
         }
     </g>
 
     <g id="board">
-        @for (square of board; track $index; let x = $index) {
-            <g [attr.transform]="getBlockTransform(x)">
-                @if (canDisplayArrow(x, PlayerOrNone.ZERO)) {
+        @for (squareInfo of viewInfos(); track $index; let x = $index) {
+            <g [attr.transform]="squareInfo.blockTransform">
+                @if (squareInfo.canDisplayArrow.get(Player.ZERO)) {
                     <polygon id="drop-arrow-zero-{{ x }}"
                              class="base mid-stroke"
-                             [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
+                             [ngClass]="squareInfo.arrowClasses.get(Player.ZERO)"
                              (click)="onArrowClick(x, PlayerOrNone.ZERO)"
                              [attr.points]="ARROW_COORD"
-                             [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, -SPACE_SIZE / 2)"/>
+                             [attr.transform]="svgTransformZero"/>
                 }
-                @if (canDisplayArrow(x, PlayerOrNone.ONE)) {
+                @if (squareInfo.canDisplayArrow.get(Player.ONE)) {
                     <polygon id="drop-arrow-one-{{ x }}"
                              class="base mid-stroke"
-                             [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
+                             [ngClass]="squareInfo.arrowClasses.get(Player.ONE)"
                              (click)="onArrowClick(x, PlayerOrNone.ONE)"
                              [attr.points]="ARROW_COORD"
-                             [attr.transform]="getSVGTranslation(0, -SPACE_SIZE / 2)"/>
+                             [attr.transform]="svgTransformOne"/>
                 }
                 <rect id="square-{{ x }}"
                       (click)="onSquareClick(x)"
@@ -42,17 +42,15 @@
                       y="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
-                      [ngClass]="getSquareClasses(x)"
+                      [ngClass]="squareInfo.classes"
                       class="base mid-stroke"/>
-                @for (i of ArrayUtils.range(square.count(PlayerOrNone.NONE)); track i) {
-                    <ng-container>
-                        <circle id="square-{{ x }}-piece-{{ i }}-out-of-{{ square.count(PlayerOrNone.NONE) }}"
-                                [attr.transform]="getCircleTransform(i, square)"
-                                (click)="onSquareClick(x)"
-                                r="10"
-                                [ngClass]="getPieceClasses(x, i, square)"
-                                class="base mid-stroke"/>
-                    </ng-container>
+                @for (pieceInfo of squareInfo.pieceInfos; track i; let i = $index) {
+                    <circle id="square-{{ x }}-piece-{{ i }}-out-of-{{ squareInfo.square.count(PlayerOrNone.NONE) }}"
+                            [attr.transform]="pieceInfo.transform"
+                            (click)="onSquareClick(x)"
+                            r="10"
+                            [ngClass]="pieceInfo.classes"
+                            class="base mid-stroke"/>
                 }
             </g>
         }
