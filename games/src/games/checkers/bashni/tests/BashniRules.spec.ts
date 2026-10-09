@@ -194,7 +194,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 5), new Coord(2, 3)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(4, 5), new Coord(2, 3)]);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -215,7 +215,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When doing the backward capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 4)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(5, 2), new Coord(3, 4)]);
 
             // Then the move should succeed and stack captured piece under the capturing one
             const expectedState: CheckersState = OddCheckersState.of([
@@ -245,7 +245,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When doing the small capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 1), new Coord(0, 3)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(0, 3)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = OddCheckersState.of([
@@ -275,7 +275,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing the single piece
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 3), new Coord(2, 1)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(0, 3), new Coord(2, 1)]);
 
             // Then the move should succeed and stack the captured piece
             const expectedState: CheckersState = OddCheckersState.of([
@@ -305,7 +305,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When capturing the commander of the stack
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 1), new Coord(0, 3)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(0, 3)]);
 
             // Then the move should succeed and transfer the stack correctly
             const expectedState: CheckersState = OddCheckersState.of([
@@ -335,7 +335,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When doing a double capture
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(1, 0),
                 new Coord(3, 2),
                 new Coord(5, 0),
@@ -371,7 +371,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When trying to capture the tower twice
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(1, 0),
                 new Coord(3, 2),
                 new Coord(1, 0),
@@ -396,7 +396,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When flying through (4, 1), whose piece was captured earlier in the move
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(1, 6),
                 new Coord(3, 4),
                 new Coord(5, 2),
@@ -433,7 +433,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When trying to finish by crossing the starting square
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(2, 3),
                 new Coord(0, 5),
                 new Coord(2, 7),
@@ -470,7 +470,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When trying to finish on the starting square
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(2, 1),
                 new Coord(0, 3),
                 new Coord(2, 5),
@@ -508,7 +508,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing both pieces
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(5, 0), new Coord(0, 5), new Coord(2, 7),
             ]);
 
@@ -541,7 +541,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing the first piece but not the second one
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(5, 0), new Coord(0, 5),
             ]);
 
@@ -562,7 +562,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When choosing not to go for the longest capture
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(5, 0), new Coord(1, 4),
             ]);
 
@@ -629,7 +629,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When continuing capturing as a king
-            const move: CheckersMove = CheckersMove.fromCapture([
+            const move: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(5, 2),
                 new Coord(3, 0),
                 new Coord(0, 3),
@@ -664,7 +664,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When trying to stop at the promotion line without taking the available king capture
-            const shortCapture: CheckersMove = CheckersMove.fromCapture([
+            const shortCapture: CheckersMove = CheckersMove.fromCaptureList([
                 new Coord(5, 2),
                 new Coord(3, 0),
             ]);

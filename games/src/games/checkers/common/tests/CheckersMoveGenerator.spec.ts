@@ -105,7 +105,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
                 new Coord(5, 8),
                 new Coord(7, 6),
             ];
-            const move: CheckersMove = CheckersMove.fromCapture(coords);
+            const move: CheckersMove = CheckersMove.fromCaptureList(coords);
             expect(legalCaptures).toEqual([move]);
         });
 
@@ -166,7 +166,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 new Coord(4, 6),
                 new Coord(6, 4),
             ];
-            const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise);
+            const moveClockwise: CheckersMove = CheckersMove.fromCaptureList(coordsClockwise);
             const coordsCounterClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 6),
@@ -174,7 +174,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 new Coord(4, 2),
                 new Coord(6, 4),
             ];
-            const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise);
+            const moveCounterClockwise: CheckersMove = CheckersMove.fromCaptureList(coordsCounterClockwise);
             expect(legalCaptures).toEqual([moveClockwise, moveCounterClockwise]);
         });
 
@@ -231,7 +231,7 @@ describe('CheckersMoveGenerator for Bashni', () => {
         const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
 
         // Then the capture should be generated even though Player.ZERO is the current player
-        const expectedMove: CheckersMove = CheckersMove.fromCapture([new Coord(1, 0), new Coord(4, 3)]);
+        const expectedMove: CheckersMove = CheckersMove.fromCaptureList([new Coord(1, 0), new Coord(4, 3)]);
         expect(captures.some((move: CheckersMove) => move.equals(expectedMove))).toBeTrue();
     });
 

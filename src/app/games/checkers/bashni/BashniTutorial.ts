@@ -51,7 +51,7 @@ export class BashniTutorial extends Tutorial {
                 [__, _u, __, _u, __, _u, __, _u],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3)]),
+            CheckersMove.fromCaptureList([new Coord(6, 5), new Coord(4, 3)]),
             $localize`Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower controlled the player at the top of the tower.`,
         ),
         TutorialStep.anyMove(
@@ -67,7 +67,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, _u, __, __, __, __],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(5, 4), new Coord(7, 6)]),
+            CheckersMove.fromCaptureList([new Coord(5, 4), new Coord(7, 6)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -83,7 +83,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, _u, __, _u, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3), new Coord(6, 1)]),
+            CheckersMove.fromCaptureList([new Coord(6, 5), new Coord(4, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
@@ -99,7 +99,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 2),
-            [CheckersMove.fromCapture([new Coord(3, 4), new Coord(1, 2)])],
+            [CheckersMove.fromCaptureList([new Coord(3, 4), new Coord(1, 2)])],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You made the majority capture, but you were asked to do the minority one here!`,
         ),
@@ -137,7 +137,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, _u, __, _u, __],
             ], 2),
             [
-                CheckersMove.fromCapture([new Coord(5, 0), new Coord(0, 5), new Coord(2, 7)]),
+                CheckersMove.fromCaptureList([new Coord(5, 0), new Coord(0, 5), new Coord(2, 7)]),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You should capture twice!`,
@@ -155,7 +155,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]),
+            CheckersMove.fromCaptureList([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -171,7 +171,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, _v, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 1)]),
+            CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(4, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
@@ -188,21 +188,21 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
             ], 0),
             [
-                CheckersMove.fromCapture([
+                CheckersMove.fromCaptureList([
                     new Coord(5, 4),
                     new Coord(2, 1),
                     new Coord(0, 3),
                     new Coord(3, 6),
                     new Coord(5, 4),
                 ]),
-                CheckersMove.fromCapture([
+                CheckersMove.fromCaptureList([
                     new Coord(5, 4),
                     new Coord(2, 1),
                     new Coord(0, 3),
                     new Coord(3, 6),
                     new Coord(6, 3),
                 ]),
-                CheckersMove.fromCapture([
+                CheckersMove.fromCaptureList([
                     new Coord(5, 4),
                     new Coord(2, 1),
                     new Coord(0, 3),

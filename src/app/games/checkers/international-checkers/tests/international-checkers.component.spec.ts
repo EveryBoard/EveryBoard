@@ -119,7 +119,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
             [_, U, _, U, _, U, _, U, _, U],
             [U, _, U, _, U, _, U, _, U, _],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 7)]),
+        move: CheckersMove.fromCaptureList([new Coord(0, 5), new Coord(2, 7)]),
     },
     promotionTest: {
         state: OddCheckersState.of([
@@ -146,7 +146,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
             [_, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
     },
     returnToStartCaptureTest: {
         state: OddCheckersState.of([
@@ -161,7 +161,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
             [_, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _],
         ], 0),
-        move: CheckersMove.fromCapture([
+        move: CheckersMove.fromCaptureList([
             new Coord(5, 4),
             new Coord(3, 2),
             new Coord(1, 4),
@@ -182,7 +182,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
             [_, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _],
         ], 1),
-        move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(0, 3)]),
+        move: CheckersMove.fromCaptureList([new Coord(2, 1), new Coord(0, 3)]),
     },
     invalidThirdMoveTest: {
         start: new Coord(3, 6),
@@ -250,7 +250,7 @@ describe('InternationalCheckersComponent', () => {
             await testUtils.expectClickSuccess('#coord-1-0');
 
             // When doing a capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 0), new Coord(5, 4)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(1, 0), new Coord(5, 4)]);
             await testUtils.expectMoveSuccess('#coord-5-4', move);
 
             // Then only captured space should be captured-fill
@@ -285,7 +285,7 @@ describe('InternationalCheckersComponent', () => {
             await testUtils.expectClickSuccess('#coord-4-5');
 
             // When doing a capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 5), new Coord(0, 1)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(4, 5), new Coord(0, 1)]);
 
             // Then it should be a success
             await testUtils.expectMoveSuccess('#coord-0-1', move);
@@ -311,7 +311,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing a capture
             const captures: Coord[] = [new Coord(6, 7), new Coord(2, 3), new Coord(0, 1)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures);
+            const move: CheckersMove = CheckersMove.fromCaptureList(captures);
 
             // Then it should be a success
             await testUtils.expectMoveSuccess('#coord-0-1', move);
@@ -415,7 +415,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing the last capture
             const captures: Coord[] = [new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures);
+            const move: CheckersMove = CheckersMove.fromCaptureList(captures);
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-5', move);
@@ -502,7 +502,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing the move
             // Then it should succeed
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 4), new Coord(3, 0)]);
+            const move: CheckersMove = CheckersMove.fromCaptureList([new Coord(3, 4), new Coord(3, 0)]);
             await testUtils.expectMoveSuccess('#coord-3-0', move);
         }));
 

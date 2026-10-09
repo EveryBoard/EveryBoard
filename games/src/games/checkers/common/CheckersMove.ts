@@ -5,30 +5,37 @@ import { Move } from '../../../jscaip/Move';
 
 export class CheckersMove extends Move {
 
-    private static of(coords: ReadonlyArray<Coord>, isStep: boolean): CheckersMove {
+    private static of(coords: MGPUniqueList<Coord>, isStep: boolean): CheckersMove {
         return new CheckersMove(coords, isStep);
     }
 
-    public static fromCapture(coords: ReadonlyArray<Coord>): CheckersMove {
+    public static fromCapture(coords: MGPUniqueList<Coord>): CheckersMove {
         return new CheckersMove(coords, false);
     }
 
+    public static fromCaptureList(coords: Coord[]): CheckersMove {
+        return new CheckersMove(
+            new MGPUniqueList(coords),
+            false,
+        );
+    }
+
     public static fromStep(start: Coord, end: Coord): CheckersMove {
-        return new CheckersMove([start, end], true);
+        return new CheckersMove(new MGPUniqueList([start, end]), true);
     }
 
     public static encoder: Encoder<CheckersMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
         (move: CheckersMove) => [[...move.coords], move.isStep],
-        (fields: [Coord[], boolean]) => CheckersMove.of(fields[0], fields[1]),
+        (fields: [Coord[], boolean]) => CheckersMove.of(new MGPUniqueList(fields[0]), fields[1]),
     );
 
-    private constructor(public readonly coords: ReadonlyArray<Coord>, public readonly isStep: boolean) {
+    private constructor(public readonly coords: MGPUniqueList<Coord>, public readonly isStep: boolean) {
         super();
     }
 
     public override toString(): string {
-        const coordStrings: string[] = this.coords.map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.map((coord: Coord) => coord.toString()).toList();
         const coordString: string = coordStrings.join(', ');
         if (this.isStep) {
             return 'CheckersStep(' + coordString + ')';
@@ -41,15 +48,15 @@ export class CheckersMove extends Move {
         return CheckersMove.getRelation(this.coords, other.coords);
     }
 
-    public static getRelation(a: ReadonlyArray<Coord>, b: ReadonlyArray<Coord>): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
-        const thisLength: number = a.length;
-        const otherLength: number = b.length;
+    public static getRelation(a: MGPUniqueList<Coord>, b: MGPUniqueList<Coord>): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+        const thisLength: number = a.size();
+        const otherLength: number = b.size();
         if (thisLength > otherLength) {
             return 'INEQUALITY';
         }
         const minimalLength: number = Math.min(thisLength, otherLength);
         for (let i: number = 0; i < minimalLength; i++) {
-            if (a[i].equals(b[i]) === false) return 'INEQUALITY';
+            if (a.get(i).equals(b.get(i)) === false) return 'INEQUALITY';
         }
         if (thisLength === otherLength) return 'EQUALITY';
         else return 'PREFIX';
@@ -69,7 +76,7 @@ export class CheckersMove extends Move {
     }
 
     public getEndingCoord(): Coord {
-        return this.coords[this.coords.length - 1];
+        return this.coords.getFromEnd(0);
     }
 
     public getSteppedOverCoordsWithDuplicates(): Coord[] {
@@ -99,7 +106,7 @@ export class CheckersMove extends Move {
         Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
         const firstPart: Coord[] = [...this.coords];
         const secondPart: Coord[] = [...move.coords].slice(1);
-        return CheckersMove.fromCapture(firstPart.concat(secondPart));
+        return CheckersMove.fromCaptureList(firstPart.concat(secondPart));
     }
 
 }

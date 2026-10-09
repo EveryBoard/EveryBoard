@@ -411,7 +411,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 const state: CheckersState = entries.complexCaptureTest.state;
                 await testUtils.setupState(state);
                 const move: CheckersMove = entries.complexCaptureTest.move;
-                expect(move.coords.length).withContext('a "complex" capture should have more than 2 elements').toBeGreaterThan(2);
+                expect(move.coords.size()).withContext('a "complex" capture should have more than 2 elements').toBeGreaterThan(2);
                 const first: Coord = move.coords[0];
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
 
@@ -436,7 +436,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await testUtils.expectClickSuccess(`#coord-${ move.coords[0].x }-${ move.coords[0].y }`);
 
                 // When performing the circular capture
-                for (let i: number = 1; i < move.coords.length - 1; i++) {
+                for (let i: number = 1; i < move.coords.size() - 1; i++) {
                     await testUtils.expectClickSuccess(`#coord-${ move.coords[i].x }-${ move.coords[i].y }`);
                 }
 
