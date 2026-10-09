@@ -2,10 +2,10 @@ import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { DiamPiece } from '@everyboard/games';
-import { EncapsulePiece } from '@everyboard/games';
-import { HivePiece } from '@everyboard/games';
-import { SiamMove } from '@everyboard/games';
+import { DiamPiece } from '@everyboard/games/diam';
+import { EncapsulePiece } from '@everyboard/games/encapsule';
+import { HivePiece } from '@everyboard/games/hive';
+import { SiamMove } from '@everyboard/games/siam';
 import { MGPOptional } from '@everyboard/lib';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {

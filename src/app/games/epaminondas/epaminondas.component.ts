@@ -6,16 +6,21 @@ import { Ordinal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { EpaminondasAttackHeuristic } from '@everyboard/games';
-import { EpaminondasFailure } from '@everyboard/games';
-import { EpaminondasMove } from '@everyboard/games';
-import { EpaminondasMoveGenerator } from '@everyboard/games';
-import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '@everyboard/games';
-import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '@everyboard/games';
-import { EpaminondasPositionalHeuristic } from '@everyboard/games';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '@everyboard/games';
-import { EpaminondasState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { EpaminondasAttackHeuristic } from '@everyboard/games/epaminondas';
+import { EpaminondasFailure } from '@everyboard/games/epaminondas';
+import { EpaminondasMove } from '@everyboard/games/epaminondas';
+import { EpaminondasMoveGenerator } from '@everyboard/games/epaminondas';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '@everyboard/games/epaminondas';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '@everyboard/games/epaminondas';
+import { EpaminondasPositionalHeuristic } from '@everyboard/games/epaminondas';
+import {
+    EpaminondasConfig,
+    EpaminondasLegalityInformation,
+    EpaminondasNode,
+    EpaminondasRules,
+} from '@everyboard/games/epaminondas';
+import { EpaminondasState } from '@everyboard/games/epaminondas';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';

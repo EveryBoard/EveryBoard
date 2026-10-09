@@ -6,12 +6,12 @@ import { Ordinal } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { EmptyRulesConfig } from '@everyboard/games';
-import { MartianChessMove } from '@everyboard/games';
-import { MartianChessMoveGenerator } from '@everyboard/games';
-import { MartianChessPiece } from '@everyboard/games';
-import { MartianChessMoveResult, MartianChessRules } from '@everyboard/games';
-import { MartianChessScoreHeuristic } from '@everyboard/games';
-import { MartianChessState } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games/martian-chess';
+import { MartianChessMoveGenerator } from '@everyboard/games/martian-chess';
+import { MartianChessPiece } from '@everyboard/games/martian-chess';
+import { MartianChessMoveResult, MartianChessRules } from '@everyboard/games/martian-chess';
+import { MartianChessScoreHeuristic } from '@everyboard/games/martian-chess';
+import { MartianChessState } from '@everyboard/games/martian-chess';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

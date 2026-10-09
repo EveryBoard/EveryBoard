@@ -1,9 +1,9 @@
 import { Coord } from '@everyboard/games';
-import { TaflConfig } from '@everyboard/games';
-import { TaflPawn } from '@everyboard/games';
-import { TaflState } from '@everyboard/games';
-import { HnefataflMove } from '@everyboard/games';
-import { HnefataflRules } from '@everyboard/games';
+import { TaflConfig } from '@everyboard/games/hnefatafl';
+import { TaflPawn } from '@everyboard/games/hnefatafl';
+import { TaflState } from '@everyboard/games/hnefatafl';
+import { HnefataflMove } from '@everyboard/games/hnefatafl';
+import { HnefataflRules } from '@everyboard/games/hnefatafl';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

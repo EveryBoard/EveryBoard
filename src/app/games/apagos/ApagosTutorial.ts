@@ -1,8 +1,8 @@
 
 import { Player } from '@everyboard/games';
-import { ApagosMove } from '@everyboard/games';
-import { ApagosConfig, ApagosRules } from '@everyboard/games';
-import { ApagosState } from '@everyboard/games';
+import { ApagosMove } from '@everyboard/games/apagos';
+import { ApagosConfig, ApagosRules } from '@everyboard/games/apagos';
+import { ApagosState } from '@everyboard/games/apagos';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -5,8 +5,8 @@ import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '@everyboard/games';
-import { TeekoState } from '@everyboard/games';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '@everyboard/games/teeko';
+import { TeekoState } from '@everyboard/games/teeko';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TeekoComponent } from '../teeko.component';

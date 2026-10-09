@@ -6,13 +6,18 @@ import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
-import { MancalaConfig } from '@everyboard/games';
-import { MancalaFailure } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '@everyboard/games';
-import { MancalaScoreHeuristic } from '@everyboard/games';
-import { MancalaState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games/families/mancala';
+import { MancalaFailure } from '@everyboard/games/families/mancala';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/families/mancala';
+import {
+    MancalaCaptureResult,
+    MancalaDistributionResult,
+    MancalaDropResult,
+    MancalaRules,
+} from '@everyboard/games/families/mancala';
+import { MancalaScoreHeuristic } from '@everyboard/games/families/mancala';
+import { MancalaState } from '@everyboard/games/families/mancala';
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
