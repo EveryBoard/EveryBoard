@@ -31,8 +31,8 @@ func TestWebhookPublishesGameLifecycle(t *testing.T) {
 	game := model.Game{
 		GameID:     42,
 		GameName:   "P4",
-		PlayerZero: model.MinimalUser{Name: "Alice"},
-		PlayerOne:  model.MinimalUser{Name: "Bob"},
+		PlayerZero: model.PlayerInfo{User: model.MinimalUser{Name: "Alice"}},
+		PlayerOne:  model.PlayerInfo{User: model.MinimalUser{Name: "Bob"}},
 		Result:     model.ResultResignOfOne,
 	}
 	notifier.GameStarted(game)

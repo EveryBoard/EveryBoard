@@ -257,7 +257,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ...PreparationOptions.withoutClocks,
             game: {
                 ...GameMocks.STARTED,
-                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                playerZero: {
+                    ...GameMocks.STARTED.playerZero,
+                    user: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                },
             },
         });
         await receiveSync();
