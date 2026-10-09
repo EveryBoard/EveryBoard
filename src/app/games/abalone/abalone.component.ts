@@ -20,11 +20,11 @@ import { ScoreName } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 
 type CapturedInfo = {
     coord: Coord;
@@ -146,7 +146,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (previousState.coordIsOccupiedSquare(moved)) {
+        while (previousState.coordIsOccupied(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }

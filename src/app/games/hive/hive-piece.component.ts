@@ -4,8 +4,8 @@ import { AfterContentChecked, Component, input, InputSignal } from '@angular/cor
 import { Coord } from '@everyboard/games';
 import { HivePiece } from '@everyboard/games';
 
-import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
+import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 
 @Component({
     selector: '[app-hive-piece]',

@@ -19,10 +19,10 @@ import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from '../../components/game-components/layout/HexaLayout';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,10 +87,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.SPACE_SIZE = 40;
         this.constructedState = this.state();
         const size: number = this.SPACE_SIZE * 1.50;
-        const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
-        const origineY: number = - this.hexagonWidth;
-        const origine: Coord = new Coord(origineX, origineY);
-        this.hexaLayout = new HexaLayout(size, origine, FlatHexaOrientation.INSTANCE);
+        const originX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
+        const originY: number = - this.hexagonWidth;
+        const origin: Coord = new Coord(originX, originY);
+        this.hexaLayout = new HexaLayout(size, origin, FlatHexaOrientation.INSTANCE);
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
