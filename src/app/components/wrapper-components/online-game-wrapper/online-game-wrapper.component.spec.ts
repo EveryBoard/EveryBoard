@@ -143,7 +143,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component without accepted config
             await prepareComponent(false);
             // When the game is not started yet
-            expect(wrapper.gameStarted).toBeFalse();
+            expect(wrapper.gameStarted()).toBeFalse();
             // Then game creation should exist
             const gameCreationId: DebugElement = testUtils.findElement('#gameCreation');
             expect(gameCreationId).withContext('GameCreationComponent id should be present after ngOnInit').toBeTruthy();
@@ -156,7 +156,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component where the game is not started
             await prepareComponent(false);
             // When the game is not started yet
-            expect(wrapper.gameStarted).toBeFalse();
+            expect(wrapper.gameStarted()).toBeFalse();
             // Then the p4 and chat tags should not be present
             testUtils.expectElementNotToExist('app-p4');
             testUtils.expectElementNotToExist('app-chat');
@@ -176,7 +176,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.detectChanges();
 
             // Then game the game should appear
-            expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
+            expect(wrapper.gameStarted()).withContext('game should be started').toBeTrue();
             testUtils.expectElementNotToExist('#gameCreation');
             testUtils.expectElementToExist('#game');
             testUtils.expectElementToExist('app-p4');
