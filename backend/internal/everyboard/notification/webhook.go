@@ -59,7 +59,7 @@ func newWebhook(client *http.Client, endpoint string, frontendURL string) *Webho
 func (w *Webhook) GameStarted(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
 		"Game started! %s vs. %s on %s. [Observe the game](%s).",
-		game.PlayerZero.Name, game.PlayerOne.Name, game.GameName, w.observeURL(game),
+		game.PlayerZero.User.Name, game.PlayerOne.User.Name, game.GameName, w.observeURL(game),
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
 }
 
@@ -81,12 +81,12 @@ func (w *Webhook) observeURL(game model.Game) string {
 
 func resultSummary(game model.Game) string {
 	if game.Result.IsVictoryOfZero() {
-		return fmt.Sprintf("%s won against %s", game.PlayerZero.Name, game.PlayerOne.Name)
+		return fmt.Sprintf("%s won against %s", game.PlayerZero.User.Name, game.PlayerOne.User.Name)
 	}
 	if game.Result.IsVictoryOfOne() {
-		return fmt.Sprintf("%s won against %s", game.PlayerOne.Name, game.PlayerZero.Name)
+		return fmt.Sprintf("%s won against %s", game.PlayerOne.User.Name, game.PlayerZero.User.Name)
 	}
-	return fmt.Sprintf("%s and %s drew", game.PlayerZero.Name, game.PlayerOne.Name)
+	return fmt.Sprintf("%s and %s drew", game.PlayerZero.User.Name, game.PlayerOne.User.Name)
 }
 
 func (w *Webhook) enqueue(payload webhookPayload) {

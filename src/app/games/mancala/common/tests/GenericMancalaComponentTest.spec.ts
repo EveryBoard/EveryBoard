@@ -7,11 +7,11 @@ import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Cell, Table } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games';
-import { MancalaDropResult, MancalaRules } from '@everyboard/games';
-import { MancalaState } from '@everyboard/games';
-import { MancalaConfig } from '@everyboard/games';
-import { MancalaFailure } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/families/mancala';
+import { MancalaDropResult, MancalaRules } from '@everyboard/games/families/mancala';
+import { MancalaState } from '@everyboard/games/families/mancala';
+import { MancalaConfig } from '@everyboard/games/families/mancala';
+import { MancalaFailure } from '@everyboard/games/families/mancala';
 import { MoveTestUtils } from '@everyboard/games/testing';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 

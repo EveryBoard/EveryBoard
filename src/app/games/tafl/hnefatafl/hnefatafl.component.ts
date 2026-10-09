@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { HnefataflMove } from '@everyboard/games';
-import { HnefataflRules } from '@everyboard/games';
+import { HnefataflMove } from '@everyboard/games/hnefatafl';
+import { HnefataflRules } from '@everyboard/games/hnefatafl';
 
 import { TaflComponent } from '../tafl.component';
 

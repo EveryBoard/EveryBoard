@@ -6,10 +6,10 @@ import { DirectionFailure } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { LinesOfActionMove } from '@everyboard/games';
-import { LinesOfActionRules } from '@everyboard/games';
-import { LinesOfActionState } from '@everyboard/games';
-import { LinesOfActionFailure } from '@everyboard/games';
+import { LinesOfActionMove } from '@everyboard/games/lines-of-action';
+import { LinesOfActionRules } from '@everyboard/games/lines-of-action';
+import { LinesOfActionState } from '@everyboard/games/lines-of-action';
+import { LinesOfActionFailure } from '@everyboard/games/lines-of-action';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LinesOfActionComponent } from '../lines-of-action.component';

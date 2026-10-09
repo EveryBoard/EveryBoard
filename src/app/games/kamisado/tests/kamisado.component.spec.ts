@@ -4,11 +4,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { KamisadoColor } from '@everyboard/games';
-import { KamisadoMove } from '@everyboard/games';
-import { KamisadoPiece } from '@everyboard/games';
-import { KamisadoState } from '@everyboard/games';
-import { KamisadoFailure } from '@everyboard/games';
+import { KamisadoColor } from '@everyboard/games/kamisado';
+import { KamisadoMove } from '@everyboard/games/kamisado';
+import { KamisadoPiece } from '@everyboard/games/kamisado';
+import { KamisadoState } from '@everyboard/games/kamisado';
+import { KamisadoFailure } from '@everyboard/games/kamisado';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

@@ -1,9 +1,9 @@
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games';
-import { CoerceoConfig, CoerceoRules } from '@everyboard/games';
-import { CoerceoState } from '@everyboard/games';
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games/coerceo';
+import { CoerceoConfig, CoerceoRules } from '@everyboard/games/coerceo';
+import { CoerceoState } from '@everyboard/games/coerceo';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

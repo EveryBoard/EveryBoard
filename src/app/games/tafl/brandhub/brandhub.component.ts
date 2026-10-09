@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BrandhubMove } from '@everyboard/games';
-import { BrandhubRules } from '@everyboard/games';
+import { BrandhubMove } from '@everyboard/games/brandhub';
+import { BrandhubRules } from '@everyboard/games/brandhub';
 
 import { TaflComponent } from '../tafl.component';
 

@@ -3,9 +3,9 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { P4Move } from '@everyboard/games';
-import { P4Rules, P4Config } from '@everyboard/games';
-import { P4State } from '@everyboard/games';
+import { P4Move } from '@everyboard/games/p4';
+import { P4Rules, P4Config } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { P4Component } from '../p4.component';
