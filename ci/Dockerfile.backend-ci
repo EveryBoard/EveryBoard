@@ -1,0 +1,25 @@
+FROM node:24-trixie-slim AS firebase
+
+RUN npm install --global firebase-tools@15.29.0 \
+    && npm cache clean --force \
+    && firebase setup:emulators:firestore
+
+FROM golang:1.26-trixie AS ci
+
+ENV PATH=/usr/local/bin:$PATH
+
+COPY --from=firebase /usr/local/ /usr/local/
+COPY --from=firebase /root/.cache/firebase/ /root/.cache/firebase/
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        bc \
+        openjdk-21-jre-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+COPY backend/go.mod backend/go.sum ./backend/
+RUN cd backend && go mod download
+
+COPY . .

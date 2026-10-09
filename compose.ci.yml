@@ -1,0 +1,101 @@
+name: everyboard-ci
+
+services:
+  frontend-build:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: frontend
+    command: npm run build
+
+  frontend-tests:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: ci
+    command: >-
+      sh -c "npm run libtest:ci && npm run gamestest:ci && npm run test:ci &&
+      python ./scripts/coverage.py check"
+    volumes:
+      - type: bind
+        source: ./coverage
+        target: /workspace/coverage
+
+  frontend-lint:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: frontend
+    command: npm run check
+
+  translations:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: translations-ci
+    command: >-
+      sh -c "npm run dependencies:build && ./scripts/update-translations.sh &&
+      ./scripts/check-translations.sh skip"
+
+  images:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: images-ci
+    command: ./scripts/check-images.sh
+
+  backend-tests:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.backend-ci
+      target: ci
+    command: >-
+      sh -c "cd backend && make build && make test &&
+      POSTGRES_TEST_DSN='postgresql://everyboard:everyboard@postgres:5432/everyboard_test?sslmode=disable'
+      make test-postgres &&
+      make check-coverage && make check-fmt"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  e2e:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.frontend
+      target: e2e
+    command: sh -c "npm run dependencies:build && npm run e2e"
+    environment:
+      DB_HOST: postgres-e2e
+      E2E_EXTERNAL_POSTGRES: "true"
+      E2E_IN_DOCKER: "true"
+    depends_on:
+      postgres-e2e:
+        condition: service_healthy
+
+  postgres-e2e:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: everyboard_e2e
+      POSTGRES_PASSWORD: everyboard_e2e
+      POSTGRES_DB: everyboard_e2e
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U everyboard_e2e -d everyboard_e2e"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: everyboard
+      POSTGRES_PASSWORD: everyboard
+      POSTGRES_DB: everyboard_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U everyboard -d everyboard_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
