@@ -1,25 +1,25 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { SiamFailure } from '@everyboard/games/siam';
+import { SiamHeuristic } from '@everyboard/games/siam';
+import { SiamMove } from '@everyboard/games/siam';
+import { SiamMoveGenerator } from '@everyboard/games/siam';
+import { SiamPiece } from '@everyboard/games/siam';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from '@everyboard/games/siam';
+import { SiamState } from '@everyboard/games/siam';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Debug } from '../../utils/Debug';
 
-import { SiamFailure } from './SiamFailure';
-import { SiamHeuristic } from './SiamHeuristic';
-import { SiamMove } from './SiamMove';
-import { SiamMoveGenerator } from './SiamMoveGenerator';
-import { SiamPiece } from './SiamPiece';
-import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
-import { SiamState } from './SiamState';
 import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {

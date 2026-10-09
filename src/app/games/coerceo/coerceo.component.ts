@@ -1,25 +1,24 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { CoerceoCapturesAndFreedomHeuristic } from '@everyboard/games/coerceo';
+import { CoerceoFailure } from '@everyboard/games/coerceo';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games/coerceo';
+import { CoerceoMoveGenerator } from '@everyboard/games/coerceo';
+import { CoerceoPiecesThreatsTilesHeuristic } from '@everyboard/games/coerceo';
+import { CoerceoPiecesTilesFreedomHeuristic } from '@everyboard/games/coerceo';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '@everyboard/games/coerceo';
+import { CoerceoState } from '@everyboard/games/coerceo';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-
-import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { CoerceoFailure } from './CoerceoFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
-import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
-import { CoerceoState } from './CoerceoState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

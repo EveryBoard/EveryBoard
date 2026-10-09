@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { Table } from '../../../../jscaip/TableUtils';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { AwaleRules } from '@everyboard/games/awale';
+import { AwaleMoveGenerator } from '@everyboard/games/awale';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/awale';
+import { MancalaState } from '@everyboard/games/awale';
+import { MancalaConfig } from '@everyboard/games/awale';
+import { MancalaFailure } from '@everyboard/games/awale';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { MancalaConfig } from '../../common/MancalaConfig';
-import { MancalaFailure } from '../../common/MancalaFailure';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaState } from '../../common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { AwaleRules } from '../AwaleRules';
 import { AwaleComponent } from '../awale.component';
 
 const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();

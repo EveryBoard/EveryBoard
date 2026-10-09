@@ -1,24 +1,28 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { ConspirateursHeuristic } from '@everyboard/games/conspirateurs';
+import {
+    ConspirateursMove,
+    ConspirateursMoveDrop,
+    ConspirateursMoveJump,
+    ConspirateursMoveSimple,
+} from '@everyboard/games/conspirateurs';
+import { ConspirateursMoveGenerator } from '@everyboard/games/conspirateurs';
+import { ConspirateursRules } from '@everyboard/games/conspirateurs';
+import { ConspirateursState } from '@everyboard/games/conspirateurs';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Vector } from '../../jscaip/Vector';
-
-import { ConspirateursHeuristic } from './ConspirateursHeuristic';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
-import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
-import { ConspirateursRules } from './ConspirateursRules';
-import { ConspirateursState } from './ConspirateursState';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][];

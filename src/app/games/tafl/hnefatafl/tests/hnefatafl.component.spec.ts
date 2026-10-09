@@ -1,10 +1,11 @@
-/* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../jscaip/Coord';
-import { TaflPawn } from '../../TaflPawn';
-import { TaflState } from '../../TaflState';
+
+import { Coord } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games/hnefatafl';
+import { TaflState } from '@everyboard/games/hnefatafl';
+import { HnefataflMove } from '@everyboard/games/hnefatafl';
+import { HnefataflRules } from '@everyboard/games/hnefatafl';
+
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
-import { HnefataflMove } from '../HnefataflMove';
-import { HnefataflRules } from '../HnefataflRules';
 import { HnefataflComponent } from '../hnefatafl.component';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;

@@ -5,23 +5,23 @@ import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { AbstractNode, GameNode } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { Localized } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 import { Candidate, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { Debug } from '../../../utils/Debug';
-import { Localized } from '../../../utils/LocaleUtils';
 import { EloComponent } from '../../normal-component/elo/elo.component';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 export class GameCreationComponentMessages {
@@ -226,13 +226,13 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.canReviewConfig = configRoom.status === Status.CONFIG_PROPOSED;
         this.viewInfo.canEditConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.userIsCreator = this.userIsCreator(configRoom);
-        this.viewInfo.userIsChosenOpponent = authUser.id === configRoom.chosenOpponent?.id;
+        this.viewInfo.userIsChosenOpponent = authUser.id === configRoom.chosenOpponent?.user.id;
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
-        this.viewInfo.creator = configRoom.creator.name;
+        this.viewInfo.creator = configRoom.creator.user.name;
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
             return {
                 name: c.user.name,
@@ -246,7 +246,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             this.viewInfo.moveDuration = configRoom.moveDuration;
             this.viewInfo.gameDuration = configRoom.gameDuration;
             this.viewInfo.gameType = configRoom.gameType;
-            this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
+            this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.user.name;
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
         }
         switch (configRoom.gameType) {
@@ -268,7 +268,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.gameDuration = this.viewInfo.gameDuration ?? configRoom.gameDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent == null || opponent === '') {
-            opponent = configRoom.chosenOpponent?.name ?? '';
+            opponent = configRoom.chosenOpponent?.user.name ?? '';
         } else {
             const chosenOpponentIsCandidate: boolean = this.candidates.some(
                 (candidate: Candidate) => {
@@ -341,7 +341,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
             this.userIsCreator(configRoom))
         {
-            const userName: string = Utils.getNonNullable(oldConfigRoom?.chosenOpponent).name;
+            const userName: string = Utils.getNonNullable(oldConfigRoom?.chosenOpponent).user.name;
             this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
         }
         this.updateViewInfo(configRoom);
@@ -391,7 +391,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private userIsCreator(configRoom: ConfigRoom): boolean {
         const currentUserId: string = this.connectedUserService.user.get().id;
-        return currentUserId === configRoom.creator.id;
+        return currentUserId === configRoom.creator.user.id;
     }
 
     public acceptConfig(): Promise<void> {

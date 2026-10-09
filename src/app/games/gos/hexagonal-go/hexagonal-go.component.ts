@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/hexagonal-go';
+import { GoMove } from '@everyboard/games/hexagonal-go';
+import { GoPhase } from '@everyboard/games/hexagonal-go';
+import { GoPiece } from '@everyboard/games/hexagonal-go';
+import { GoState } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoHeuristic } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoMoveGenerator } from '@everyboard/games/hexagonal-go';
+import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games/hexagonal-go';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { HexaLayout } from '../../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { HexaLayout } from '../../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Debug } from '../../../utils/Debug';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-
-import { HexagonalGoHeuristic } from './HexagonalGoHeuristic';
-import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
-import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

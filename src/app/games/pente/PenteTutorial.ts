@@ -1,13 +1,14 @@
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { PenteMove } from '@everyboard/games/pente';
+import { PenteRules } from '@everyboard/games/pente';
+import { PenteState } from '@everyboard/games/pente';
+import { PenteConfig } from '@everyboard/games/pente';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { PenteConfig } from './PenteConfig';
-import { PenteMove } from './PenteMove';
-import { PenteRules } from './PenteRules';
-import { PenteState } from './PenteState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

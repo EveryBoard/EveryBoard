@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { TableUtils, Table } from '@everyboard/games';
+import { GoMove } from '@everyboard/games/zoomed-go';
+import { GoPhase } from '@everyboard/games/zoomed-go';
+import { GoPiece } from '@everyboard/games/zoomed-go';
+import { GoState } from '@everyboard/games/zoomed-go';
+import { RectangularGoConfig } from '@everyboard/games/zoomed-go';
+import { ZoomedGoRules } from '@everyboard/games/zoomed-go';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { TableUtils, Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { GoMove } from '../../GoMove';
-import { GoPhase } from '../../GoPhase';
-import { GoPiece } from '../../GoPiece';
-import { GoState } from '../../GoState';
-import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
-import { ZoomedGoRules } from '../ZoomedGoRules';
 import { ZoomedGoComponent } from '../zoomed-go.component';
 
 describe('ZoomedGoComponent', () => {

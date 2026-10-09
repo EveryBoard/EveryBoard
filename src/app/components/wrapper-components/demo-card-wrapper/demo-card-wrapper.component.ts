@@ -1,11 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
+import { AbstractNode } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AbstractNode } from '../../../jscaip/AI/GameNode';
-import { Move } from '../../../jscaip/Move';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameWrapper } from '../GameWrapper';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
