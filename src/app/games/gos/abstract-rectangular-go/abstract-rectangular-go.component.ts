@@ -9,10 +9,11 @@ import { GoMove } from '@everyboard/games/families/go';
 import { GoPhase } from '@everyboard/games/families/go';
 import { GoPiece } from '@everyboard/games/families/go';
 import { GoState } from '@everyboard/games/families/go';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games/families/go';
+import { RectangularGoConfig } from '@everyboard/games/families/go';
+import { AbstractRectangularGoRules } from '@everyboard/games/families/go';
 import { GoHeuristic } from '@everyboard/games/go';
 import { GoMoveGenerator } from '@everyboard/games/go';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -34,7 +35,7 @@ export abstract class AbstractRectangularGoComponent
 
     public last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public captures: WritableSignal<Coord[]> = signal([]);
+    public captures: WritableSignal<Set<Coord>> = signal(new Set());
 
     public displayedZooms: WritableSignal<number> = signal(1);
 
@@ -100,7 +101,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override hideLastMove(): void {
-        this.captures.set([]);
+        this.captures.set(new Set());
         this.last.set(MGPOptional.empty());
     }
 
@@ -159,7 +160,7 @@ export abstract class AbstractRectangularGoComponent
                 }
             }
         }
-        this.captures.set(captures);
+        this.captures.set(new Set(captures));
     }
 
     public override async pass(): Promise<MGPValidation> {
