@@ -5,7 +5,7 @@ import { Component, computed, input, InputSignal, output, OutputEmitterRef, Sign
 import { Coord } from '@everyboard/games';
 import { GoPiece } from '@everyboard/games';
 import { GoState } from '@everyboard/games';
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../../../components/game-components/base-game-component/BaseGameComponent';
 import { BlankGobanComponent } from '../../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
@@ -20,7 +20,7 @@ import { GoSubBoardHelper } from '../GoSubBoardHelper';
 export class GoBoardComponent extends BaseGameComponent {
 
     // input coord match the zoom 0
-    public captures: InputSignal<Coord[]> = input.required();
+    public captures: InputSignal<Set<Coord>> = input.required();
 
     public ko: InputSignal<MGPOptional<Coord>> = input.required();
 
@@ -28,7 +28,7 @@ export class GoBoardComponent extends BaseGameComponent {
 
     public hover: InputSignal<MGPOptional<Coord>> = input.required();
 
-    public adaptedCaptures: Signal<Coord[]> = computed(() => {
+    public adaptedCaptures: Signal<Set<Coord>> = computed(() => {
         return this
             .captures()
             .map((coord: Coord) => GoSubBoardHelper.fromNormalToZoomedCoord(coord, this.zx(), this.zy(), this.zoom()))
