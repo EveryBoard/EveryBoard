@@ -154,9 +154,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             this.opponentMoveIsBeingAnimated = false;
             this.animationOngoing = false;
         }
-        this.scores.set(
-            MGPOptional.of(state.getScoresCopy()),
-        );
+        this.scores.set(MGPOptional.of(state.scores));
         this.changeVisibleState(state);
     }
 
