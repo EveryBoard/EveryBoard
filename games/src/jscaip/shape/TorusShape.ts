@@ -18,7 +18,10 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
 
     public getCenters(): Coord[] {
         return [
-            new Coord(0, 0),
+            new Coord(
+                Math.floor(this.width / 2),
+                Math.floor(this.height / 2),
+            ),
         ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
     }
 

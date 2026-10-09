@@ -9,7 +9,6 @@ import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
@@ -176,30 +175,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         config: ConnectNConfig,
     ): GameStatus {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
-        if (state.turn === 0) {
-            return GameStatus.ONGOING;
-        }
-        // take the last move
-        const lastMove: ConnectNMove = node.previousMove.get();
-        const currentPlayer: Player = state.getCurrentOpponent();
-        for (const startCoord of lastMove.coords) {
-            for (const direction of state.getTopology().getDirections()) {
-                const directionCount: number = this.countAlignedPieceOf(
-                    state,
-                    currentPlayer,
-                    direction,
-                    startCoord,
-                );
-                const oppositeCount: number = this.countAlignedPieceOf(
-                    state,
-                    currentPlayer,
-                    direction.getOpposite(),
-                    startCoord,
-                );
-                if (directionCount + 1 + oppositeCount >= config.n) {
-                    return GameStatus.getVictory(currentPlayer);
-                }
-            }
+        const victoriousCoord: Coord[] = ConnectNRules.getVictoriousCoords(state, config);
+        if (victoriousCoord.length > 0) {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
         if (this.isBoardFull(state)) {
             return GameStatus.DRAW;
@@ -214,20 +192,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
             .filter((coord: Coord) => {
                 return state.getPieceAt(coord).isPlayer() === false;
             }).length === 0;
-    }
-
-    private countAlignedPieceOf(state: TopologicGameState<FourStatePiece>,
-                                currentPlayer: Player,
-                                direction: Direction,
-                                coord: Coord,
-    ): number {
-        let count: number = 0;
-        let testedCoord: MGPOptional<Coord> = state.getShape().getNextCoord(coord, direction, 1);
-        while (testedCoord.isPresent() && state.hasPieceAt(testedCoord.get(), FourStatePiece.ofPlayer(currentPlayer))) {
-            testedCoord = state.getShape().getNextCoord(testedCoord.get(), direction, 1);
-            count++;
-        }
-        return count;
     }
 
 }

@@ -47,7 +47,7 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public coordIsOccupiedSquare(coord: Coord): boolean {
+    public coordIsOccupied(coord: Coord): boolean {
         const optional: MGPOptional<FourStatePiece> = this.getOptionalPieceAt(coord);
         if (optional.isPresent()) {
             return optional.get().isPlayer();

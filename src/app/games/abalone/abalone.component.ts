@@ -146,7 +146,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (previousState.coordIsOccupiedSquare(moved)) {
+        while (previousState.coordIsOccupied(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }
