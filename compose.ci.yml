@@ -63,7 +63,6 @@ services:
       context: .
       dockerfile: ci/Dockerfile.frontend
       target: e2e
-      network: host
     command: sh -c "npm run dependencies:build && npm run e2e"
     environment:
       DB_HOST: postgres-e2e
