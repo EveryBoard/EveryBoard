@@ -12,7 +12,7 @@ import { GoMoveGenerator } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
 import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -34,7 +34,7 @@ export abstract class AbstractRectangularGoComponent
 
     protected readonly last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    protected readonly captures: WritableSignal<Coord[]> = signal([]);
+    protected readonly captures: WritableSignal<Set<Coord>> = signal(new Set());
 
     protected readonly displayedZooms: WritableSignal<number> = signal(1);
 
@@ -104,7 +104,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override hideLastMove(): void {
-        this.captures.set([]);
+        this.captures.set(new Set());
         this.last.set(MGPOptional.empty());
     }
 
@@ -165,7 +165,7 @@ export abstract class AbstractRectangularGoComponent
                 }
             }
         }
-        this.captures.set(captures);
+        this.captures.set(new Set(captures));
     }
 
     public override async pass(): Promise<MGPValidation> {

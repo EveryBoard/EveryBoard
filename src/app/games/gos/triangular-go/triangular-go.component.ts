@@ -15,7 +15,7 @@ import { TriangularGoMoveGenerator } from '@everyboard/games';
 import { TriangularGoConfig, TriangularGoRules } from '@everyboard/games';
 import { Debug } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -40,7 +40,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
 
     protected readonly last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    private readonly captures: WritableSignal<Coord[]> = signal([]);
+    private readonly captures: WritableSignal<Set<Coord>> = signal(new Set());
 
     public constructor() {
         super('TriangularGo');
@@ -70,7 +70,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     public override hideLastMove(): void {
-        this.captures.set([]);
+        this.captures.set(new Set());
         this.last.set(MGPOptional.empty());
     }
 
@@ -127,7 +127,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
                 captures.push(coord);
             }
         }
-        this.captures.set(captures);
+        this.captures.set(new Set(captures));
     }
 
     public override async pass(): Promise<MGPValidation> {
@@ -143,7 +143,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     public getPlayerClassAt(coord: Coord): string[] {
         const piece: GoPiece = this.state().getPieceAt(coord);
         const classes: string[] = [];
-        if (this.captures().some((c: Coord) => c.equals(coord))) {
+        if (this.captures().contains(coord)) {
             classes.push('captured-fill');
         }
         if (piece.isOccupied()) {

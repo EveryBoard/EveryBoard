@@ -16,7 +16,7 @@ import { GipfLegalityInformation, GipfRules } from '@everyboard/games';
 import { GipfScoreHeuristic } from '@everyboard/games';
 import { GipfState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, MGPMap, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexaLayout } from '../../components/game-components/HexaLayout';
@@ -44,9 +44,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private static readonly PHASE_FINAL_CAPTURE: number = 3;
 
     protected readonly inserted: WritableSignal<MGPOptional<Arrow<HexaDirection>>> = signal(MGPOptional.empty());
-    public readonly arrows: WritableSignal<Arrow<HexaDirection>[]> = signal([]);
+    public readonly arrows: WritableSignal<Set<Arrow<HexaDirection>>> = signal(new Set());
     private readonly captured: WritableSignal<MGPMap<Coord, Player>> = signal(new MGPMap());
-    private readonly moved: WritableSignal<Coord[]> = signal([]);
+    private readonly moved: WritableSignal<Set<Coord>> = signal(new Set());
 
     public readonly hexagonWidth: number = this.SPACE_SIZE;
     public readonly sharedHexagonX: number = Math.cos(30) * this.hexagonWidth * 0.5;
@@ -60,10 +60,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private readonly constructedState: WritableSignal<GipfState> = signal(this.state());
 
     public readonly possibleCaptures: WritableSignal<ReadonlyArray<GipfCapture>> = signal([]);
-    private readonly initialCaptures: WritableSignal<GipfCapture[]> = signal([]);
+    private readonly initialCaptures: WritableSignal<Set<GipfCapture>> = signal(new Set());
     private readonly placement: WritableSignal<MGPOptional<GipfPlacement>> = signal(MGPOptional.empty());
     private readonly placementEntrance: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
-    private readonly finalCaptures: WritableSignal<GipfCapture[]> = signal([]);
+    private readonly finalCaptures: WritableSignal<Set<GipfCapture>> = signal(new Set());
 
     public constructor() {
         super('Gipf');
@@ -111,7 +111,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, previousState);
         const stateAfterPlacement: GipfState = GipfRules.applyPlacement(move.placement, stateAfterInitialCaptures);
         move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c, stateAfterPlacement));
-        this.moved.set(this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement));
+        this.moved.set(new Set(
+            this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement),
+        ));
         this.inserted.set(MGPOptional.empty());
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;
@@ -205,9 +207,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.possibleCaptures.set(GipfRules.getPossibleCaptures(this.constructedState()));
         switch (this.movePhase()) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
-                const initialCaptures: GipfCapture[] = this.initialCaptures();
-                initialCaptures.push(capture);
-                this.initialCaptures.set(initialCaptures);
+                this.initialCaptures.set(this.initialCaptures().addElement(capture));
                 if (this.possibleCaptures().length === 0) {
                     return this.moveToPlacementPhase();
                 } else {
@@ -215,11 +215,13 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                 }
             default:
                 Utils.expectToBe(this.movePhase(), GipfComponent.PHASE_FINAL_CAPTURE);
-                const finalCaptures: GipfCapture[] = this.finalCaptures();
-                finalCaptures.push(capture);
-                this.finalCaptures.set(finalCaptures);
+                this.finalCaptures.set(this.finalCaptures().addElement(capture));
                 if (this.possibleCaptures().length === 0) {
-                    return this.tryMove(this.initialCaptures(), this.placement().get(), this.finalCaptures());
+                    return this.tryMove(
+                        this.initialCaptures().toList(),
+                        this.placement().get(),
+                        this.finalCaptures().toList(),
+                    );
                 } else {
                     return MGPValidation.SUCCESS;
                 }
@@ -244,7 +246,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
         this.possibleCaptures.set(GipfRules.getPossibleCaptures(this.constructedState()));
         if (this.possibleCaptures().length === 0) {
-            return this.tryMove(this.initialCaptures(), this.placement().get(), this.finalCaptures());
+            return this.tryMove(this.initialCaptures().toList(), this.placement().get(), this.finalCaptures());
         } else {
             this.movePhase.set(GipfComponent.PHASE_FINAL_CAPTURE);
         }
@@ -261,7 +263,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                 );
             }
         }
-        this.arrows.set(arrows);
+        this.arrows.set(new Set(arrows));
     }
 
     private async selectPlacementCoord(coord: Coord): Promise<MGPValidation> {
@@ -280,7 +282,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         } else {
             this.movePhase.set(GipfComponent.PHASE_PLACEMENT_DIRECTION);
             this.computeArrows(coord);
-            if (this.arrows().length === 0) {
+            if (this.arrows().size() === 0) {
                 await this.cancelMove(GipfFailure.NO_DIRECTIONS_AVAILABLE());
             }
         }
@@ -295,7 +297,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
-        this.arrows.set([]);
+        this.arrows.set(new Set());
         this.constructedState.set(
             GipfRules.applyPlacement(this.placement().get(), this.constructedState()),
         );
@@ -323,25 +325,25 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public override cancelMoveAttempt(): void {
         this.constructedState.set(this.state());
         this.captured.set(new MGPMap());
-        this.moved.set([]);
-        this.initialCaptures.set([]);
+        this.moved.set(new Set());
+        this.initialCaptures.set(new Set());
         this.placement.set(MGPOptional.empty());
         this.placementEntrance.set(MGPOptional.empty());
         this.finalCaptures.set([]);
-        this.arrows.set([]);
+        this.arrows.set(new Set());
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
     public override hideLastMove(): void {
         this.inserted.set(MGPOptional.empty());
-        this.arrows.set([]);
-        this.moved.set([]);
+        this.arrows.set(new Set());
+        this.moved.set(new Set());
     }
 
     public getSpaceClass(coord: Coord): string {
         if (this.isCapturedPiece(coord)) {
             return 'captured-fill';
-        } else if (this.moved().some((c: Coord) => c.equals(coord))) {
+        } else if (this.moved().contains(coord)) {
             return 'moved-fill';
         } else {
             return '';
