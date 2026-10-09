@@ -5,10 +5,11 @@ import { Debug } from '@everyboard/games';
 
 import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
+import { PlayerInfo } from '../domain/PlayerInfo';
 
 import { BackendService, BackendMessage } from './BackendService';
 
-export type Candidate = { user: MinimalUser; elo: number };
+export type Candidate = PlayerInfo;
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
@@ -55,7 +56,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
-                candidateJoined({ user: message.getArgument('candidate'), elo: message.getArgument('elo') });
+                candidateJoined(message.getArgument('candidate'));
             });
         const candidateLeftSubscription: Subscription =
             this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {

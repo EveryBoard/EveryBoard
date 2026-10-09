@@ -26,17 +26,15 @@ func (s *GORMStore) CreateConfigRoom(creator model.MinimalUser, gameName string)
 	}
 
 	configRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		Creator:        model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		FirstPlayer:    model.FirstPlayerRandom,
+		ChosenOpponent: nil,
+		Status:         model.StatusCreated,
+		GameType:       model.GameTypeStandard,
+		MoveDuration:   model.StandardMoveDuration,
+		GameDuration:   model.StandardGameDuration,
+		RulesConfig:    nil,
+		GameName:       gameName,
 	}
 
 	result := s.db.Create(&configRoom)
@@ -51,7 +49,7 @@ func (s *GORMStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
 	var candidate model.Candidate
 	result := s.db.
-		Where("game_id = ? AND user_id = ?", configRoom.ID, opponent.ID).
+		Where("game_id = ? AND player_id = ?", configRoom.ID, opponent.ID).
 		First(&candidate)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return apperror.ErrorNotAllowed
@@ -59,13 +57,13 @@ func (s *GORMStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	candidateElo := candidate.Elo
-	result = s.db.Model(&model.ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(model.ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
+	chosenOpponent := candidate.PlayerInfo
+	result = s.db.Model(&model.ConfigRoom{}).Where("id = ?", configRoom.ID).
+		Updates(model.ConfigRoom{ChosenOpponent: &chosenOpponent})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	configRoom.ChosenOpponent = &chosenOpponent
 	return nil
 }
 
@@ -77,7 +75,6 @@ func (s *GORMStore) RemoveOpponent(configRoom *model.ConfigRoom) error {
 		"chosen_opponent_elo":  nil,
 	})
 	configRoom.ChosenOpponent = nil
-	configRoom.ChosenOpponentElo = nil
 	return wrapError("RemoveOpponent", result.Error)
 }
 
@@ -129,12 +126,12 @@ func (s *GORMStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 	// Compute who is the new opponent and who plays first
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
-	if game.PlayerZero.ID == creator.ID {
+	if game.PlayerZero.User.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
-		chosenOpponent = game.PlayerOne
+		chosenOpponent = game.PlayerOne.User
 	} else {
 		firstPlayer = model.FirstPlayerCreator
-		chosenOpponent = game.PlayerZero
+		chosenOpponent = game.PlayerZero.User
 	}
 
 	// Get the new elo of the opponent
@@ -145,17 +142,18 @@ func (s *GORMStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	// Create the config room for the rematch, as every game needs an associated config room
 	rematchConfigRoom := model.ConfigRoom{
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		Creator: model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		ChosenOpponent: &model.PlayerInfo{
+			User: chosenOpponent,
+			Elo:  chosenOpponentElo.CurrentElo,
+		},
+		FirstPlayer:  firstPlayer,
+		Status:       model.StatusStarted,
+		GameType:     configRoom.GameType,
+		MoveDuration: configRoom.MoveDuration,
+		GameDuration: configRoom.GameDuration,
+		RulesConfig:  configRoom.RulesConfig,
+		GameName:     configRoom.GameName,
 	}
 	result := s.db.Create(&rematchConfigRoom)
 	return &rematchConfigRoom, wrapError("CreateRematchConfigRoom", result.Error)
@@ -167,15 +165,14 @@ func (s *GORMStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 
 func (s *GORMStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
 	result := s.db.Create(&model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:     configRoom.ID,
+		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},
 	})
 	return wrapError("AddCandidate", result.Error)
 }
 
 func (s *GORMStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) error {
-	result := s.db.Where("game_id = ? and user_id = ?", configRoom.ID, uid).Delete(&model.Candidate{})
+	result := s.db.Where("game_id = ? and player_id = ?", configRoom.ID, uid).Delete(&model.Candidate{})
 	return wrapError("DeleteCandidate", result.Error)
 }
 
