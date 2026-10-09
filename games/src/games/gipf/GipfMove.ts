@@ -1,4 +1,4 @@
-import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils, Encoder, MGPOptional, Set } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
@@ -42,8 +42,8 @@ export class GipfMove extends Move {
         (fields: GipfMoveFields) => new GipfMove(fields[0], fields[1], fields[2]),
     );
     public constructor(public readonly placement: GipfPlacement,
-                       public readonly initialCaptures: ReadonlyArray<GipfCapture>,
-                       public readonly finalCaptures: ReadonlyArray<GipfCapture>) {
+                       public readonly initialCaptures: Set<GipfCapture>,
+                       public readonly finalCaptures: Set<GipfCapture>) {
         super();
     }
     public toString(): string {
@@ -52,7 +52,7 @@ export class GipfMove extends Move {
             this.placement.toString() + ', [' +
             this.capturesToString(this.finalCaptures) + '])';
     }
-    private capturesToString(captures: ReadonlyArray<GipfCapture>): string {
+    private capturesToString(captures: Set<GipfCapture>): string {
         let str: string = '';
         for (const capture of captures) {
             if (str !== '') {
@@ -65,8 +65,8 @@ export class GipfMove extends Move {
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
-        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (this.initialCaptures.equals(other.initialCaptures) === false) return false;
+        if (this.finalCaptures.equals(other.finalCaptures) === false) return false;
         return true;
     }
 }

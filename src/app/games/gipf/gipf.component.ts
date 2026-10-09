@@ -218,9 +218,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                 this.finalCaptures.set(this.finalCaptures().addElement(capture));
                 if (this.possibleCaptures().length === 0) {
                     return this.tryMove(
-                        this.initialCaptures().toList(),
+                        this.initialCaptures(),
                         this.placement().get(),
-                        this.finalCaptures().toList(),
+                        this.finalCaptures(),
                     );
                 } else {
                     return MGPValidation.SUCCESS;
@@ -246,7 +246,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
         this.possibleCaptures.set(GipfRules.getPossibleCaptures(this.constructedState()));
         if (this.possibleCaptures().length === 0) {
-            return this.tryMove(this.initialCaptures().toList(), this.placement().get(), this.finalCaptures());
+            return this.tryMove(this.initialCaptures(), this.placement().get(), this.finalCaptures());
         } else {
             this.movePhase.set(GipfComponent.PHASE_FINAL_CAPTURE);
         }
@@ -315,9 +315,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return this.selectPlacementDirection(direction.toOptional());
     }
 
-    private tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
+    private tryMove(initialCaptures: Set<GipfCapture>,
                     placement: GipfPlacement,
-                    finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
+                    finalCaptures: Set<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
         return this.chooseMove(move);
     }

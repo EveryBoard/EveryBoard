@@ -132,10 +132,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
 
-    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        // this.state() self updates... TODO FOR REVIEW: should I even kill this one :D ?
-    }
-
     public getPlayerClassAtXY(x: number, y: number): string {
         const piece: FourStatePiece = this.state().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getPlayer());
