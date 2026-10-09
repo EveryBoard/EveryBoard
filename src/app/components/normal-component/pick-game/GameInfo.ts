@@ -1,9 +1,13 @@
 import { Type } from '@angular/core';
 
-import { AbaloneRules, ConnectSixRules, RulesConfigDescription, ZoomedGoRules } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
+import { AbaloneRules } from '@everyboard/games';
+import { ZoomedGoRules } from '@everyboard/games';
 import { ApagosRules } from '@everyboard/games';
 import { LascaRules } from '@everyboard/games';
 import { CoerceoRules } from '@everyboard/games';
+import { ConnectNRules } from '@everyboard/games';
+import { ConnectSixRules } from '@everyboard/games';
 import { ConspirateursRules } from '@everyboard/games';
 import { DiaballikRules } from '@everyboard/games';
 import { DiamRules } from '@everyboard/games';
@@ -61,7 +65,6 @@ import { LascaTutorial } from '../../../games/checkers/lasca/LascaTutorial';
 import { LascaComponent } from '../../../games/checkers/lasca/lasca.component';
 import { CoerceoTutorial } from '../../../games/coerceo/CoerceoTutorial';
 import { CoerceoComponent } from '../../../games/coerceo/coerceo.component';
-import { ConnectNRules } from '../../../games/connect-n/ConnectNRules';
 import { ConnectNTutorial } from '../../../games/connect-n/ConnectNTutorial';
 import { ConnectNComponent } from '../../../games/connect-n/connect-n.component';
 import { ConnectSixTutorial } from '../../../games/connect-six/ConnectSixTutorial';

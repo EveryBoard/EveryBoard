@@ -5,7 +5,7 @@ import { NumberConfig } from '../../../config/NumberConfig';
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../config/RulesConfigDescriptionLocalizable';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { TopologicReversiRules, ReversiConfig, TopologyNamer, Shapes } from '../common/AbstractReversiRules';
+import { TopologicReversiRules, ReversiConfig, ReversiTopologyNamer, ReversiShapes } from '../common/AbstractReversiRules';
 
 export class ReversiRules extends TopologicReversiRules {
 
@@ -23,8 +23,8 @@ export class ReversiRules extends TopologicReversiRules {
             name: (): string => $localize`Reversi`,
             config: {
                 boardSize: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
-                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, TopologyNamer),
-                shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
+                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, ReversiTopologyNamer),
+                shape: new EnumConfig('SQUARE', () => $localize`Board shape`, ReversiShapes),
             },
         });
 

@@ -2,7 +2,7 @@
 import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { RectangularShape } from '../../../jscaip/shape/rere';
 import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';

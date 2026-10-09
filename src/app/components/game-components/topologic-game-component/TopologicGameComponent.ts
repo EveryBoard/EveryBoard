@@ -1,6 +1,5 @@
 import { computed, Signal } from '@angular/core';
 
-
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FlatHexaOrientation } from '@everyboard/games';

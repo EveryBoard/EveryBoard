@@ -6,7 +6,7 @@ import { Topology } from '../topology/Topology';
 
 import { TopologicShape } from './Shape';
 
-export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
+export class HexagonShape<D extends Direction> extends TopologicShape<D> {
 
     public constructor(
         public readonly side: number,
@@ -44,7 +44,7 @@ export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
-        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
+        const next: Coord = this.getTopology().getTopologyNextCoord(coord, direction, distance);
         if (this.isOnBoard(next)) {
             return MGPOptional.of(next);
         } else {

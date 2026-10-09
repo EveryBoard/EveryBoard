@@ -6,7 +6,7 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { RectangularShape } from '../../../jscaip/shape/rere';
 import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
@@ -210,7 +210,7 @@ describe('ConnectNAlignmentMinimax', () => {
         // Given the initial board and a hexagonal shape
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            shape: 'HEXAGONAL',
+            shape: 'HEXAGON',
             boardSize: 5,
         };
         const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(customConfig);

@@ -5,7 +5,7 @@ import { Coord } from '../../Coord';
 import { Direction } from '../../Direction';
 import { OrdinalSquareTopology } from '../../topology/OrdinalSquareTopology';
 import { Topology } from '../../topology/Topology';
-import { RectangularShape } from '../RectangularShape';
+import { RectangularShape } from '../rere';
 
 describe('RectangularShape', () => {
 

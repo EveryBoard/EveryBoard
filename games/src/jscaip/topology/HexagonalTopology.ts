@@ -20,17 +20,17 @@ export class HexagonalTopology implements Topology<HexaDirection> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: HexaDirection, distance: number = 1): Coord {
+    public getTopologyNextCoord(coord: Coord, direction: HexaDirection, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: HexaDirection) => this.getNextCoord(coord, direction),
+                (direction: HexaDirection) => this.getTopologyNextCoord(coord, direction),
             ),
             ...this.getDirections().map(
-                (direction: HexaDirection) => this.getNextCoord(coord, direction, -1),
+                (direction: HexaDirection) => this.getTopologyNextCoord(coord, direction, -1),
             ),
         ]);
     }

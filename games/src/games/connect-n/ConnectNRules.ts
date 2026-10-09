@@ -1,9 +1,9 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { EnumConfig } from '../../components/wrapper-components/rules-configuration/EnumConfig';
-import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { EnumConfig } from '../../config/EnumConfig';
+import { NumberConfig } from '../../config/NumberConfig';
+import { RulesConfigDescription } from '../../config/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
@@ -14,11 +14,11 @@ import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
-import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../jscaip/shape/RectangularShape';
+import { HexagonShape } from '../../jscaip/shape/HexagonShape';
+import { RectangularShape } from '../../jscaip/shape/rere';
 import { TopologicShape } from '../../jscaip/shape/Shape';
 import { TorusShape } from '../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../jscaip/shape/TriangularShape';
+import { TriangleShape } from '../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
@@ -32,19 +32,19 @@ import { ConnectNMove } from './ConnectNMove';
 
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 
-export const TopologyNamer: Record<TopologyID, Localized> = {
+export const ConnectNTopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
     'SQUARE (8)': () => $localize`Square (8)`,
-    'HEXAGONAL': () => $localize`Hexagonal`,
-    'TRIANGULAR': () => $localize`Triangular`,
+    'HEXAGON': () => $localize`Hexagon`,
+    'TRIANGLE': () => $localize`Triangle`,
 };
 
-export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORUS';
+export type ConnectNShapeEnum = 'SQUARE' | 'HEXAGON' | 'TRIANGLE' | 'TORUS';
 
-export const Shapes: Record<ShapeEnum, Localized> = {
+export const ConnectNShapes: Record<ConnectNShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
-    'HEXAGONAL': () => $localize`Hexagonal`,
-    'TRIANGULAR': () => $localize`Triangular`,
+    'HEXAGON': () => $localize`Hexagon`,
+    'TRIANGLE': () => $localize`Triangle`,
     'TORUS': () => $localize`Torus`,
 };
 
@@ -56,7 +56,7 @@ export type ConnectNConfig = {
 
     topology: TopologyID;
 
-    shape: ShapeEnum;
+    shape: ConnectNShapeEnum;
 
     boardSize: number;
 
@@ -75,8 +75,8 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                 n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
                 dropAfterFirstTurn: new NumberConfig(2, () => $localize`Drop after first turn`, MGPValidators.range(2, 10)),
                 boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
-                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, TopologyNamer),
-                shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
+                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, ConnectNTopologyNamer),
+                shape: new EnumConfig('SQUARE', () => $localize`Board shape`, ConnectNShapes),
             },
         });
 
@@ -160,13 +160,13 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         switch (config.shape) {
             case 'SQUARE': {
                 return new RectangularShape(config.boardSize, config.boardSize, topology);
-            } case 'HEXAGONAL': {
-                return new HexagonalShape(config.boardSize, topology);
+            } case 'HEXAGON': {
+                return new HexagonShape(config.boardSize, topology);
             } case 'TORUS': {
                 return new TorusShape(config.boardSize, config.boardSize, topology);
             } default: {
-                Utils.expectToBe(config.shape, 'TRIANGULAR');
-                return new TriangularShape(config.boardSize, topology);
+                Utils.expectToBe(config.shape, 'TRIANGLE');
+                return new TriangleShape(config.boardSize, topology);
             }
         }
     }

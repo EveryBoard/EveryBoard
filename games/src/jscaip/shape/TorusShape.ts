@@ -18,7 +18,7 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
 
     public getCenters(): Coord[] {
         return [
-            new Coord(0, 0),
+            new Coord(Math.floor(this.width / 2), Math.floor(this.height / 2)),
         ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
     }
 
@@ -38,7 +38,7 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
-        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
+        const next: Coord = this.getTopology().getTopologyNextCoord(coord, direction, distance);
         const nextX: number = ((next.x % this.width) + this.width) % this.width;
         const nextY: number = ((next.y % this.height) + this.height) % this.height;
         return MGPOptional.of(new Coord(nextX, nextY));

@@ -23,17 +23,17 @@ export class OrdinalSquareTopology implements Topology<Ordinal> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
+    public getTopologyNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction),
+                (direction: Direction) => this.getTopologyNextCoord(coord, direction),
             ),
             ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction, -1),
+                (direction: Direction) => this.getTopologyNextCoord(coord, direction, -1),
             ),
         ]);
     }

@@ -13,15 +13,15 @@ import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
-import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { HexagonShape } from '../../../jscaip/shape/HexagonShape';
+import { RectangularShape } from '../../../jscaip/shape/rere';
 import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { TorusShape } from '../../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
+import { TriangleShape } from '../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { TopologyID, topologyMap } from '../../../jscaip/topology/topologyMap';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 
@@ -41,19 +41,19 @@ export class ReversiMoveWithSwitched {
 
 export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
-export const TopologyNamer: Record<TopologyID, Localized> = {
+export const ReversiTopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
     'SQUARE (8)': () => $localize`Square (8)`,
-    'HEXAGONAL': () => $localize`Hexagonal`,
-    'TRIANGULAR': () => $localize`Triangular`,
+    'HEXAGON': () => $localize`Hexagon`,
+    'TRIANGLE': () => $localize`Triangle`,
 };
 
-export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORUS'; // TODO: hexagonal or hexagon ?
+export type ReversiShapeEnum = 'SQUARE' | 'HEXAGON' | 'TRIANGLE' | 'TORUS';
 
-export const Shapes: Record<ShapeEnum, Localized> = {
+export const ReversiShapes: Record<ReversiShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
-    'HEXAGONAL': () => $localize`Hexagonal`,
-    'TRIANGULAR': () => $localize`Triangular`,
+    'HEXAGON': () => $localize`Hexagon`,
+    'TRIANGLE': () => $localize`Triangle`,
     'TORUS': () => $localize`Torus`,
 };
 
@@ -61,7 +61,7 @@ export type ReversiConfig = RulesConfig & {
 
     topology: TopologyID;
 
-    shape: ShapeEnum;
+    shape: ReversiShapeEnum;
 
     boardSize: number;
 };
@@ -98,57 +98,84 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         const shape: TopologicShape<Direction> = this.getShape(config, topology);
         const centers: Coord[] = shape.getCenters();
         switch (config.topology) {
-            case 'HEXAGONAL':
-                let evenDirection: boolean = false;
-                for (const direction of topology.getDirections()) {
-                    const pieceToPut: FourStatePiece = evenDirection ? FourStatePiece.ZERO : FourStatePiece.ONE;
-                    const coord: Coord = shape.getNextCoord(centers[0], direction, 1).get();
-                    board[coord.y][coord.x] = pieceToPut;
-                    evenDirection = !evenDirection;
-                }
-                return board;
+            case 'HEXAGON':
+                return this.getInitialHexagonalBoard(topology, shape, centers, board);
             case 'SQUARE (4)':
-                console.log('jaaj');
             case 'SQUARE (8)':
-                const upLeft: Coord = centers[0];
-                if (centers.length === 1) {
-                    centers.push(
-                        shape.getNextCoord(upLeft, Ordinal.RIGHT, 1).get(),
-                        shape.getNextCoord(upLeft, Ordinal.DOWN, 1).get(),
-                        shape.getNextCoord(upLeft, Ordinal.DOWN_RIGHT, 1).get(),
-                    );
-                }
-                for (const center of centers) {
-                    const evenCoord: boolean = (center.x + center.y) % 2 === 0;
-                    const pieceToPut: FourStatePiece = evenCoord ? FourStatePiece.ZERO : FourStatePiece.ONE;
-                    board[center.y][center.x] = pieceToPut;
-                }
-                return board;
+                return this.getInitialSquareBoard(centers, shape, board);
             default:
-                Utils.expectToBe(config.topology, 'TRIANGULAR');
-                const center: Coord = centers[0];
-                if (centers.length === 1) {
-                    let mirror: Coord;
-                    if (TriangularCheckerBoard.isSpaceDark(center)) {
-                        mirror = new Coord(center.x, center.y - 1);
-                    } else {
-                        mirror = new Coord(center.x, center.y + 1);
-                    }
-                    centers.push(
-                        mirror,
-                        shape.getNextCoord(mirror, Ordinal.RIGHT, 1).get(),
-                        shape.getNextCoord(mirror, Ordinal.LEFT, 1).get(),
-                        shape.getNextCoord(center, Ordinal.RIGHT, 1).get(),
-                        shape.getNextCoord(center, Ordinal.LEFT, 1).get(),
-                    );
-                };
-                for (const center of centers) {
-                    const isUpward: boolean = TriangularCheckerBoard.isSpaceDark(center);
-                    const pieceToPut: FourStatePiece = isUpward ? FourStatePiece.ZERO : FourStatePiece.ONE;
-                    board[center.y][center.x] = pieceToPut;
-                }
-                return board;
+                Utils.expectToBe(config.topology, 'TRIANGLE');
+                return this.getInitialTriangularBoard(shape, centers, board);
         }
+    }
+
+    private getInitialSquareBoard(
+        centers: Coord[],
+        shape: TopologicShape<Direction>,
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        const upLeft: Coord = centers[0];
+        if (centers.length === 1) {
+            centers.push(
+                shape.getNextCoord(upLeft, Ordinal.RIGHT, 1).get(),
+                shape.getNextCoord(upLeft, Ordinal.DOWN, 1).get(),
+                shape.getNextCoord(upLeft, Ordinal.DOWN_RIGHT, 1).get()
+            );
+        }
+        for (const center of centers) {
+            const evenCoord: boolean = (center.x + center.y) % 2 === 0;
+            const pieceToPut: FourStatePiece = evenCoord ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            board[center.y][center.x] = pieceToPut;
+        }
+        return board;
+    }
+
+    private getInitialHexagonalBoard(
+        topology: Topology<Direction>,
+        shape: TopologicShape<Direction>,
+        centers: Coord[],
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        let evenDirection: boolean = false;
+        for (const direction of topology.getDirections()) {
+            const pieceToPut: FourStatePiece = evenDirection ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            const coord: Coord = shape.getNextCoord(centers[0], direction, 1).get();
+            board[coord.y][coord.x] = pieceToPut;
+            evenDirection = !evenDirection;
+        }
+        return board;
+    }
+
+    private getInitialTriangularBoard(
+        shape: TopologicShape<Direction>,
+        centers: Coord[],
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        const baseCenter: Coord = centers[0];
+        console.log(baseCenter.toString())
+        console.table(board);
+        if (centers.length === 1) {
+            let mirror: Coord;
+            if (TriangularCheckerBoard.isSpaceDark(baseCenter)) {
+                mirror = new Coord(baseCenter.x, baseCenter.y - 1);
+            } else {
+                mirror = new Coord(baseCenter.x, baseCenter.y + 1);
+            }
+            centers.push(
+                mirror,
+                shape.getNextCoord(mirror, Ordinal.RIGHT, 1).get(),
+                shape.getNextCoord(mirror, Ordinal.LEFT, 1).get(),
+                shape.getNextCoord(baseCenter, Ordinal.RIGHT, 1).get(),
+                shape.getNextCoord(baseCenter, Ordinal.LEFT, 1).get(),
+            );
+            console.log(centers)
+        };
+        for (const center of centers) {
+            const isUpward: boolean = TriangularCheckerBoard.isSpaceDark(center);
+            const pieceToPut: FourStatePiece = isUpward ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            board[center.y][center.x] = pieceToPut;
+        }
+        return board;
     }
 
     private getTopology(config: ReversiConfig): Topology<Direction> {
@@ -159,13 +186,13 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         switch (config.shape) {
             case 'SQUARE': {
                 return new RectangularShape(config.boardSize, config.boardSize, topology);
-            } case 'HEXAGONAL': {
-                return new HexagonalShape(config.boardSize, topology);
+            } case 'HEXAGON': {
+                return new HexagonShape(config.boardSize, topology);
             } case 'TORUS': {
                 return new TorusShape(config.boardSize, config.boardSize, topology);
             } default: {
-                Utils.expectToBe(config.shape, 'TRIANGULAR');
-                return new TriangularShape(config.boardSize, topology);
+                Utils.expectToBe(config.shape, 'TRIANGLE');
+                return new TriangleShape(config.boardSize, topology);
             }
         }
     }
@@ -302,7 +329,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
             if (state.getPieceAt(coord).equals(FourStatePiece.EMPTY)) {
                 // For each empty spaces
                 const opponentNeighbors: Set<Coord> = state.getNeighboringPawnLike(opponent, coord);
-                console.log(coord.toString(), 'has', opponentNeighbors.map((c: Coord) => c.toString()))
+                console.log(coord.toString(), 'has', opponentNeighbors.map((c: Coord) => c.toString()));
                 if (opponentNeighbors.size() > 0) {
                     // if one of the neighboring space is an opponent then, there could be a switch,
                     // and hence a legal move

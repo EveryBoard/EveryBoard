@@ -2,7 +2,7 @@
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Ordinal } from '../../../../jscaip/Ordinal';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangularShape } from '../../../../jscaip/shape/RectangularShape';
+import { RectangularShape } from '../../../../jscaip/shape/rere';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';

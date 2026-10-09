@@ -1,12 +1,15 @@
 import { NInARowHelper } from './NInARowHelper';
 import { Ordinal } from './Ordinal';
+import { PlayerOrNone } from './Player';
+import { GameStateWithCoords } from './state/GameStateWithCoords';
 
 export class OrdinalNInARowHelper<T extends NonNullable<unknown>> extends NInARowHelper<T, Ordinal> {
 
-    private readonly ordinals: ReadonlyArray<Ordinal> = Ordinal.ORDINALS;
-
-    protected override getDirections(): ReadonlyArray<Ordinal> {
-        return this.ordinals;
+    public constructor(
+        getOwner: (piece: T, state?: GameStateWithCoords<T>) => PlayerOrNone,
+        N: number,
+    ) {
+        super(getOwner, N, Ordinal.ORDINALS);
     }
 
 }

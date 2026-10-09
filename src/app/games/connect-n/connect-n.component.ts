@@ -7,15 +7,14 @@ import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
+import { ConnectNAlignmentHeuristic } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games';
+import { ConnectNMoveGenerator } from '@everyboard/games';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
 import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
-
-import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
-import { ConnectNMove } from './ConnectNMove';
-import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
-import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
 
 @Component({
     selector: 'app-connect-n',
@@ -55,6 +54,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.state();
+        // this.coordsAndContents.set(state.getCoordsAndContents());
         this.victoryCoords.set(
             new Set(
                 ConnectNRules.getVictoriousCoords(state, this.config()),

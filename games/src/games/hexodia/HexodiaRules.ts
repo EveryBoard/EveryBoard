@@ -10,10 +10,12 @@ import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
+import { GameStateWithCoords } from '../../jscaip/state/GameStateWithCoords';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { HexodiaMove } from './HexodiaMove';
@@ -33,10 +35,14 @@ export class HexodiaNode extends GameNode<HexodiaMove, FourStatePieceGameStateWi
 
 class HexodiaNInARowHelper extends NInARowHelper<FourStatePiece, DodecaHexaDirection> {
 
-    protected override getDirections(): ReadonlyArray<DodecaHexaDirection> {
-        return DodecaHexaDirection.factory.all;
+    public constructor(
+        getOwner: (piece: FourStatePiece, state?: GameStateWithCoords<FourStatePiece>) => PlayerOrNone,
+        N: number,
+    ) {
+        super(getOwner, N, DodecaHexaDirection.factory.all);
     }
 }
+
 export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
 
     private static singleton: MGPOptional<HexodiaRules> = MGPOptional.empty();

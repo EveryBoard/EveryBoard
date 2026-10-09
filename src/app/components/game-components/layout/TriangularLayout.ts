@@ -1,4 +1,4 @@
-import { Coord } from '../../../../../games/src/jscaip/Coord';
+import { Coord } from '@everyboard/games';
 
 import { BaseLayout } from './Layout';
 

@@ -1,23 +1,24 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
-import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
-import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
-import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
-import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
-import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { HexagonShape } from '@everyboard/games';
+import { RectangularShape } from '@everyboard/games';
+import { TopologicShape } from '@everyboard/games';
+import { TriangleShape } from '@everyboard/games';
+import { SimpleGameStateWithTable } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
+import { TopologicGameStateWithTable } from '@everyboard/games';
+import { HexagonalTopology } from '@everyboard/games';
+import { OrdinalSquareTopology } from '@everyboard/games';
+import { TriangularTopology } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ConnectNMove } from '../ConnectNMove';
-import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
 
@@ -420,7 +421,7 @@ describe('ConnectNComponent (SQUARE 8)', () => {
 
 });
 
-describe('ConnectNComponent (TRIANGULAR)', () => {
+describe('ConnectNComponent (TRIANGLE)', () => {
 
     let testUtils: ComponentTestUtils<ConnectNComponent>;
 
@@ -433,8 +434,8 @@ describe('ConnectNComponent (TRIANGULAR)', () => {
         // on a triangular config
         const customConfig: ConnectNConfig = {
             ...ConnectNRules.get().getDefaultRulesConfig(),
-            topology: 'TRIANGULAR',
-            shape: 'TRIANGULAR',
+            topology: 'TRIANGLE',
+            shape: 'TRIANGLE',
             boardSize: 5,
         };
         const gameState: SimpleGameStateWithTable<FourStatePiece> =
@@ -447,7 +448,7 @@ describe('ConnectNComponent (TRIANGULAR)', () => {
             ], 7);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
             triangularTopology,
-            new TriangularShape(5, triangularTopology),
+            new TriangleShape(5, triangularTopology),
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });
@@ -468,7 +469,7 @@ describe('ConnectNComponent (TRIANGULAR)', () => {
 
 });
 
-describe('ConnectNComponent (HEXAGONAL)', () => {
+describe('ConnectNComponent (HEXAGON)', () => {
 
     let testUtils: ComponentTestUtils<ConnectNComponent>;
 
@@ -482,8 +483,8 @@ describe('ConnectNComponent (HEXAGONAL)', () => {
         // on a hexagonal config
         const customConfig: ConnectNConfig = {
             ...ConnectNRules.get().getDefaultRulesConfig(),
-            topology: 'HEXAGONAL',
-            shape: 'HEXAGONAL',
+            topology: 'HEXAGON',
+            shape: 'HEXAGON',
             boardSize: 5,
         };
         const gameState: SimpleGameStateWithTable<FourStatePiece> =
@@ -500,7 +501,7 @@ describe('ConnectNComponent (HEXAGONAL)', () => {
             ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new HexagonalShape(5, hexagonalTopology),
+            new HexagonShape(5, hexagonalTopology),
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });

@@ -6,10 +6,10 @@ import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { RectangularShape } from '../../../jscaip/shape/rere';
 import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { TorusShape } from '../../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
+import { TriangleShape } from '../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -29,7 +29,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
 
-describe('ConnectNRules (SQUARE)', () => {
+describe('ConnectNRules (with default config)', () => {
     /**
      * Naming of cases, some of them will be used
      * A. double open: _ _ X X X X _ _
@@ -478,7 +478,7 @@ describe('ConnectNRules (SQUARE)', () => {
 });
 
 
-describe('ConnectNRules (HEXAGONAL)', () => {
+describe('ConnectNRules (with hexagonal config)', () => {
 
     let rules: ConnectNRules;
     const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
@@ -491,7 +491,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'HEXAGONAL',
+            topology: 'HEXAGON',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -534,7 +534,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'HEXAGONAL',
+            topology: 'HEXAGON',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -577,7 +577,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'HEXAGONAL',
+            topology: 'HEXAGON',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -621,7 +621,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'HEXAGONAL',
+            topology: 'HEXAGON',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -664,7 +664,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
 });
 
 
-describe('ConnectNRules (TRIANGULAR)', () => {
+describe('ConnectNRules (with triangular config)', () => {
 
     let rules: ConnectNRules;
     const triangularTopology: TriangularTopology = new TriangularTopology();
@@ -677,7 +677,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'TRIANGULAR',
+            topology: 'TRIANGLE',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -704,7 +704,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             triangularTopology,
-            new TriangularShape(19, triangularTopology),
+            new TriangleShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -722,7 +722,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'TRIANGULAR',
+            topology: 'TRIANGLE',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -749,7 +749,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             triangularTopology,
-            new TriangularShape(19, triangularTopology),
+            new TriangleShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -767,7 +767,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'TRIANGULAR',
+            topology: 'TRIANGLE',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
@@ -794,7 +794,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             triangularTopology,
-            new TriangularShape(19, triangularTopology),
+            new TriangleShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -813,8 +813,8 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             boardSize: 5,
-            shape: 'TRIANGULAR',
-            topology: 'TRIANGULAR',
+            shape: 'TRIANGLE',
+            topology: 'TRIANGLE',
         };
 
         // When rendering initial state
@@ -831,7 +831,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             ], 0);
         const actualInitialState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
             triangularTopology,
-            new TriangularShape(5, triangularTopology),
+            new TriangleShape(5, triangularTopology),
             gameState,
         );
         expect(actualInitialState).toEqual(expectedInitialState);
@@ -839,7 +839,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
 });
 
 
-describe('ConnectNRules (TORUS)', () => {
+describe('ConnectNRules (with rectangular torus config)', () => {
 
     let rules: ConnectNRules;
     const squareTopology: OrdinalSquareTopology = new OrdinalSquareTopology();

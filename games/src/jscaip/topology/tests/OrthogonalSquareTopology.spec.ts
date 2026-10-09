@@ -16,7 +16,7 @@ describe('OrthogonalSquareTopology', () => {
             const direction: Orthogonal = Orthogonal.UP;
 
             // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction);
+            const result: Coord = topology.getTopologyNextCoord(coord, direction);
 
             // Then
             expect(result).toEqual(new Coord(2, 2));
@@ -30,7 +30,7 @@ describe('OrthogonalSquareTopology', () => {
             const distance: number = 3;
 
             // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction, distance);
+            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
 
             // Then
             expect(result).toEqual(new Coord(5, 3));
@@ -44,7 +44,7 @@ describe('OrthogonalSquareTopology', () => {
             const distance: number = -2;
 
             // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction, distance);
+            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
 
             // Then
             expect(result).toEqual(new Coord(2, 5));

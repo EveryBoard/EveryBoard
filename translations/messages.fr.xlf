@@ -581,9 +581,9 @@
         <source>Number of pieces rows</source>
         <target>Nombre de rangées de pièces</target>
       </trans-unit>
-      <trans-unit id="6874699210811358423" datatype="html">
-        <source>Toric</source>
-        <target>Torique</target>
+      <trans-unit id="7899288557289749176" datatype="html">
+        <source>Torus</source>
+        <target>Tore</target>
       </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
@@ -1829,6 +1829,14 @@
         <source>Square (8)</source>
         <target>Carré (8)</target>
       </trans-unit>
+      <trans-unit id="4218979419748995724" datatype="html">
+        <source>Hexagon</source>
+        <target>Hexagone</target>
+      </trans-unit>
+      <trans-unit id="6243699471535097376" datatype="html">
+        <source>Triangle</source>
+        <target>Triangle</target>
+      </trans-unit>
       <trans-unit id="8336049305072615544" datatype="html">
         <source>Square</source>
         <target>Carré</target>
@@ -2709,10 +2717,6 @@
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
         <target>Hexagonal</target>
-      </trans-unit>
-      <trans-unit id="5440587977382249688" datatype="html">
-        <source>Triangular</source>
-        <target>Triangulaire</target>
       </trans-unit>
       <trans-unit id="2986159287834234807" datatype="html">
         <source>N</source>

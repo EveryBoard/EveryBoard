@@ -56,7 +56,7 @@ export class RectangularShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
-        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
+        const next: Coord = this.getTopology().getTopologyNextCoord(coord, direction, distance);
         if (this.isOnBoard(next)) {
             return MGPOptional.of(next);
         } else {

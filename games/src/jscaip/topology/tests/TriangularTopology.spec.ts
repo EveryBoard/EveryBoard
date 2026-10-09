@@ -41,7 +41,7 @@ describe('TriangularTopology', () => {
                 const topology: TriangularTopology = new TriangularTopology();
 
                 // When evaluating next coord
-                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction);
+                const result: Coord = topology.getTopologyNextCoord(testCase.start, testCase.direction);
 
                 // Then the result should be correct
                 expect(result).toEqual(testCase.expectedDestination);

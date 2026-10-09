@@ -23,7 +23,7 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
+    public getTopologyNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
         if (direction.y === 0) { // No weird behavior for LEFT and RIGHT
             return coord.getNext(direction, distance);
         }

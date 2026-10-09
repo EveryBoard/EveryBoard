@@ -9,10 +9,10 @@ import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { Table } from '../../../../jscaip/TableUtils';
-import { HexagonalShape } from '../../../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../../../jscaip/shape/RectangularShape';
+import { HexagonShape } from '../../../../jscaip/shape/HexagonShape';
+import { RectangularShape } from '../../../../jscaip/shape/rere';
 import { TorusShape } from '../../../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../../../jscaip/shape/TriangularShape';
+import { TriangleShape } from '../../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { HexagonalTopology } from '../../../../jscaip/topology/HexagonalTopology';
@@ -319,14 +319,14 @@ fdescribe('ReversiRules', () => {
         describe('Hexagonal Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-            const hexagonalShape: HexagonalShape<HexaDirection> = new TriangularShape(5, hexagonalTopology);
+            const hexagonalShape: HexagonShape<HexaDirection> = new TriangleShape(5, hexagonalTopology);
 
             it('should have initial board with a hole', () => {
                 // Given hexagonal shaped board with odd size
                 const customConfig: ReversiConfig = {
                     ...defaultConfig,
-                    shape: 'HEXAGONAL',
-                    topology: 'HEXAGONAL',
+                    shape: 'HEXAGON',
+                    topology: 'HEXAGON',
                     boardSize: 5,
                 };
 
@@ -356,18 +356,18 @@ fdescribe('ReversiRules', () => {
             });
 
         });
-
+// TODO FOR REVIEW: pour le reversi, ça n'ira avec le triangulaire que sur les tailles multiples de trois, pour que le centre soit respecté
         describe('Triangular Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-            const hexagonalShape: HexagonalShape<HexaDirection> = new HexagonalShape(6, hexagonalTopology);
+            const hexagonalShape: HexagonShape<HexaDirection> = new HexagonShape(6, hexagonalTopology);
             // TODO: test size 5 and 7 ?
             it('should have initial board packed', () => {
                 // Given hexagonal shaped board with odd size
                 const customConfig: ReversiConfig = {
                     ...defaultConfig,
-                    shape: 'TRIANGULAR',
-                    topology: 'TRIANGULAR',
+                    shape: 'TRIANGLE',
+                    topology: 'TRIANGLE',
                     boardSize: 6,
                 };
 
