@@ -57,12 +57,12 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			GameName:   "testgame",
-			PlayerZero: model.MinimalUser{ID: "other1", Name: "Other 1"},
-			PlayerOne:  model.MinimalUser{ID: "other2", Name: "Other 2"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "other1", Name: "Other 1"}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "other2", Name: "Other 2"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
-			Creator: model.MinimalUser{ID: "other1", Name: "Other 1"},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: "other1", Name: "Other 1"}},
 			Status:  model.StatusStarted,
 		})
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedGameID)))
@@ -80,7 +80,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusCreated,
 		})
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID)))
@@ -106,7 +106,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:       configRoomID,
-			Creator:  model.MinimalUser{ID: "creator", Name: "creator"},
+			Creator:  model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
 			Status:   model.StatusCreated,
 			GameName: "test",
 		})
@@ -125,7 +125,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		}
 		// User should no longer be a candidate
 		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
-			assert.NotEqual(t, uid, cand.User.ID, "unsubscribed candidate should have been removed")
+			assert.NotEqual(t, uid, cand.PlayerInfo.User.ID, "unsubscribed candidate should have been removed")
 		}
 	})
 
@@ -137,8 +137,8 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:             configRoomID,
-			Creator:        model.MinimalUser{ID: "creator", Name: "creator"},
-			ChosenOpponent: &model.MinimalUser{ID: uid, Name: uid},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:         model.StatusCreated,
 		})
 
@@ -168,8 +168,8 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:             configRoomID,
-			Creator:        model.MinimalUser{ID: "creator", Name: "creator"},
-			ChosenOpponent: &model.MinimalUser{ID: uid, Name: uid},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: "creator", Name: "creator"}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:         model.StatusConfigProposed,
 		})
 
@@ -215,7 +215,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusCreated,
 		})
 
@@ -238,7 +238,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 		encodedID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusFinished,
 		})
 
@@ -273,12 +273,12 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "other", Name: "other"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "other", Name: "other"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusStarted,
 		})
 		fakeStore.SetCurrentGameForTest(uid, &model.CurrentGame{
