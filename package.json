@@ -24,6 +24,7 @@
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
     "gamestest:ci": "cd games && npm ci && npm run test:ci && npm run coverage",
+    "check": "npm run lint && npm run check:games-exports",
     "check:games-exports": "node --import tsx scripts/check-games-exports.ts",
     "prelint": "npm run eslint-rules:test",
     "lint": "eslint \"**/*.ts\" \"src/app/**/*.html\" --quiet",

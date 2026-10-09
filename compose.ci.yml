@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: ci/Dockerfile.frontend
       target: frontend
-    command: sh -c "npm run lint && npm run check:games-exports"
+    command: npm run check
 
   translations:
     build:
