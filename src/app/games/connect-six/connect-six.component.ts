@@ -9,7 +9,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboar
 import { ConnectSixMoveGenerator } from '@everyboard/games';
 import { ConnectSixRules } from '@everyboard/games';
 import { ConnectSixState } from '@everyboard/games';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
@@ -30,9 +30,9 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     protected droppedCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    private readonly lastMoved: WritableSignal<Coord[]> = signal([]);
+    private readonly lastMoved: WritableSignal<Set<Coord>> = signal(new Set());
 
-    private readonly victoryCoords: WritableSignal<Coord[]> = signal([]);
+    private readonly victoryCoords: WritableSignal<Set<Coord>> = signal(new Set());
 
     public constructor() {
         super('ConnectSix');
@@ -55,20 +55,20 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.state();
         this.board = state.getCopiedBoard();
-        this.victoryCoords.set(ConnectSixRules.getVictoriousCoords(state));
+        this.victoryCoords.set(new Set(ConnectSixRules.getVictoriousCoords(state)));
         this.createHoshis();
     }
 
     protected override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
-            this.lastMoved.set([move.coord]);
+            this.lastMoved.set(new Set([move.coord]));
         } else {
-            this.lastMoved.set([move.getFirst(), move.getSecond()]);
+            this.lastMoved.set(new Set([move.getFirst(), move.getSecond()]));
         }
     }
 
     public override hideLastMove(): void {
-        this.lastMoved.set([]);
+        this.lastMoved.set(new Set());
     }
 
     @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
@@ -103,10 +103,10 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
             classes.push('highlighted-stroke');
         } else {
             classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords().some((c: Coord) => c.equals(coord))) {
+            if (this.victoryCoords().contains(coord)) {
                 classes.push('victory-stroke');
             }
-            if (this.lastMoved().some((c: Coord) => c.equals(coord))) {
+            if (this.lastMoved().contains(coord)) {
                 classes.push('last-move-stroke');
             }
         }

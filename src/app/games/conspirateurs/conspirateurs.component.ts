@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
-import { Coord } from '@everyboard/games';
+import { Coord, Table } from '@everyboard/games';
 import { GameStatus } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -45,7 +45,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y + 1,
     );
     protected readonly dropPhase: WritableSignal<boolean> = signal(true);
-    protected readonly boardInfo: WritableSignal<SquareInfo[][]> = signal([]);
+    protected readonly boardInfo: WritableSignal<Table<SquareInfo>> = signal([]);
     protected readonly victory: WritableSignal<Coord[]> = signal([]);
     protected readonly viewInfoLastMoveArrow: WritableSignal<string> = signal('');
     protected readonly sidePieces: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(20, 20));
@@ -128,7 +128,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jump: ConspirateursMoveJump = this.jumpInConstruction().get();
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
-                const boardInfo: SquareInfo[][] = this.boardInfo();
+                const boardInfo: Table<SquareInfo> = this.boardInfo();
                 boardInfo[jumpStart.y][jumpStart.x].hasPieceToDraw = false;
                 boardInfo[jumpCurrent.y][jumpCurrent.x].hasPieceToDraw = true;
                 for (const coord of jump.coords) {
@@ -241,7 +241,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         } else {
             let lastMoveArrow: string = '';
             for (const coord of move.coords) {
-                const boardInfo: SquareInfo[][] = this.boardInfo();
+                const boardInfo: Table<SquareInfo> = this.boardInfo();
                 boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 this.boardInfo.set(boardInfo);
                 lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
