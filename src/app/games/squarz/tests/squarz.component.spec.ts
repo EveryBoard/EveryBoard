@@ -4,10 +4,10 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { SquarzMove } from '@everyboard/games';
-import { SquarzConfig, SquarzRules } from '@everyboard/games';
-import { SquarzState } from '@everyboard/games';
-import { SquarzFailure } from '@everyboard/games';
+import { SquarzMove } from '@everyboard/games/squarz';
+import { SquarzConfig, SquarzRules } from '@everyboard/games/squarz';
+import { SquarzState } from '@everyboard/games/squarz';
+import { SquarzFailure } from '@everyboard/games/squarz';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SquarzComponent } from '../squarz.component';

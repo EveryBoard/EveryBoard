@@ -1,17 +1,18 @@
 import { ModelSignal, signal, WritableSignal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { GoLegalityInformation } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { GoMove } from '@everyboard/games';
-import { GoPhase } from '@everyboard/games';
-import { GoPiece } from '@everyboard/games';
-import { GoState } from '@everyboard/games';
-import { GoHeuristic } from '@everyboard/games';
-import { GoMoveGenerator } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/families/go';
+import { GoMove } from '@everyboard/games/families/go';
+import { GoPhase } from '@everyboard/games/families/go';
+import { GoPiece } from '@everyboard/games/families/go';
+import { GoState } from '@everyboard/games/families/go';
+import { RectangularGoConfig } from '@everyboard/games/families/go';
+import { AbstractRectangularGoRules } from '@everyboard/games/families/go';
+import { GoHeuristic } from '@everyboard/games/go';
+import { GoMoveGenerator } from '@everyboard/games/go';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';

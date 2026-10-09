@@ -2,11 +2,11 @@
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { YinshCapture, YinshMove } from '@everyboard/games';
-import { YinshPiece } from '@everyboard/games';
-import { YinshRules } from '@everyboard/games';
-import { YinshState } from '@everyboard/games';
 import { Localized } from '@everyboard/games';
+import { YinshCapture, YinshMove } from '@everyboard/games/yinsh';
+import { YinshPiece } from '@everyboard/games/yinsh';
+import { YinshRules } from '@everyboard/games/yinsh';
+import { YinshState } from '@everyboard/games/yinsh';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -4,11 +4,11 @@ import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@ang
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { ConnectSixAlignmentHeuristic } from '@everyboard/games';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games';
-import { ConnectSixMoveGenerator } from '@everyboard/games';
-import { ConnectSixRules } from '@everyboard/games';
-import { ConnectSixState } from '@everyboard/games';
+import { ConnectSixAlignmentHeuristic } from '@everyboard/games/connect-six';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games/connect-six';
+import { ConnectSixMoveGenerator } from '@everyboard/games/connect-six';
+import { ConnectSixRules } from '@everyboard/games/connect-six';
+import { ConnectSixState } from '@everyboard/games/connect-six';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { P4Config, P4Rules } from '@everyboard/games';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
 import { MGPOptional } from '@everyboard/lib';
 
 import { AuthUser } from '../../../services/ConnectedUserService';

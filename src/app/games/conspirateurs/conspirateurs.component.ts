@@ -7,13 +7,19 @@ import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
-import { ConspirateursHeuristic } from '@everyboard/games';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '@everyboard/games';
-import { ConspirateursMoveGenerator } from '@everyboard/games';
-import { ConspirateursRules } from '@everyboard/games';
-import { ConspirateursState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+import { ConspirateursHeuristic } from '@everyboard/games/conspirateurs';
+import {
+    ConspirateursMove,
+    ConspirateursMoveDrop,
+    ConspirateursMoveJump,
+    ConspirateursMoveSimple,
+} from '@everyboard/games/conspirateurs';
+import { ConspirateursMoveGenerator } from '@everyboard/games/conspirateurs';
+import { ConspirateursRules } from '@everyboard/games/conspirateurs';
+import { ConspirateursState } from '@everyboard/games/conspirateurs';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

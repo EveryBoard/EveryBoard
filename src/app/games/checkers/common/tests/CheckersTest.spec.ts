@@ -5,12 +5,12 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { CheckersFailure } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersMoveGenerator } from '@everyboard/games';
 import { Direction, DirectionFailure } from '@everyboard/games';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games';
-import { CheckersStack, CheckersState } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games/families/checkers';
+import { CheckersMove } from '@everyboard/games/families/checkers';
+import { CheckersMoveGenerator } from '@everyboard/games/families/checkers';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games/families/checkers';
+import { CheckersStack, CheckersState } from '@everyboard/games/families/checkers';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 

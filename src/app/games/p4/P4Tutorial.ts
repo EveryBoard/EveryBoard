@@ -1,7 +1,7 @@
 import { PlayerOrNone } from '@everyboard/games';
-import { P4Move } from '@everyboard/games';
-import { P4Config, P4Rules } from '@everyboard/games';
-import { P4State } from '@everyboard/games';
+import { P4Move } from '@everyboard/games/p4';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
