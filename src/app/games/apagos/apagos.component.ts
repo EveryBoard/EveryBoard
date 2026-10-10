@@ -58,19 +58,16 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
 
-    private readonly apagosState: WritableSignal<ApagosState> = signal(
-        ApagosRules.get().getInitialState(this.config()),
-    );
-    private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.apagosState().board);
+    private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.state().board);
     private readonly width: Signal<number> = computed(() => this.board().length);
     private readonly remaining: Signal<PlayerMap<number>> = computed(() => {
-        return this.apagosState().remaining;
+        return this.state().remaining;
     });
 
     protected readonly ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
     protected readonly pieceRadius: Signal<number> = computed(() => {
-        const nPieces: number = this.apagosState().getMaxPiecesPerPlayer();
+        const nPieces: number = this.state().getMaxPiecesPerPlayer();
         return ((this.width() - 1) * this.SPACE_SIZE) / (nPieces + 1);
     });
 
@@ -175,7 +172,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.apagosState.set(this.state());
         this.showPossibleDrops();
     }
 
@@ -243,7 +239,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     private showPossibleDrops(): void {
         const displayableArrow: DropArrow[] = [];
-        const state: ApagosState = this.apagosState();
+        const state: ApagosState = this.state();
         for (let x: number = 0; x < state.board.length; x++) {
             if (state.board[x].isFull() === false) {
                 if (state.remaining.get(Player.ZERO) > 0) {
