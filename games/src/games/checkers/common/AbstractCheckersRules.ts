@@ -127,7 +127,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                     const postCapture: { state: CheckersState; piece: CheckersStack } =
                         this.applyCapture(state, coord, captured.get(), landing, config);
 
-                    const startOfMove: CheckersMove = CheckersMove.fromCaptureList([coord, landing]);
+                    const startOfMove: CheckersMove = CheckersMove.fromCapture([coord, landing]);
                     const newCapturedCoords: Coord[] = capturedCoords.concat(captured.get());
 
                     const endsOfMoves: CheckersMove[] = this.getPieceCaptures(postCapture.state,
@@ -363,7 +363,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         let resultingState: CheckersState = state.remove(moveStart);
         if (move.isStep === false) {
             const capturedCoords: Coord[] = [];
-            for (let i: number = 1; i < move.coords.size(); i++) {
+            for (let i: number = 1; i < move.coords.length; i++) {
                 const previousCoord: Coord = move.coords[i - 1];
                 const landingCoord: Coord = move.coords[i];
                 const capturedCoord: MGPOptional<Coord> =
@@ -457,11 +457,11 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
 
     private isLegalSubMoveList(move: CheckersMove, state: CheckersState, config: CheckersConfig): MGPValidation {
         let stack: CheckersStack = state.getPieceAt(move.coords[0]);
-        const isSimpleJump: boolean = move.coords.size() === 2;
+        const isSimpleJump: boolean = move.coords.length === 2;
         let validationState: CheckersState = state.remove(move.coords[0]);
         const capturedCoords: Coord[] = [];
         const finishLine: number = state.getFinishLineOf(state.getCurrentPlayer());
-        for (let i: number = 1; i < move.coords.size(); i++) {
+        for (let i: number = 1; i < move.coords.length; i++) {
             const previousCoord: Coord = move.coords[i - 1];
             const landingCoord: Coord = move.coords[i];
             const subMoveValidity: MGPValidation =
@@ -646,9 +646,9 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         }
         if (config.mustMakeMaximalCapture) {
             const legalCaptures: CheckersMove[] =
-                ArrayUtils.maximumsBy(possibleCaptures, (m: CheckersMove) => m.coords.size());
-            const captureSize: number = move.coords.size();
-            const awaitedCaptureSize: number = legalCaptures[0].coords.size();
+                ArrayUtils.maximumsBy(possibleCaptures, (m: CheckersMove) => m.coords.length);
+            const captureSize: number = move.coords.length;
+            const awaitedCaptureSize: number = legalCaptures[0].coords.length;
             if (captureSize === awaitedCaptureSize) {
                 return MGPValidation.SUCCESS;
             } else if (legalCaptures.some((m: CheckersMove) => move.isPrefix(m))) {

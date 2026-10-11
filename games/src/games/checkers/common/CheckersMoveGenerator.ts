@@ -24,7 +24,7 @@ export class CheckersMoveGenerator extends MoveGenerator<CheckersMove, CheckersS
     public getLegalCaptures(state: CheckersState, config: CheckersConfig): CheckersMove[] {
         const possibleCaptures: CheckersMove[] = this.rules.getCompleteCaptures(state, config);
         if (config.mustMakeMaximalCapture) {
-            return ArrayUtils.maximumsBy(possibleCaptures, (m: CheckersMove) => m.coords.size());
+            return ArrayUtils.maximumsBy(possibleCaptures, (m: CheckersMove) => m.coords.length);
         } else {
             return possibleCaptures;
         }
