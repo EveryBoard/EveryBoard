@@ -200,7 +200,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     @ClickHandler((coord: Coord) => `#piece-${ coord.x }-${ coord.y }`)
-    public async onPieceClick(coord: Coord): Promise<MGPValidation> {
+    protected async onPieceClick(coord: Coord): Promise<MGPValidation> {
         // onLegalPieceClick is called somewhere else where no click handling check need to be done
         return this.onLegalPieceClick(coord);
     }
@@ -288,7 +288,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    public isReachable(c: FourStatePiece): boolean {
+    protected isReachable(c: FourStatePiece): boolean {
         return c !== FourStatePiece.UNREACHABLE;
     }
 
@@ -382,7 +382,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     @ClickHandler((dir: HexaDirection) => `#direction-${ dir.toString() }`)
-    public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
+    protected async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
         // doChooseDirection is called somewhere else where no click handling check need to be done
         return this.doChooseDirection(dir);
     }
@@ -400,13 +400,13 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     @ClickHandler((coord: Coord) => `#invisible-space-${ coord.x }-${ coord.y }`)
-    public async onInvisibleSpaceClick(coord: Coord): Promise<MGPValidation> {
+    protected async onInvisibleSpaceClick(coord: Coord): Promise<MGPValidation> {
         // tryChoosingDirection is called somewhere else where no click handling check need to be done
         return this.tryChoosingDirection(coord);
     }
 
     @ClickHandler((coord: Coord) => `#space-${ coord.x }-${ coord.y }`)
-    public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
+    protected async onSpaceClick(coord: Coord): Promise<MGPValidation> {
         if (this.state().getPieceAt(coord).isPlayer()) {
             return this.onLegalPieceClick(coord);
         }
@@ -426,7 +426,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return this.cancelMove();
     }
 
-    public getSquareClassesAt(coord: Coord): string[] {
+    protected getSquareClassesAt(coord: Coord): string[] {
         const classes: string[] = [];
         if (this.moveds().contains(coord)) {
             classes.push('moved-fill');
@@ -434,7 +434,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return classes;
     }
 
-    public getPieceClasses(coord: Coord): string[] {
+    protected getPieceClasses(coord: Coord): string[] {
         const player: PlayerOrNone = this.state().getPieceAt(coord).getPlayer();
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds().contains(coord)) {

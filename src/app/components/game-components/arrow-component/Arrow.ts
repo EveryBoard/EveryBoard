@@ -1,6 +1,6 @@
-import { ComparableObject } from '@everyboard/lib';
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
+import { ComparableObject } from '@everyboard/lib';
 
 export class Arrow<T extends Direction> implements ComparableObject {
 
