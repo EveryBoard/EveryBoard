@@ -58,7 +58,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     protected readonly captureds: WritableSignal<Set<CapturedInfo>> = signal(new Set());
 
-    protected readonly directions: WritableSignal<Set<Arrow<HexaDirection>>> = signal(new Set());
+    protected readonly directions: WritableSignal<ReadonlyArray<Arrow<HexaDirection>>> = signal([]);
 
     private readonly selecteds: WritableSignal<MGPUniqueList<Coord>> = signal(new MGPUniqueList());
 
@@ -131,7 +131,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.directions.set(new Set());
+        this.directions.set([]);
         this.selecteds.set(new MGPUniqueList());
     }
 
@@ -228,7 +228,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private showPossibleDirections(): void {
-        this.directions.set(new Set());
+        this.directions.set([]);
         Utils.assert(this.selecteds().size() > 0, 'do not call showPossibleDirections if there is no selected piece');
         this.showDirection();
     }
@@ -255,7 +255,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                 directions.push(arrow);
             }
         }
-        this.directions.set(new Set(directions));
+        this.directions.set(directions);
     }
 
     private getArrowPath(direction: HexaDirection): AbaloneArrowInfo {

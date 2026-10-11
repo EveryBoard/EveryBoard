@@ -1,8 +1,7 @@
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
-import { ComparableObject } from '@everyboard/lib';
 
-export class Arrow<T extends Direction> implements ComparableObject {
+export class Arrow<T extends Direction> {
 
     public transformation: string;
     public startCenter: Coord;
@@ -11,8 +10,8 @@ export class Arrow<T extends Direction> implements ComparableObject {
     public constructor(public readonly start: Coord,
                        public readonly landing: Coord,
                        public readonly dir: T,
-                       public readonly getCenterAt: (c: Coord) => Coord)
-    {
+                       public readonly getCenterAt: (c: Coord) => Coord,
+    ) {
         const pointedCenter: Coord = this.getCenterAt(landing);
         const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
         const angle: number = dir.getAngle() + 150;
@@ -21,13 +20,6 @@ export class Arrow<T extends Direction> implements ComparableObject {
         this.transformation = rotation + ' ' + translation;
         this.startCenter = this.getCenterAt(this.start);
         this.landingCenter = this.getCenterAt(this.landing);
-    }
-
-    public equals(other: Arrow<T>): boolean {
-        return other != null &&
-            this.start.equals(other.start) &&
-            this.landing.equals(other.landing) &&
-            this.dir.equals(other.dir);
     }
 
 }
