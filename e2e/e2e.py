@@ -10,6 +10,7 @@ import random
 import string
 import time
 import textwrap
+import os
 
 # Conventions:
 # - avoid time.sleep when wait_for can be used instead
@@ -27,8 +28,13 @@ MAX_WAIT=10
 class PlayerDriver():
     def __init__(self):
         options = Options()
+        if os.environ.get('CHROME_BIN'):
+            options.binary_location = os.environ['CHROME_BIN']
         if HEADLESS:
             options.add_argument('-headless')
+        if os.environ.get('E2E_IN_DOCKER') == 'true':
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
         self.driver = webdriver.Chrome(options=options)
         if HEADLESS:
             # If the browser (fake) window is too small, selenium complains that some elements are not clickable, so make sure it's big enough
