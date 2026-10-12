@@ -392,7 +392,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         const finishLine: number = state.getFinishLineOf(state.getCurrentPlayer());
         const promotedMidCapture: boolean =
             config.canPromoteMidCapture &&
-            move.coords.some((c: Coord) => c.y === finishLine);
+            move.coords.map((c: Coord) => c.y).some((y: number) => y === finishLine);
         if (moveEnd.y === finishLine || promotedMidCapture) {
             resultingState = resultingState.set(moveEnd, movingStack.promoteCommander());
         }
