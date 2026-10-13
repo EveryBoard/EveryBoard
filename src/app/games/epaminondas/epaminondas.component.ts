@@ -1,28 +1,32 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { EpaminondasAttackHeuristic } from '@everyboard/games/epaminondas';
+import { EpaminondasFailure } from '@everyboard/games/epaminondas';
+import { EpaminondasMove } from '@everyboard/games/epaminondas';
+import { EpaminondasMoveGenerator } from '@everyboard/games/epaminondas';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '@everyboard/games/epaminondas';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '@everyboard/games/epaminondas';
+import { EpaminondasPositionalHeuristic } from '@everyboard/games/epaminondas';
+import {
+    EpaminondasConfig,
+    EpaminondasLegalityInformation,
+    EpaminondasNode,
+    EpaminondasRules,
+} from '@everyboard/games/epaminondas';
+import { EpaminondasState } from '@everyboard/games/epaminondas';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
-import { EpaminondasFailure } from './EpaminondasFailure';
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';
-import { EpaminondasPositionalHeuristic } from './EpaminondasPositionalHeuristic';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
-import { EpaminondasState } from './EpaminondasState';
 
 export type PossibleMove = {
 
@@ -294,7 +298,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public getHighlightedCoords(): Coord[] {
-        if (this.interactive === false) {
+        if (this.interactive() === false) {
             return [];
         }
         if (this.firstPiece.isPresent()) {

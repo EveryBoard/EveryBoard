@@ -3,13 +3,13 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { P4Config, P4Rules } from '@everyboard/games/p4';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
@@ -61,7 +61,7 @@ describe('GameCreationComponent', () => {
         await clickElement('#presenceOf_' + candidate.name);
         configRoomService.mockConfigRoomUpdate({
             ...ConfigRoomMocks.getInitial(defaultConfig),
-            chosenOpponent: candidate,
+            chosenOpponent: { user: candidate, elo: 0 },
         });
     }
     async function clickElement(elementName: string): Promise<void> {
@@ -370,14 +370,14 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 });
 
                 // Then currentConfigRoom should be updated with the proposed config
                 const proposedConfig: ConfigRoom = {
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 };
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
@@ -400,7 +400,7 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     rulesConfig: proposedRulesConfig,
                     status: Status.CONFIG_PROPOSED,
                 });
@@ -434,7 +434,7 @@ describe('GameCreationComponent', () => {
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
                     ...ConfigRoomMocks.getInitialRandom(defaultConfig),
-                    chosenOpponent: candidate,
+                    chosenOpponent: { user: candidate, elo: 0 },
                     status: Status.CONFIG_PROPOSED,
                 });
                 testUtils.detectChanges();

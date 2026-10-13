@@ -46,18 +46,16 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	fakeStore.SetMessagesForTest(model.GameIDLobby, []*model.Message{&msg})
 
 	configRoom := model.ConfigRoom{
-		ID:                2,
-		Creator:           userFoo,
-		CreatorElo:        0,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		FirstPlayer:       model.FirstPlayerRandom,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          "P4",
+		ID:             2,
+		Creator:        model.PlayerInfo{User: userFoo, Elo: 0},
+		ChosenOpponent: nil,
+		Status:         model.StatusCreated,
+		FirstPlayer:    model.FirstPlayerRandom,
+		GameType:       model.GameTypeStandard,
+		MoveDuration:   model.StandardMoveDuration,
+		GameDuration:   model.StandardGameDuration,
+		RulesConfig:    nil,
+		GameName:       "P4",
 	}
 	fakeStore.SetConfigRoomForTest(configRoom.ID, &configRoom)
 	fakeStore.SetNextIDForTest(configRoom.ID)

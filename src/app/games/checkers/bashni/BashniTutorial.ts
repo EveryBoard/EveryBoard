@@ -1,12 +1,12 @@
+import { Coord } from '@everyboard/games';
+import { BashniRules } from '@everyboard/games/bashni';
+import { CheckersConfig } from '@everyboard/games/bashni';
+import { CheckersMove } from '@everyboard/games/bashni';
+import { CheckersPiece, CheckersStack, OddCheckersState } from '@everyboard/games/bashni';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../jscaip/Coord';
-import { CheckersConfig } from '../common/AbstractCheckersRules';
-import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, OddCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
-
-import { BashniRules } from './BashniRules';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;
 const one: CheckersPiece = CheckersPiece.ONE;

@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games/triangular-go';
+import { GoMove } from '@everyboard/games/triangular-go';
+import { GoPhase } from '@everyboard/games/triangular-go';
+import { GoPiece } from '@everyboard/games/triangular-go';
+import { GoState } from '@everyboard/games/triangular-go';
+import { TriangularGoHeuristic } from '@everyboard/games/triangular-go';
+import { TriangularGoMoveGenerator } from '@everyboard/games/triangular-go';
+import { TriangularGoConfig, TriangularGoRules } from '@everyboard/games/triangular-go';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { TableUtils } from '../../../jscaip/TableUtils';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
-import { Debug } from '../../../utils/Debug';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-
-import { TriangularGoHeuristic } from './TriangularGoHeuristic';
-import { TriangularGoMoveGenerator } from './TriangularGoMoveGenerator';
-import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

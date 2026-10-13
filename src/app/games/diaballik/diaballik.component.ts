@@ -1,24 +1,23 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Line } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { DiaballikDistanceHeuristic } from '@everyboard/games/diaballik';
+import { DiaballikFailure } from '@everyboard/games/diaballik';
+import { DiaballikFilteredMoveGenerator } from '@everyboard/games/diaballik';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from '@everyboard/games/diaballik';
+import { DiaballikMoveGenerator } from '@everyboard/games/diaballik';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from '@everyboard/games/diaballik';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games/diaballik';
 import { MGPFallible, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Line } from '../../jscaip/Line';
-import { Player } from '../../jscaip/Player';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
-import { DiaballikFailure } from './DiaballikFailure';
-import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +43,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly victoryCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly loserCoords: WritableSignal<Set<Coord>> = signal(new Set());
-    protected readonly blockedLines: WritableSignal<Set<Line>> = signal(new Set());
+    protected readonly blockedLines: WritableSignal<ReadonlyArray<Line>> = signal([]);
 
     protected readonly indicators: WritableSignal<Set<Coord>> = signal(new Set());
 
@@ -140,7 +139,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
                 }
             }
         }
-        this.blockedLines.set(new Set(blockedLines));
+        this.blockedLines.set(blockedLines);
     }
 
     protected override async showLastMove(move: DiaballikMove): Promise<void> {
@@ -293,9 +292,13 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
             } else {
                 this.currentSelection.set(MGPOptional.of(clickedCoord));
                 if (clickedPiece.holdsBall) {
-                    this.indicators.set(this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord));
+                    this.indicators.set(new Set(
+                        this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord),
+                    ));
                 } else {
-                    this.indicators.set(this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord));
+                    this.indicators.set(new Set(
+                        this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord),
+                    ));
                 }
                 return MGPValidation.SUCCESS;
             }
@@ -312,7 +315,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
             // Just deselects
             this.currentSelection.set(MGPOptional.empty());
             this.indicators.set(new Set());
-            if (this.subMoves().length === 0) {
+            if (this.subMoves().size() === 0) {
                 // No sub moves constructed at all, cancel the move to show the last one
                 return this.cancelMove();
             }
@@ -358,13 +361,13 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public showDoneButton(): boolean {
-        return this.interactive && this.subMoves().length >= 1;
+        return this.interactive() && this.subMoves().size() >= 1;
     }
 
     @ClickHandler(() => `#done`)
     public async done(): Promise<MGPValidation> {
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
-        if (this.subMoves().length >= 2) {
+        if (this.subMoves().size() >= 2) {
             second = MGPOptional.of(this.subMoves()[1]);
         }
         // Note: user can't click on done if there are either no sub move (button doesn't appear)

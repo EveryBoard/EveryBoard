@@ -1,14 +1,14 @@
+
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { DvonnMove } from '@everyboard/games/dvonn';
+import { DvonnPieceStack } from '@everyboard/games/dvonn';
+import { DvonnRules } from '@everyboard/games/dvonn';
+import { DvonnState } from '@everyboard/games/dvonn';
 import { MGPValidation, Utils } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { Player } from '../../jscaip/Player';
-
-import { DvonnMove } from './DvonnMove';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnRules } from './DvonnRules';
-import { DvonnState } from './DvonnState';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;

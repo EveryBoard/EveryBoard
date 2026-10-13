@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Player } from '../../../jscaip/Player';
+import { Player } from '@everyboard/games';
+import { ApagosMove } from '@everyboard/games/apagos';
+import { ApagosConfig, ApagosRules } from '@everyboard/games/apagos';
+import { ApagosState } from '@everyboard/games/apagos';
+import { ApagosFailure } from '@everyboard/games/apagos';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ApagosFailure } from '../ApagosFailure';
-import { ApagosMove } from '../ApagosMove';
-import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { ApagosState } from '../ApagosState';
 import { ApagosComponent } from '../apagos.component';
 
 describe('ApagosComponent', () => {

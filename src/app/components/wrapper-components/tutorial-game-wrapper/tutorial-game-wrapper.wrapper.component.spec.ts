@@ -2,22 +2,23 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { Player } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuartoConfig, QuartoRules } from '@everyboard/games/quarto';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
+import { QuartoState } from '@everyboard/games/quarto';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { QuartoMove } from '../../../games/quarto/QuartoMove';
-import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
-import { QuartoConfig, QuartoRules } from '../../../games/quarto/QuartoRules';
-import { QuartoState } from '../../../games/quarto/QuartoState';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { Player } from '../../../jscaip/Player';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
+import { RulesConfigUtils } from '../rules-configuration/RulesConfigUtils';
 
 import { TutorialFailure } from './TutorialFailure';
 import { TutorialStep, TutorialStepAnyMove } from './TutorialStep';
@@ -920,7 +921,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#click-piece-15', new QuartoMove(0, 0, QuartoPiece.BBBB));
 
             // Then the opponent should not be displayed as interactive
-            expect(gameComponent.isInteractive()).toBeFalse();
+            expect(gameComponent.interactive()).toBeFalse();
         }));
 
     });

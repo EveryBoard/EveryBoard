@@ -31,18 +31,6 @@
       "noImplicitAny": false, // cannot be enabled if we want to access object fields with their name in a weakly-typed setting
       "typeRoots": [
         "node_modules/@types"
-      ],
-      "lib": [
-        "es2020",
-        "dom"
-      ],
-      "paths": {
-        "core-js/es7/reflect": [
-          "node_modules/core-js/proposals/reflect-metadata"
-        ],
-        "core-js/es6/*": [
-          "node_modules/core-js/es"
-        ]
-      }
+      ]
     }
 }

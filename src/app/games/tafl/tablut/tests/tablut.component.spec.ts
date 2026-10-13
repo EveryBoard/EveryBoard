@@ -1,11 +1,12 @@
-/* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../jscaip/Coord';
-import { TaflConfig } from '../../TaflConfig';
-import { TaflPawn } from '../../TaflPawn';
-import { TaflState } from '../../TaflState';
+
+import { Coord } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games/tablut';
+import { TaflState } from '@everyboard/games/tablut';
+import { TaflConfig } from '@everyboard/games/tablut';
+import { TablutMove } from '@everyboard/games/tablut';
+import { TablutRules } from '@everyboard/games/tablut';
+
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
-import { TablutMove } from '../TablutMove';
-import { TablutRules } from '../TablutRules';
 import { TablutComponent } from '../tablut.component';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;

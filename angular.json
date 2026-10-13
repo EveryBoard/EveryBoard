@@ -39,7 +39,6 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "sass": { "silenceDeprecations": ["import"] },
               "includePaths": [
                 "src/sass"
               ]
@@ -178,14 +177,11 @@
               ]
             },
             "ci": {
+              "main": "src/test.ci.ts",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.local.ts"
-                },
-                {
-                  "replace": "src/TestVars.spec.ts",
-                  "with": "src/TestVars.ci.spec.ts"
                 }
               ]
             }

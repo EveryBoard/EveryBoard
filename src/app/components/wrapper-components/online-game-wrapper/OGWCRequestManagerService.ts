@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
+import { Localized } from '@everyboard/games';
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
 
 import { GameEventReply, GameEventRequest, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
-import { Localized } from '../../../utils/LocaleUtils';
 
 export interface RequestInfo {
     requestType: RequestType;

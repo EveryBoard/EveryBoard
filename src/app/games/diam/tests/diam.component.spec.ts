@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { DiamMove, DiamMoveDrop, DiamMoveShift } from '@everyboard/games/diam';
+import { DiamPiece } from '@everyboard/games/diam';
+import { DiamState } from '@everyboard/games/diam';
+import { DiamFailure } from '@everyboard/games/diam';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DiamFailure } from '../DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
-import { DiamPiece } from '../DiamPiece';
-import { DiamState } from '../DiamState';
 import { DiamComponent } from '../diam.component';
 
 describe('DiamComponent', () => {
