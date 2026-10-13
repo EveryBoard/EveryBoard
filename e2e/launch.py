@@ -41,20 +41,31 @@ def run_e2e(only_scenario):
         postgres_user = 'everyboard_e2e'
         postgres_password = 'everyboard_e2e'
         postgres_db = 'everyboard_e2e'
-        docker_id = subprocess.check_output(['docker', 'run', '-d',
-                                             '-e', f'POSTGRES_USER={postgres_user}',
-                                             '-e', f'POSTGRES_PASSWORD={postgres_password}',
-                                             '-e', f'POSTGRES_DB={postgres_db}',
-                                             '-p', '5432:5432',
-                                             'postgres:17']).decode().strip()
-        time.sleep(5) # wait for postgres to start
+        if os.environ.get('E2E_EXTERNAL_POSTGRES') != 'true':
+            docker_id = subprocess.check_output(['docker', 'run', '-d',
+                                                 '-e', f'POSTGRES_USER={postgres_user}',
+                                                 '-e', f'POSTGRES_PASSWORD={postgres_password}',
+                                                 '-e', f'POSTGRES_DB={postgres_db}',
+                                                 '-p', '5432:5432',
+                                                 'postgres:17']).decode().strip()
+            time.sleep(5) # wait for postgres to start
 
         env = os.environ.copy()
         env['DB_USERNAME'] = postgres_user
         env['DB_PASSWORD'] = postgres_password
         env['DB_NAME'] = postgres_db
-        env['DB_HOST'] = 'localhost'
-        backend_process = subprocess.Popen(['make', '-C', 'backend', 'run-postgres'], env=env, stdout=subprocess.PIPE, universal_newlines=True)
+        env['DB_HOST'] = os.environ.get('DB_HOST', 'localhost')
+        env['USE_EMULATOR'] = 'yes'
+        env['PROJECT_ID'] = 'my-project'
+        env['ALLOW_ORIGIN'] = '*'
+        env['DATABASE_TYPE'] = 'postgres'
+        env['DATABASE_DSN'] = (
+            f'postgresql://{postgres_user}:{postgres_password}@{env["DB_HOST"]}:5432/{postgres_db}?sslmode=disable'
+        )
+        backend_command = ['./backend/backend']
+        if not os.path.isfile('backend/backend'):
+            backend_command = ['make', '-C', 'backend', 'run-postgres']
+        backend_process = subprocess.Popen(backend_command, env=env, stdout=subprocess.PIPE, universal_newlines=True)
         backend_log_thread = threading.Thread(target=log, args=(backend_process,))
         backend_log_thread.start()
 
