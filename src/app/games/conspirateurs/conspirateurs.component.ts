@@ -19,7 +19,6 @@ import {
 import { ConspirateursMoveGenerator } from '@everyboard/games/conspirateurs';
 import { ConspirateursRules } from '@everyboard/games/conspirateurs';
 import { ConspirateursState } from '@everyboard/games/conspirateurs';
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
