@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
@@ -17,6 +17,11 @@ import { HexaLayout } from '../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 
+type CoordAndContent = {
+    coord: Coord;
+    spaceContent: DvonnPieceStack;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-dvonn',
@@ -24,16 +29,11 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
-    protected override computeViewBox(): ViewBox {
-        return new ViewBox(0, 0, 875, 380);
-    }
-
-    public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
-    public chosen: MGPOptional<Coord> = MGPOptional.empty();
-    public disconnectedSpaces: { coord: Coord; spaceContent: DvonnPieceStack }[] = [];
+    protected readonly lastMove: WritableSignal<MGPOptional<DvonnMove>> = signal(MGPOptional.empty());
+    protected readonly chosen: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly disconnectedSpaces: WritableSignal<CoordAndContent[]> = signal([]);
 
     public constructor() {
         super('Dvonn');
@@ -76,9 +76,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.hexaBoard = this.state().board;
     }
 
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, 875, 380);
+    }
+
     public override hideLastMove(): void {
-        this.lastMove = MGPOptional.empty();
-        this.disconnectedSpaces = [];
+        this.lastMove.set(MGPOptional.empty());
+        this.disconnectedSpaces.set([]);
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -87,29 +91,31 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     protected override async showLastMove(move: DvonnMove): Promise<void> {
-        this.lastMove = MGPOptional.of(move);
+        this.lastMove.set(MGPOptional.of(move));
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.state();
+        const disconnectedSpaces: CoordAndContent[] = this.disconnectedSpaces();
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) &&
-                    coord.equals(this.lastMove.get().getStart()) === false)
+                    coord.equals(this.lastMove().get().getStart()) === false)
                 {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && previousStack.hasPieces()) {
                         const disconnected: { coord: Coord; spaceContent: DvonnPieceStack } =
                             { coord, spaceContent: previousStack };
-                        this.disconnectedSpaces.push(disconnected);
+                        disconnectedSpaces.push(disconnected);
                     }
                 }
             }
         }
+        this.disconnectedSpaces.set(disconnectedSpaces);
     }
 
     public override cancelMoveAttempt(): void {
-        this.chosen = MGPOptional.empty();
+        this.chosen.set(MGPOptional.empty());
     }
 
     public override async pass(): Promise<MGPValidation> {
@@ -119,9 +125,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.chosen.isAbsent()) {
+        if (this.chosen().isAbsent()) {
             return this.choosePiece(x, y);
-        } else if (this.chosen.equalsValue(new Coord(x, y))) {
+        } else if (this.chosen().equalsValue(new Coord(x, y))) {
             // Deselects the piece
             return this.cancelMove();
         } else {
@@ -133,7 +139,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.state(), coord);
         if (legal.isSuccess()) {
-            this.chosen = MGPOptional.of(coord);
+            this.chosen.set(MGPOptional.of(coord));
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(legal.getReason());
@@ -142,7 +148,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const state: DvonnState = this.state();
-        const chosenPiece: Coord = this.chosen.get();
+        const chosenPiece: Coord = this.chosen().get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<DvonnMove> = DvonnMove.from(chosenPiece, chosenDestination);
         if (move.isFailure()) {
