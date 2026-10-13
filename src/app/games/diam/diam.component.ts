@@ -1,9 +1,9 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
-import { DummyHeuristic } from '@everyboard/games';
+import { DummyHeuristic, PlayerOrNone } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
-import { Player, PlayerOrNone } from '@everyboard/games';
+import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
 import { DiamFailure } from '@everyboard/games/diam';
@@ -12,40 +12,46 @@ import { DiamMoveGenerator } from '@everyboard/games/diam';
 import { DiamPiece } from '@everyboard/games/diam';
 import { DiamRules } from '@everyboard/games/diam';
 import { DiamState } from '@everyboard/games/diam';
-import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { ArrayUtils, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 
-interface ViewInfo {
-    boardInfo: SpaceInfo[];
-    remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>;
-}
+// interface ViewInfo {
+//     boardInfo: SpaceInfo[];
+//     remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>;
+// }
 
 interface SpaceInfo {
-    x: number;
-    spaceClasses: string[];
-    pieces: PieceInfo[];
+    readonly x: number;
+    readonly spaceClasses: ReadonlyArray<string>;
+    readonly pieces: ReadonlyArray<PieceInfo>;
 }
 
 interface PieceInfo {
-    backgroundClasses: string[];
-    foregroundClasses: string[];
-    y: number;
-    drawPosition: Coord;
-    actualPiece: DiamPiece;
+    readonly backgroundClasses: ReadonlyArray<string>;
+    readonly foregroundClasses: ReadonlyArray<string>;// ROA
+    readonly y: number;
+    readonly drawPosition: Coord;
+    readonly actualPiece: DiamPiece;
 }
 
-type SelectedPiece = { type: 'pieceFromReserve'; piece: DiamPiece };
-type SelectedPosition = { type: 'pieceFromBoard'; position: Coord };
+interface SelectedPiece {
+    readonly type: 'pieceFromReserve';
+    readonly piece: DiamPiece;
+};
+interface SelectedPosition {
+    readonly type: 'pieceFromBoard';
+    readonly position: Coord;
+};
 type Selected = SelectedPiece | SelectedPosition;
 
 interface LastMoved {
-    startDrawPosition: Coord;
-    endDrawPosition: Coord;
-    start: MGPOptional<Coord>;
-    end: Coord;
+    readonly startDrawPosition: Coord;
+    readonly endDrawPosition: Coord;
+    readonly start: MGPOptional<Coord>;
+    readonly end: Coord;
 }
 
 @Component({
@@ -98,13 +104,14 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     private readonly selected: WritableSignal<MGPOptional<Selected>> = signal(MGPOptional.empty());
 
-    protected readonly viewInfo: WritableSignal<ViewInfo> = signal({
-        boardInfo: [],
-        remainingPieces: new MGPMap([
+    protected readonly boardInfo: WritableSignal<ReadonlyArray<SpaceInfo>> = signal([]);
+
+    protected readonly remainingPieces: WritableSignal<MGPMap<PlayerOrNone, ReadonlyArray<PieceInfo>>> = signal(
+        new MGPMap([
             { key: Player.ZERO, value: [] },
             { key: Player.ONE, value: [] },
         ]),
-    });
+    );
 
     public constructor() {
         super('Diam');
@@ -242,18 +249,13 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     private updateBoardInfo(): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
-            const boardInfo: SpaceInfo[] = this.ArrayUtils.copy(this.viewInfo().boardInfo);
+            const boardInfo: SpaceInfo[] = ArrayUtils.copy(this.boardInfo());
             boardInfo[x] = {
                 x,
                 spaceClasses: [], // will be filled in showLastMove
                 pieces: this.getPieces(x),
             };
-            this.viewInfo.update((viewInfo: ViewInfo) => {
-                return {
-                    ...viewInfo,
-                    boardInfo,
-                };
-            });
+            this.boardInfo.set(boardInfo);
         }
     }
 
@@ -279,13 +281,19 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     classes.push('moved-fill');
                 }
             }
-            this.viewInfo().boardInfo[x].spaceClasses = classes;
+            const boardInfo: SpaceInfo[] = ArrayUtils.copy(this.boardInfo());
+            boardInfo[x] = {
+                ...boardInfo[x],
+                spaceClasses: classes,
+            };
+            this.boardInfo.set(boardInfo);
         }
     }
 
     private showLastMoveOnPieces(move: DiamMove): void {
         const previousState: DiamState = this.getPreviousState();
         let lastMoved: LastMoved[] = [];
+        const boardInfo: SpaceInfo[] = ArrayUtils.copy(this.boardInfo());
         if (move.isDrop()) {
             lastMoved = this.getLastMovedFromDrop(move, previousState);
         } else {
@@ -294,21 +302,30 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         for (const movedPiece of lastMoved) {
             const x: number = movedPiece.end.x;
             const y: number = movedPiece.end.y;
-            this.viewInfo().boardInfo[x].pieces[y].foregroundClasses.push('last-move-stroke');
+            const foregroundClasses: ReadonlyArray<string> = [
+                ...boardInfo[x].pieces[y].foregroundClasses,
+                'last-move-stroke',
+            ];
+            const pieceInfo: PieceInfo = {
+                ...boardInfo[x].pieces[y],
+                foregroundClasses,
+            };
+            const pieces: PieceInfo[] = ArrayUtils.copy(boardInfo[x].pieces);
+            pieces[y] = pieceInfo;
+            boardInfo[x] = {
+                ...boardInfo[x],
+                pieces,
+            };
         }
+        this.boardInfo.set(boardInfo);
     }
 
     private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
-        this.viewInfo.update((viewInfo: ViewInfo) => {
-            return {
-                ...viewInfo,
-                remainingPieces: new MGPMap([
-                    { key: Player.ZERO, value: [] },
-                    { key: Player.ONE, value: [] },
-                ]),
-            };
-        });
+        const remainingPieces: MGPMap<PlayerOrNone, ReadonlyArray<PieceInfo>> = new MGPMap([
+            { key: Player.ZERO, value: [] },
+            { key: Player.ONE, value: [] },
+        ]);
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.state().getRemainingPiecesOf(piece);
@@ -321,7 +338,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-stroke-hover');
                 }
-                const pieceInfos: PieceInfo[] = this.viewInfo().remainingPieces.get(piece.owner).get();
+                const pieceInfos: PieceInfo[] = ArrayUtils.copy(
+                    this.remainingPieces().get(piece.owner).get(),
+                );
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
                     backgroundClasses.push('player' + (piece.owner.getValue()) + '-alternate-fill');
@@ -335,9 +354,11 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     drawPosition: this.getDrawPositionRemainingPiece(piece, y),
                     actualPiece: piece,
                 });
-                this.viewInfo().remainingPieces.put(piece.owner, pieceInfos);
+                remainingPieces.put(piece.owner, pieceInfos);
             }
         }
+        remainingPieces.makeImmutable();
+        this.remainingPieces.set(remainingPieces);
     }
 
     private isTopPieceOfReserveAndSelected(y: number, remainingPiecesOfThatType: number, piece: DiamPiece): boolean {
