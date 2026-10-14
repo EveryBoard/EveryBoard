@@ -47,7 +47,8 @@ describe('ConfigRoomService', () => {
     }
 
     function addCandidate(candidate: MinimalUser): void {
-        backendService.mockReceivedMessage('CandidateJoined', { candidate: { user: candidate, elo: 0 } });
+        const joinedCandidate: Candidate = { user: candidate, elo: 0, botIdentifier: null };
+        backendService.mockReceivedMessage('CandidateJoined', { candidate: joinedCandidate });
         tick(1);
     }
 
