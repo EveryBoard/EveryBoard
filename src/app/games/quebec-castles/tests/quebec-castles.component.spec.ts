@@ -217,7 +217,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                 };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.getComponent().setInteractive(false);
+                testUtils.setInteractive(false);
 
                 // When displaying board
                 // Then it should not have drop-validator
