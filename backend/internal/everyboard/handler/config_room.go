@@ -52,13 +52,7 @@ func (h *Handler) handleSubscribeConfigRoom(gameID model.GameID, botIdentifier *
 				if err = store.AddCandidate(configRoom, h.user, elo.CurrentElo, botIdentifier); err != nil {
 					return err
 				}
-				currentGame := &model.CurrentGame{
-					GameID:   gameID,
-					GameName: configRoom.GameName,
-					Creator:  configRoom.Creator.User,
-					Opponent: configRoom.ChosenOpponent.MinimalUserOrNil(),
-					Role:     model.UserRoleCandidate,
-				}
+				currentGame := model.NewCurrentGame(configRoom, model.UserRoleCandidate)
 				// h.connection is already subscribed, so this broadcast includes the new user
 				h.bufferBroadcastToConfigRoom(&buf, gameID, protocol.CandidateJoinedMessage{
 					Candidate: model.PlayerInfo{User: h.user, Elo: elo.CurrentElo, BotIdentifier: botIdentifier},
@@ -118,28 +112,12 @@ func (h *Handler) handleSelectOpponent(opponent model.MinimalUser) error {
 		}
 		selectedOpponent := *configRoom.ChosenOpponent
 
-		currentGameCreator := &model.CurrentGame{
-			GameID:                configRoom.ID,
-			GameName:              configRoom.GameName,
-			Creator:               configRoom.Creator.User,
-			CreatorBotIdentifier:  configRoom.Creator.BotIdentifier,
-			Opponent:              &selectedOpponent.User,
-			OpponentBotIdentifier: configRoom.ChosenOpponent.BotIdentifier,
-			Role:                  model.UserRoleCreator,
-		}
+		currentGameCreator := model.NewCurrentGame(configRoom, model.UserRoleCreator)
 		if err = h.updateCurrentGame(&buf, store, h.user, currentGameCreator); err != nil {
 			return err
 		}
 
-		currentGameOpponent := &model.CurrentGame{
-			GameID:                configRoom.ID,
-			GameName:              configRoom.GameName,
-			Creator:               configRoom.Creator.User,
-			CreatorBotIdentifier:  configRoom.Creator.BotIdentifier,
-			Opponent:              &selectedOpponent.User,
-			OpponentBotIdentifier: configRoom.ChosenOpponent.BotIdentifier,
-			Role:                  model.UserRoleChosenOpponent,
-		}
+		currentGameOpponent := model.NewCurrentGame(configRoom, model.UserRoleChosenOpponent)
 		if err = h.updateCurrentGame(&buf, store, selectedOpponent.User, currentGameOpponent); err != nil {
 			return err
 		}
@@ -279,24 +257,12 @@ func (h *Handler) handleAcceptConfig() error {
 			return err
 		}
 
-		currentGameCreator := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  configRoom.Creator.User,
-			Opponent: configRoom.ChosenOpponent.MinimalUserOrNil(),
-			Role:     model.UserRolePlayer,
-		}
+		currentGameCreator := model.NewCurrentGame(configRoom, model.UserRolePlayer)
 		if err = h.updateCurrentGame(&buf, store, configRoom.Creator.User, currentGameCreator); err != nil {
 			return err
 		}
 
-		currentGameOpponent := &model.CurrentGame{
-			GameID:   configRoom.ID,
-			GameName: configRoom.GameName,
-			Creator:  configRoom.Creator.User,
-			Opponent: configRoom.ChosenOpponent.MinimalUserOrNil(),
-			Role:     model.UserRolePlayer,
-		}
+		currentGameOpponent := model.NewCurrentGame(configRoom, model.UserRolePlayer)
 		if err = h.updateCurrentGame(&buf, store, configRoom.ChosenOpponent.User, currentGameOpponent); err != nil {
 			return err
 		}

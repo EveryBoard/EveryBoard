@@ -12,3 +12,10 @@ func (p *PlayerInfo) MinimalUserOrNil() *MinimalUser {
 	}
 	return &p.User
 }
+
+func (p *PlayerInfo) BotIdentifierOrNil() *BotIdentifier {
+	if p == nil {
+		return nil
+	}
+	return p.BotIdentifier
+}

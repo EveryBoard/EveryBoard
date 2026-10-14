@@ -77,18 +77,10 @@ func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIden
 			return err
 		}
 
-		newCurrentGame := model.CurrentGame{
-			GameID:                configRoom.ID,
-			GameName:              gameName,
-			Creator:               configRoom.Creator.User,
-			CreatorBotIdentifier:  configRoom.Creator.BotIdentifier,
-			Opponent:              nil,
-			OpponentBotIdentifier: nil,
-			Role:                  model.UserRoleCreator,
-		}
+		newCurrentGame := model.NewCurrentGame(configRoom, model.UserRoleCreator)
 
 		buf.addSend(h.connection, protocol.GameCreatedMessage{GameID: configRoom.ID})
-		if err := h.setCurrentGame(&buf, store, h.user, &newCurrentGame); err != nil {
+		if err := h.setCurrentGame(&buf, store, h.user, newCurrentGame); err != nil {
 			return err
 		}
 

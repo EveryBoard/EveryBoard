@@ -25,3 +25,15 @@ type CurrentGame struct {
 	OpponentBotIdentifier *BotIdentifier `gorm:"serializer:json" json:"opponentBotIdentifier"`
 	Role                  UserRole       `gorm:"not null" json:"role"`
 }
+
+func NewCurrentGame(configRoom *ConfigRoom, role UserRole) *CurrentGame {
+	return &CurrentGame{
+		GameID:                configRoom.ID,
+		GameName:              configRoom.GameName,
+		Creator:               configRoom.Creator.User,
+		CreatorBotIdentifier:  configRoom.Creator.BotIdentifier,
+		Opponent:              configRoom.ChosenOpponent.MinimalUserOrNil(),
+		OpponentBotIdentifier: configRoom.ChosenOpponent.BotIdentifierOrNil(),
+		Role:                  role,
+	}
+}

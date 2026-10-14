@@ -2,6 +2,8 @@ package model
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMarshalMinimalUser(t *testing.T) {
@@ -86,4 +88,38 @@ func TestMarshalCurrentGameWithBotIdentifiers(t *testing.T) {
 
 	// Then both bot identifiers should be included
 	ExpectMarshallingToWork(t, original, json)
+}
+
+func TestNewCurrentGame(t *testing.T) {
+	creatorBotIdentifier := &BotIdentifier{DisplayName: "Creator bot", Parameters: []byte(`{}`)}
+	opponentBotIdentifier := &BotIdentifier{DisplayName: "Opponent bot", Parameters: []byte(`{}`)}
+	creator := MinimalUser{ID: "creator", Name: "Creator", IsBot: true}
+	opponent := MinimalUser{ID: "opponent", Name: "Opponent", IsBot: true}
+	configRoom := &ConfigRoom{
+		ID:       42,
+		GameName: "P4",
+		Creator: PlayerInfo{
+			User:          creator,
+			BotIdentifier: creatorBotIdentifier,
+		},
+		ChosenOpponent: &PlayerInfo{
+			User:          opponent,
+			BotIdentifier: opponentBotIdentifier,
+		},
+	}
+
+	currentGame := NewCurrentGame(configRoom, UserRolePlayer)
+
+	assert.Equal(t, GameID(42), currentGame.GameID)
+	assert.Equal(t, "P4", currentGame.GameName)
+	assert.Equal(t, creator, currentGame.Creator)
+	assert.Equal(t, creatorBotIdentifier, currentGame.CreatorBotIdentifier)
+	assert.Equal(t, &opponent, currentGame.Opponent)
+	assert.Equal(t, opponentBotIdentifier, currentGame.OpponentBotIdentifier)
+	assert.Equal(t, UserRolePlayer, currentGame.Role)
+
+	configRoom.ChosenOpponent = nil
+	currentGame = NewCurrentGame(configRoom, UserRoleCreator)
+	assert.Nil(t, currentGame.Opponent)
+	assert.Nil(t, currentGame.OpponentBotIdentifier)
 }
