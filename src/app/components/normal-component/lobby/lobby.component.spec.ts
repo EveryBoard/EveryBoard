@@ -251,7 +251,9 @@ describe('LobbyComponent', () => {
     it('should display creator elo as a whole rounded number', fakeAsync(async() => {
         // Given a lobby with an existing game, with a creator elo
         testUtils.detectChanges();
-        setActiveConfigRooms(MGPMap.from({ gameId: { ...configRoom, creatorElo: 12.67865 } }));
+        setActiveConfigRooms(MGPMap.from({
+            gameId: { ...configRoom, creator: { ...configRoom.creator, elo: 12.67865 } },
+        }));
 
         // When displaying it
         testUtils.detectChanges();
@@ -266,8 +268,14 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
         setActiveConfigRooms(MGPMap.from({ gameId: {
             ...configRoom,
-            creatorBotIdentifier: { displayName: 'Creator Bot', parameters: {} },
-            chosenOpponentBotIdentifier: { displayName: 'Opponent Bot', parameters: {} },
+            creator: {
+                ...configRoom.creator,
+                botIdentifier: { displayName: 'Creator Bot', parameters: {} },
+            },
+            chosenOpponent: configRoom.chosenOpponent == null ? null : {
+                ...configRoom.chosenOpponent,
+                botIdentifier: { displayName: 'Opponent Bot', parameters: {} },
+            },
         } }));
 
         // When displaying it
@@ -277,8 +285,8 @@ describe('LobbyComponent', () => {
         const game: DebugElement = testUtils.findElement('#part-0');
         expect(game.nativeElement.innerText).toContain('Creator Bot');
         expect(game.nativeElement.innerText).toContain('Opponent Bot');
-        expect(game.nativeElement.innerText).not.toContain(configRoom.creator.name);
-        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent?.name);
+        expect(game.nativeElement.innerText).not.toContain(configRoom.creator.user.name);
+        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent?.user.name);
     }));
 
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {

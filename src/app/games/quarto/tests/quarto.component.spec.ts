@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
-import { QuartoConfig, QuartoRules } from '@everyboard/games';
-import { QuartoState } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
+import { QuartoConfig, QuartoRules } from '@everyboard/games/quarto';
+import { QuartoState } from '@everyboard/games/quarto';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuartoComponent } from '../quarto.component';

@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { P4Heuristic } from '@everyboard/games';
-import { P4Move } from '@everyboard/games';
-import { P4MoveGenerator } from '@everyboard/games';
-import { P4OrderedMoveGenerator } from '@everyboard/games';
-import { P4Config, P4Rules } from '@everyboard/games';
-import { P4State } from '@everyboard/games';
+import { P4Heuristic } from '@everyboard/games/p4';
+import { P4Move } from '@everyboard/games/p4';
+import { P4MoveGenerator } from '@everyboard/games/p4';
+import { P4OrderedMoveGenerator } from '@everyboard/games/p4';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

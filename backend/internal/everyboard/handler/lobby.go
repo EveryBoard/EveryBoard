@@ -80,8 +80,8 @@ func (h *Handler) handleCreateGame(gameName string, botIdentifier *model.BotIden
 		newCurrentGame := model.CurrentGame{
 			GameID:                configRoom.ID,
 			GameName:              gameName,
-			Creator:               configRoom.Creator,
-			CreatorBotIdentifier:  configRoom.CreatorBotIdentifier,
+			Creator:               configRoom.Creator.User,
+			CreatorBotIdentifier:  configRoom.Creator.BotIdentifier,
 			Opponent:              nil,
 			OpponentBotIdentifier: nil,
 			Role:                  model.UserRoleCreator,

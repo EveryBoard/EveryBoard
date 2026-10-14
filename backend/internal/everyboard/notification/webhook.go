@@ -59,9 +59,7 @@ func newWebhook(client *http.Client, endpoint string, frontendURL string) *Webho
 func (w *Webhook) GameStarted(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
 		"Game started! %s vs. %s on %s. [Observe the game](%s).",
-		playerDisplayName(game.PlayerZero, game.PlayerZeroBotIdentifier),
-		playerDisplayName(game.PlayerOne, game.PlayerOneBotIdentifier),
-		game.GameName, w.observeURL(game),
+		playerDisplayName(game.PlayerZero), playerDisplayName(game.PlayerOne), game.GameName, w.observeURL(game),
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
 }
 
@@ -82,8 +80,8 @@ func (w *Webhook) observeURL(game model.Game) string {
 }
 
 func resultSummary(game model.Game) string {
-	playerZeroName := playerDisplayName(game.PlayerZero, game.PlayerZeroBotIdentifier)
-	playerOneName := playerDisplayName(game.PlayerOne, game.PlayerOneBotIdentifier)
+	playerZeroName := playerDisplayName(game.PlayerZero)
+	playerOneName := playerDisplayName(game.PlayerOne)
 	if game.Result.IsVictoryOfZero() {
 		return fmt.Sprintf("%s won against %s", playerZeroName, playerOneName)
 	}
@@ -93,11 +91,11 @@ func resultSummary(game model.Game) string {
 	return fmt.Sprintf("%s and %s drew", playerZeroName, playerOneName)
 }
 
-func playerDisplayName(player model.MinimalUser, botIdentifier *model.BotIdentifier) string {
-	if botIdentifier != nil {
-		return botIdentifier.DisplayName
+func playerDisplayName(player model.PlayerInfo) string {
+	if player.BotIdentifier != nil {
+		return player.BotIdentifier.DisplayName
 	}
-	return player.Name
+	return player.User.Name
 }
 
 func (w *Webhook) enqueue(payload webhookPayload) {

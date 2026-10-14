@@ -31,8 +31,8 @@ func TestWebhookPublishesGameLifecycle(t *testing.T) {
 	game := model.Game{
 		GameID:     42,
 		GameName:   "P4",
-		PlayerZero: model.MinimalUser{Name: "Alice"},
-		PlayerOne:  model.MinimalUser{Name: "Bob"},
+		PlayerZero: model.PlayerInfo{User: model.MinimalUser{Name: "Alice"}},
+		PlayerOne:  model.PlayerInfo{User: model.MinimalUser{Name: "Bob"}},
 		Result:     model.ResultResignOfOne,
 	}
 	notifier.GameStarted(game)
@@ -72,15 +72,15 @@ func TestWebhookPublishesBotDisplayNames(t *testing.T) {
 	game := model.Game{
 		GameID:   42,
 		GameName: "P4",
-		PlayerZero: model.MinimalUser{
-			Name: "bot-account-zero",
+		PlayerZero: model.PlayerInfo{
+			User:          model.MinimalUser{Name: "bot-account-zero"},
+			BotIdentifier: &model.BotIdentifier{DisplayName: "Perfect P4"},
 		},
-		PlayerZeroBotIdentifier: &model.BotIdentifier{DisplayName: "Perfect P4"},
-		PlayerOne: model.MinimalUser{
-			Name: "bot-account-one",
+		PlayerOne: model.PlayerInfo{
+			User:          model.MinimalUser{Name: "bot-account-one"},
+			BotIdentifier: &model.BotIdentifier{DisplayName: "MCTS P4"},
 		},
-		PlayerOneBotIdentifier: &model.BotIdentifier{DisplayName: "MCTS P4"},
-		Result:                 model.ResultResignOfOne,
+		Result: model.ResultResignOfOne,
 	}
 
 	// When the game starts and finishes

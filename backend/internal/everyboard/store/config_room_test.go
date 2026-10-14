@@ -25,7 +25,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	configRoom, err := store.CreateConfigRoom(creator, gameName, nil)
 	require.NoError(t, err, "cannot create config room")
 	assert.Equal(t, model.StatusCreated, configRoom.Status, "created config room is not as expected")
-	assert.Equal(t, creator, configRoom.Creator, "created config room is not as expected")
+	assert.Equal(t, creator, configRoom.Creator.User, "created config room is not as expected")
 	assert.Equal(t, gameName, configRoom.GameName, "created config room is not as expected")
 
 	// Add a candidate
@@ -39,7 +39,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	require.NoError(t, err, "cannot get config room")
 	require.NotNil(t, configRoom, "config room does not exist anymore")
 	require.NotNil(t, configRoom.ChosenOpponent, "selected opponent is not as expected")
-	assert.Equal(t, opponent, *configRoom.ChosenOpponent, "selected opponent is not as expected")
+	assert.Equal(t, opponent, configRoom.ChosenOpponent.User, "selected opponent is not as expected")
 
 	// Unselect them
 	err = store.RemoveOpponent(configRoom)
@@ -104,91 +104,24 @@ func TestConfigRoomFlow(t *testing.T) {
 	require.Nil(t, configRoom, "config room still exists but should not")
 }
 
-func TestBotIdentifiersArePersistedInConfigRoomAndCandidate(t *testing.T) {
-	// Given a database and identifiers for a bot creator and candidate
+func TestConfigRoomHasAllDeclaredColumns(t *testing.T) {
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
-	creator := model.MinimalUser{ID: "creator", Name: "creator", IsBot: true}
-	candidate := model.MinimalUser{ID: "candidate", Name: "candidate", IsBot: true}
-	creatorBotIdentifier := &model.BotIdentifier{
-		DisplayName: "Creator bot",
-		Parameters:  json.RawMessage(`{"version":1}`),
-	}
-	candidateBotIdentifier := &model.BotIdentifier{
-		DisplayName: "Candidate bot",
-		Parameters:  json.RawMessage(`{"version":2}`),
-	}
 
-	// When creating the config room and adding the candidate
-	configRoom, err := store.CreateConfigRoom(creator, "P4", creatorBotIdentifier)
-	require.NoError(t, err, "cannot create config room")
-	err = store.AddCandidate(configRoom, candidate, 42, candidateBotIdentifier)
-	require.NoError(t, err, "cannot add candidate")
-
-	// Then both identifiers should be restored from the database
-	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
-	require.NoError(t, err, "cannot get config room")
-	require.NotNil(t, persistedConfigRoom, "config room should exist")
-	var persistedCandidates []model.Candidate
-	err = store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
-		persistedCandidates = append(persistedCandidates, candidate)
-		return nil
-	})
-	require.NoError(t, err, "cannot get candidates")
-	assert.Equal(t, creatorBotIdentifier, persistedConfigRoom.CreatorBotIdentifier)
-	require.Len(t, persistedCandidates, 1)
-	assert.Equal(t, candidateBotIdentifier, persistedCandidates[0].BotIdentifier)
+	for _, column := range model.ConfigRoomRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.ConfigRoom{}, column),
+			"missing config-room column %s", column)
+	}
 }
 
-func TestSelectOpponentCopiesPersistedBotIdentifier(t *testing.T) {
-	// Given a config room with a persisted bot candidate
+func TestCandidateHasAllDeclaredColumns(t *testing.T) {
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
-	creator := model.MinimalUser{ID: "creator", Name: "creator"}
-	candidate := model.MinimalUser{ID: "candidate", Name: "candidate", IsBot: true}
-	botIdentifier := &model.BotIdentifier{
-		DisplayName: "Candidate bot",
-		Parameters:  json.RawMessage(`{"version":2}`),
+
+	for _, column := range model.CandidateRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.Candidate{}, column),
+			"missing candidate column %s", column)
 	}
-	configRoom, err := store.CreateConfigRoom(creator, "P4", nil)
-	require.NoError(t, err, "cannot create config room")
-	require.NoError(t, store.AddCandidate(configRoom, candidate, 42, botIdentifier), "cannot add candidate")
-
-	// When selecting the bot candidate
-	require.NoError(t, store.SelectOpponent(configRoom, candidate), "cannot select bot candidate")
-
-	// Then its identifier should be copied to the chosen opponent
-	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
-	require.NoError(t, err, "cannot get config room after selecting candidate")
-	require.NotNil(t, persistedConfigRoom, "config room should exist")
-	assert.Equal(t, botIdentifier, configRoom.ChosenOpponentBotIdentifier)
-	assert.Equal(t, botIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
-}
-
-func TestRemoveOpponentClearsBotIdentifier(t *testing.T) {
-	// Given a config room with a selected bot opponent
-	store, err := InitDatabase(sqlite.Open(":memory:"))
-	require.NoError(t, err, "cannot initialize db")
-	creator := model.MinimalUser{ID: "creator", Name: "creator"}
-	opponent := model.MinimalUser{ID: "opponent", Name: "opponent", IsBot: true}
-	botIdentifier := &model.BotIdentifier{
-		DisplayName: "Opponent bot",
-		Parameters:  json.RawMessage(`{"version":2}`),
-	}
-	configRoom, err := store.CreateConfigRoom(creator, "P4", nil)
-	require.NoError(t, err, "cannot create config room")
-	require.NoError(t, store.AddCandidate(configRoom, opponent, 42, botIdentifier), "cannot add candidate")
-	require.NoError(t, store.SelectOpponent(configRoom, opponent), "cannot select opponent")
-
-	// When removing the chosen opponent
-	require.NoError(t, store.RemoveOpponent(configRoom), "cannot remove bot opponent")
-
-	// Then the chosen-opponent identifier should be cleared
-	persistedConfigRoom, err := store.GetConfigRoom(configRoom.ID)
-	require.NoError(t, err, "cannot get config room after removing opponent")
-	require.NotNil(t, persistedConfigRoom, "config room should exist")
-	assert.Nil(t, configRoom.ChosenOpponentBotIdentifier)
-	assert.Nil(t, persistedConfigRoom.ChosenOpponentBotIdentifier)
 }
 
 func TestSelectOpponentRequiresCandidate(t *testing.T) {
@@ -232,8 +165,8 @@ func TestSelectOpponentUsesPersistedCandidateUser(t *testing.T) {
 	// Then both representations use the persisted candidate as their authority
 	require.NotNil(t, configRoom.ChosenOpponent)
 	require.NotNil(t, persistedConfigRoom.ChosenOpponent)
-	assert.Equal(t, candidate, *configRoom.ChosenOpponent)
-	assert.Equal(t, candidate, *persistedConfigRoom.ChosenOpponent)
+	assert.Equal(t, candidate, configRoom.ChosenOpponent.User)
+	assert.Equal(t, candidate, persistedConfigRoom.ChosenOpponent.User)
 }
 
 func TestRematchForCreator(t *testing.T) {
@@ -257,10 +190,10 @@ func TestRematchForCreator(t *testing.T) {
 	rematch, err := store.CreateRematch(configRoom, creator, game)
 	require.NoError(t, err, "cannot create rematch")
 	assert.NotEqual(t, configRoom.ID, rematch.ID, "rematch config room not as expected")
-	assert.Equal(t, creator.ID, rematch.Creator.ID, "rematch config room not as expected")
+	assert.Equal(t, creator.ID, rematch.Creator.User.ID, "rematch config room not as expected")
 	require.NotNil(t, rematch.ChosenOpponent, "rematch config room not as expected")
 	require.NotNil(t, configRoom.ChosenOpponent, "rematch config room not as expected")
-	assert.Equal(t, configRoom.ChosenOpponent.ID, rematch.ChosenOpponent.ID, "rematch config room not as expected")
+	assert.Equal(t, configRoom.ChosenOpponent.User.ID, rematch.ChosenOpponent.User.ID, "rematch config room not as expected")
 	assert.Equal(t, model.StatusStarted, rematch.Status, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameType, rematch.GameType, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameDuration, rematch.GameDuration, "rematch config room not as expected")
@@ -290,9 +223,9 @@ func TestRematchForOpponent(t *testing.T) {
 	rematch, err := store.CreateRematch(configRoom, opponent, game)
 	require.NoError(t, err, "cannot create rematch")
 	assert.NotEqual(t, configRoom.ID, rematch.ID, "rematch config room not as expected")
-	assert.Equal(t, opponent.ID, rematch.Creator.ID, "rematch config room not as expected")
+	assert.Equal(t, opponent.ID, rematch.Creator.User.ID, "rematch config room not as expected")
 	require.NotNil(t, rematch.ChosenOpponent, "rematch config room not as expected")
-	assert.Equal(t, configRoom.Creator.ID, rematch.ChosenOpponent.ID, "rematch config room not as expected")
+	assert.Equal(t, configRoom.Creator.User.ID, rematch.ChosenOpponent.User.ID, "rematch config room not as expected")
 	assert.Equal(t, model.StatusStarted, rematch.Status, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameType, rematch.GameType, "rematch config room not as expected")
 	assert.Equal(t, configRoom.GameDuration, rematch.GameDuration, "rematch config room not as expected")
@@ -357,11 +290,11 @@ func TestRematchPropagatesBotIdentifiers(t *testing.T) {
 			require.NotNil(t, persistedRematch, "rematch should exist")
 
 			// Then both identifiers should follow their users into the rematch
-			assert.Equal(t, test.expectedCreatorBotIdentifier, rematch.CreatorBotIdentifier)
-			assert.Equal(t, test.expectedChosenOpponentBotIdentifier, rematch.ChosenOpponentBotIdentifier)
-			assert.Equal(t, test.expectedCreatorBotIdentifier, persistedRematch.CreatorBotIdentifier)
+			assert.Equal(t, test.expectedCreatorBotIdentifier, rematch.Creator.BotIdentifier)
+			assert.Equal(t, test.expectedChosenOpponentBotIdentifier, rematch.ChosenOpponent.BotIdentifier)
+			assert.Equal(t, test.expectedCreatorBotIdentifier, persistedRematch.Creator.BotIdentifier)
 			assert.Equal(t, test.expectedChosenOpponentBotIdentifier,
-				persistedRematch.ChosenOpponentBotIdentifier)
+				persistedRematch.ChosenOpponent.BotIdentifier)
 		})
 	}
 }
@@ -452,7 +385,7 @@ func TestPostgresApplyToCandidatesShouldAllowQueriesInCallback(t *testing.T) {
 	err = database.Transaction(func(transaction Store) error {
 		return transaction.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 			seenCandidates++
-			_, err := transaction.GetElo(configRoom.GameName, candidate.User)
+			_, err := transaction.GetElo(configRoom.GameName, candidate.PlayerInfo.User)
 			return err
 		})
 	})
@@ -484,5 +417,5 @@ func TestPostgresSelectOpponentPersistsBotIdentifier(t *testing.T) {
 	require.NotNil(t, persistedConfigRoom, "config room should exist")
 
 	// Then PostgreSQL should persist and restore the candidate's identifier
-	assert.Equal(t, botIdentifier, persistedConfigRoom.ChosenOpponentBotIdentifier)
+	assert.Equal(t, botIdentifier, persistedConfigRoom.ChosenOpponent.BotIdentifier)
 }

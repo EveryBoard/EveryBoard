@@ -4,9 +4,9 @@ import { fakeAsync } from '@angular/core/testing';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { PentagoMove } from '@everyboard/games';
-import { PentagoRules } from '@everyboard/games';
-import { PentagoState } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games/pentago';
+import { PentagoRules } from '@everyboard/games/pentago';
+import { PentagoState } from '@everyboard/games/pentago';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../pentago.component';

@@ -46,8 +46,8 @@ describe('ConfigRoomService', () => {
         tick(1);
     }
 
-    function addCandidate(candidate: MinimalUser, botIdentifier: BotIdentifier | null = null): void {
-        backendService.mockReceivedMessage('CandidateJoined', { candidate, elo: 0, botIdentifier });
+    function addCandidate(candidate: MinimalUser): void {
+        backendService.mockReceivedMessage('CandidateJoined', { candidate: { user: candidate, elo: 0 } });
         tick(1);
     }
 
@@ -120,7 +120,7 @@ describe('ConfigRoomService', () => {
             // When a candidate joins
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             const botIdentifier: BotIdentifier | null = null;
-            addCandidate(candidate, botIdentifier);
+            addCandidate(candidate);
             // Then we are notified about it
             expect(candidates.length).toBe(1);
             expect(candidates[0]).toEqual({ user: candidate, elo: 0, botIdentifier });

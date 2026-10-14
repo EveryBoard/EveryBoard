@@ -1,17 +1,12 @@
 import { RulesConfig } from '@everyboard/games';
 
-import { BotIdentifier } from './BotIdentifier';
-import { MinimalUser } from './MinimalUser';
+import { PlayerInfo } from './PlayerInfo';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export type ConfigRoom = {
-    readonly creator: MinimalUser;
-    readonly creatorElo: number;
-    readonly creatorBotIdentifier: BotIdentifier | null;
+    readonly creator: PlayerInfo;
 
-    readonly chosenOpponent: MinimalUser | null;
-    readonly chosenOpponentElo: number | null;
-    readonly chosenOpponentBotIdentifier: BotIdentifier | null;
+    readonly chosenOpponent: PlayerInfo | null;
     readonly status: Status;
 
     readonly firstPlayer: FirstPlayer;

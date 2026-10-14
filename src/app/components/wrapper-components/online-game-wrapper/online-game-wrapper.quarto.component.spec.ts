@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 import { GameStatus } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { BotIdentifier } from '../../../domain/BotIdentifier';
@@ -206,7 +206,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-        expect(Utils.getNonNullable(wrapper.currentUser).name).toEqual('creator');
+        expect(Utils.getNonNullable(wrapper.currentUser()).name).toEqual('creator');
     }));
 
     it('should no longer have GameCreationComponent and should have QuartoComponent instead', fakeAsync(async() => {
@@ -258,7 +258,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ...PreparationOptions.withoutClocks,
             game: {
                 ...GameMocks.STARTED,
-                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                playerZero: {
+                    ...GameMocks.STARTED.playerZero,
+                    user: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                },
             },
         });
         await receiveSync();
@@ -416,8 +419,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 ...PreparationOptions.withoutClocks,
                 game: {
                     ...GameMocks.STARTED,
-                    playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
-                    playerOneBotIdentifier: botIdentifier,
+                    playerOne: {
+                        ...GameMocks.STARTED.playerOne,
+                        user: { ...GameMocks.STARTED.playerOne.user, isBot: true },
+                        botIdentifier,
+                    },
                 },
             });
 
@@ -426,7 +432,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the bot display name is shown instead of its account name
             expect(opponentIndicator.innerText).toBe(botIdentifier.displayName);
-            expect(opponentIndicator.innerText).not.toContain(GameMocks.STARTED.playerOne.name);
+            expect(opponentIndicator.innerText).not.toContain(GameMocks.STARTED.playerOne.user.name);
 
             await receiveEndGame();
         }));
@@ -439,8 +445,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             };
             const botGame: Game = {
                 ...GameMocks.STARTED,
-                playerOne: { ...GameMocks.STARTED.playerOne, isBot: true },
-                playerOneBotIdentifier: botIdentifier,
+                playerOne: {
+                    ...GameMocks.STARTED.playerOne,
+                    user: { ...GameMocks.STARTED.playerOne.user, isBot: true },
+                    botIdentifier,
+                },
             };
             await prepareTestUtilsFor(USER_OBSERVER, {
                 ...PreparationOptions.withoutClocks,

@@ -8,13 +8,9 @@ export class ConfigRoomMocks {
 
     public static getInitial(rulesConfig: RulesConfig): ConfigRoom {
         return {
-            creator: UserMocks.CREATOR_MINIMAL_USER,
-            creatorElo: 0,
-            creatorBotIdentifier: null,
+            creator: { user: UserMocks.CREATOR_MINIMAL_USER, elo: 0, botIdentifier: null },
 
             chosenOpponent: null,
-            chosenOpponentElo: null,
-            chosenOpponentBotIdentifier: null,
             status: Status.CREATED,
 
             // We don't want the first player to be random here, to minimize non-deterministic tests
@@ -37,21 +33,21 @@ export class ConfigRoomMocks {
     public static withChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         };
     }
 
     public static withAnotherChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
+            chosenOpponent: { user: UserMocks.OTHER_OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         };
     }
 
     public static withProposedConfig(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
             status: Status.CONFIG_PROPOSED,
         };
     }
@@ -59,7 +55,7 @@ export class ConfigRoomMocks {
     public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
             status: Status.STARTED,
         };
     }

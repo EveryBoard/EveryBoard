@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
-import { MartianChessMove } from '@everyboard/games';
-import { MartianChessPiece } from '@everyboard/games';
-import { MartianChessRules } from '@everyboard/games';
-import { MartianChessState } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games/martian-chess';
+import { MartianChessPiece } from '@everyboard/games/martian-chess';
+import { MartianChessRules } from '@everyboard/games/martian-chess';
+import { MartianChessState } from '@everyboard/games/martian-chess';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

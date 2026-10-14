@@ -69,6 +69,16 @@ func TestDBGameFlow(t *testing.T) {
 
 }
 
+func TestGameHasAllDeclaredColumns(t *testing.T) {
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	for _, column := range model.GameRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.Game{}, column),
+			"missing game column %s", column)
+	}
+}
+
 func TestManyGameEvents(t *testing.T) {
 	// Given a db with a game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
@@ -140,8 +150,8 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationPropagatesBotIdentifiers(t *testing.T) {
@@ -196,10 +206,10 @@ func TestGameCreationPropagatesBotIdentifiers(t *testing.T) {
 			require.NotNil(t, persistedGame, "game should exist")
 
 			// Then identifiers should follow the same ordering as their players
-			assert.Equal(t, test.expectedPlayerZeroIdentifier, game.PlayerZeroBotIdentifier)
-			assert.Equal(t, test.expectedPlayerOneIdentifier, game.PlayerOneBotIdentifier)
-			assert.Equal(t, test.expectedPlayerZeroIdentifier, persistedGame.PlayerZeroBotIdentifier)
-			assert.Equal(t, test.expectedPlayerOneIdentifier, persistedGame.PlayerOneBotIdentifier)
+			assert.Equal(t, test.expectedPlayerZeroIdentifier, game.PlayerZero.BotIdentifier)
+			assert.Equal(t, test.expectedPlayerOneIdentifier, game.PlayerOne.BotIdentifier)
+			assert.Equal(t, test.expectedPlayerZeroIdentifier, persistedGame.PlayerZero.BotIdentifier)
+			assert.Equal(t, test.expectedPlayerOneIdentifier, persistedGame.PlayerOne.BotIdentifier)
 		})
 	}
 }
@@ -232,8 +242,8 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationWithoutOpponentFails(t *testing.T) {

@@ -130,7 +130,7 @@ func TestHandleCreateGamePersistsBotIdentifier(t *testing.T) {
 	require.NoError(t, err, "bot creator should be allowed to subscribe with its identifier")
 
 	// Then the creator bot identifier should be persisted
-	assert.Equal(t, botIdentifier, persistedRooms[0].CreatorBotIdentifier)
+	assert.Equal(t, botIdentifier, persistedRooms[0].Creator.BotIdentifier)
 	currentGame, err := database.GetCurrentGame(bot)
 	require.NoError(t, err, "cannot retrieve bot current game")
 	require.NotNil(t, currentGame)
@@ -161,7 +161,7 @@ func TestHandleSubscribeConfigRoomPersistsBotIdentifier(t *testing.T) {
 
 	// Then the candidate bot identifier should be persisted
 	require.Len(t, persistedCandidates, 1)
-	assert.Equal(t, botIdentifier, persistedCandidates[0].BotIdentifier)
+	assert.Equal(t, botIdentifier, persistedCandidates[0].PlayerInfo.BotIdentifier)
 	currentGame, err := database.GetCurrentGame(bot)
 	require.NoError(t, err, "cannot retrieve bot current game")
 	require.NotNil(t, currentGame)

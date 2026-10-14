@@ -3,6 +3,8 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type FirstPlayer string
@@ -93,20 +95,23 @@ func (gt *GameType) UnmarshalJSON(data []byte) error {
 }
 
 type ConfigRoom struct {
-	ID                          GameID          `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
-	Creator                     MinimalUser     `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
-	CreatorElo                  float64         `gorm:"not null" json:"creatorElo"`
-	CreatorBotIdentifier        *BotIdentifier  `gorm:"serializer:json" json:"creatorBotIdentifier"`
-	ChosenOpponent              *MinimalUser    `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
-	ChosenOpponentElo           *float64        `json:"chosenOpponentElo"`
-	ChosenOpponentBotIdentifier *BotIdentifier  `gorm:"serializer:json" json:"chosenOpponentBotIdentifier"`
-	Status                      Status          `gorm:"not null" json:"status"`
-	FirstPlayer                 FirstPlayer     `gorm:"not null" json:"firstPlayer"`
-	GameType                    GameType        `gorm:"not null" json:"gameType"`
-	MoveDuration                uint32          `gorm:"not null" json:"moveDuration"`
-	GameDuration                uint32          `gorm:"not null" json:"gameDuration"`
-	RulesConfig                 json.RawMessage `json:"rulesConfig"`
-	GameName                    string          `gorm:"not null" json:"gameName"`
+	ID             GameID          `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	Creator        PlayerInfo      `gorm:"embedded;embeddedPrefix:creator_" json:"creator"`
+	ChosenOpponent *PlayerInfo     `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
+	Status         Status          `gorm:"not null" json:"status"`
+	FirstPlayer    FirstPlayer     `gorm:"not null" json:"firstPlayer"`
+	GameType       GameType        `gorm:"not null" json:"gameType"`
+	MoveDuration   uint32          `gorm:"not null" json:"moveDuration"`
+	GameDuration   uint32          `gorm:"not null" json:"gameDuration"`
+	RulesConfig    json.RawMessage `json:"rulesConfig"`
+	GameName       string          `gorm:"not null" json:"gameName"`
+}
+
+func (c *ConfigRoom) AfterFind(_ *gorm.DB) error {
+	if c.ChosenOpponent != nil && c.ChosenOpponent.User.ID == "" {
+		c.ChosenOpponent = nil
+	}
+	return nil
 }
 
 // ConfigRoomRows lists the rows names, it is needed for tests, but better placed here
@@ -119,11 +124,9 @@ var ConfigRoomRows = []string{
 }
 
 type Candidate struct {
-	ID            uint64         `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
-	GameID        GameID         `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	User          MinimalUser    `gorm:"embedded;embeddedPrefix:user_;not null"`
-	Elo           float64        `gorm:"not null" json:"elo"`
-	BotIdentifier *BotIdentifier `gorm:"serializer:json" json:"botIdentifier"`
+	ID         uint64     `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	GameID     GameID     `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
+	PlayerInfo PlayerInfo `gorm:"embedded;embeddedPrefix:player_"`
 }
 
-var CandidateRows = []string{"id", "game_id", "user_id", "user_name", "elo", "bot_identifier"}
+var CandidateRows = []string{"id", "game_id", "player_id", "player_name", "player_elo", "player_bot_identifier"}
