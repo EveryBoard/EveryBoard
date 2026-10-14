@@ -28,6 +28,8 @@ type CurrentGame struct {
 
 func NewCurrentGame(configRoom *ConfigRoom, role UserRole) *CurrentGame {
 	return &CurrentGame{
+		ID:                    0,
+		User:                  MinimalUser{},
 		GameID:                configRoom.ID,
 		GameName:              configRoom.GameName,
 		Creator:               configRoom.Creator.User,

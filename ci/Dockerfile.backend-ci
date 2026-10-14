@@ -8,6 +8,8 @@ FROM golang:1.26-trixie AS ci
 
 ENV PATH=/usr/local/bin:$PATH
 
+RUN go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.14.0
+
 COPY --from=firebase /usr/local/ /usr/local/
 COPY --from=firebase /root/.cache/firebase/ /root/.cache/firebase/
 
