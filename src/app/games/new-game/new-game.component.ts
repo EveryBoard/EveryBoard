@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
-import { NewGameHeuristic } from '@everyboard/games';
-import { NewGameMove } from '@everyboard/games';
-import { NewGameMoveGenerator } from '@everyboard/games';
-import { NewGameLegalityInfo, NewGameRules } from '@everyboard/games';
-import { NewGameState } from '@everyboard/games';
+import { NewGameHeuristic } from '@everyboard/games/new-game';
+import { NewGameMove } from '@everyboard/games/new-game';
+import { NewGameMoveGenerator } from '@everyboard/games/new-game';
+import { NewGameLegalityInfo, NewGameRules } from '@everyboard/games/new-game';
+import { NewGameState } from '@everyboard/games/new-game';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

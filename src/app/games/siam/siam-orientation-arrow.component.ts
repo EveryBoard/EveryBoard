@@ -5,8 +5,8 @@ import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player } from '@everyboard/games';
-import { SiamMove } from '@everyboard/games';
-import { SiamConfig } from '@everyboard/games';
+import { SiamMove } from '@everyboard/games/siam';
+import { SiamConfig } from '@everyboard/games/siam';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 

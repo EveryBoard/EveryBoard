@@ -3,10 +3,10 @@ import { Coord } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { HiveMove } from '@everyboard/games';
-import { HivePiece } from '@everyboard/games';
-import { HiveRules } from '@everyboard/games';
-import { HiveState } from '@everyboard/games';
+import { HiveMove } from '@everyboard/games/hive';
+import { HivePiece } from '@everyboard/games/hive';
+import { HiveRules } from '@everyboard/games/hive';
+import { HiveState } from '@everyboard/games/hive';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -5,12 +5,12 @@ import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { Table3DUtils, TableUtils } from '@everyboard/games';
-import { TrexoAlignmentHeuristic } from '@everyboard/games';
-import { TrexoFailure } from '@everyboard/games';
-import { TrexoMove } from '@everyboard/games';
-import { TrexoMoveGenerator } from '@everyboard/games';
-import { TrexoRules } from '@everyboard/games';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games';
+import { TrexoAlignmentHeuristic } from '@everyboard/games/trexo';
+import { TrexoFailure } from '@everyboard/games/trexo';
+import { TrexoMove } from '@everyboard/games/trexo';
+import { TrexoMoveGenerator } from '@everyboard/games/trexo';
+import { TrexoRules } from '@everyboard/games/trexo';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games/trexo';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

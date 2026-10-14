@@ -48,8 +48,7 @@ func (m ConfigRoomDeletedMessage) Tag() string {
 }
 
 type CandidateJoinedMessage struct {
-	Candidate model.MinimalUser `json:"candidate"`
-	Elo       float64           `json:"elo"`
+	Candidate model.PlayerInfo `json:"candidate"`
 }
 
 func (m CandidateJoinedMessage) Tag() string {

@@ -6,9 +6,9 @@ import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { QuebecCastlesMove } from '@everyboard/games';
-import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games';
-import { QuebecCastlesState } from '@everyboard/games';
+import { QuebecCastlesMove } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesState } from '@everyboard/games/quebec-castles';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

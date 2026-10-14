@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { LascaRules } from '@everyboard/games';
+import { LascaRules } from '@everyboard/games/lasca';
 
 import { CheckersComponent } from '../common/checkers.component';
 

@@ -5,9 +5,9 @@ import { Ordinal } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { EpaminondasMove } from '@everyboard/games';
-import { EpaminondasState } from '@everyboard/games';
-import { EpaminondasFailure } from '@everyboard/games';
+import { EpaminondasMove } from '@everyboard/games/epaminondas';
+import { EpaminondasState } from '@everyboard/games/epaminondas';
+import { EpaminondasFailure } from '@everyboard/games/epaminondas';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { EpaminondasComponent } from '../epaminondas.component';

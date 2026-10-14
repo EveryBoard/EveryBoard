@@ -4,10 +4,10 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { DvonnMove } from '@everyboard/games';
-import { DvonnPieceStack } from '@everyboard/games';
-import { DvonnState } from '@everyboard/games';
-import { DvonnFailure } from '@everyboard/games';
+import { DvonnMove } from '@everyboard/games/dvonn';
+import { DvonnPieceStack } from '@everyboard/games/dvonn';
+import { DvonnState } from '@everyboard/games/dvonn';
+import { DvonnFailure } from '@everyboard/games/dvonn';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DvonnComponent } from '../dvonn.component';

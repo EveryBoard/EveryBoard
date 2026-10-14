@@ -3,8 +3,8 @@ import { Component, computed, input, InputSignal, output, OutputEmitterRef, Sign
 
 
 import { Coord } from '@everyboard/games';
-import { GoPiece } from '@everyboard/games';
-import { GoState } from '@everyboard/games';
+import { GoPiece } from '@everyboard/games/families/go';
+import { GoState } from '@everyboard/games/families/go';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../../../components/game-components/base-game-component/BaseGameComponent';

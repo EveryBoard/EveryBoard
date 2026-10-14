@@ -2,14 +2,14 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { ApagosFailure } from '@everyboard/games';
-import { ApagosFullBoardHeuristic } from '@everyboard/games';
-import { ApagosMove } from '@everyboard/games';
-import { ApagosMoveGenerator } from '@everyboard/games';
-import { ApagosRightmostHeuristic } from '@everyboard/games';
-import { ApagosConfig, ApagosRules } from '@everyboard/games';
-import { ApagosSquare } from '@everyboard/games';
-import { ApagosState } from '@everyboard/games';
+import { ApagosFailure } from '@everyboard/games/apagos';
+import { ApagosFullBoardHeuristic } from '@everyboard/games/apagos';
+import { ApagosMove } from '@everyboard/games/apagos';
+import { ApagosMoveGenerator } from '@everyboard/games/apagos';
+import { ApagosRightmostHeuristic } from '@everyboard/games/apagos';
+import { ApagosConfig, ApagosRules } from '@everyboard/games/apagos';
+import { ApagosSquare } from '@everyboard/games/apagos';
+import { ApagosState } from '@everyboard/games/apagos';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

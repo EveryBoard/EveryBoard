@@ -4,14 +4,14 @@ import { ChangeDetectionStrategy, Component, computed, signal, Signal, WritableS
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { PylosCoord } from '@everyboard/games';
-import { PylosFailure } from '@everyboard/games';
-import { PylosHeuristic } from '@everyboard/games';
-import { PylosMove, PylosMoveFailure } from '@everyboard/games';
-import { PylosMoveGenerator } from '@everyboard/games';
-import { PylosRules } from '@everyboard/games';
-import { PylosState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { PylosCoord } from '@everyboard/games/pylos';
+import { PylosFailure } from '@everyboard/games/pylos';
+import { PylosHeuristic } from '@everyboard/games/pylos';
+import { PylosMove, PylosMoveFailure } from '@everyboard/games/pylos';
+import { PylosMoveGenerator } from '@everyboard/games/pylos';
+import { PylosRules } from '@everyboard/games/pylos';
+import { PylosState } from '@everyboard/games/pylos';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -432,8 +432,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private createRenderedSpace(coord: PylosCoord,
                                 kind: 'piece' | 'landing',
                                 classes: ReadonlyArray<string>)
-    : PylosRenderedSpace
-    {
+    : PylosRenderedSpace {
         return {
             kind,
             coord,

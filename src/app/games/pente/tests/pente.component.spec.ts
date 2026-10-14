@@ -5,8 +5,8 @@ import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { PenteMove } from '@everyboard/games';
-import { PenteState } from '@everyboard/games';
+import { PenteMove } from '@everyboard/games/pente';
+import { PenteState } from '@everyboard/games/pente';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PenteComponent } from '../pente.component';

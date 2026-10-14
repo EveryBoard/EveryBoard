@@ -5,10 +5,10 @@ import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games';
-import { CoerceoConfig, CoerceoRules } from '@everyboard/games';
-import { CoerceoState } from '@everyboard/games';
-import { CoerceoFailure } from '@everyboard/games';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games/coerceo';
+import { CoerceoConfig, CoerceoRules } from '@everyboard/games/coerceo';
+import { CoerceoState } from '@everyboard/games/coerceo';
+import { CoerceoFailure } from '@everyboard/games/coerceo';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { CoerceoComponent } from '../coerceo.component';

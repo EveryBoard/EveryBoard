@@ -5,10 +5,10 @@ import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { SixMove } from '@everyboard/games';
-import { SixConfig, SixRules } from '@everyboard/games';
-import { SixState } from '@everyboard/games';
-import { SixFailure } from '@everyboard/games';
+import { SixMove } from '@everyboard/games/six';
+import { SixConfig, SixRules } from '@everyboard/games/six';
+import { SixState } from '@everyboard/games/six';
+import { SixFailure } from '@everyboard/games/six';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';

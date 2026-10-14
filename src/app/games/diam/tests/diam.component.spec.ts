@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { DiamMove, DiamMoveDrop, DiamMoveShift } from '@everyboard/games';
-import { DiamPiece } from '@everyboard/games';
-import { DiamState } from '@everyboard/games';
-import { DiamFailure } from '@everyboard/games';
+import { DiamMove, DiamMoveDrop, DiamMoveShift } from '@everyboard/games/diam';
+import { DiamPiece } from '@everyboard/games/diam';
+import { DiamState } from '@everyboard/games/diam';
+import { DiamFailure } from '@everyboard/games/diam';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DiamComponent } from '../diam.component';

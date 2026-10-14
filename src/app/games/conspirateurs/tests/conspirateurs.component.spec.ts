@@ -4,9 +4,14 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '@everyboard/games';
-import { ConspirateursState } from '@everyboard/games';
-import { ConspirateursFailure } from '@everyboard/games';
+import {
+    ConspirateursMove,
+    ConspirateursMoveDrop,
+    ConspirateursMoveJump,
+    ConspirateursMoveSimple,
+} from '@everyboard/games/conspirateurs';
+import { ConspirateursState } from '@everyboard/games/conspirateurs';
+import { ConspirateursFailure } from '@everyboard/games/conspirateurs';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConspirateursComponent } from '../conspirateurs.component';
