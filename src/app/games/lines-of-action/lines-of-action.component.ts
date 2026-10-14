@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { LinesOfActionFailure } from '@everyboard/games/lines-of-action';
+import { LinesOfActionHeuristic } from '@everyboard/games/lines-of-action';
+import { LinesOfActionMove } from '@everyboard/games/lines-of-action';
+import { LinesOfActionMoveGenerator } from '@everyboard/games/lines-of-action';
+import { LinesOfActionRules } from '@everyboard/games/lines-of-action';
+import { LinesOfActionState } from '@everyboard/games/lines-of-action';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { LinesOfActionFailure } from './LinesOfActionFailure';
-import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
-import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionState } from './LinesOfActionState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,9 +58,9 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         if (this.selected.equalsValue(coord)) {
             return this.cancelMove();
         }
-        const currentPlayer: PlayerOrNone = this.getState().getCurrentPlayer();
+        const currentPlayer: PlayerOrNone = this.state().getCurrentPlayer();
         if (this.selected.isAbsent() ||
-            this.getState().getPieceAt(coord) === currentPlayer)
+            this.state().getPieceAt(coord) === currentPlayer)
         {
             return this.select(coord);
         } else {
@@ -80,14 +79,14 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
 
     private async select(coord: Coord): Promise<MGPValidation> {
-        const piece: PlayerOrNone = this.getState().getPieceAt(coord);
+        const piece: PlayerOrNone = this.state().getPieceAt(coord);
         if (piece.isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-        } else if (piece === this.getState().getCurrentOpponent()) {
+        } else if (piece === this.state().getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get()).toList();
+        this.targets = LinesOfActionRules.possibleTargets(this.state(), this.selected.get()).toList();
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
@@ -95,7 +94,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().board;
+        this.board = this.state().board;
     }
 
     protected override async showLastMove(move: LinesOfActionMove): Promise<void> {

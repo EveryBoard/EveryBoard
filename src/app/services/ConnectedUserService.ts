@@ -3,12 +3,12 @@ import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
+import { Debug } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserDAO } from '../dao/UserDAO';
 import { MinimalUser } from '../domain/MinimalUser';
 import { User } from '../domain/User';
-import { Debug } from '../utils/Debug';
 
 import { UserService } from './UserService';
 

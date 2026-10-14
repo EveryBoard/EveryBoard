@@ -39,7 +39,7 @@ func TestGames(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
-	assert.JSONEq(t, `[{"gameName":"P4","playerZero":{"id":"","name":""},"playerZeroElo":0,"playerOne":{"id":"","name":""},"playerOneElo":0,"result":"VictoryOfZero","beginning":123,"url":"https://everyboard.org/play/P4/JgaEB"}]`, recorder.Body.String())
+	assert.JSONEq(t, `[{"gameName":"P4","playerZero":{"user":{"id":"","name":""},"elo":0},"playerOne":{"user":{"id":"","name":""},"elo":0},"result":"VictoryOfZero","beginning":123,"url":"https://everyboard.org/play/P4/JgaEB"}]`, recorder.Body.String())
 }
 
 func TestGamesEmptyListIsArray(t *testing.T) {

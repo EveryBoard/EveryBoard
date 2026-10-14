@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { AwaleComponent } from '../../../games/mancala/awale/awale.component';

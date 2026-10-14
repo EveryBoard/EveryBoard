@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { Debug } from '@everyboard/games';
+
 import { User } from '../domain/User';
-import { Debug } from '../utils/Debug';
 
 import { FirestoreDAO } from './FirestoreDAO';
 

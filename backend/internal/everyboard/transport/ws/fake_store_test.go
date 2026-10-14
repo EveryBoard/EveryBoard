@@ -23,8 +23,7 @@ type FakeStore struct {
 func NewFakeStore() *FakeStore {
 	lobby := &model.ConfigRoom{
 		ID:          model.GameIDLobby,
-		Creator:     model.MinimalUser{Name: "", ID: ""},
-		CreatorElo:  0,
+		Creator:     model.PlayerInfo{User: model.MinimalUser{Name: "", ID: ""}, Elo: 0},
 		Status:      model.StatusFinished,
 		FirstPlayer: model.FirstPlayerRandom,
 		GameType:    model.GameTypeStandard,
@@ -172,18 +171,16 @@ func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string)
 	}
 	id := s.allocateID()
 	configRoom := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       model.FirstPlayerRandom,
-		ChosenOpponent:    nil,
-		ChosenOpponentElo: nil,
-		Status:            model.StatusCreated,
-		GameType:          model.GameTypeStandard,
-		MoveDuration:      model.StandardMoveDuration,
-		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       nil,
-		GameName:          gameName,
+		ID:             id,
+		Creator:        model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		FirstPlayer:    model.FirstPlayerRandom,
+		ChosenOpponent: nil,
+		Status:         model.StatusCreated,
+		GameType:       model.GameTypeStandard,
+		MoveDuration:   model.StandardMoveDuration,
+		GameDuration:   model.StandardGameDuration,
+		RulesConfig:    nil,
+		GameName:       gameName,
 	}
 	s.ConfigRooms[id] = configRoom
 	return configRoom, nil
@@ -197,19 +194,17 @@ func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
 	var candidateElo float64
 	for _, c := range s.Candidates[configRoom.ID] {
-		if c.User.ID == opponent.ID {
-			candidateElo = c.Elo
+		if c.PlayerInfo.User.ID == opponent.ID {
+			candidateElo = c.PlayerInfo.Elo
 			break
 		}
 	}
-	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidateElo
+	configRoom.ChosenOpponent = &model.PlayerInfo{User: opponent, Elo: candidateElo}
 	return nil
 }
 
 func (s *FakeStore) RemoveOpponent(configRoom *model.ConfigRoom) error {
 	configRoom.ChosenOpponent = nil
-	configRoom.ChosenOpponentElo = nil
 	return nil
 }
 
@@ -246,12 +241,12 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	var firstPlayer model.FirstPlayer
 	var chosenOpponent model.MinimalUser
-	if game.PlayerZero.ID == creator.ID {
+	if game.PlayerZero.User.ID == creator.ID {
 		firstPlayer = model.FirstPlayerChosenOpponent
-		chosenOpponent = game.PlayerOne
+		chosenOpponent = game.PlayerOne.User
 	} else {
 		firstPlayer = model.FirstPlayerCreator
-		chosenOpponent = game.PlayerZero
+		chosenOpponent = game.PlayerZero.User
 	}
 
 	chosenOpponentElo, err := s.GetElo(configRoom.GameName, chosenOpponent)
@@ -261,18 +256,19 @@ func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.Mi
 
 	id := s.allocateID()
 	rematch := &model.ConfigRoom{
-		ID:                id,
-		Creator:           creator,
-		CreatorElo:        creatorElo.CurrentElo,
-		FirstPlayer:       firstPlayer,
-		ChosenOpponent:    &chosenOpponent,
-		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
-		Status:            model.StatusStarted,
-		GameType:          configRoom.GameType,
-		MoveDuration:      configRoom.MoveDuration,
-		GameDuration:      configRoom.GameDuration,
-		RulesConfig:       configRoom.RulesConfig,
-		GameName:          configRoom.GameName,
+		ID:      id,
+		Creator: model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		ChosenOpponent: &model.PlayerInfo{
+			User: chosenOpponent,
+			Elo:  chosenOpponentElo.CurrentElo,
+		},
+		FirstPlayer:  firstPlayer,
+		Status:       model.StatusStarted,
+		GameType:     configRoom.GameType,
+		MoveDuration: configRoom.MoveDuration,
+		GameDuration: configRoom.GameDuration,
+		RulesConfig:  configRoom.RulesConfig,
+		GameName:     configRoom.GameName,
 	}
 	s.ConfigRooms[id] = rematch
 	return rematch, nil
@@ -291,9 +287,8 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 
 func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
-		GameID: configRoom.ID,
-		User:   user,
-		Elo:    elo,
+		GameID:     configRoom.ID,
+		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},
 	})
 	return nil
 }
@@ -301,7 +296,7 @@ func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.Minima
 func (s *FakeStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) error {
 	candidates := s.Candidates[configRoom.ID]
 	for i, c := range candidates {
-		if c.User.ID == uid {
+		if c.PlayerInfo.User.ID == uid {
 			s.Candidates[configRoom.ID] = append(candidates[:i], candidates[i+1:]...)
 			return nil
 		}
@@ -336,31 +331,23 @@ func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool
 		}
 	}
 
-	var playerZero model.MinimalUser
-	var playerZeroElo float64
-	var playerOne model.MinimalUser
-	var playerOneElo float64
+	var playerZero model.PlayerInfo
+	var playerOne model.PlayerInfo
 	if starter == model.FirstPlayerCreator {
 		playerZero = configRoom.Creator
-		playerZeroElo = configRoom.CreatorElo
 		playerOne = *configRoom.ChosenOpponent
-		playerOneElo = *configRoom.ChosenOpponentElo
 	} else {
 		playerZero = *configRoom.ChosenOpponent
-		playerZeroElo = *configRoom.ChosenOpponentElo
 		playerOne = configRoom.Creator
-		playerOneElo = configRoom.CreatorElo
 	}
 
 	game := &model.Game{
-		GameID:        configRoom.ID,
-		GameName:      configRoom.GameName,
-		PlayerZero:    playerZero,
-		PlayerZeroElo: playerZeroElo,
-		PlayerOne:     playerOne,
-		PlayerOneElo:  playerOneElo,
-		Result:        model.ResultInProgress,
-		Beginning:     now,
+		GameID:     configRoom.ID,
+		GameName:   configRoom.GameName,
+		PlayerZero: playerZero,
+		PlayerOne:  playerOne,
+		Result:     model.ResultInProgress,
+		Beginning:  now,
 	}
 	s.Games[configRoom.ID] = game
 	return game, nil

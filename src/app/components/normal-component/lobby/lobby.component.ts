@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { Debug } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConfigRoom, Status } from '../../../domain/ConfigRoom';
@@ -11,7 +12,6 @@ import { ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsSer
 import { BackendMessage, BackendService } from '../../../services/BackendService';
 import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { Debug } from '../../../utils/Debug';
 import { ChatComponent } from '../chat/chat.component';
 import { EloComponent } from '../elo/elo.component';
 import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';

@@ -1,19 +1,18 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { P4Heuristic } from '@everyboard/games/p4';
+import { P4Move } from '@everyboard/games/p4';
+import { P4MoveGenerator } from '@everyboard/games/p4';
+import { P4OrderedMoveGenerator } from '@everyboard/games/p4';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-
-import { P4Heuristic } from './P4Heuristic';
-import { P4Move } from './P4Move';
-import { P4MoveGenerator } from './P4MoveGenerator';
-import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
-import { P4Config, P4Rules } from './P4Rules';
-import { P4State } from './P4State';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,14 +82,14 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: P4State = this.getState();
+        const state: P4State = this.state();
 
         this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
         this.board = state.board;
     }
 
     protected override async showLastMove(move: P4Move): Promise<void> {
-        const state: P4State = this.getState();
+        const state: P4State = this.state();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));
     }

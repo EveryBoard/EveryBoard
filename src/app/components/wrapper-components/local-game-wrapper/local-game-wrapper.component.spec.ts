@@ -3,25 +3,25 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { AIDepthLimitOptions, AIOptions, AbstractAI } from '@everyboard/games';
+import { MinimaxConfig } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { IterativeDeepeningMinimax } from '@everyboard/games';
+import { MCTS } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
+import { P4Heuristic } from '@everyboard/games/p4';
+import { P4Move } from '@everyboard/games/p4';
+import { P4OrderedMoveGenerator } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { GipfComponent } from '../../../games/gipf/gipf.component';
-import { P4Heuristic } from '../../../games/p4/P4Heuristic';
-import { P4Move } from '../../../games/p4/P4Move';
-import { P4OrderedMoveGenerator } from '../../../games/p4/P4OrderedMoveGenerator';
-import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
-import { P4State } from '../../../games/p4/P4State';
 import { P4Component } from '../../../games/p4/p4.component';
-import { AIDepthLimitOptions, AIOptions, AbstractAI } from '../../../jscaip/AI/AI';
-import { MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
@@ -129,7 +129,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
     it('should create the component at turn 0', () => {
         expect(testUtils.getGameComponent()).toBeTruthy();
-        const state: P4State = testUtils.getGameComponent().getState();
+        const state: P4State = testUtils.getGameComponent().state();
         expect(state.turn).toBe(0);
     });
 
@@ -155,7 +155,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Given a game
         // When displaying it
         // Then it is interactive
-        expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+        expect(testUtils.getGameComponent().interactive()).toBeTrue();
     }));
 
     it('should show draw', fakeAsync(async() => {
@@ -216,14 +216,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
                 [O, _, _, _, _, _, _],
             ], 2);
             await testUtils.setupState(advancedState);
-            let state: P4State = testUtils.getGameComponent().getState();
+            let state: P4State = testUtils.getGameComponent().state();
             expect(state.turn).toBe(2);
 
             // When clicking on restart button
             await testUtils.expectInterfaceClickSuccess('#restart-button');
 
             // Then it should go back to first turn
-            state = testUtils.getGameComponent().getState();
+            state = testUtils.getGameComponent().state();
             expect(state.turn).toBe(0);
         }));
 
@@ -261,7 +261,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
                 [O, _, _, _, _, _, _],
             ], 2);
             await testUtils.setupState(advancedState);
-            const state: P4State = testUtils.getGameComponent().getState();
+            const state: P4State = testUtils.getGameComponent().state();
             expect(state.turn).toBe(2);
 
             // When restarting the game
@@ -280,14 +280,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
             testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
 
             // When selecting only the AI without the depth for the current player
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
 
             // Then the game should not be interactive anymore
-            expect(testUtils.getGameComponent().isInteractive())
+            expect(testUtils.getGameComponent().interactive())
                 .withContext('Interactivity should be false')
                 .toBeFalse();
             // nor should it show the current player background
@@ -582,7 +582,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
-            expect(gameComponent.getState().turn)
+            expect(gameComponent.state().turn)
                 .withContext('after we did one move')
                 .toEqual(1);
             testUtils.selectChildElementOfDropDown('#ai-profile-select-1', 'player-1-profile-alignment');
@@ -593,7 +593,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(localGameWrapper.proposeAIToPlay).toHaveBeenCalledTimes(3);
             // And hideLastMove should have been called once per pending AI proposal
             expect(gameComponent.hideLastMove).toHaveBeenCalledTimes(3);
-            expect(gameComponent.getState().turn)
+            expect(gameComponent.state().turn)
                 .withContext('after AI did her move')
                 .toEqual(2);
         }));
@@ -781,7 +781,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     describe('Take Back', () => {
         it('should take back one turn when human move has been made', fakeAsync(async() => {
             // Given a board with a move already done
-            const state: P4State = testUtils.getGameComponent().getState();
+            const state: P4State = testUtils.getGameComponent().state();
             expect(state.turn).toBe(0);
 
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
@@ -846,17 +846,17 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should not allow to take back when AI vs. AI', fakeAsync(async() => {
             // Given a board on which AI plays against AI
             selectAIPlayer(Player.ZERO);
-            expect(testUtils.getGameComponent().getState().turn).toBe(0);
+            expect(testUtils.getGameComponent().state().turn).toBe(0);
             testUtils.expectElementNotToExist('#take-back');
             tick( LocalGameWrapperComponent.AI_TIMEOUT);
-            expect(testUtils.getGameComponent().getState().turn).toBe(1);
+            expect(testUtils.getGameComponent().state().turn).toBe(1);
             testUtils.expectElementNotToExist('#take-back');
 
             // When searching for takeBack button
             // Then it should not be visible
             selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
-            expect(testUtils.getGameComponent().getState().turn).toBe(2);
+            expect(testUtils.getGameComponent().state().turn).toBe(2);
             testUtils.expectElementNotToExist('#take-back');
             // deactivate AI to stop timeout generation
             tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
@@ -868,7 +868,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should highlight board in player 0 color when it is player 0 turn', () => {
             // Given a game which is initially interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
 
             // Then the game should have background for player 0
             testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
@@ -876,7 +876,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should highlight board in player 1 color when it is player 1 turn', fakeAsync(async() => {
             // Given a game which is initially interactive and it is Player.ONE's turn
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // Then the game should have background for player 1

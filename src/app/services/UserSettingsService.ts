@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { LocaleUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { LocaleUtils } from '../utils/LocaleUtils';
 
 @Injectable({
     providedIn: 'root',

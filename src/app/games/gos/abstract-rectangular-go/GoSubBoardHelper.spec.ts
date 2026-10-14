@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from '../../../jscaip/TableUtils';
+import { Table } from '@everyboard/games';
 
 import { GoSubBoardHelper } from './GoSubBoardHelper';
 

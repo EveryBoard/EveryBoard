@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games/diaballik';
+import { DiaballikRules } from '@everyboard/games/diaballik';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games/diaballik';
+import { DiaballikFailure } from '@everyboard/games/diaballik';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DiaballikFailure } from '../DiaballikFailure';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
-import { DiaballikRules } from '../DiaballikRules';
-import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { DiaballikComponent } from '../diaballik.component';
 
 describe('DiaballikComponent', () => {
@@ -435,7 +435,7 @@ describe('DiaballikComponent', () => {
         // Given a non-interactive component
         testUtils.expectElementToExist('#translationCount');
         testUtils.expectElementToExist('#passCount');
-        testUtils.getGameComponent().setInteractive(false);
+        testUtils.getGameComponent().interactive.set(false);
 
         // When displaying it
         // Then there should be no translation or pass count

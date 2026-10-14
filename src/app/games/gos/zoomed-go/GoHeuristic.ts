@@ -1,8 +1,6 @@
-import { AbstractGoHeuristic } from '../AbstractGoHeuristic';
-import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
-
-import { ZoomedGoRules } from './ZoomedGoRules';
-
+import { AbstractGoHeuristic } from '@everyboard/games/zoomed-go';
+import { RectangularGoConfig } from '@everyboard/games/zoomed-go';
+import { ZoomedGoRules } from '@everyboard/games/zoomed-go';
 
 export class ZoomedGoHeuristic extends AbstractGoHeuristic<RectangularGoConfig> {
 

@@ -2,7 +2,7 @@
   "name": "@everyboard/lib",
   "version": "1.0.0",
   "description": "EveryBoard's library",
-  "private": "true",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,8 +25,9 @@
   },
   "devDependencies": {
     "@types/jasmine": "^6.0.0",
-    "jasmine": "^6.2.0",
+    "jasmine": "^6.3.0",
     "nyc": "^18.0.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

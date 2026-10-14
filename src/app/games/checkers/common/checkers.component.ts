@@ -1,24 +1,23 @@
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { AbstractCheckersRules, CheckersConfig } from '@everyboard/games/families/checkers';
+import { CheckersControlHeuristic } from '@everyboard/games/families/checkers';
+import { CheckersControlPlusDominationHeuristic } from '@everyboard/games/families/checkers';
+import { CheckersFailure } from '@everyboard/games/families/checkers';
+import { CheckersMove } from '@everyboard/games/families/checkers';
+import { CheckersMoveGenerator } from '@everyboard/games/families/checkers';
+import { CheckersScoreHeuristic } from '@everyboard/games/families/checkers';
+import { CheckersPiece, CheckersStack, CheckersState } from '@everyboard/games/families/checkers';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { ModeConfig } from '../../../components/game-components/parallelogram-game-component/ModeConfig';
 import { ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-
-import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
-import { CheckersControlHeuristic } from './CheckersControlHeuristic';
-import { CheckersControlPlusDominationHeuristic } from './CheckersControlPlusDominationHeuristic';
-import { CheckersFailure } from './CheckersFailure';
-import { CheckersMove } from './CheckersMove';
-import { CheckersMoveGenerator } from './CheckersMoveGenerator';
-import { CheckersScoreHeuristic } from './CheckersScoreHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,
@@ -117,7 +116,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.setConstructedState(this.getState());
+        this.setConstructedState(this.state());
         this.legalMoves = this.moveGenerator.getListMoves(this.node(), this.config());
         this.scores = MGPOptional.of(this.constructedState().get().getScores());
         this.showPossibleClicks();
@@ -178,7 +177,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private showPossibleClicks(): void {
         this.possibleClicks = new Set();
-        if (this.interactive) {
+        if (this.interactive()) {
             for (const validMove of this.legalMoves) {
                 const numberOfClicks: number = this.currentMoveClicks.length;
                 if (numberOfClicks < validMove.coords.length) {
@@ -212,7 +211,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public override cancelMoveAttempt(): void {
-        this.setConstructedState(this.getState());
+        this.setConstructedState(this.state());
         this.currentMoveClicks = [];
         this.capturedCoords = [];
         this.flownOverCoords = [];
@@ -260,7 +259,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const lastSegmentStart: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
         const stack: CheckersStack = this.constructedState().get().getPieceAt(lastSegmentStart);
         const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
-        const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
+        const stateWithoutStarting: CheckersState = this.state().remove(this.currentMoveClicks[0]);
         const validation: MGPValidation = this.rules.getSubMoveValidity(
             stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.config(),
         );
@@ -268,7 +267,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             return validation.getReason();
         }
         const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
-        const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.config());
+        const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.state(), this.config());
         Utils.assert(moveValidity.isFailure(), 'A move absent from possibleClicks should be illegal');
         return moveValidity.getReason();
     }
@@ -285,7 +284,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private doesMoveAttemptCapture(clicked: Coord): boolean {
         const start: Coord = this.currentMoveClicks[0];
         const steppedOver: Coord[] = start.getCoordsToward(clicked);
-        return steppedOver.some((coord: Coord) => this.getState().getPieceAt(coord).isOccupied());
+        return steppedOver.some((coord: Coord) => this.state().getPieceAt(coord).isOccupied());
     }
 
     private getMatchingLegalMove(): MGPOptional<CheckersMove> {
@@ -300,7 +299,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private applyPartialCapture(): void {
         const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
-        this.setConstructedState(this.rules.applyMove(currentMove, this.getState(), this.config()));
+        this.setConstructedState(this.rules.applyMove(currentMove, this.state(), this.config()));
     }
 
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {
@@ -331,8 +330,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private adaptXY(x: number, y: number): Coord {
         if (this.getPointOfView() === Player.ONE) {
-            const maxX: number = this.getState().getWidth() - 1;
-            const maxY: number = this.getState().getHeight() - 1;
+            const maxX: number = this.width() - 1;
+            const maxY: number = this.height() - 1;
             return new Coord(maxX - x, maxY - y);
         } else {
             return new Coord(x, y);

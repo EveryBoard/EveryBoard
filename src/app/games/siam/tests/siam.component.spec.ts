@@ -1,19 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { SiamMove } from '@everyboard/games/siam';
+import { SiamPiece } from '@everyboard/games/siam';
+import { SiamRules } from '@everyboard/games/siam';
+import { SiamState } from '@everyboard/games/siam';
+import { SiamFailure } from '@everyboard/games/siam';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { SiamFailure } from '../SiamFailure';
-import { SiamMove } from '../SiamMove';
-import { SiamPiece } from '../SiamPiece';
-import { SiamRules } from '../SiamRules';
-import { SiamState } from '../SiamState';
 import { SiamComponent } from '../siam.component';
 
 describe('SiamComponent', () => {

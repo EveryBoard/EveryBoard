@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { MancalaComponent } from '../common/MancalaComponent';
-import { MancalaMove } from '../common/MancalaMove';
-import { NumberedCircleComponent } from '../common/numbered-circle.component';
+import { AwaleMoveGenerator } from '@everyboard/games/awale';
+import { AwaleRules } from '@everyboard/games/awale';
+import { MancalaMove } from '@everyboard/games/awale';
 
-import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { AwaleRules } from './AwaleRules';
+import { MancalaComponent } from '../common/MancalaComponent';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

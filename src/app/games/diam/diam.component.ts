@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { DiamFailure } from '@everyboard/games/diam';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '@everyboard/games/diam';
+import { DiamMoveGenerator } from '@everyboard/games/diam';
+import { DiamPiece } from '@everyboard/games/diam';
+import { DiamRules } from '@everyboard/games/diam';
+import { DiamState } from '@everyboard/games/diam';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Vector } from '../../jscaip/Vector';
-
-import { DiamFailure } from './DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
-import { DiamMoveGenerator } from './DiamMoveGenerator';
-import { DiamPiece } from './DiamPiece';
-import { DiamRules } from './DiamRules';
-import { DiamState } from './DiamState';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[];
@@ -155,7 +154,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
-        const clickedPiece: DiamPiece = this.getState().getPieceAt(clicked);
+        const clickedPiece: DiamPiece = this.state().getPieceAt(clicked);
         if (clickedPiece.owner === this.getCurrentPlayer()) {
             if (this.isSelected(null, clicked)) {
                 return this.cancelMove();
@@ -300,7 +299,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         ]);
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
-            const remaining: number = this.getState().getRemainingPiecesOf(piece);
+            const remaining: number = this.state().getRemainingPiecesOf(piece);
             for (let y: number = 0; y < remaining; y++) {
                 const foregroundClasses: string[] = [];
                 if (this.isTopPieceOfReserveAndSelected(y, remaining, piece)) {
@@ -357,11 +356,11 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
 
     private getPieces(x: number): PieceInfo[] {
-        const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.getState());
+        const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.state());
         const isPlayerTurn: boolean = this.isPlayerTurn();
         const infos: PieceInfo[] = [];
         for (let y: number = 0; y < DiamState.HEIGHT; y++) {
-            const piece: DiamPiece = this.getState().getPieceAtXY(x, y);
+            const piece: DiamPiece = this.state().getPieceAtXY(x, y);
             const coord: Coord = new Coord(x, y);
             if (piece !== DiamPiece.EMPTY) {
                 const foregroundClasses: string[] = [];
@@ -371,7 +370,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                 if (this.isVictory(x, y, highestAlignment)) {
                     foregroundClasses.push('victory-stroke');
                 }
-                if (isPlayerTurn && this.rules.pieceCanMove(this.getState(), coord)) {
+                if (isPlayerTurn && this.rules.pieceCanMove(this.state(), coord)) {
                     foregroundClasses.push('clickable-stroke-hover');
                 }
                 infos.push({

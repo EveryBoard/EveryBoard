@@ -4,11 +4,11 @@
      preserveAspectRatio="xMidYMid meet">
 
     <g app-blank-goban
-       [width]="getState().getWidth()"
-       [height]="getState().getHeight()"
+       [width]="width()"
+       [height]="height()"
        (clickCallBack)="onClick($event)"/>
     <g id="piece-ko-territory-markers-and-dead-stones">
-        @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+        @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
             <g>
                 @if (spaceIsFull(coordAndContent.coord)) {
                     <g>
