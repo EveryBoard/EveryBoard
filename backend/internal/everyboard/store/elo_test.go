@@ -69,7 +69,7 @@ func TestGetEloConcurrentFirstCreate(t *testing.T) {
 	wg.Add(numGoroutines)
 	errs := make(chan error, numGoroutines)
 	start := make(chan struct{})
-	for i := 0; i < numGoroutines; i++ {
+	for range numGoroutines {
 		go func() {
 			defer wg.Done()
 			<-start

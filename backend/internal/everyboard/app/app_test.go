@@ -26,8 +26,8 @@ func (f firebaseMock) Initialize() error {
 	return nil
 }
 
-func (f firebaseMock) Fetch(_ context.Context, _ string, path string) (map[string]interface{}, error) {
-	return map[string]interface{}{"username": path}, nil
+func (f firebaseMock) Fetch(_ context.Context, _ string, path string) (map[string]any, error) {
+	return map[string]any{"username": path}, nil
 }
 
 func (f firebaseMock) VerifyToken(_ context.Context, _ string) (string, error) {

@@ -24,7 +24,7 @@ type FirebaseLike interface {
 	// linking what is done here with the request being handled; this is a go
 	// concept that allows for example to cancel the firestore request in case
 	// the client that made the initial request has left.
-	Fetch(context context.Context, collection string, path string) (map[string]interface{}, error)
+	Fetch(context context.Context, collection string, path string) (map[string]any, error)
 	// Verify an identity token and returns the user id that it corresponds to.
 	// If it's not a valid token, it returns an error instead.
 	VerifyToken(context context.Context, token string) (string, error)
@@ -108,7 +108,7 @@ func (f *Firebase) Initialize() error {
 	return nil
 }
 
-func (f Firebase) Fetch(context context.Context, collection string, path string) (map[string]interface{}, error) {
+func (f Firebase) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
 	docRef := f.firestore.Collection(collection).Doc(path)
 	docSnapshot, err := docRef.Get(context)
 	if err != nil {
@@ -132,7 +132,7 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 			return "", errors.New("invalid payload encoding") // payload is not a b64 string
 		}
 
-		var claims map[string]interface{}
+		var claims map[string]any
 		err = json.Unmarshal(payloadBytes, &claims)
 		if err != nil {
 			return "", errors.New("invalid payload") // payload cannot be decoded as a map

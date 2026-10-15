@@ -17,7 +17,7 @@ func TestConnectionMessageQueueHandlesBurst(t *testing.T) {
 	c := EstablishWebSocketConnection(t, "victim")
 	defer func() { _ = c.Close() }()
 
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		config.Connections.SendMessage(c, protocol.ErrorMessage{Reason: apperror.ErrorUnknownMessage.Msg})
 	}
 }

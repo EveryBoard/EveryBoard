@@ -327,7 +327,7 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 		))
 		foundGameUpdate := false
 		foundSyncEvent := false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), "GameUpdate") {
 				foundGameUpdate = true

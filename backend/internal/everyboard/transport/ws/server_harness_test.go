@@ -57,7 +57,7 @@ func (f FirebaseMock) VerifyToken(_ context.Context, token string) (string, erro
 		return "", errors.New("invalid payload encoding") // payload is not a b64 string
 	}
 
-	var claims map[string]interface{}
+	var claims map[string]any
 	err = json.Unmarshal(payloadBytes, &claims)
 	if err != nil {
 		return "", errors.New("invalid payload") // payload cannot be decoded as a map

@@ -89,7 +89,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		readWithTimeout(t, c) // skip subscription messages
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
 		require.NoError(t, err, "WriteMessage failed")
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
 				break
@@ -118,7 +118,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
 		require.NoError(t, err, "WriteMessage failed")
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
 				break
@@ -299,7 +299,7 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 		))
 
 		found := false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), "GameUpdate") {
 				found = true

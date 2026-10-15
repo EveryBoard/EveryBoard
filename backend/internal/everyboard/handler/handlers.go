@@ -71,8 +71,7 @@ func (h *Handler) Handle(messageType string, messageData map[string]json.RawMess
 	if err == nil {
 		return
 	}
-	var backendError apperror.BackendError
-	if errors.As(err, &backendError) {
+	if backendError, ok := errors.AsType[apperror.BackendError](err); ok {
 		h.SendError(backendError)
 		return
 	}
