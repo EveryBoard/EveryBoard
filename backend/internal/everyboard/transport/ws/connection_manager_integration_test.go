@@ -40,6 +40,6 @@ func TestSendMessageToClosedConnection(t *testing.T) {
 	// When sending it a message
 	config.Connections.SendMessage(c, protocol.ErrorMessage{Reason: "test"})
 
-	// Then it should not not panic, and should be skipped in push loop
+	// Then it should not panic, and should be skipped in push loop
 	time.Sleep(100 * time.Millisecond)
 }

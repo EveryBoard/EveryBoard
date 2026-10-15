@@ -25,7 +25,7 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	sendRawMessage(t, c, `["SubscribeLobby"]`)
 	time.Sleep(100 * time.Millisecond)
 
-	// Then we should should be subscribed
+	// Then we should be subscribed
 	require.True(t, config.Subscriptions.IsSubscribed("foo"), "user should be subscribed to lobby")
 }
 

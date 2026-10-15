@@ -3,11 +3,14 @@ version: "2"
 linters:
     default: standard
     enable:
+        - asasalint
         - bidichk
         - bodyclose
+        - canonicalheader
         - containedctx
         - contextcheck
         - durationcheck
+        - dupword
         - errorlint
         - exhaustive
         - fatcontext
