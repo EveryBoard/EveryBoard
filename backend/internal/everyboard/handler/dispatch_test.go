@@ -37,7 +37,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When calling unsubscribe
 		err := h.unsubscribe()
 		// Then it should not result in an error
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 
 	t.Run("HandleSubscribeGameDoesNotExist", func(t *testing.T) {
@@ -55,7 +55,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When we subscribe to the lobby
 		err := h.handleSubscribeLobby()
 		// Then it should succeed
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
@@ -88,6 +88,6 @@ func TestUnsubscribeDirect(t *testing.T) {
 	t.Run("Lobby", func(t *testing.T) {
 		subs.Subscribe(h.connection, user.ID, model.GameIDLobby, session.SubscriptionToLobby)
 		err := h.unsubscribe()
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 }

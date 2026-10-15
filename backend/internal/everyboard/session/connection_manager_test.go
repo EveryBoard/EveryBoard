@@ -14,7 +14,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	// Given a connection manager with no connection for a user
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	manager := NewConnectionManager[*MockConnection]()
-	require.Equal(t, 0, len(manager.AllUserConnections(user)), "user should not have connections before adding one")
+	require.Empty(t, manager.AllUserConnections(user), "user should not have connections before adding one")
 
 	// When we add a connection
 	connection := &MockConnection{ID: 42}
@@ -22,7 +22,7 @@ func TestConnectionWorkflow(t *testing.T) {
 
 	// Then it should be there
 	connections := manager.AllUserConnections(user)
-	require.Equal(t, 1, len(connections), "user should have one connection")
+	require.Len(t, connections, 1, "user should have one connection")
 
 	require.True(t, connections.Has(connection), "user connections should contain the added connection")
 
@@ -31,7 +31,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.AddConnection(user, otherConnection)
 	// Then it should be there along with the other one
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 2, len(connections), "user should have two connections")
+	require.Len(t, connections, 2, "user should have two connections")
 
 	require.True(t, connections.Has(connection), "user connections should contain the first connection")
 	require.True(t, connections.Has(otherConnection), "user connections should contain the second connection")
@@ -48,7 +48,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.RemoveConnection(user, connection)
 	// Then it shouldn't be there
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 1, len(connections), "user should have one connection after removing one")
+	require.Len(t, connections, 1, "user should have one connection after removing one")
 
 	require.True(t, connections.Has(otherConnection), "remaining connection should still be registered")
 
@@ -56,7 +56,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.RemoveConnection(user, otherConnection)
 	// Then we should not have any more connection
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 0, len(connections), "user should have no connections after removing all")
+	require.Empty(t, connections, "user should have no connections after removing all")
 }
 
 type CountMessagesConnection struct {

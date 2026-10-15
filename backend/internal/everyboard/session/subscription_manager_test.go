@@ -32,7 +32,7 @@ func TestSubscriptionWorkflow(t *testing.T) {
 	subscriptionKind := SubscriptionToLobby
 	const gameID model.GameID = model.GameIDLobby
 
-	require.Equal(t, 0, len(manager.SubscriptionsTo(subscriptionKind, gameID)), "user should not have subscriptions before subscribing")
+	require.Empty(t, manager.SubscriptionsTo(subscriptionKind, gameID), "user should not have subscriptions before subscribing")
 	require.False(t, manager.IsSubscribed(user), "user should not be subscribed before subscribing")
 	_, _, subscribed := manager.SubscriptionOf(connection)
 	require.False(t, subscribed, "connection should not have a subscription before subscribing")
@@ -50,7 +50,7 @@ func TestSubscriptionWorkflow(t *testing.T) {
 	manager.Unsubscribe(connection)
 
 	// Then the client should not be connected anymore
-	require.Equal(t, 0, len(manager.SubscriptionsTo(subscriptionKind, gameID)), "user should not have subscriptions after unsubscribing")
+	require.Empty(t, manager.SubscriptionsTo(subscriptionKind, gameID), "user should not have subscriptions after unsubscribing")
 	require.False(t, manager.IsSubscribed(user), "user should not be subscribed after unsubscribing")
 	_, _, subscribed = manager.SubscriptionOf(connection)
 	require.False(t, subscribed, "connection should not have a subscription after unsubscribing")

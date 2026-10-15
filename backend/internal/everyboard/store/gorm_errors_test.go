@@ -30,7 +30,7 @@ func TestGetEloDoesNotExist(t *testing.T) {
 	user := model.MinimalUser{ID: "non-existent", Name: "non-existent"}
 	elo, err := store.GetElo("some-game", user)
 	require.NoError(t, err, "error when getting elo")
-	assert.Equal(t, 0.0, elo.CurrentElo, "expected 0.0 elo")
+	assert.InDelta(t, 0.0, elo.CurrentElo, 0.000001, "expected 0.0 elo")
 }
 
 func TestUpdateElosTransaction(t *testing.T) {

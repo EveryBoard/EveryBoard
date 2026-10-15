@@ -282,6 +282,6 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	t.Logf("Games in DB: %d", len(configRooms))
 
 	// Then it should have been exactly 1
-	assert.Equal(t, 1, len(configRooms), "Should only have created one game")
+	assert.Len(t, configRooms, 1, "Should only have created one game")
 	assert.Equal(t, 1, numSuccess, "Should only have one successful creation")
 }
