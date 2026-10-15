@@ -30,7 +30,7 @@ func (f FirebaseMock) Initialize() error {
 	return nil
 }
 
-func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
+func (f FirebaseMock) Fetch(_ context.Context, _ string, path string) (map[string]any, error) {
 	if f.Users != nil {
 		user, ok := f.Users[path]
 		if !ok {
@@ -43,7 +43,7 @@ func (f FirebaseMock) Fetch(context context.Context, collection string, path str
 	}, nil
 }
 
-func (f FirebaseMock) VerifyToken(context context.Context, token string) (string, error) {
+func (f FirebaseMock) VerifyToken(_ context.Context, token string) (string, error) {
 	// Extract the identity from token as is without checking anything except well-formedness
 	tokenParts := strings.Split(token, ".")
 	if len(tokenParts) != 3 {

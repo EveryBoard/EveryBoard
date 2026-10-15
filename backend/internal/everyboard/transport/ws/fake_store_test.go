@@ -69,8 +69,8 @@ func (s *FakeStore) ConfigRoomForTest(gameId model.GameID) *model.ConfigRoom {
 	if configRoom == nil {
 		return nil
 	}
-	copy := *configRoom
-	return &copy
+	clone := *configRoom
+	return &clone
 }
 
 func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
@@ -80,8 +80,8 @@ func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
 	if game == nil {
 		return nil
 	}
-	copy := *game
-	return &copy
+	clone := *game
+	return &clone
 }
 
 func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
@@ -91,8 +91,8 @@ func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
 	if currentGame == nil {
 		return nil
 	}
-	copy := *currentGame
-	return &copy
+	clone := *currentGame
+	return &clone
 }
 
 func (s *FakeStore) CandidatesForTest(gameId model.GameID) []model.Candidate {

@@ -10,7 +10,7 @@ import (
 )
 
 func TestCors(t *testing.T) {
-	server := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}), gameStoreStub{})
 

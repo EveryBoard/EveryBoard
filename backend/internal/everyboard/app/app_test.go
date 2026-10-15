@@ -26,11 +26,11 @@ func (f firebaseMock) Initialize() error {
 	return nil
 }
 
-func (f firebaseMock) Fetch(context context.Context, collection string, path string) (map[string]interface{}, error) {
+func (f firebaseMock) Fetch(_ context.Context, _ string, path string) (map[string]interface{}, error) {
 	return map[string]interface{}{"username": path}, nil
 }
 
-func (f firebaseMock) VerifyToken(context context.Context, token string) (string, error) {
+func (f firebaseMock) VerifyToken(_ context.Context, _ string) (string, error) {
 	return "user", nil
 }
 
@@ -38,7 +38,7 @@ type failingDialector struct {
 	gorm.Dialector
 }
 
-func (d failingDialector) Initialize(db *gorm.DB) error {
+func (d failingDialector) Initialize(_ *gorm.DB) error {
 	return fmt.Errorf("forced dialector failure")
 }
 

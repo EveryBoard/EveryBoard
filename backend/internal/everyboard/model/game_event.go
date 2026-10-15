@@ -78,9 +78,8 @@ const (
 func ActionAddTime(kind AddTimeKind) ActionPayload {
 	if kind == AddTimeMove {
 		return ActionPayload{Action: ActionAddMoveTime}
-	} else {
-		return ActionPayload{Action: ActionAddGameTime}
 	}
+	return ActionPayload{Action: ActionAddGameTime}
 }
 
 type MovePayload struct {

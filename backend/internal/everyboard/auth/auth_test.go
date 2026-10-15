@@ -36,14 +36,14 @@ func (f FirebaseMock) Initialize() error {
 	return nil
 }
 
-func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
+func (f FirebaseMock) Fetch(_ context.Context, _ string, _ string) (map[string]any, error) {
 	if f.errorOnFetch {
 		return nil, fmt.Errorf("firebase fetch error")
 	}
 	return f.documentToFetch, nil
 }
 
-func (f FirebaseMock) VerifyToken(context context.Context, token string) (string, error) {
+func (f FirebaseMock) VerifyToken(_ context.Context, _ string) (string, error) {
 	if f.errorOnTokenVerification {
 		return "", fmt.Errorf("firebase token verification error")
 	}

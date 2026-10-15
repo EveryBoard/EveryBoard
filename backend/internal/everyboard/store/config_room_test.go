@@ -217,7 +217,7 @@ func TestIterateOverConfigrooms(t *testing.T) {
 	// Then there should be none
 	expectConfigRooms := func(count int) {
 		seen := 0
-		err := store.ApplyToConfigRooms(func(configroom model.ConfigRoom) error {
+		err := store.ApplyToConfigRooms(func(_ model.ConfigRoom) error {
 			seen = seen + 1
 			return nil
 		})
@@ -261,7 +261,7 @@ func TestCandidatesFlow(t *testing.T) {
 
 	expectCandidates := func(count int) {
 		candidatesSeen := 0
-		err := store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+		err := store.ApplyToCandidates(configRoom.ID, func(_ model.Candidate) error {
 			candidatesSeen = candidatesSeen + 1
 			return nil
 		})

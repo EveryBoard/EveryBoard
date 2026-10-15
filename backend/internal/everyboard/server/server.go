@@ -29,7 +29,7 @@ func cors(origin string, next http.Handler) http.Handler {
 	})
 }
 
-var showVersion = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var showVersion = http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte(Version))
 })
 

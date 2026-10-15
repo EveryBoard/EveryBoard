@@ -64,13 +64,13 @@ type CountMessagesConnection struct {
 	receiveNext      chan struct{} // to signal that we should receive the next message
 }
 
-func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) error {
+func (c *CountMessagesConnection) WriteMessage(_ int, _ []byte) error {
 	<-c.receiveNext // wait for being signalled to receive the next message (to simulate network delays)
 	c.messagesReceived.Add(1)
 	return nil
 }
 
-func (c *CountMessagesConnection) SetWriteDeadline(t time.Time) error {
+func (c *CountMessagesConnection) SetWriteDeadline(_ time.Time) error {
 	return nil
 }
 

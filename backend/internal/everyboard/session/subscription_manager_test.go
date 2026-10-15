@@ -12,11 +12,11 @@ type MockConnection struct {
 	ID int
 }
 
-func (m *MockConnection) WriteMessage(messageType int, data []byte) error {
+func (m *MockConnection) WriteMessage(_ int, _ []byte) error {
 	return nil
 }
 
-func (m *MockConnection) SetWriteDeadline(t time.Time) error {
+func (m *MockConnection) SetWriteDeadline(_ time.Time) error {
 	return nil
 }
 

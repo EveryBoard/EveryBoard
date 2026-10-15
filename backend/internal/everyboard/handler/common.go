@@ -190,39 +190,38 @@ func (h *Handler) unsubscribe() error {
 
 				return h.removeCurrentGame(&buf, store, configRoom.Creator.User)
 
-			} else {
-				if err = store.DeleteCandidate(configRoom, h.user.ID); err != nil {
+			}
+			if err = store.DeleteCandidate(configRoom, h.user.ID); err != nil {
+				return err
+			}
+			h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.CandidateLeftMessage{Candidate: h.user})
+
+			if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.User.ID == h.user.ID {
+				if err = store.RemoveOpponent(configRoom); err != nil {
 					return err
 				}
-				h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.CandidateLeftMessage{Candidate: h.user})
-
-				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.User.ID == h.user.ID {
-					if err = store.RemoveOpponent(configRoom); err != nil {
-						return err
-					}
-					if configRoom.Status == model.StatusConfigProposed {
-						if err = store.ReviewConfig(configRoom); err != nil {
-							return err
-						}
-					}
-					h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.ConfigRoomUpdateMessage{
-						GameID:     configRoom.ID,
-						ConfigRoom: *configRoom,
-					})
-					newCreatorGame := &model.CurrentGame{
-						GameID:   configRoom.ID,
-						GameName: configRoom.GameName,
-						Creator:  configRoom.Creator.User,
-						Opponent: nil,
-						Role:     model.UserRoleCreator,
-					}
-					if err = h.updateCurrentGame(&buf, store, configRoom.Creator.User, newCreatorGame); err != nil {
+				if configRoom.Status == model.StatusConfigProposed {
+					if err = store.ReviewConfig(configRoom); err != nil {
 						return err
 					}
 				}
-
-				return h.removeCurrentGame(&buf, store, h.user)
+				h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.ConfigRoomUpdateMessage{
+					GameID:     configRoom.ID,
+					ConfigRoom: *configRoom,
+				})
+				newCreatorGame := &model.CurrentGame{
+					GameID:   configRoom.ID,
+					GameName: configRoom.GameName,
+					Creator:  configRoom.Creator.User,
+					Opponent: nil,
+					Role:     model.UserRoleCreator,
+				}
+				if err = h.updateCurrentGame(&buf, store, configRoom.Creator.User, newCreatorGame); err != nil {
+					return err
+				}
 			}
+
+			return h.removeCurrentGame(&buf, store, h.user)
 		}
 
 		return fmt.Errorf("unsubscribe: fell through all switch cases, which shouldn't happen")

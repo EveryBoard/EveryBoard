@@ -41,7 +41,7 @@ func TestDBGameFlow(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
 			seen = seen + 1
 			return nil
 		})
@@ -112,7 +112,7 @@ func TestManyGameEvents(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
 			seen = seen + 1
 			return nil
 		})

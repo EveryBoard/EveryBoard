@@ -69,6 +69,6 @@ var GameRows = []string{
 	"result", "beginning",
 }
 
-func (g *Game) UnmarshalJSON(data []byte) error {
+func (g *Game) UnmarshalJSON(_ []byte) error {
 	return fmt.Errorf("not allowed to unmarshall game")
 }

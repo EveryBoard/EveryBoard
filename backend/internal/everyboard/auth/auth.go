@@ -14,10 +14,10 @@ type User struct {
 }
 
 func FetchUserDocument(context context.Context, uid string) (*User, error) {
-	return FetchUserDocumentWithClient(firebaseClient, context, uid)
+	return FetchUserDocumentWithClient(context, firebaseClient, uid)
 }
 
-func FetchUserDocumentWithClient(client FirebaseLike, context context.Context, uid string) (*User, error) {
+func FetchUserDocumentWithClient(context context.Context, client FirebaseLike, uid string) (*User, error) {
 	doc, err := client.Fetch(context, "users", uid)
 	if err != nil {
 		return nil, err
@@ -54,6 +54,6 @@ func VerifyTokenAndGetUserWithClient(client FirebaseLike, r *http.Request) (stri
 		return "", nil, err
 	}
 
-	user, err := FetchUserDocumentWithClient(client, r.Context(), uid)
+	user, err := FetchUserDocumentWithClient(r.Context(), client, uid)
 	return uid, user, err
 }

@@ -142,15 +142,14 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 			return "", fmt.Errorf("missing 'sub' part of token")
 		}
 		return sub, nil
-	} else {
-		verifiedToken, err := f.auth.VerifyIDToken(context, token)
-		if err != nil {
-			return "", fmt.Errorf("invalid token: %w", err)
-		}
-		user_id, ok := verifiedToken.Claims["user_id"].(string)
-		if !ok {
-			return "", fmt.Errorf("missing 'user_id' part of token")
-		}
-		return user_id, err
 	}
+	verifiedToken, err := f.auth.VerifyIDToken(context, token)
+	if err != nil {
+		return "", fmt.Errorf("invalid token: %w", err)
+	}
+	user_id, ok := verifiedToken.Claims["user_id"].(string)
+	if !ok {
+		return "", fmt.Errorf("missing 'user_id' part of token")
+	}
+	return user_id, err
 }

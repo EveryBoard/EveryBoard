@@ -197,7 +197,7 @@ func TestApplyToObservers(t *testing.T) {
 	// Then we should see exactly two observers
 	expectObservers := func(count int) {
 		seen := 0
-		err := store.ApplyToObservers(42, func(user model.MinimalUser) error {
+		err := store.ApplyToObservers(42, func(_ model.MinimalUser) error {
 			seen = seen + 1
 			return nil
 		})
@@ -222,7 +222,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	errors := make(chan error, numRequests)
 
 	for i := range numRequests {
-		go func(id int) {
+		go func(_ int) {
 			defer wg.Done()
 
 			err := dbStore.Transaction(func(s Store) error {

@@ -16,7 +16,7 @@ type FailingDialector struct {
 	gorm.Dialector
 }
 
-func (d FailingDialector) Initialize(db *gorm.DB) error {
+func (d FailingDialector) Initialize(_ *gorm.DB) error {
 	return fmt.Errorf("forced dialector failure")
 }
 
@@ -37,7 +37,7 @@ func TestUpdateElosTransaction(t *testing.T) {
 	store, _ := InitDatabase(sqlite.Open(":memory:"))
 
 	// Transaction that returns an error
-	err := store.Transaction(func(s Store) error {
+	err := store.Transaction(func(_ Store) error {
 		return fmt.Errorf("forced transaction failure")
 	})
 	require.Error(t, err, "expected transaction callback error to be returned")
