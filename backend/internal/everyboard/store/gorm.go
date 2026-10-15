@@ -30,7 +30,7 @@ type migration struct {
 func autoMigrate(db *gorm.DB, migrations ...migration) error {
 	for _, migration := range migrations {
 		if err := db.AutoMigrate(migration.model); err != nil {
-			return fmt.Errorf("cannot initialize DB (AutoMigrate %s): %v", migration.name, err)
+			return fmt.Errorf("cannot initialize DB (AutoMigrate %s): %w", migration.name, err)
 		}
 	}
 	return nil
@@ -38,7 +38,7 @@ func autoMigrate(db *gorm.DB, migrations ...migration) error {
 
 func migrateCandidates(db *gorm.DB) error {
 	if err := db.AutoMigrate(&model.Candidate{}); err != nil {
-		return fmt.Errorf("cannot initialize DB (AutoMigrate model.Candidate): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate model.Candidate): %w", err)
 	}
 
 	legacyColumns := []struct {
@@ -60,10 +60,10 @@ func migrateCandidates(db *gorm.DB) error {
 			columns.current,
 		))
 		if result.Error != nil {
-			return fmt.Errorf("cannot migrate candidates column %s: %v", columns.legacy, result.Error)
+			return fmt.Errorf("cannot migrate candidates column %s: %w", columns.legacy, result.Error)
 		}
 		if err := db.Migrator().DropColumn(&model.Candidate{}, columns.legacy); err != nil {
-			return fmt.Errorf("cannot remove legacy candidates column %s: %v", columns.legacy, err)
+			return fmt.Errorf("cannot remove legacy candidates column %s: %w", columns.legacy, err)
 		}
 	}
 	return nil
@@ -77,7 +77,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		TranslateError: true,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to DB: %v", err)
+		return nil, fmt.Errorf("failed to connect to DB: %w", err)
 	}
 
 	switch dialector.(type) {
@@ -109,7 +109,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
-			return nil, fmt.Errorf("cannot initialize DB (Create lobby): %v", result.Error)
+			return nil, fmt.Errorf("cannot initialize DB (Create lobby): %w", result.Error)
 		}
 	}
 
@@ -128,7 +128,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 	}
 	result = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_current_games_user_id ON current_games (user_id)")
 	if result.Error != nil {
-		return nil, fmt.Errorf("cannot initialize DB (Create current-game user index): %v", result.Error)
+		return nil, fmt.Errorf("cannot initialize DB (Create current-game user index): %w", result.Error)
 	}
 	return &GORMStore{db}, nil
 }

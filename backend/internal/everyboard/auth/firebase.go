@@ -82,24 +82,24 @@ func (f *Firebase) Initialize() error {
 		conf := &firebase.Config{ProjectID: f.ProjectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 		if err != nil {
-			return fmt.Errorf("cannot initialize firebase with emulator: %v", err)
+			return fmt.Errorf("cannot initialize firebase with emulator: %w", err)
 		}
 	} else {
 		opts := option.WithAuthCredentialsFile(option.ServiceAccount, f.ServiceAccountFile)
 		app, err = firebase.NewApp(context.Background(), nil, opts)
 		if err != nil {
-			return fmt.Errorf("cannot connect to firebase: %v", err)
+			return fmt.Errorf("cannot connect to firebase: %w", err)
 		}
 	}
 
 	authClient, err := app.Auth(context.Background())
 	if err != nil {
-		return fmt.Errorf("cannot setup firebase auth: %v", err)
+		return fmt.Errorf("cannot setup firebase auth: %w", err)
 	}
 
 	firestoreClient, err := app.Firestore(context.Background())
 	if err != nil {
-		return fmt.Errorf("cannot setup firebase firestore: %v", err)
+		return fmt.Errorf("cannot setup firebase firestore: %w", err)
 	}
 
 	f.auth = authClient
@@ -111,7 +111,7 @@ func (f Firebase) Fetch(context context.Context, collection string, path string)
 	docRef := f.firestore.Collection(collection).Doc(path)
 	docSnapshot, err := docRef.Get(context)
 	if err != nil {
-		return nil, fmt.Errorf("cannot fetch document: %v", err)
+		return nil, fmt.Errorf("cannot fetch document: %w", err)
 	}
 	return docSnapshot.Data(), nil
 }
@@ -145,7 +145,7 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 	} else {
 		verifiedToken, err := f.auth.VerifyIDToken(context, token)
 		if err != nil {
-			return "", fmt.Errorf("invalid token: %v", err)
+			return "", fmt.Errorf("invalid token: %w", err)
 		}
 		user_id, ok := verifiedToken.Claims["user_id"].(string)
 		if !ok {
