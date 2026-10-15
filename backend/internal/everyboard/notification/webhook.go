@@ -2,6 +2,7 @@ package notification
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -111,7 +112,7 @@ func (w *Webhook) publish(payload webhookPayload) error {
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequest(http.MethodPost, w.endpoint, bytes.NewReader(body))
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, w.endpoint, bytes.NewReader(body))
 	if err != nil {
 		return err
 	}

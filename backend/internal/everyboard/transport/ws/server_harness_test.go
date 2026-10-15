@@ -91,7 +91,8 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *TestServer) {
 		Connections:   testServer.Connections,
 		Origin:        "*",
 	})
-	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	listenConfig := net.ListenConfig{}
+	listener, err := listenConfig.Listen(t.Context(), "tcp", "127.0.0.1:0")
 	require.NoError(t, err, "cannot listen on test server address")
 
 	httpServer := httptest.NewUnstartedServer(server.New("127.0.0.1:0", "*", websocketHandler, fakeStore).Handler)

@@ -23,7 +23,7 @@ func TestAuthenticateBot(t *testing.T) {
 			},
 		},
 	}}
-	req := httptest.NewRequest("GET", "/ws", nil)
+	req := httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/ws", nil)
 	req.Header.Set("Sec-WebSocket-Protocol", tokenForUser("bot"))
 
 	// When authenticating the request
@@ -47,7 +47,7 @@ func TestServeHTTPUnauthorized(t *testing.T) {
 		Origin:        "*",
 	})
 
-	req := httptest.NewRequest("GET", "/ws", nil)
+	req := httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/ws", nil)
 	rr := httptest.NewRecorder()
 
 	// When serving the request

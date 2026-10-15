@@ -57,7 +57,7 @@ func TestVerificationOfInvalidToken(t *testing.T) {
 		errorOnFetch:             false,
 	})
 	// Token invalid because it is not given in the Sec-WebSocket-Protocol field (which is absent)
-	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "http://whocares.com", nil)
 	require.NoError(t, err, "cannot create request")
 	_, _, err = VerifyTokenAndGetUser(req)
 	require.Error(t, err, "expected token verification to fail")
@@ -81,7 +81,7 @@ func TestVerifiedTokenButNoUser(t *testing.T) {
 		uidToReturnUponVerification: "foo",
 		errorOnFetch:                true,
 	})
-	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "http://whocares.com", nil)
 	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	// When verifying its token and retrieving the user
@@ -101,7 +101,7 @@ func TestTokenVerificationHappyFlow(t *testing.T) {
 			"username": "foo",
 		},
 	})
-	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "http://whocares.com", nil)
 	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	// When verifying its token and retrieving the user
@@ -125,7 +125,7 @@ func TestTokenVerificationBotHappyFlow(t *testing.T) {
 			"isBot":    true,
 		},
 	})
-	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "http://whocares.com", nil)
 	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	// When verifying its token and retrieving the user
@@ -137,10 +137,11 @@ func TestTokenVerificationBotHappyFlow(t *testing.T) {
 	require.True(t, user.IsBot, "did not retrieve the fact that user is a bot")
 }
 
-func waitForPort(address string, timeout time.Duration) error {
+func waitForPort(ctx context.Context, address string, timeout time.Duration) error {
 	deadline := time.Now().Add(timeout)
 	for time.Now().Before(deadline) {
-		conn, err := net.DialTimeout("tcp", address, time.Second)
+		dialer := net.Dialer{Timeout: time.Second}
+		conn, err := dialer.DialContext(ctx, "tcp", address)
 		if err == nil {
 			return conn.Close()
 		}
@@ -150,7 +151,16 @@ func waitForPort(address string, timeout time.Duration) error {
 }
 
 func startFirebaseEmulator(t *testing.T) {
-	cmd := exec.Command("npx", "firebase", "emulators:start", "--only", "firestore,auth", "--project", "my-project")
+	cmd := exec.CommandContext(
+		t.Context(),
+		"npx",
+		"firebase",
+		"emulators:start",
+		"--only",
+		"firestore,auth",
+		"--project",
+		"my-project",
+	)
 	err := cmd.Start()
 	require.NoError(t, err, "failed to start Firebase emulator")
 
@@ -174,7 +184,7 @@ func startFirebaseEmulator(t *testing.T) {
 		}
 	})
 
-	err = waitForPort("127.0.0.1:9099", 30*time.Second)
+	err = waitForPort(t.Context(), "127.0.0.1:9099", 30*time.Second)
 	require.NoError(t, err, "failed to wait for Firebase emulator to start")
 
 	t.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
@@ -189,7 +199,7 @@ func TestTokenVerificationWithEmulator(t *testing.T) {
 		ProjectID:   "my-project",
 	})
 
-	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "http://whocares.com", nil)
 	require.NoError(t, err, "cannot create request")
 
 	// When verifying the token
@@ -251,7 +261,7 @@ func addUser(t *testing.T, uid string, username string) {
 	url := fmt.Sprintf("http://127.0.0.1:8080/v1/projects/my-project/databases/(default)/documents/users/%s", uid)
 	body := fmt.Sprintf(`{"fields":{"username":{"stringValue":"%s"}}}`, username)
 
-	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer([]byte(body)))
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodPatch, url, bytes.NewBuffer([]byte(body)))
 	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer owner")
