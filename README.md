@@ -19,4 +19,4 @@ make ci
 
 Individual categories can be run with `make ci-build`, `make ci-frontend`, `make ci-backend`, `make ci-lint`,
 `make ci-vuln`, `make ci-translations`, `make ci-images`, and `make ci-e2e`. Run `make ci-clean` to remove the CI
-Compose resources.
+Compose resources. Backend CI tests run with Go's race detector enabled.

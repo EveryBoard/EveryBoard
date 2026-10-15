@@ -26,14 +26,14 @@ format:
 	go fmt ./...
 
 test:
-	go test ./... -failfast
+	go test $(GO_TEST_FLAGS) ./... -failfast
 
 test-postgres:
 	@test -n "$$POSTGRES_TEST_DSN" || (echo "POSTGRES_TEST_DSN must be set" >&2; exit 1)
-	go test ./... -run '^TestPostgres' -count=1
+	go test $(GO_TEST_FLAGS) ./... -run '^TestPostgres' -count=1
 
 coverage:
-	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
+	go test $(GO_TEST_FLAGS) ./... -coverpkg=./... -cover -coverprofile=coverage.out
 
 view-coverage: coverage
 	go tool cover -html=coverage.out -o coverage.html
