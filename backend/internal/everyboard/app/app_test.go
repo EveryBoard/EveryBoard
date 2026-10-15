@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/auth"
@@ -16,7 +16,7 @@ type failingFirebase struct {
 }
 
 func (f failingFirebase) Initialize() error {
-	return fmt.Errorf("forced firebase failure")
+	return errors.New("forced firebase failure")
 }
 
 type firebaseMock struct {
@@ -39,7 +39,7 @@ type failingDialector struct {
 }
 
 func (d failingDialector) Initialize(_ *gorm.DB) error {
-	return fmt.Errorf("forced dialector failure")
+	return errors.New("forced dialector failure")
 }
 
 func TestPrepareFailures(t *testing.T) {

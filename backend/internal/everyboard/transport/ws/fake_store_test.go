@@ -1,7 +1,7 @@
 package ws
 
 import (
-	"fmt"
+	"errors"
 	"sync"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -319,7 +319,7 @@ func (s *FakeStore) GetGame(gameId model.GameID) (*model.Game, error) {
 
 func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
 	if configRoom.ChosenOpponent == nil {
-		return nil, fmt.Errorf("cannot create a game if a config room has no opponent")
+		return nil, errors.New("cannot create a game if a config room has no opponent")
 	}
 
 	starter := configRoom.FirstPlayer

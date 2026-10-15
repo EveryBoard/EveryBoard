@@ -3,6 +3,7 @@ package auth
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -31,21 +32,21 @@ type FirebaseMock struct {
 
 func (f FirebaseMock) Initialize() error {
 	if f.errorOnInitialization {
-		return fmt.Errorf("firebase initialization error")
+		return errors.New("firebase initialization error")
 	}
 	return nil
 }
 
 func (f FirebaseMock) Fetch(_ context.Context, _ string, _ string) (map[string]any, error) {
 	if f.errorOnFetch {
-		return nil, fmt.Errorf("firebase fetch error")
+		return nil, errors.New("firebase fetch error")
 	}
 	return f.documentToFetch, nil
 }
 
 func (f FirebaseMock) VerifyToken(_ context.Context, _ string) (string, error) {
 	if f.errorOnTokenVerification {
-		return "", fmt.Errorf("firebase token verification error")
+		return "", errors.New("firebase token verification error")
 	}
 	return f.uidToReturnUponVerification, nil
 }
@@ -258,7 +259,7 @@ func tokenVerificationShouldFailWithMissingUser(t *testing.T, req *http.Request)
 }
 
 func addUser(ctx context.Context, t *testing.T, uid string, username string) {
-	url := fmt.Sprintf("http://127.0.0.1:8080/v1/projects/my-project/databases/(default)/documents/users/%s", uid)
+	url := "http://127.0.0.1:8080/v1/projects/my-project/databases/(default)/documents/users/" + uid
 	body := fmt.Sprintf(`{"fields":{"username":{"stringValue":"%s"}}}`, username)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, url, bytes.NewBuffer([]byte(body)))

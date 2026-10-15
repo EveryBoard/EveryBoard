@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -106,7 +107,7 @@ type EventPayload struct {
 
 func (e EventPayload) Value() (driver.Value, error) {
 	if e.EventData == nil {
-		return nil, fmt.Errorf("nil event data")
+		return nil, errors.New("nil event data")
 	}
 	// We need to flatten eventType into the same object as EventData.
 	// Since EventData is an interface, we can't use embedding for flattening.
@@ -126,7 +127,7 @@ func (e EventPayload) Value() (driver.Value, error) {
 func (e *EventPayload) Scan(value any) error {
 	bytes, ok := value.([]byte)
 	if !ok {
-		return fmt.Errorf("failed to unmarshal EventPayload: not []byte")
+		return errors.New("failed to unmarshal EventPayload: not []byte")
 	}
 	data, err := UnmarshalEventData(bytes)
 	if err != nil {
@@ -255,7 +256,7 @@ var GameEventRows = []string{"id", "game_id", "timestamp", "user_id", "user_name
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {
 	if e.Data.EventData == nil {
-		return nil, fmt.Errorf("nil event data")
+		return nil, errors.New("nil event data")
 	}
 
 	// Since EventData is an interface, embedding it in a struct does not flatten it
@@ -299,7 +300,7 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 
 	if p, ok := e.Data.EventData.(MovePayload); ok {
 		if string(p.Move) == "" {
-			return fmt.Errorf("missing move payload")
+			return errors.New("missing move payload")
 		}
 	}
 	return nil

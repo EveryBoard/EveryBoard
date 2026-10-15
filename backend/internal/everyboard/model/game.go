@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -70,5 +71,5 @@ var GameRows = []string{
 }
 
 func (g *Game) UnmarshalJSON(_ []byte) error {
-	return fmt.Errorf("not allowed to unmarshall game")
+	return errors.New("not allowed to unmarshall game")
 }

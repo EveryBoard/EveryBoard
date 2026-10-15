@@ -1,7 +1,7 @@
 package store
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ type FailingDialector struct {
 }
 
 func (d FailingDialector) Initialize(_ *gorm.DB) error {
-	return fmt.Errorf("forced dialector failure")
+	return errors.New("forced dialector failure")
 }
 
 func TestInitDatabaseFailure(t *testing.T) {
@@ -38,7 +38,7 @@ func TestUpdateElosTransaction(t *testing.T) {
 
 	// Transaction that returns an error
 	err := store.Transaction(func(_ Store) error {
-		return fmt.Errorf("forced transaction failure")
+		return errors.New("forced transaction failure")
 	})
 	require.Error(t, err, "expected transaction callback error to be returned")
 }

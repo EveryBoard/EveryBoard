@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -37,11 +38,11 @@ type Webhook struct {
 func NewWebhook(endpoint string, frontendURL string) (*Webhook, error) {
 	parsed, err := url.Parse(endpoint)
 	if err != nil || (parsed.Scheme != "http" && parsed.Scheme != "https") || parsed.Host == "" {
-		return nil, fmt.Errorf("invalid webhook URL")
+		return nil, errors.New("invalid webhook URL")
 	}
 	frontend, err := url.Parse(frontendURL)
 	if err != nil || (frontend.Scheme != "http" && frontend.Scheme != "https") || frontend.Host == "" {
-		return nil, fmt.Errorf("invalid frontend URL")
+		return nil, errors.New("invalid frontend URL")
 	}
 	return newWebhook(&http.Client{Timeout: 5 * time.Second}, endpoint, frontendURL), nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -54,7 +55,7 @@ type Firebase struct {
 func (f *Firebase) Initialize() error {
 	if f.UseEmulator {
 		if f.ProjectID == "" {
-			return fmt.Errorf("project ID is not set but emulator needs it; use PROJECT_ID environment variable")
+			return errors.New("project ID is not set but emulator needs it; use PROJECT_ID environment variable")
 		}
 
 		// Need to prepare the environment variable otherwise the firebase lib will not like it
@@ -68,7 +69,7 @@ func (f *Firebase) Initialize() error {
 		}
 	} else {
 		if f.ServiceAccountFile == "" {
-			return fmt.Errorf("service account file is not set; use SERVICE_ACCOUNT environment variable")
+			return errors.New("service account file is not set; use SERVICE_ACCOUNT environment variable")
 		}
 		_, err := os.Stat(f.ServiceAccountFile)
 		if err != nil {
@@ -122,24 +123,24 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 		// So we need to manually check the token that is created by the emulator.
 		tokenParts := strings.Split(token, ".")
 		if len(tokenParts) != 3 {
-			return "", fmt.Errorf("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
+			return "", errors.New("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
 		}
 
 		// We only care here about the second part, which contains the payload
 		payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
 		if err != nil {
-			return "", fmt.Errorf("invalid payload encoding") // payload is not a b64 string
+			return "", errors.New("invalid payload encoding") // payload is not a b64 string
 		}
 
 		var claims map[string]interface{}
 		err = json.Unmarshal(payloadBytes, &claims)
 		if err != nil {
-			return "", fmt.Errorf("invalid payload") // payload cannot be decoded as a map
+			return "", errors.New("invalid payload") // payload cannot be decoded as a map
 		}
 
 		sub, ok := claims["sub"].(string)
 		if !ok {
-			return "", fmt.Errorf("missing 'sub' part of token")
+			return "", errors.New("missing 'sub' part of token")
 		}
 		return sub, nil
 	}
@@ -149,7 +150,7 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 	}
 	user_id, ok := verifiedToken.Claims["user_id"].(string)
 	if !ok {
-		return "", fmt.Errorf("missing 'user_id' part of token")
+		return "", errors.New("missing 'user_id' part of token")
 	}
 	return user_id, err
 }

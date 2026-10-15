@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/rating"
@@ -141,7 +141,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 			loser = game.PlayerOne.User
 			draw = true
 		} else {
-			return fmt.Errorf("doEndGame: game result is not finished")
+			return errors.New("doEndGame: game result is not finished")
 		}
 
 		if extraEvent != nil {
@@ -435,7 +435,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 		return nil
 	}
 
-	return fmt.Errorf("accept: unknown proposition, should never happen")
+	return errors.New("accept: unknown proposition, should never happen")
 }
 
 func (h *Handler) handleAddTime(kind model.AddTimeKind) error {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"net/http/httptest"
@@ -47,24 +48,24 @@ func (f FirebaseMock) VerifyToken(_ context.Context, token string) (string, erro
 	// Extract the identity from token as is without checking anything except well-formedness
 	tokenParts := strings.Split(token, ".")
 	if len(tokenParts) != 3 {
-		return "", fmt.Errorf("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
+		return "", errors.New("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
 	}
 
 	// We only care here about the second part, which contains the payload
 	payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
 	if err != nil {
-		return "", fmt.Errorf("invalid payload encoding") // payload is not a b64 string
+		return "", errors.New("invalid payload encoding") // payload is not a b64 string
 	}
 
 	var claims map[string]interface{}
 	err = json.Unmarshal(payloadBytes, &claims)
 	if err != nil {
-		return "", fmt.Errorf("invalid payload") // payload cannot be decoded as a map
+		return "", errors.New("invalid payload") // payload cannot be decoded as a map
 	}
 
 	sub, ok := claims["sub"].(string)
 	if !ok {
-		return "", fmt.Errorf("missing 'sub' part of token")
+		return "", errors.New("missing 'sub' part of token")
 	}
 
 	return sub, nil

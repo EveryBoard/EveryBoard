@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/gorilla/websocket"
@@ -224,7 +224,7 @@ func (h *Handler) unsubscribe() error {
 			return h.removeCurrentGame(&buf, store, h.user)
 		}
 
-		return fmt.Errorf("unsubscribe: fell through all switch cases, which shouldn't happen")
+		return errors.New("unsubscribe: fell through all switch cases, which shouldn't happen")
 	})
 	if err != nil {
 		return err
@@ -237,12 +237,12 @@ func (h *Handler) unsubscribe() error {
 func getMessageArgument[T any](messageData map[string]json.RawMessage, key string) (*T, error) {
 	arg, ok := messageData[key]
 	if !ok {
-		return nil, fmt.Errorf("missing data")
+		return nil, errors.New("missing data")
 	}
 	var extracted T
 	err := json.Unmarshal(arg, &extracted)
 	if err != nil {
-		return nil, fmt.Errorf("invalid data")
+		return nil, errors.New("invalid data")
 	}
 	return &extracted, nil
 }

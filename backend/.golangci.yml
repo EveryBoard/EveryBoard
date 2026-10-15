@@ -9,17 +9,23 @@ linters:
         - durationcheck
         - errorlint
         - exhaustive
+        - fatcontext
         - gosec
+        - loggercheck
         - makezero
         - misspell
+        - modernize
         - musttag
         - nilerr
         - noctx
+        - perfsprint
         - reassign
         - revive
         - rowserrcheck
         - sqlclosecheck
         - testifylint
+        - unconvert
+        - usestdlibvars
     settings:
         revive:
             enable-default-rules: true
