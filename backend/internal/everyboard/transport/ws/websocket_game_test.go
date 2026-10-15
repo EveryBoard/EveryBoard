@@ -21,7 +21,7 @@ func TestHandleSubscribeGameDoesNotExist(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -63,7 +63,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -139,7 +139,7 @@ func TestHandleGameEnd(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -243,7 +243,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -292,7 +292,7 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -437,7 +437,7 @@ func TestSendMoveFromConfigRoomCreatorWhoIsNotGamePlayer(t *testing.T) {
 
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
 	defer func() { _ = c.Close() }()
 	readWithTimeout(t, c)

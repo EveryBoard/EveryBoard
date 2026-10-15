@@ -30,13 +30,25 @@ func tokenForUser(uid string) string {
 	return fmt.Sprintf("Authorization, %s.%s.", b64("{}"), b64(fmt.Sprintf(`{"sub":"%s"}`, uid)))
 }
 
+func dialWebSocket(url string, headers http.Header) (*websocket.Conn, int, error) {
+	connection, response, err := websocket.DefaultDialer.Dial(url, headers)
+	statusCode := 0
+	if response != nil {
+		statusCode = response.StatusCode
+		if response.Body != nil {
+			_ = response.Body.Close()
+		}
+	}
+	return connection, statusCode, err
+}
+
 func EstablishWebSocketConnection(t *testing.T, uid string) *websocket.Conn {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, statusCode, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
 
-	require.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
+	require.Equal(t, http.StatusSwitchingProtocols, statusCode, "expected websocket upgrade")
 
 	// We should always receive a first message (about our current game)
 	_, _, err = c.ReadMessage()

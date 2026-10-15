@@ -66,12 +66,12 @@ func TestWebSocketRequest(t *testing.T) {
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser("foo"))
 
 	// When establishing a WebSocket connection
-	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, statusCode, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
 	defer func() { _ = c.Close() }()
 
 	// Then the HTTP connection should be upgraded to WebSocket
-	assert.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
+	assert.Equal(t, http.StatusSwitchingProtocols, statusCode, "expected websocket upgrade")
 
 	// And the connection should receive its initial state
 	_, _, err = c.ReadMessage()
@@ -128,9 +128,9 @@ func TestInitialStateOnlySentToNewConnection(t *testing.T) {
 	dial := func() *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser("same-user"))
-		c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, statusCode, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
-		require.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
+		require.Equal(t, http.StatusSwitchingProtocols, statusCode, "expected websocket upgrade")
 		return c
 	}
 

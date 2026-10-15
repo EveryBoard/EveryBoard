@@ -80,7 +80,7 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c

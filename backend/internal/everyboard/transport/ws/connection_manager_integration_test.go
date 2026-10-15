@@ -7,7 +7,6 @@ import (
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
-	"github.com/gorilla/websocket"
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,8 +29,9 @@ func TestSendMessageToClosedConnection(t *testing.T) {
 	// Given a closed connection
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser("user1"))
-	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
+	defer func() { _ = c.Close() }()
 	time.Sleep(100 * time.Millisecond) // Give it time to register
 
 	user, _ := config.Connections.GetUserOfClient(c)
