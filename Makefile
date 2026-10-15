@@ -16,6 +16,7 @@ ci-backend:
 
 ci-lint:
 	$(CI_COMPOSE) run --build --rm --no-deps frontend-lint
+	$(CI_COMPOSE) run --build --rm --no-deps backend-lint
 
 ci-translations:
 	$(CI_COMPOSE) run --build --rm --no-deps translations

@@ -1,10 +1,11 @@
 package session
 
 import (
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/require"
 )
 
 type MockConnection struct {

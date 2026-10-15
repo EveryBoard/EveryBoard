@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

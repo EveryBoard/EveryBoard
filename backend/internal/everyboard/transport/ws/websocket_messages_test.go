@@ -1,9 +1,10 @@
 package ws
 
 import (
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/gorilla/websocket"
 )
@@ -13,7 +14,7 @@ func TestInvalidMessages(t *testing.T) {
 	defer stopServer()
 
 	client := EstablishWebSocketConnection(t, "player")
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// Invalid message because tag does not exist
 	sendRawMessage(t, client, `["Invalid"]`)
@@ -90,7 +91,7 @@ func TestMessageArgumentErrors(t *testing.T) {
 	}
 
 	c := dial("user1")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	tests := []struct {
 		name string

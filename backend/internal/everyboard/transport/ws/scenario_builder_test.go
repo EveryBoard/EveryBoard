@@ -4,12 +4,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"log"
 	"net/http"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/handler"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -165,7 +166,7 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 func (sb ScenarioBuilder) Cleanup() {
 	sb.cleanupOnce.Do(func() {
 		for _, conn := range sb.connections {
-			conn.Close()
+			_ = conn.Close()
 		}
 		for _, f := range sb.cleanupFunctions {
 			f()
@@ -616,7 +617,7 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 }
 
 func readWithTimeout(t *testing.T, c *websocket.Conn) []byte {
-	c.SetReadDeadline(time.Now().Add(2 * time.Second))
+	require.NoError(t, c.SetReadDeadline(time.Now().Add(2*time.Second)))
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		t.Logf("ReadMessage failed (might be expected): %v", err)

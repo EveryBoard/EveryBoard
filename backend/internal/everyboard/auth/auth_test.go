@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"net"
 	"net/http"
 	"os"
 	"os/exec"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func InitializeFirebaseForTest(t *testing.T, f FirebaseLike) {
@@ -257,7 +258,7 @@ func addUser(t *testing.T, uid string, username string) {
 
 	resp, err := http.DefaultClient.Do(req)
 	require.NoError(t, err, "cannot make http request")
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	require.Equal(t, http.StatusOK, resp.StatusCode, "user creation in firestore failed")
 }

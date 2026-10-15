@@ -3,11 +3,12 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
@@ -28,7 +29,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 	t.Run("AlreadySubscribed", func(t *testing.T) {
 		c := dial("user_already_sub")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		// Add a config room to ensure SubscribeLobby sends a message
 		fakeStore.SetConfigRoomForTest(model.GameID(500), &model.ConfigRoom{
@@ -51,7 +52,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 	t.Run("ConfigRoomDoesNotExist", func(t *testing.T) {
 		c := dial("user_non_existent")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		encodedID, _ := model.EncodeID(model.GameID(999))
 		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
@@ -62,7 +63,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 	t.Run("StatusStarted", func(t *testing.T) {
 		c := dial("user_observer")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(200)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -81,7 +82,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 	t.Run("SubscribeAsCandidate", func(t *testing.T) {
 		c := dial("user_candidate")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(600)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -108,7 +109,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 	t.Run("StatusFinished", func(t *testing.T) {
 		c := dial("user_finished")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(201)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -148,7 +149,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		})
 
 		c := dial("user_proposed")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
@@ -169,7 +170,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		})
 
 		c := dial("cand2")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
@@ -195,7 +196,7 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 	t.Run("StatusNotProposed", func(t *testing.T) {
 		uid := "user_accept_not_proposed"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(5000)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -249,7 +250,7 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 	t.Run("StatusNotCreated", func(t *testing.T) {
 		uid := "creator"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(6000)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -259,7 +260,10 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID),
+		))
 		found := false
 		for range 5 {
 			msg := readWithTimeout(t, c)

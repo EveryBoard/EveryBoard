@@ -68,7 +68,7 @@ func TestWebSocketRequest(t *testing.T) {
 	// When establishing a WebSocket connection
 	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// Then the HTTP connection should be upgraded to WebSocket
 	assert.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
@@ -83,7 +83,7 @@ func TestMalformedWebSocketMessage(t *testing.T) {
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 	client := EstablishWebSocketConnection(t, "foo")
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// When sending a malformed message
 	sendRawMessage(t, client, `alq"`)
@@ -97,7 +97,7 @@ func TestUnknownWebSocketMessage(t *testing.T) {
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 	client := EstablishWebSocketConnection(t, "foo")
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// When sending a message with an unknown tag
 	sendRawMessage(t, client, `["Unknown"]`)
@@ -111,7 +111,7 @@ func TestSubscribeToLobbyWebSocketMessage(t *testing.T) {
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 	client := EstablishWebSocketConnection(t, "foo")
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// When sending a SubscribeToLobby message
 	sendRawMessage(t, client, `["SubscribeToLobby"]`)
@@ -135,12 +135,12 @@ func TestInitialStateOnlySentToNewConnection(t *testing.T) {
 	}
 
 	first := dial()
-	defer first.Close()
+	defer func() { _ = first.Close() }()
 	expectMessage(t, first, `["CurrentGameUpdate",{"currentGame":null}]`)
 
 	// When the same user establishes a second connection
 	second := dial()
-	defer second.Close()
+	defer func() { _ = second.Close() }()
 
 	// Then only the new connection should receive the initial state
 	expectMessage(t, second, `["CurrentGameUpdate",{"currentGame":null}]`)

@@ -1,12 +1,13 @@
 package session
 
 import (
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
-	"github.com/stretchr/testify/require"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
+	"github.com/stretchr/testify/require"
 )
 
 func TestConnectionWorkflow(t *testing.T) {
@@ -86,13 +87,13 @@ func TestManyMessages(t *testing.T) {
 	manager.AddConnection(user, connection)
 	// When sending many messages (to simulate a player reconnecting and receiving all events)
 	numberOfMessages := 100
-	for _ = range numberOfMessages {
+	for range numberOfMessages {
 		manager.SendMessage(connection, protocol.ChatMessage{})
 	}
 
 	// Then it should not lose messages
 	require.Equal(t, int32(0), connection.messagesReceived.Load(), "connection should not receive messages before processing starts")
-	for _ = range numberOfMessages {
+	for range numberOfMessages {
 		connection.receiveNext <- struct{}{} // will make it receive one more message
 	}
 	time.Sleep(100 * time.Millisecond) // wait a bit to make sure every message has been processed

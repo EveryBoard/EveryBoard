@@ -2,9 +2,10 @@ package store
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"gorm.io/driver/sqlite"
@@ -47,7 +48,7 @@ func TestGORMStoreErrorPaths(t *testing.T) {
 	// Close the underlying DB to force errors
 	db := store.DB()
 	sqlDB, _ := db.DB()
-	sqlDB.Close()
+	require.NoError(t, sqlDB.Close())
 
 	user := model.MinimalUser{ID: "u", Name: "u"}
 

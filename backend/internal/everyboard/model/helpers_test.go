@@ -2,9 +2,10 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func ExpectMarshallingToWorkBothWays[T any](t *testing.T, object T, expectedJSON string) {

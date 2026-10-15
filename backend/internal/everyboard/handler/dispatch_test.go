@@ -2,8 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/go-jose/go-jose/v4/testutils/require"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -58,7 +60,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
 		h := newH()
-		store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1})
+		require.NoError(t, store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1}))
 		err := h.handleWithoutErrorSend("Create", map[string]json.RawMessage{"gameName": json.RawMessage(`"test"`)})
 		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 	})

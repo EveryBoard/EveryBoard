@@ -1,10 +1,11 @@
 package rating
 
 import (
+	"testing"
+
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestEloComputationFirstGame(t *testing.T) {

@@ -3,12 +3,13 @@ package ws
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
@@ -34,14 +35,14 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 
 	t.Run("NotSubscribed", func(t *testing.T) {
 		c := dial("user_not_sub")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
 		require.NoError(t, err, "WriteMessage failed")
 	})
 
 	t.Run("Lobby", func(t *testing.T) {
 		c := dial("user_lobby")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
 		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c) // skip lobby update
@@ -51,7 +52,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 
 	t.Run("GameObserver", func(t *testing.T) {
 		c := dial("user_observer")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		gameID := model.GameID(42)
 		encodedGameID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
@@ -75,7 +76,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 	t.Run("ConfigRoomCreator", func(t *testing.T) {
 		uid := "user_creator"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		configRoomID := model.GameID(100)
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
@@ -101,7 +102,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 	t.Run("ConfigRoomCandidate", func(t *testing.T) {
 		uid := "user_candidate"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		configRoomID := model.GameID(101)
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
@@ -132,7 +133,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 	t.Run("ConfigRoomChosenOpponent", func(t *testing.T) {
 		uid := "user_opponent"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		configRoomID := model.GameID(102)
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
@@ -163,7 +164,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		// Given a config room proposed to a chosen opponent
 		uid := "user_proposed_opponent"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		configRoomID := model.GameID(103)
 		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
 		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
@@ -209,7 +210,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 	t.Run("ConfigRoomGone", func(t *testing.T) {
 		uid := "user_gone"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(2000)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -219,7 +220,10 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 			Status:  model.StatusCreated,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		fakeStore.DeleteConfigRoomForTest(configRoomID)
@@ -232,7 +236,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 	t.Run("StatusNotUnstarted", func(t *testing.T) {
 		uid := "user_status_not_unstarted"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		configRoomID := model.GameID(2001)
 		encodedID, _ := model.EncodeID(configRoomID)
@@ -242,7 +246,10 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 			Status:  model.StatusFinished,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
@@ -267,7 +274,7 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 	t.Run("PlayerLeavesGame", func(t *testing.T) {
 		uid := "player_test"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(4000)
 		encodedID, _ := model.EncodeID(gameID)
@@ -286,7 +293,10 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 			Role:   model.UserRoleCreator,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 
 		found := false
 		for i := 0; i < 5; i++ {

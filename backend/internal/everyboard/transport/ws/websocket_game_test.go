@@ -2,12 +2,13 @@ package ws
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
@@ -27,7 +28,7 @@ func TestHandleSubscribeGameDoesNotExist(t *testing.T) {
 	}
 
 	c := dial("user_game_not_exists")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	encodedID, _ := model.EncodeID(model.GameID(9999))
 	err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
@@ -42,7 +43,7 @@ func TestSubscribeGameRollback(t *testing.T) {
 
 	uid := "rollback-user"
 	c := EstablishWebSocketConnection(t, uid)
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// Encode a game ID that decodes successfully but does not exist in the store.
 	missingID, err := model.EncodeID(model.GameID(999999))
@@ -71,7 +72,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	t.Run("TakeBack", func(t *testing.T) {
 		uid := "player0"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(700)
 		encodedID, _ := model.EncodeID(gameID)
@@ -86,7 +87,10 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"TakeBack"}]`))
@@ -97,7 +101,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	t.Run("Draw", func(t *testing.T) {
 		uid := "player_draw"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(800)
 		encodedID, _ := model.EncodeID(gameID)
@@ -114,7 +118,10 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Draw"}]`))
@@ -141,7 +148,7 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerZero", func(t *testing.T) {
 		uid := "player_w0"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(900)
 		encodedID, _ := model.EncodeID(gameID)
@@ -158,7 +165,7 @@ func TestHandleGameEnd(t *testing.T) {
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":0}]`))
@@ -171,7 +178,7 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerOne", func(t *testing.T) {
 		uid := "player_w1"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(901)
 		encodedID, _ := model.EncodeID(gameID)
@@ -188,7 +195,7 @@ func TestHandleGameEnd(t *testing.T) {
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":1}]`))
@@ -201,7 +208,7 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerNone", func(t *testing.T) {
 		uid := "player_wnone"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(902)
 		encodedID, _ := model.EncodeID(gameID)
@@ -218,7 +225,7 @@ func TestHandleGameEnd(t *testing.T) {
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":2}]`))
@@ -244,7 +251,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 
 	t.Run("NotSubscribed", func(t *testing.T) {
 		c := dial("user_not_sub")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
 		require.NoError(t, err, "WriteMessage failed")
@@ -255,7 +262,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 	t.Run("GameNotFinished", func(t *testing.T) {
 		uid := "user_not_finished"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(300)
 		encodedID, _ := model.EncodeID(gameID)
@@ -265,7 +272,10 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
@@ -292,7 +302,7 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 		uid := "player_timeout_test"
 		opponent := "opponent_timeout_test"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(7000)
 		encodedID, _ := model.EncodeID(gameID)
@@ -311,7 +321,10 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 			GameName:       "test-game",
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		foundGameUpdate := false
 		foundSyncEvent := false
 		for i := 0; i < 5; i++ {
@@ -426,7 +439,7 @@ func TestSendMoveFromConfigRoomCreatorWhoIsNotGamePlayer(t *testing.T) {
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 	readWithTimeout(t, c)
 
 	err = c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))

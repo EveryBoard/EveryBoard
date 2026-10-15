@@ -30,7 +30,7 @@ func cors(origin string, next http.Handler) http.Handler {
 }
 
 var showVersion = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(Version))
+	_, _ = w.Write([]byte(Version))
 })
 
 func New(listenAddr string, origin string, websocketHandler http.Handler, gameStore store.GameStore) *http.Server {

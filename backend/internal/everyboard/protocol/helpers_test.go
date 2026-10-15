@@ -2,8 +2,9 @@ package protocol
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func ExpectMarshallingToWork[T any](t *testing.T, object T, expectedJSON string) {
