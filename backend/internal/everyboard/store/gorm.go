@@ -80,8 +80,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		return nil, fmt.Errorf("failed to connect to DB: %w", err)
 	}
 
-	switch dialector.(type) {
-	case *sqlite.Dialector:
+	if _, ok := dialector.(*sqlite.Dialector); ok {
 		// In case we have sqlite, we only want one connection. Otherwise, this renders tests flaky.
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxOpenConns(1)

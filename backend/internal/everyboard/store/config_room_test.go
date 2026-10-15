@@ -218,7 +218,7 @@ func TestIterateOverConfigrooms(t *testing.T) {
 	expectConfigRooms := func(count int) {
 		seen := 0
 		err := store.ApplyToConfigRooms(func(_ model.ConfigRoom) error {
-			seen = seen + 1
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate config rooms")
@@ -262,7 +262,7 @@ func TestCandidatesFlow(t *testing.T) {
 	expectCandidates := func(count int) {
 		candidatesSeen := 0
 		err := store.ApplyToCandidates(configRoom.ID, func(_ model.Candidate) error {
-			candidatesSeen = candidatesSeen + 1
+			candidatesSeen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate candidates")

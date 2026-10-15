@@ -10,6 +10,7 @@ linters:
         - errorlint
         - exhaustive
         - fatcontext
+        - gocritic
         - gosec
         - loggercheck
         - makezero
@@ -18,6 +19,7 @@ linters:
         - musttag
         - nilerr
         - noctx
+        - nolintlint
         - perfsprint
         - reassign
         - revive
@@ -27,6 +29,9 @@ linters:
         - unconvert
         - usestdlibvars
     settings:
+        gocritic:
+            disabled-checks:
+                - ifElseChain
         revive:
             enable-default-rules: true
             rules:

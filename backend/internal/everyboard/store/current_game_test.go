@@ -198,7 +198,7 @@ func TestApplyToObservers(t *testing.T) {
 	expectObservers := func(count int) {
 		seen := 0
 		err := store.ApplyToObservers(42, func(_ model.MinimalUser) error {
-			seen = seen + 1
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate observers")
