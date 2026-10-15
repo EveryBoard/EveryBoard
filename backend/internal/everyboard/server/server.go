@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
@@ -39,7 +40,8 @@ func New(listenAddr string, origin string, websocketHandler http.Handler, gameSt
 	mux.Handle("/version", showVersion)
 	mux.Handle("/api/games", cors(origin, gamesHandler(origin, gameStore)))
 	return &http.Server{
-		Addr:    listenAddr,
-		Handler: mux,
+		Addr:              listenAddr,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 }
