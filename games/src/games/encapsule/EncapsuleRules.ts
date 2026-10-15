@@ -119,16 +119,19 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return map;
     }
 
-    private getPlayersCoords(coords: Coord[], state: EncapsuleState, player: Player): Coord[] {
+    private getSpaceOwnedBy(coords: Coord[], state: EncapsuleState, player: Player): ReadonlyArray<Coord> {
         return coords.filter((coord: Coord) => {
             return state.getPieceAt(coord).getBiggest().getPlayer().equals(player);
         });
     }
 
-    public getVictoriousCoords(state: EncapsuleState, config: EncapsuleConfig): Coord[] {
-        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
-        const opponentCoords: Coord[] = this.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
-        const playerCoords: Coord[] = this.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
+    public getVictoriousCoords(state: EncapsuleState, config: EncapsuleConfig): ReadonlyArray<Coord> {
+        const victoriousCoord: Coord[] =
+            this.getHelper(config).getVictoriousCoord(state);
+        const opponentCoords: ReadonlyArray<Coord> =
+            this.getSpaceOwnedBy(victoriousCoord, state, state.getPreviousOpponent());
+        const playerCoords: ReadonlyArray<Coord> =
+            this.getSpaceOwnedBy(victoriousCoord, state, state.getPreviousPlayer());
         if (opponentCoords.length === 0) {
             if (playerCoords.length === 0) {
                 return []; // Nobody won
@@ -144,7 +147,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
     }
 
     public isVictory(state: EncapsuleState, config: EncapsuleConfig): MGPOptional<Player> {
-        const victoriousCoords: Coord[] = this.getVictoriousCoords(state, config);
+        const victoriousCoords: ReadonlyArray<Coord> = this.getVictoriousCoords(state, config);
         if (victoriousCoords.length > 0) {
             const coord: Coord = victoriousCoords[0];
             return MGPOptional.of(state.getPieceAt(coord).getBiggest().getPlayer() as Player);
@@ -217,17 +220,12 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
 
     public override getGameStatus(node: EncapsuleNode, config: EncapsuleConfig): GameStatus {
         const state: EncapsuleState = node.gameState;
-        const victoriousCoord: Coord[] = EncapsuleRules.helpers.get(config.nInARow).get().getVictoriousCoord(state);
-        const unreducedWinners: PlayerOrNone[] = victoriousCoord.map(
-            (coord: Coord) => state.getPieceAt(coord).getBiggest().getPlayer(),
-        );
-        const winners: Set<PlayerOrNone> = new Set(unreducedWinners);
-        if (winners.size() === 0) {
+        const victoriousCoord: ReadonlyArray<Coord> = this.getVictoriousCoords(state, config);
+        if (victoriousCoord.length === 0) {
             return GameStatus.ONGOING;
-        } else if (winners.size() === 1) {
-            return GameStatus.getVictory(winners.getAnyElement().get() as Player);
         } else {
-            return GameStatus.getVictory(state.getCurrentPlayer());
+            const winner: Player = state.getPieceAt(victoriousCoord[0]).getBiggest().getPlayer() as Player;
+            return GameStatus.getVictory(winner);
         }
     }
 

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@ang
 
 import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { EncapsuleFailure } from '@everyboard/games/encapsule';
@@ -11,7 +12,7 @@ import { EncapsuleMoveGenerator } from '@everyboard/games/encapsule';
 import { EncapsulePiece } from '@everyboard/games/encapsule';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '@everyboard/games/encapsule';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '@everyboard/games/encapsule';
-import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -19,14 +20,14 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { RingComponent } from '../common/ring/ring.component';
 
 type SquareData = {
-    coordClasses: string[] | string;
-    piecesData: PieceData[];
+    readonly coordClasses: ReadonlyArray<string> | string;
+    readonly piecesData: ReadonlyArray<PieceData>;
 }
 
 type PieceData = {
-    radius: number;
-    classes: string[];
-    translate: string;
+    readonly radius: number;
+    readonly classes: ReadonlyArray<string>;
+    readonly translate: string;
 }
 
 @Component({
@@ -49,8 +50,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     protected readonly chosenCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly chosenPiece: WritableSignal<MGPOptional<EncapsulePiece>> = signal(MGPOptional.empty());
     private readonly remainingPieceCenterCoords: WritableSignal<MGPMap<Player, Coord[]>> = signal(new MGPMap());
-    protected readonly victoryCoords: WritableSignal<Coord[]> = signal([]);
-    protected readonly boardPieces: WritableSignal<SquareData[][]> = signal([]);
+    protected readonly victoryCoords: WritableSignal<ReadonlyArray<Coord>> = signal([]);
+    protected readonly boardPieces: WritableSignal<Table<SquareData>> = signal([]);
     protected readonly pieceSizeToRadius: WritableSignal<MGPMap<EncapsulePiece, number>> = signal(new MGPMap());
 
     public constructor() {

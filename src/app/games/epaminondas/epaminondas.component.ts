@@ -30,11 +30,11 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 
 export type PossibleMove = {
 
-    arrow: Arrow<Ordinal>;
+    readonly arrow: Arrow<Ordinal>;
 
-    endingCoord: Coord;
+    readonly endingCoord: Coord;
 
-    relatedMove: EpaminondasMove;
+    readonly relatedMove: EpaminondasMove;
 };
 
 @Component({
@@ -57,7 +57,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     // Data linked to the move attempt
     private readonly firstPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly lastPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
-    protected readonly possibleMoves: WritableSignal<PossibleMove[]> = signal([]);
+    protected readonly possibleMoves: WritableSignal<ReadonlyArray<PossibleMove>> = signal([]);
 
     // Data linked to the last move
     private moveds: Coord[] = [];

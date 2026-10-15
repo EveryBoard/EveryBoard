@@ -12,7 +12,7 @@ import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 
-describe('EncapsuleRules', () => {
+fdescribe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
     const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();

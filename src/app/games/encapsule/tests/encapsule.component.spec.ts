@@ -339,7 +339,7 @@ describe('EncapsuleComponent', () => {
             testUtils.expectElementNotToExist('#victory-1-2');
         }));
 
-        it(`should display opponent's non-victory highlight`, fakeAsync(async() => {
+        it(`should not display opponent's non-victory highlight`, fakeAsync(async() => {
             // Given a board with both player having 3 pieces aligned
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 1, 1]);
             const board: EncapsuleSpace[][] = [
@@ -348,8 +348,8 @@ describe('EncapsuleComponent', () => {
                 [___, ___, ___],
             ];
             const state: EncapsuleState = new EncapsuleState(board, 9, remainingPieces, 3);
-            // When displaying it
 
+            // When displaying it
             await testUtils.setupState(state);
 
             // Then the victory coords should be highlighted only for winner
