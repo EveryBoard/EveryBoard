@@ -11,6 +11,7 @@ linters:
         - nilerr
         - noctx
         - revive
+        - rowserrcheck
         - sqlclosecheck
         - testifylint
     settings:
