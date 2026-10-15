@@ -4,6 +4,7 @@ linters:
     default: standard
     enable:
         - bodyclose
+        - durationcheck
         - errorlint
         - exhaustive
         - gosec
