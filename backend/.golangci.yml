@@ -4,13 +4,18 @@ linters:
     default: standard
     enable:
         - bodyclose
+        - containedctx
+        - contextcheck
         - durationcheck
         - errorlint
         - exhaustive
         - gosec
+        - makezero
         - misspell
+        - musttag
         - nilerr
         - noctx
+        - reassign
         - revive
         - rowserrcheck
         - sqlclosecheck

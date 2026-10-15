@@ -257,11 +257,11 @@ func tokenVerificationShouldFailWithMissingUser(t *testing.T, req *http.Request)
 	require.Error(t, err, "expected token verification to fail")
 }
 
-func addUser(t *testing.T, uid string, username string) {
+func addUser(ctx context.Context, t *testing.T, uid string, username string) {
 	url := fmt.Sprintf("http://127.0.0.1:8080/v1/projects/my-project/databases/(default)/documents/users/%s", uid)
 	body := fmt.Sprintf(`{"fields":{"username":{"stringValue":"%s"}}}`, username)
 
-	req, err := http.NewRequestWithContext(t.Context(), http.MethodPatch, url, bytes.NewBuffer([]byte(body)))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, url, bytes.NewBuffer([]byte(body)))
 	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer owner")
@@ -276,7 +276,7 @@ func addUser(t *testing.T, uid string, username string) {
 func tokenVerificationShouldSucceedWithValidTokenAndUser(t *testing.T, req *http.Request) {
 	// Token is well-formed and user exists in firestore
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLWlkIn0K.")
-	addUser(t, "user-id", "foo")
+	addUser(req.Context(), t, "user-id", "foo")
 	// When verifying its token and retrieving the user
 	uid, user, err := VerifyTokenAndGetUser(req)
 
