@@ -52,6 +52,9 @@ lint:
 vet:
 	go vet ./...
 
+vulncheck:
+	go tool govulncheck ./...
+
 clean:
 	go clean -testcache
 
@@ -75,4 +78,4 @@ docker: prod
 deploy: docker
 	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d --network everyboard -p $(listen-port):8081 -e DISCORD_WEBHOOK_URL='$$DISCORD_WEBHOOK_URL' -e FRONTEND_URL='$$FRONTEND_URL' backend-$(target) /backend $(args)" < "backend-$(target).tar"
 
-.PHONY: build deps tidy run test test-postgres coverage view-coverage check-coverage check-fmt lint vet clean prod deploy
+.PHONY: build deps tidy run test test-postgres coverage view-coverage check-coverage check-fmt lint vet vulncheck clean prod deploy

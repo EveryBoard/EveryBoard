@@ -35,6 +35,13 @@ services:
       target: ci
     command: sh -c "cd backend && make lint && make vet"
 
+  backend-vuln:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.backend-ci
+      target: ci
+    command: sh -c "cd backend && make vulncheck"
+
   translations:
     build:
       context: .
