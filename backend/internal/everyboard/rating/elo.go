@@ -21,6 +21,8 @@ func w(end EndType) float64 {
 		return 0.5
 	case Victory:
 		return 1
+	case Loss:
+		return 0
 	default:
 		return 0
 	}

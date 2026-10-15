@@ -234,6 +234,8 @@ func (h *Handler) handleGameEnd(winner model.PlayerOrNone) error {
 			return model.ResultVictoryOfZero
 		case model.PlayerOrNoneOne:
 			return model.ResultVictoryOfOne
+		case model.PlayerOrNoneNone:
+			return model.ResultHardDraw
 		default:
 			return model.ResultHardDraw
 		}
