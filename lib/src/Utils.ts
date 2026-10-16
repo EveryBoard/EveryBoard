@@ -40,7 +40,7 @@ export class Utils {
         }
     }
 
-    public static assert(condition: boolean, message: string, data?: JSONValue): void {
+    public static assert(condition: boolean, message: string, data?: JSONValue): asserts condition {
         if (condition === false) {
             // We log the error but we also throw an exception
             // This is because if an assertion fails,

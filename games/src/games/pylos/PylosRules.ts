@@ -19,6 +19,8 @@ export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
 export class PylosRules extends Rules<PylosMove, PylosState> {
 
+    public static readonly PIECES_PER_PLAYER: number = 15;
+
     private static singleton: MGPOptional<PylosRules> = MGPOptional.empty();
 
     public static get(): PylosRules {
@@ -135,9 +137,9 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
 
     public static getGameStatus(node: PylosNode): GameStatus {
         const ownershipMap: PlayerNumberMap = node.gameState.getPiecesRepartition();
-        if (ownershipMap.get(Player.ZERO) === 15) {
+        if (ownershipMap.get(Player.ZERO) === PylosRules.PIECES_PER_PLAYER) {
             return GameStatus.ONE_WON;
-        } else if (ownershipMap.get(Player.ONE) === 15) {
+        } else if (ownershipMap.get(Player.ONE) === PylosRules.PIECES_PER_PLAYER) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;
