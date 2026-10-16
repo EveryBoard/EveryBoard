@@ -387,8 +387,8 @@ describe('PylosComponent', () => {
             await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop-1-1-0'); // drop
 
-            // When doing clicking on the capture-validation button
-            // Then nothing should happen
+            // When clicking on the capture-validation button
+            // Then it should succeed without cancelling nor submitting the move
             await testUtils.expectClickSuccess('#capture-validation');
         }));
 
