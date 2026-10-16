@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/go-jose/go-jose/v4/testutils/require"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"

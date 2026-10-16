@@ -5,7 +5,6 @@ go 1.26.9
 require (
 	cloud.google.com/go/firestore v1.25.0
 	firebase.google.com/go/v4 v4.21.0
-	github.com/go-jose/go-jose/v4 v4.1.4
 	github.com/gorilla/websocket v1.5.3
 	github.com/sqids/sqids-go v0.4.1
 	github.com/stretchr/testify v1.12.1
@@ -98,6 +97,7 @@ require (
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/ghostiam/protogetter v0.3.21 // indirect
 	github.com/go-critic/go-critic v0.14.4 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-toolsmith/astcast v1.1.0 // indirect
