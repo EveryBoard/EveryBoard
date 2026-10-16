@@ -154,7 +154,7 @@ func (h *Handler) unsubscribe() error {
 			}
 			// Only remove the current game for observers; players must remain in game
 			// even if they close their tab, so they can't join a new game in another tab
-			if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
+			if game.PlayerZero.User.ID != h.user.ID && game.PlayerOne.User.ID != h.user.ID {
 				if err = h.removeCurrentGame(&buf, store, h.user); err != nil {
 					return err
 				}
@@ -173,7 +173,7 @@ func (h *Handler) unsubscribe() error {
 				return nil
 			}
 
-			if configRoom.Creator.ID == h.user.ID {
+			if configRoom.Creator.User.ID == h.user.ID {
 				if err = store.DeleteConfigRoom(configRoom); err != nil {
 					return err
 				}
@@ -183,12 +183,12 @@ func (h *Handler) unsubscribe() error {
 				h.bufferBroadcastToLobby(&buf, update)
 
 				if err = store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
-					return h.removeCurrentGame(&buf, store, candidate.User)
+					return h.removeCurrentGame(&buf, store, candidate.PlayerInfo.User)
 				}); err != nil {
 					return err
 				}
 
-				return h.removeCurrentGame(&buf, store, configRoom.Creator)
+				return h.removeCurrentGame(&buf, store, configRoom.Creator.User)
 
 			} else {
 				if err = store.DeleteCandidate(configRoom, h.user.ID); err != nil {
@@ -196,7 +196,7 @@ func (h *Handler) unsubscribe() error {
 				}
 				h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.CandidateLeftMessage{Candidate: h.user})
 
-				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.ID == h.user.ID {
+				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.User.ID == h.user.ID {
 					if err = store.RemoveOpponent(configRoom); err != nil {
 						return err
 					}
@@ -212,11 +212,11 @@ func (h *Handler) unsubscribe() error {
 					newCreatorGame := &model.CurrentGame{
 						GameID:   configRoom.ID,
 						GameName: configRoom.GameName,
-						Creator:  configRoom.Creator,
+						Creator:  configRoom.Creator.User,
 						Opponent: nil,
 						Role:     model.UserRoleCreator,
 					}
-					if err = h.updateCurrentGame(&buf, store, configRoom.Creator, newCreatorGame); err != nil {
+					if err = h.updateCurrentGame(&buf, store, configRoom.Creator.User, newCreatorGame); err != nil {
 						return err
 					}
 				}

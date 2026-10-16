@@ -1,8 +1,8 @@
 
 import { Coord } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
-import { QuartoState } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
+import { QuartoState } from '@everyboard/games/quarto';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

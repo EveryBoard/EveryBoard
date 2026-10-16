@@ -1,10 +1,10 @@
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { PenteMove } from '@everyboard/games';
-import { PenteRules } from '@everyboard/games';
-import { PenteState } from '@everyboard/games';
-import { PenteConfig } from '@everyboard/games';
+import { PenteMove } from '@everyboard/games/pente';
+import { PenteRules } from '@everyboard/games/pente';
+import { PenteState } from '@everyboard/games/pente';
+import { PenteConfig } from '@everyboard/games/pente';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

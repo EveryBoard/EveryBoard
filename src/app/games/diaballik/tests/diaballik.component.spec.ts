@@ -3,10 +3,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games';
-import { DiaballikRules } from '@everyboard/games';
-import { DiaballikPiece, DiaballikState } from '@everyboard/games';
-import { DiaballikFailure } from '@everyboard/games';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games/diaballik';
+import { DiaballikRules } from '@everyboard/games/diaballik';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games/diaballik';
+import { DiaballikFailure } from '@everyboard/games/diaballik';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

@@ -6,9 +6,9 @@ import { FourStatePiece } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { AbaloneMove } from '@everyboard/games';
-import { AbaloneState } from '@everyboard/games';
-import { AbaloneFailure } from '@everyboard/games';
+import { AbaloneMove } from '@everyboard/games/abalone';
+import { AbaloneState } from '@everyboard/games/abalone';
+import { AbaloneFailure } from '@everyboard/games/abalone';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneComponent } from '../abalone.component';

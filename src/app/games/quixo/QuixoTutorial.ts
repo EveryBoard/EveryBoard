@@ -1,8 +1,8 @@
 import { Orthogonal } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { QuixoMove } from '@everyboard/games';
-import { QuixoRules } from '@everyboard/games';
-import { QuixoConfig, QuixoState } from '@everyboard/games';
+import { QuixoMove } from '@everyboard/games/quixo';
+import { QuixoRules } from '@everyboard/games/quixo';
+import { QuixoConfig, QuixoState } from '@everyboard/games/quixo';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

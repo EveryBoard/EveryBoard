@@ -12,6 +12,7 @@
 /node_modules
 /lib/node_modules
 /games/node_modules
+/ci/deploy-tools/node_modules
 
 # IDEs and editors
 /.idea

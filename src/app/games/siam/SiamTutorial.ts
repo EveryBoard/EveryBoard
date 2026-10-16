@@ -1,9 +1,9 @@
 
 import { Orthogonal } from '@everyboard/games';
-import { SiamMove } from '@everyboard/games';
-import { SiamPiece } from '@everyboard/games';
-import { SiamConfig, SiamRules } from '@everyboard/games';
-import { SiamState } from '@everyboard/games';
+import { SiamMove } from '@everyboard/games/siam';
+import { SiamPiece } from '@everyboard/games/siam';
+import { SiamConfig, SiamRules } from '@everyboard/games/siam';
+import { SiamState } from '@everyboard/games/siam';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

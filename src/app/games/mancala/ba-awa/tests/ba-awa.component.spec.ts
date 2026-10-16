@@ -3,11 +3,11 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games';
-import { MancalaState } from '@everyboard/games';
-import { BaAwaRules } from '@everyboard/games';
-import { BaAwaConfig } from '@everyboard/games';
-import { BaAwaMoveGenerator } from '@everyboard/games';
+import { BaAwaRules } from '@everyboard/games/ba-awa';
+import { BaAwaConfig } from '@everyboard/games/ba-awa';
+import { BaAwaMoveGenerator } from '@everyboard/games/ba-awa';
+import { MancalaState } from '@everyboard/games/ba-awa';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/ba-awa';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';

@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 import { GameStatus } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
@@ -257,7 +257,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ...PreparationOptions.withoutClocks,
             game: {
                 ...GameMocks.STARTED,
-                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                playerZero: {
+                    ...GameMocks.STARTED.playerZero,
+                    user: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                },
             },
         });
         await receiveSync();

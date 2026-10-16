@@ -2,10 +2,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
-import { CheckersFailure } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
-import { BashniRules } from '@everyboard/games';
+import { BashniRules } from '@everyboard/games/bashni';
+import { CheckersFailure } from '@everyboard/games/bashni';
+import { CheckersMove } from '@everyboard/games/bashni';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games/bashni';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';

@@ -1,8 +1,8 @@
 import { PlayerNumberMap } from '@everyboard/games';
-import { MancalaDistribution, MancalaMove } from '@everyboard/games';
-import { MancalaState } from '@everyboard/games';
-import { BaAwaRules } from '@everyboard/games';
-import { BaAwaConfig } from '@everyboard/games';
+import { BaAwaRules } from '@everyboard/games/ba-awa';
+import { BaAwaConfig } from '@everyboard/games/ba-awa';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games/ba-awa';
+import { MancalaState } from '@everyboard/games/ba-awa';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
-import { TrexoMove } from '@everyboard/games';
-import { TrexoRules } from '@everyboard/games';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games/trexo';
+import { TrexoRules } from '@everyboard/games/trexo';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games/trexo';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

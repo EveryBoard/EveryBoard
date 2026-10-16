@@ -2,10 +2,15 @@
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
-import { EncapsuleMove } from '@everyboard/games';
-import { EncapsulePiece } from '@everyboard/games';
-import { EncapsuleConfig, EncapsuleRules } from '@everyboard/games';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '@everyboard/games';
+import { EncapsuleMove } from '@everyboard/games/encapsule';
+import { EncapsulePiece } from '@everyboard/games/encapsule';
+import { EncapsuleConfig, EncapsuleRules } from '@everyboard/games/encapsule';
+import {
+    EncapsuleRemainingPieces,
+    EncapsuleSizeToNumberMap,
+    EncapsuleSpace,
+    EncapsuleState,
+} from '@everyboard/games/encapsule';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
