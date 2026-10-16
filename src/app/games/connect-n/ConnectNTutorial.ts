@@ -6,9 +6,9 @@ import { TopologicShape } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
 import { TopologicGameStateWithTable } from '@everyboard/games';
 import { OrdinalSquareTopology } from '@everyboard/games';
-import { ConnectNMove } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
-import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games/connect-n';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

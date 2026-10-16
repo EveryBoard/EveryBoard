@@ -11,6 +11,7 @@ import { BaAwaRules } from '@everyboard/games/ba-awa';
 import { BashniRules } from '@everyboard/games/bashni';
 import { BrandhubRules } from '@everyboard/games/brandhub';
 import { CoerceoRules } from '@everyboard/games/coerceo';
+import { ConnectNRules } from '@everyboard/games/connect-n';
 import { ConnectSixRules } from '@everyboard/games/connect-six';
 import { ConspirateursRules } from '@everyboard/games/conspirateurs';
 import { DiaballikRules } from '@everyboard/games/diaballik';

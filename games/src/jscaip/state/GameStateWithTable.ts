@@ -6,9 +6,19 @@ import { Table, TableUtils } from '../TableUtils';
 
 import { GameState } from './GameState';
 
-export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
+export class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
-    public static withPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
+    // public static of<P extends NonNullable<unknown>>(
+    //     oldState: GameStateWithTable<P>,
+    //     newBoard: P[][],
+    // ): GameStateWithTable<P> {
+    //     return new GameStateWithTable(
+    //         newBoard,
+    //         oldState.turn,
+    //     );
+    // }
+
+    public static withPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>( // TODO: wtf a static wither
         oldState: T,
         coord: Coord,
         value: Q,
@@ -177,6 +187,13 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
             }
         }
         return result;
+    }
+
+    public incrementTurn(): GameStateWithTable<P> {
+        return new GameStateWithTable(
+            this.getCopiedBoard(),
+            this.turn + 1,
+        );
     }
 
     public [Symbol.iterator](): IterableIterator<P> {

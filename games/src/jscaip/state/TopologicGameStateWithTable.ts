@@ -3,6 +3,7 @@ import { Direction } from '../Direction';
 import { TopologicShape } from '../shape/Shape';
 import { Topology } from '../topology/Topology';
 
+import { GameStateWithTable } from './GameStateWithTable';
 import { SimpleGameStateWithTable } from './SimpleGameStateWithTable';
 import { TopologicGameState } from './TopologicGameState';
 
@@ -38,12 +39,12 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
         return this.gameStateWithTable.isNotOnBoard(coord);
     }
 
-    public override incrementTurn(): this {
+    public override incrementTurn(): TopologicGameStateWithTable<P> {
         return new TopologicGameStateWithTable(
             this.getTopology(),
             this.getShape(),
             this.gameStateWithTable.incrementTurn(),
-        ) as this;
+        );
     }
 
     public withPieceAt(coord: Coord, value: P): this {
@@ -54,7 +55,9 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
                 this.gameStateWithTable,
                 coord,
                 value,
-                SimpleGameStateWithTable.of,
+                (oldState: GameStateWithTable<P>, newBoard: P[][]) => {
+                    return new GameStateWithTable(newBoard, oldState.turn);
+                },
             ),
         ) as this;
     }

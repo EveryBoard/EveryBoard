@@ -7,10 +7,10 @@ import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
-import { ConnectNAlignmentHeuristic } from '@everyboard/games';
-import { ConnectNMove } from '@everyboard/games';
-import { ConnectNMoveGenerator } from '@everyboard/games';
-import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+import { ConnectNAlignmentHeuristic } from '@everyboard/games/connect-n';
+import { ConnectNMove } from '@everyboard/games/connect-n';
+import { ConnectNMoveGenerator } from '@everyboard/games/connect-n';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

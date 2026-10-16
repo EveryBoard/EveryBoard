@@ -15,8 +15,8 @@ import { TopologicGameStateWithTable } from '@everyboard/games';
 import { HexagonalTopology } from '@everyboard/games';
 import { OrdinalSquareTopology } from '@everyboard/games';
 import { TriangularTopology } from '@everyboard/games';
-import { ConnectNMove } from '@everyboard/games';
-import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games/connect-n';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNComponent } from '../connect-n.component';
