@@ -190,7 +190,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private fillBoardFor(player: Player, state: QuebecCastlesState, config: QuebecCastlesConfig): QuebecCastlesState {
         const initialCoords: Coord[] = this.getInitialCoords(player, state, config);
         for (const coord of initialCoords) {
-            state = state.setPieceAt(coord, player);
+            state = state.withPieceAt(coord, player);
         }
         return state;
     }
@@ -625,7 +625,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         } else {
             let resultingState: QuebecCastlesState = state;
             for (const drop of move.coords) {
-                resultingState = resultingState.setPieceAt(drop, currentPlayer);
+                resultingState = resultingState.withPieceAt(drop, currentPlayer);
             }
             return resultingState.incrementTurn();
         }
@@ -641,7 +641,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (state.getCurrentPlayer() === Player.ZERO) {
             initialState.forEachCoord((coord: Coord, content: PlayerOrNone) => {
                 if (content === Player.ONE) {
-                    newState = newState.setPieceAt(coord, PlayerOrNone.NONE);
+                    newState = newState.withPieceAt(coord, PlayerOrNone.NONE);
                 }
             });
         } else {
@@ -658,9 +658,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (initialState.getPieceAt(actualCastle).isPlayer()) {
             // The castle has been placed where a piece is on initial state
             // So we remove the "initial piece" where the actual castle is put
-            initialState = initialState.setPieceAt(actualCastle, PlayerOrNone.NONE);
+            initialState = initialState.withPieceAt(actualCastle, PlayerOrNone.NONE);
             // And move it to the place we know is by defaut empty: the default castle's spalce
-            initialState = initialState.setPieceAt(defaultCastle, player);
+            initialState = initialState.withPieceAt(defaultCastle, player);
         }
         return initialState;
     }
@@ -668,8 +668,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private applyLegalNormalMove(move: MoveCoordToCoord, state: QuebecCastlesState): QuebecCastlesState {
         const currentPlayer: Player = state.getCurrentPlayer();
         return state
-            .setPieceAt(move.getStart(), PlayerOrNone.NONE)
-            .setPieceAt(move.getEnd(), currentPlayer)
+            .withPieceAt(move.getStart(), PlayerOrNone.NONE)
+            .withPieceAt(move.getEnd(), currentPlayer)
             .incrementTurn();
     }
 
