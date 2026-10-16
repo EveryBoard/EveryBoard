@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -189,6 +190,13 @@ func TestHandleBotIdentifierValidation(t *testing.T) {
 			user:          model.MinimalUser{ID: "human", Name: "human", IsBot: false},
 			botIdentifier: botIdentifier,
 		},
+		{
+			name: "BotWithTooLongDisplayName",
+			user: model.MinimalUser{ID: "bot", Name: "bot", IsBot: true},
+			botIdentifier: &model.BotIdentifier{
+				DisplayName: strings.Repeat("a", model.MaxBotDisplayNameLength+1),
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -216,6 +224,20 @@ func TestHandleBotIdentifierValidation(t *testing.T) {
 			assert.Zero(t, rooms)
 		})
 	}
+}
+
+func TestHandleBotIdentifierAcceptsMaximumDisplayNameLength(t *testing.T) {
+	// Given a bot identifier whose display name is exactly the maximum length, including multibyte characters
+	h, _ := newTestHandler(t, model.MinimalUser{ID: "bot", Name: "bot", IsBot: true})
+	botIdentifier := &model.BotIdentifier{
+		DisplayName: strings.Repeat("é", model.MaxBotDisplayNameLength),
+	}
+
+	// When validating the bot identifier
+	err := h.validateBotIdentifier(botIdentifier)
+
+	// Then it should be accepted
+	require.NoError(t, err)
 }
 
 type failingAddCandidateStore struct {

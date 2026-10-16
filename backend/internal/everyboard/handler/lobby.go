@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"unicode/utf8"
+
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
@@ -45,6 +47,9 @@ func (h *Handler) validateBotIdentifier(botIdentifier *model.BotIdentifier) erro
 	}
 	if h.user.IsBot && botIdentifier == nil {
 		return apperror.ErrorInvalidData // user is a bot but does not declare a bot identifier
+	}
+	if botIdentifier != nil && utf8.RuneCountInString(botIdentifier.DisplayName) > model.MaxBotDisplayNameLength {
+		return apperror.ErrorInvalidData
 	}
 	return nil
 }
