@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { BotIdentifier } from '../../domain/BotIdentifier';
 import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from '../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../domain/MinimalUser';
@@ -46,7 +47,8 @@ describe('ConfigRoomService', () => {
     }
 
     function addCandidate(candidate: MinimalUser): void {
-        backendService.mockReceivedMessage('CandidateJoined', { candidate: { user: candidate, elo: 0 } });
+        const joinedCandidate: Candidate = { user: candidate, elo: 0, botIdentifier: null };
+        backendService.mockReceivedMessage('CandidateJoined', { candidate: joinedCandidate });
         tick(1);
     }
 
@@ -105,23 +107,24 @@ describe('ConfigRoomService', () => {
 
         it('should notify about candidates joining', fakeAsync(async() => {
             // Given a service with which we joined a config room
-            const candidates: MinimalUser[] = [];
+            const candidates: Candidate[] = [];
             const subscription: Subscription =
                 await configRoomService.join('gameId',
                                              ignore,
                                              ignore,
                                              (candidate: Candidate): void => {
-                                                 candidates.push(candidate.user);
+                                                 candidates.push(candidate);
                                              },
                                              ignore,
                                              ignore);
 
             // When a candidate joins
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            const botIdentifier: BotIdentifier | null = null;
             addCandidate(candidate);
             // Then we are notified about it
             expect(candidates.length).toBe(1);
-            expect(candidates[0]).toEqual(candidate);
+            expect(candidates[0]).toEqual({ user: candidate, elo: 0, botIdentifier });
             subscription.unsubscribe();
         }));
 

@@ -3,6 +3,8 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type FirstPlayer string
@@ -105,11 +107,18 @@ type ConfigRoom struct {
 	GameName       string          `gorm:"not null" json:"gameName"`
 }
 
-// Needed for tests, but better placed here
+func (c *ConfigRoom) AfterFind(_ *gorm.DB) error {
+	if c.ChosenOpponent != nil && c.ChosenOpponent.User.ID == "" {
+		c.ChosenOpponent = nil
+	}
+	return nil
+}
+
+// ConfigRoomRows lists the rows names, it is needed for tests, but better placed here
 var ConfigRoomRows = []string{
 	"id",
-	"creator_id", "creator_name", "creator_elo",
-	"chosen_opponent_id", "chosen_opponent_name", "chosen_opponent_elo",
+	"creator_id", "creator_name", "creator_elo", "creator_bot_identifier",
+	"chosen_opponent_id", "chosen_opponent_name", "chosen_opponent_elo", "chosen_opponent_bot_identifier",
 	"status", "first_player", "game_type", "move_duration", "game_duration",
 	"rules_config", "game_name",
 }
@@ -120,4 +129,4 @@ type Candidate struct {
 	PlayerInfo PlayerInfo `gorm:"embedded;embeddedPrefix:player_"`
 }
 
-var CandidateRows = []string{"id", "game_id", "player_id", "player_name", "player_elo"}
+var CandidateRows = []string{"id", "game_id", "player_id", "player_name", "player_elo", "player_bot_identifier"}

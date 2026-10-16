@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -37,20 +38,41 @@ func (s *GORMStore) UpdateCurrentGame(user model.MinimalUser, currentGame *model
 		opponentName = currentGame.Opponent.Name
 		opponentIsBot = currentGame.Opponent.IsBot
 	}
+	creatorBotIdentifier, err := serializeBotIdentifier(currentGame.CreatorBotIdentifier)
+	if err != nil {
+		return err
+	}
+	opponentBotIdentifier, err := serializeBotIdentifier(currentGame.OpponentBotIdentifier)
+	if err != nil {
+		return err
+	}
 	result := s.db.Model(&model.CurrentGame{}).Where("user_id = ?", user.ID).Updates(map[string]any{
-		"user_name":       currentGame.User.Name,
-		"user_is_bot":     currentGame.User.IsBot,
-		"game_id":         currentGame.GameID,
-		"game_name":       currentGame.GameName,
-		"creator_id":      currentGame.Creator.ID,
-		"creator_name":    currentGame.Creator.Name,
-		"creator_is_bot":  currentGame.Creator.IsBot,
-		"opponent_id":     opponentID,
-		"opponent_name":   opponentName,
-		"opponent_is_bot": opponentIsBot,
-		"role":            currentGame.Role,
+		"user_name":               currentGame.User.Name,
+		"user_is_bot":             currentGame.User.IsBot,
+		"game_id":                 currentGame.GameID,
+		"game_name":               currentGame.GameName,
+		"creator_id":              currentGame.Creator.ID,
+		"creator_name":            currentGame.Creator.Name,
+		"creator_is_bot":          currentGame.Creator.IsBot,
+		"creator_bot_identifier":  creatorBotIdentifier,
+		"opponent_id":             opponentID,
+		"opponent_name":           opponentName,
+		"opponent_is_bot":         opponentIsBot,
+		"opponent_bot_identifier": opponentBotIdentifier,
+		"role":                    currentGame.Role,
 	})
 	return wrapError("UpdateCurrentGame", result.Error)
+}
+
+func serializeBotIdentifier(identifier *model.BotIdentifier) (any, error) {
+	if identifier == nil {
+		return nil, nil
+	}
+	serialized, err := json.Marshal(identifier)
+	if err != nil {
+		return nil, wrapError("serializeBotIdentifier", err)
+	}
+	return string(serialized), nil
 }
 
 func (s *GORMStore) RemoveCurrentGame(user model.MinimalUser) error {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
@@ -164,15 +165,17 @@ func (s *FakeStore) ListGames() ([]model.Game, error) {
 	return games, nil
 }
 
-func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
+func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {
 		return nil, err
 	}
 	id := s.allocateID()
 	configRoom := &model.ConfigRoom{
-		ID:             id,
-		Creator:        model.PlayerInfo{User: creator, Elo: creatorElo.CurrentElo},
+		ID: id,
+		Creator: model.PlayerInfo{
+			User: creator, Elo: creatorElo.CurrentElo, BotIdentifier: botIdentifier,
+		},
 		FirstPlayer:    model.FirstPlayerRandom,
 		ChosenOpponent: nil,
 		Status:         model.StatusCreated,
@@ -192,14 +195,18 @@ func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 }
 
 func (s *FakeStore) SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error {
-	var candidateElo float64
+	var selectedCandidate *model.Candidate
 	for _, c := range s.Candidates[configRoom.ID] {
 		if c.PlayerInfo.User.ID == opponent.ID {
-			candidateElo = c.PlayerInfo.Elo
+			selectedCandidate = &c
 			break
 		}
 	}
-	configRoom.ChosenOpponent = &model.PlayerInfo{User: opponent, Elo: candidateElo}
+	if selectedCandidate == nil {
+		return apperror.ErrorNotAllowed
+	}
+	selectedOpponent := selectedCandidate.PlayerInfo
+	configRoom.ChosenOpponent = &selectedOpponent
 	return nil
 }
 
@@ -285,7 +292,7 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 	return nil
 }
 
-func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
 		GameID:     configRoom.ID,
 		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},

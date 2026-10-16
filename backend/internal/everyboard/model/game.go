@@ -64,8 +64,8 @@ type Game struct {
 
 var GameRows = []string{
 	"game_id", "game_name",
-	"player_zero_id", "player_zero_name", "player_zero_elo",
-	"player_one_id", "player_one_name", "player_one_elo",
+	"player_zero_id", "player_zero_name", "player_zero_elo", "player_zero_bot_identifier",
+	"player_one_id", "player_one_name", "player_one_elo", "player_one_bot_identifier",
 	"result", "beginning",
 }
 

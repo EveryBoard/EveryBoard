@@ -1,5 +1,6 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 
+import { BotIdentifier } from './BotIdentifier';
 import { MinimalUser } from './MinimalUser';
 
 export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent' | 'Candidate';
@@ -11,7 +12,9 @@ export type CurrentGame = {
     id: string;
     gameName: string;
     creator: MinimalUser;
+    creatorBotIdentifier: BotIdentifier | null;
     opponent?: MinimalUser | null;
+    opponentBotIdentifier: BotIdentifier | null;
     role: UserRoleInPart;
 };
 

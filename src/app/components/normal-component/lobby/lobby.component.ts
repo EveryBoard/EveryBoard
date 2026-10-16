@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs';
 import { Debug } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { BotIdentifier, getUserDisplayName } from '../../../domain/BotIdentifier';
 import { ConfigRoom, Status } from '../../../domain/ConfigRoom';
+import { MinimalUser } from '../../../domain/MinimalUser';
 import { CurrentGame } from '../../../domain/User';
 import { ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
 import { BackendMessage, BackendService } from '../../../services/BackendService';
@@ -95,6 +97,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public getGameName(configRoom: ConfigRoom): string {
         return GameInfo.getByUrlName(configRoom.gameName).get().name;
+    }
+
+    public getDisplayName(user: MinimalUser, botIdentifier: BotIdentifier | null): string {
+        return getUserDisplayName(user, botIdentifier);
     }
 
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {

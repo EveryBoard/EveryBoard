@@ -263,6 +263,32 @@ describe('LobbyComponent', () => {
         expect(creatorElo.nativeElement.innerText).toEqual('creator (13)');
     }));
 
+    it('should display bot identifiers as player names', fakeAsync(async() => {
+        // Given a lobby with a game between two bots
+        testUtils.detectChanges();
+        setActiveConfigRooms(MGPMap.from({ gameId: {
+            ...configRoom,
+            creator: {
+                ...configRoom.creator,
+                botIdentifier: { displayName: 'Creator Bot', parameters: {} },
+            },
+            chosenOpponent: configRoom.chosenOpponent == null ? null : {
+                ...configRoom.chosenOpponent,
+                botIdentifier: { displayName: 'Opponent Bot', parameters: {} },
+            },
+        } }));
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the bot display names
+        const game: DebugElement = testUtils.findElement('#part-0');
+        expect(game.nativeElement.innerText).toContain('Creator Bot');
+        expect(game.nativeElement.innerText).toContain('Opponent Bot');
+        expect(game.nativeElement.innerText).not.toContain(configRoom.creator.user.name);
+        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent?.user.name);
+    }));
+
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
 

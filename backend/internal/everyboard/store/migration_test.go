@@ -25,9 +25,24 @@ func (legacyCandidate) TableName() string {
 func TestMigrateCandidatesRemovesLegacyColumns(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	require.NoError(t, err, "cannot initialize legacy db")
+	testMigrateCandidatesRemovesLegacyColumns(t, db)
+}
+
+func TestPostgresMigrateCandidatesRemovesLegacyColumns(t *testing.T) {
+	db, err := gorm.Open(postgresTestDialector(t), &gorm.Config{})
+	require.NoError(t, err, "cannot initialize legacy postgres db")
+	t.Cleanup(func() {
+		sqlDB, dbErr := db.DB()
+		require.NoError(t, dbErr, "cannot access postgres test connection")
+		require.NoError(t, sqlDB.Close(), "cannot close postgres test connection")
+	})
+	testMigrateCandidatesRemovesLegacyColumns(t, db)
+}
+
+func testMigrateCandidatesRemovesLegacyColumns(t *testing.T, db *gorm.DB) {
+	t.Helper()
 	require.NoError(t, db.AutoMigrate(&legacyCandidate{}), "cannot create legacy candidates table")
 	require.NoError(t, db.Create(&legacyCandidate{
-		ID:       1,
 		GameID:   12,
 		UserID:   "foo",
 		UserName: "Foo",
@@ -52,10 +67,11 @@ func TestMigrateCandidatesRemovesLegacyColumns(t *testing.T) {
 	assert.Equal(t, 42.0, candidate.PlayerInfo.Elo)
 
 	store := &GORMStore{db: db}
-	err = store.AddCandidate(
+	err := store.AddCandidate(
 		&model.ConfigRoom{ID: 13},
 		model.MinimalUser{ID: "bar", Name: "Bar"},
 		84,
+		nil,
 	)
 	require.NoError(t, err, "cannot add candidate after migration")
 }
