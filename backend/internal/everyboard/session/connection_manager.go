@@ -113,7 +113,7 @@ func (connectionManager *ConnectionManager[Connection]) AddConnection(user model
 					logger.Debug.Printf(">>> [%s] %v", user.Name, string(toSend))
 					_ = client.SetWriteDeadline(time.Now().Add(10 * time.Second))
 					err = client.WriteMessage(websocket.TextMessage, toSend)
-					if err != nil && !(websocket.IsCloseError(err) || errors.Is(err, websocket.ErrCloseSent)) {
+					if err != nil && !websocket.IsCloseError(err) && !errors.Is(err, websocket.ErrCloseSent) {
 						// in case the connection has been closed, we will ignore sent messages
 						logger.Error.Printf("error when sending message: %v", err)
 					}
