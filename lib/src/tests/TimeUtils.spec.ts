@@ -6,16 +6,28 @@ describe('TimeUtils', () => {
     describe('sleep', () => {
 
         it('should resolve after the given delay', async() => {
-            // Given a start time
-            const before: number = Date.now();
-            const msToSleep: number = 100;
+            jasmine.clock().install(); // need to fake time in this test
 
-            // When sleeping for some time
-            await TimeUtils.sleep(msToSleep);
+            // Given a sleep promise of 100ms
+            let resolved: boolean = false;
+            const sleepPromise: Promise<void> = TimeUtils.sleep(100);
+            sleepPromise.then(() => resolved = true);
 
-            // Then at least this time should have elapsed, and not much more
-            expect(Date.now() - before).toBeGreaterThanOrEqual(msToSleep);
-            expect(Math.abs((Date.now() - before) - msToSleep)).toBeLessThan(10);
+            // When 99 ms have elapsed
+            jasmine.clock().tick(99);
+            await Promise.resolve();
+
+            // Then the sleep should not have resolved yet
+            expect(resolved).toBeFalse();
+
+            // When 1 more ms has elapsed
+            jasmine.clock().tick(1);
+            await sleepPromise;
+
+            // Then the sleep should have resolved
+            expect(resolved).toBeTrue();
+
+            jasmine.clock().uninstall();
         });
 
     });
