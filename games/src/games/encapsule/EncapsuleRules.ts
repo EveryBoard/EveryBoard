@@ -7,7 +7,7 @@ import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescr
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -107,7 +107,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
     }
 
     public getVictoriousCoords(state: EncapsuleState, config: EncapsuleConfig): Coord[] {
-        const helper: OrdinalNInARowHelper<EncapsuleSpace> = new OrdinalNInARowHelper(
+        const helper: EightDirectionNInARowHelper<EncapsuleSpace> = new EightDirectionNInARowHelper(
             (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
             config.nInARow,
         );

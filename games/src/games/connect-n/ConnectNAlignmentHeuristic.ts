@@ -3,11 +3,10 @@ import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
-import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectNMove } from '../connect-n/ConnectNMove';
 
-import { ConnectNConfig, ConnectNNode } from './ConnectNRules';
+import { ConnectNConfig, ConnectNNode, ConnectNRules } from './ConnectNRules';
 
 export class ConnectNAlignmentHeuristic
     extends Heuristic<ConnectNMove, TopologicGameState<FourStatePiece>, BoardValue, ConnectNConfig>
@@ -16,19 +15,15 @@ export class ConnectNAlignmentHeuristic
     public getBoardValue(node: ConnectNNode, config: ConnectNConfig): BoardValue {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
         let score: number = 0;
-        const currentPlayer: Player = state.getCurrentOpponent();
-        const playerCoords: Coord[] = state
+        const lastPlayer: Player = state.getCurrentOpponent();
+        const lastPlayerCoords: Coord[] = state
             .getCoordsAndContents()
             .filter((coordAndContent: { coord: Coord; content: FourStatePiece }) => {
-                return coordAndContent.content.is(currentPlayer);
+                return coordAndContent.content.is(lastPlayer);
             })
             .map((coordAndContent: { coord: Coord; content: FourStatePiece }) => coordAndContent.coord);
-        for (const coord of playerCoords) {
-            const squareScore: number = new TopologicNInARowHelper(
-                (piece: FourStatePiece) => piece.getPlayer(),
-                config.n,
-                node.gameState.getShape(),
-            ).getSquareScore(state, coord);
+        for (const coord of lastPlayerCoords) {
+            const squareScore: number = ConnectNRules.getHelper(config).getSquareScore(state, coord);
             score += squareScore;
         }
         return BoardValue.of(score);

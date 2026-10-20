@@ -7,7 +7,7 @@ import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
@@ -21,7 +21,7 @@ describe('ConnectNMoveGenerator', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
 
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const defaultTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
+    const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
     const defaultShape: TopologicShape<Direction> = new RectangularShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,

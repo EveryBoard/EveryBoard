@@ -6,7 +6,7 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GobanConfig } from '../../jscaip/GobanConfig';
-import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
@@ -31,8 +31,8 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
         return ConnectSixRules.singleton.get();
     }
 
-    public static readonly CONNECT_SIX_HELPER: OrdinalNInARowHelper<PlayerOrNone> =
-        new OrdinalNInARowHelper(Utils.identity, 6);
+    public static readonly CONNECT_SIX_HELPER: EightDirectionNInARowHelper<PlayerOrNone> =
+        new EightDirectionNInARowHelper(Utils.identity, 6);
 
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);

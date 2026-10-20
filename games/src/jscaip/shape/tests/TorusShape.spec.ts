@@ -3,16 +3,16 @@ import { MGPOptional, Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { Direction } from '../../Direction';
-import { Ordinal } from '../../Ordinal';
+import { EightDirection } from '../../EightDirection';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { TorusShape } from '../TorusShape';
 
 describe('TorusShape (with Square Topology)', () => {
 
-    const topology: Topology<Direction> = new OrdinalSquareTopology();
+    const topology: Topology<Direction> = new EightDirectionSquareTopology();
 
     describe('getCenters', () => {
 
@@ -124,7 +124,7 @@ describe('TorusShape (with Triangular Topology)', () => {
             const coord: Coord = new Coord(3, 3);
 
             // When getting getNextCoord(RIGHT)
-            const nextCoord: MGPOptional<Coord> = shape.getNextCoord(coord, Ordinal.RIGHT);
+            const nextCoord: MGPOptional<Coord> = shape.getNextCoord(coord, EightDirection.RIGHT);
 
             // Then it should reach the left edge
             expect(nextCoord).toEqual(MGPOptional.of(new Coord(0, 3)));

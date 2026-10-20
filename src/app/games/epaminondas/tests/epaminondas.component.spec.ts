@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
@@ -130,7 +130,7 @@ describe('EpaminondasComponent', () => {
             await testUtils.expectClickSuccess('#click-0-10');
             // When clicking next to the piece on an empty square
             // Then it should succeed as a move
-            const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
+            const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, EightDirection.UP);
             await testUtils.expectMoveSuccess('#click-0-9', move);
         }));
 
@@ -162,7 +162,7 @@ describe('EpaminondasComponent', () => {
             await testUtils.setupState(state);
 
             // When trying to move a single piece onto the opponent's group
-            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.UP);
+            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, EightDirection.UP);
             await testUtils.expectClickSuccess('#click-0-9');
 
             // Then the move should be illegal
@@ -206,7 +206,7 @@ describe('EpaminondasComponent', () => {
         // When performing a capturing move
         await testUtils.expectClickSuccess('#click-0-11');
 
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, EightDirection.UP);
         await testUtils.expectMoveSuccess('#click-0-8', move);
 
         // Then it should display what has been captured and moved
@@ -260,11 +260,11 @@ describe('EpaminondasComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        const previousMove: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
+        const previousMove: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, EightDirection.UP);
         await testUtils.setupState(state, { previousState, previousMove });
 
         // When receiving a move
-        const move: EpaminondasMove = new EpaminondasMove(7, 3, 2, 1, Ordinal.RIGHT);
+        const move: EpaminondasMove = new EpaminondasMove(7, 3, 2, 1, EightDirection.RIGHT);
         await testUtils.getWrapper().receiveValidMove(move);
 
         // Then there should no longer be captures

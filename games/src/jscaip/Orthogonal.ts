@@ -1,7 +1,7 @@
 import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 
 import { Direction, DirectionFactory } from './Direction';
-import { Ordinal } from './Ordinal';
+import { EightDirection } from './EightDirection';
 
 export class Orthogonal extends Direction {
 
@@ -41,19 +41,19 @@ export class Orthogonal extends Direction {
         return rotated.get();
     }
 
-    public toOrdinal(): Direction {
+    public toEightDirection(): Direction {
         switch (this) {
-            case Orthogonal.UP: return Ordinal.UP;
-            case Orthogonal.RIGHT: return Ordinal.RIGHT;
-            case Orthogonal.DOWN: return Ordinal.DOWN;
+            case Orthogonal.UP: return EightDirection.UP;
+            case Orthogonal.RIGHT: return EightDirection.RIGHT;
+            case Orthogonal.DOWN: return EightDirection.DOWN;
             default:
                 Utils.expectToBe(this, Orthogonal.LEFT);
-                return Ordinal.LEFT;
+                return EightDirection.LEFT;
         }
     }
 
     public getAngle(): number {
-        return this.toOrdinal().getAngle();
+        return this.toEightDirection().getAngle();
     }
 
 }

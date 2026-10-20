@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { SiamMove } from '@everyboard/games/siam';
@@ -37,8 +37,8 @@ export class SiamOrientationArrowComponent extends BaseGameComponent {
         const scaleValue: number = arrowRatio * sizeRatio;
         const cxAfterScale: number = 0.5 * scaleValue;
         let centralCoord: Coord = new Coord(config.width / 2, config.height / 2);
-        centralCoord = centralCoord.getNext(Ordinal.LEFT, cxAfterScale);
-        centralCoord = centralCoord.getNext(Ordinal.UP, cxAfterScale);
+        centralCoord = centralCoord.getNext(EightDirection.LEFT, cxAfterScale);
+        centralCoord = centralCoord.getNext(EightDirection.UP, cxAfterScale);
         centralCoord = centralCoord.getNext(orientation, scaleValue - sizeRatio);
         centralCoord = centralCoord.scale(this.SPACE_SIZE, this.SPACE_SIZE);
 

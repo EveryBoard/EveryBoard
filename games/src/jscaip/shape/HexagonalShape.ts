@@ -4,7 +4,7 @@ import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './Shape';
+import { TopologicShape } from './TopologicShape';
 
 export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
 

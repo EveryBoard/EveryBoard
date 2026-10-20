@@ -1,6 +1,6 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
@@ -102,7 +102,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const firstCoord: Coord = coordAndContent.coord;
             const owner: Player = coordAndContent.content;
-            for (const direction of Ordinal.ORDINALS) {
+            for (const direction of EightDirection.EIGHT_DIRECTIONS) {
                 let phalanxSize: number = 1;
                 let nextCoord: Coord = firstCoord.getNext(direction, 1);
                 while (state.hasPieceAt(nextCoord, owner)) {

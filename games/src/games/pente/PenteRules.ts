@@ -6,8 +6,8 @@ import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescr
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
+import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -89,7 +89,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
         const sizeOfCapture: number = config.sizeOfSandwich;
-        for (const direction of Ordinal.factory.all) {
+        for (const direction of EightDirection.factory.all) {
             let i: number = 1;
             let potentialCapture: Coord = coord.getNext(direction, i);
             const captured: Coord[] = [potentialCapture];
@@ -128,8 +128,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public getHelper(config: PenteConfig): OrdinalNInARowHelper<PlayerOrNone> {
-        return new OrdinalNInARowHelper(Utils.identity, config.nInARow);
+    public getHelper(config: PenteConfig): EightDirectionNInARowHelper<PlayerOrNone> {
+        return new EightDirectionNInARowHelper(Utils.identity, config.nInARow);
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {

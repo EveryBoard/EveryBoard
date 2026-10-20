@@ -15,7 +15,7 @@ import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectNFailure } from '../ConnectNFailure';
 import { ConnectNMove } from '../ConnectNMove';
@@ -39,7 +39,7 @@ describe('ConnectNRules (with default config)', () => {
      */
 
     let rules: ConnectNRules;
-    const defaultTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
+    const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
     const defaultShape: TopologicShape<Direction> = new RectangularShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
@@ -110,7 +110,7 @@ describe('ConnectNRules (with default config)', () => {
             const move: ConnectNMove = ConnectNMove.of([new Coord(11, 11), new Coord(10, 10)]);
 
             // Then the attempt should throw
-            const reason: string = ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE();
+            const reason: string = ConnectNFailure.YOU_MUST_DROP_ONE_AT_FIRST_TURN();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -363,7 +363,7 @@ describe('ConnectNRules (with default config)', () => {
             const move: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
 
             // Then the move should be illegal
-            const reason: string = ConnectNFailure.YOU_MUST_PLAY_EXACTLY(defaultConfig.dropAfterFirstTurn);
+            const reason: string = ConnectNFailure.YOU_MUST_PLAY_EXACTLY_N_PIECES(defaultConfig.dropAfterFirstTurn);
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -842,7 +842,7 @@ describe('ConnectNRules (with triangular config)', () => {
 describe('ConnectNRules (with rectangular torus config)', () => {
 
     let rules: ConnectNRules;
-    const squareTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
+    const squareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();

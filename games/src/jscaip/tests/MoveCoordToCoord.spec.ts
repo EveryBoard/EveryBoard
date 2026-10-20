@@ -5,7 +5,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 import { Coord } from '../Coord';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
-import { Ordinal } from '../Ordinal';
+import { EightDirection } from '../EightDirection';
 
 class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 
@@ -17,15 +17,15 @@ describe('MoveCoordToCoord', () => {
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
             const source: Coord = new Coord(0, 0);
-            const allDestsAndDirs: [Coord, Ordinal][] = [
-                [new Coord(0, 1), Ordinal.DOWN],
-                [new Coord(0, -1), Ordinal.UP],
-                [new Coord(1, 0), Ordinal.RIGHT],
-                [new Coord(-1, 0), Ordinal.LEFT],
-                [new Coord(-1, -1), Ordinal.UP_LEFT],
-                [new Coord(-1, 1), Ordinal.DOWN_LEFT],
-                [new Coord(1, -1), Ordinal.UP_RIGHT],
-                [new Coord(1, 1), Ordinal.DOWN_RIGHT],
+            const allDestsAndDirs: [Coord, EightDirection][] = [
+                [new Coord(0, 1), EightDirection.DOWN],
+                [new Coord(0, -1), EightDirection.UP],
+                [new Coord(1, 0), EightDirection.RIGHT],
+                [new Coord(-1, 0), EightDirection.LEFT],
+                [new Coord(-1, -1), EightDirection.UP_LEFT],
+                [new Coord(-1, 1), EightDirection.DOWN_LEFT],
+                [new Coord(1, -1), EightDirection.UP_RIGHT],
+                [new Coord(1, 1), EightDirection.DOWN_RIGHT],
             ];
             for (const [destination, direction] of allDestsAndDirs) {
                 expect(new ConcreteMoveCoordToCoord(source, destination).getDirection())

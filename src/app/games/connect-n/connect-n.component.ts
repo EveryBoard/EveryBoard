@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
 
-import { Coord } from '@everyboard/games';
+import { Coord, Table } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -15,6 +15,7 @@ import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
+import { TableUtils } from 'games/src';
 
 @Component({
     selector: 'app-connect-n',
@@ -57,11 +58,9 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.state();
         this.coordsAndContents.set(state.getCoordsAndContents());
-        this.victoryCoords.set(
-            new Set(
-                ConnectNRules.getVictoriousCoords(state, this.config()),
-            ),
-        );
+        this.victoryCoords.set(new Set(
+            ConnectNRules.getVictoriousCoords(state, this.config()),
+        ));
     }
 
     public override async showLastMove(move: ConnectNMove): Promise<void> {
@@ -90,6 +89,43 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
             return MGPValidation.SUCCESS;
         }
     }
+
+    protected readonly ownerMap: Signal<Table<PlayerOrNone>> = computed(() => {
+        const owners: PlayerOrNone[][] = [];
+        for (const coordAndContent of this.state().getCoordsAndContents()) {
+            const y: number = coordAndContent.coord.y;
+            while (owners.length < y) {
+                owners.push([]);
+            }
+            const x: number = coordAndContent.coord.x;
+            while (owners[y].length < x) {
+                owners[y].push(PlayerOrNone.NONE);
+            }
+            owners[y][x] = coordAndContent.content.getPlayer();
+        }
+        return owners;
+    });
+
+    // protected readonly spaceClasses: WritableSignal<ReadonlyArray<string>> = signal(() => {
+    //     return TableUtils.map(
+    //         this.ownerMap(),
+    //         (owner: PlayerOrNone) => {
+    //             const classes: string[] = [];
+    //             if (this.droppedCoords().contains(coord)) {
+    //                 classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
+    //                 classes.push('highlighted-stroke');
+    //             } else {
+    //                 classes.push(this.getPlayerClass(owner));
+    //                 if (this.victoryCoords().contains(coord)) {
+    //                     classes.push('victory-stroke');
+    //                 }
+    //                 if (this.lastMoveds().contains(coord)) {
+    //                     classes.push('last-move-stroke');
+    //                 }
+    //             }
+    //         },
+    //     );
+    // });
 
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

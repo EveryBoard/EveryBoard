@@ -4,13 +4,13 @@ import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { Direction } from '../../Direction';
-import { OrdinalSquareTopology } from '../../topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { Topology } from '../../topology/Topology';
 import { HexagonalShape } from '../HexagonalShape';
 
 describe('HexagonalShape', () => {
 
-    const topology: Topology<Direction> = new OrdinalSquareTopology();
+    const topology: Topology<Direction> = new EightDirectionSquareTopology();
 
     describe('getCenters', () => {
 

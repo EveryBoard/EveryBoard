@@ -282,7 +282,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await clickOnOpponentPieceAndFail();
             }));
 
-            it('should fail when doing impossible click (non ordinal direction)', fakeAsync(async() => {
+            it('should fail when doing impossible click (non eight direction)', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const firstCoord: Coord = entries.firstPlayerCoords[0];
                 await testUtils.expectClickSuccess(`#coord-${ firstCoord.x }-${ firstCoord.y }`);
@@ -293,7 +293,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await testUtils.expectClickFailure(`#coord-${ firstCoord.x + 2 }-${ firstCoord.y - 1 }`, reason);
             }));
 
-            it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
+            it('should fail when doing impossible click (eight direction)', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const state: CheckersState = entries.invalidVerticalMoveTest.state;
                 const coord: Coord = entries.invalidVerticalMoveTest.coord;

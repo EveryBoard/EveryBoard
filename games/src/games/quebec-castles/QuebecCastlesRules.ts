@@ -11,7 +11,7 @@ import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DirectionFailure } from '../../jscaip/Direction';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -217,7 +217,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public getInitialCoords(player: Player, state: QuebecCastlesState, config: QuebecCastlesConfig): Coord[] {
         let pieceToDrop: number = this.getNumberOfPieces(player, config);
-        const coordDirection: Ordinal = config.isRhombic ? Ordinal.UP_RIGHT : Ordinal.RIGHT;
+        const coordDirection: EightDirection = config.isRhombic ? EightDirection.UP_RIGHT : EightDirection.RIGHT;
         const lineDirectionAndIndex: { lineDirection: number; lineToFillIndex: number } =
             this.getLineDirectionAndIndex(player, config);
         const lineDirection: number = lineDirectionAndIndex.lineDirection;
@@ -254,7 +254,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private getAvailableSpacesAtLine(line: number, state: QuebecCastlesState, config: QuebecCastlesConfig): Coord[] {
         let defaultAvailableSpace: number;
         let coord: Coord;
-        let direction: Ordinal;
+        let direction: EightDirection;
         const coords: Coord[] = [];
         if (config.isRhombic) {
             const xMax: number = config.width - 1;
@@ -264,11 +264,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             const xInitial: number = Math.max(line - yMax, 0);
             const yInitial: number = Math.min(line, yMax);
             coord = new Coord(xInitial, yInitial);
-            direction = Ordinal.UP_RIGHT;
+            direction = EightDirection.UP_RIGHT;
         } else {
             defaultAvailableSpace = config.width;
             coord = new Coord(0, line);
-            direction = Ordinal.RIGHT;
+            direction = EightDirection.RIGHT;
         }
         while (defaultAvailableSpace > 0) {
             if (state.isCastleAt(coord) === false) {
@@ -562,7 +562,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private getMiddleValidity(state: QuebecCastlesState, move: MoveCoordToCoord): MGPValidation {
-        const direction: MGPFallible<Ordinal> = move.getDirection();
+        const direction: MGPFallible<EightDirection> = move.getDirection();
         if (direction.isFailure()) {
             return MGPValidation.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
         }
@@ -710,7 +710,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         const owner: Player = state.getPieceAt(coord) as Player;
         const stepSize: number = this.getPlayerStepSize(owner);
         const moves: QuebecCastlesMove[] = [];
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const step: Coord = coord.getNext(direction);
             if (state.isOnBoard(step)) {
                 if (stepSize === 1) {

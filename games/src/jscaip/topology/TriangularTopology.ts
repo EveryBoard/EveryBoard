@@ -2,7 +2,7 @@ import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
-import { Ordinal } from '../Ordinal';
+import { EightDirection } from '../EightDirection';
 import { TriangularDirection } from '../TriangularDirection';
 import { Vector } from '../Vector';
 
@@ -29,11 +29,11 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         }
         if (this.canGoUp(coord)) {
             if (direction.y === -1) {
-                return coord.getNext(Ordinal.UP, distance);
+                return coord.getNext(EightDirection.UP, distance);
             }
         } else {
             if (direction.y === 1) {
-                return coord.getNext(Ordinal.DOWN, distance);
+                return coord.getNext(EightDirection.DOWN, distance);
             }
         }
         return coord.getNext(new Vector(direction.x, 0), distance);
@@ -45,9 +45,9 @@ export class TriangularTopology implements Topology<TriangularDirection> {
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
-            coord.getNext(Ordinal.LEFT),
-            coord.getNext(Ordinal.RIGHT),
-            this.canGoUp(coord) ? coord.getNext(Ordinal.UP) : coord.getNext(Ordinal.DOWN),
+            coord.getNext(EightDirection.LEFT),
+            coord.getNext(EightDirection.RIGHT),
+            this.canGoUp(coord) ? coord.getNext(EightDirection.UP) : coord.getNext(EightDirection.DOWN),
         ]);
     }
 

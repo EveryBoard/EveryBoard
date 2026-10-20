@@ -8,23 +8,12 @@ import { GameState } from './GameState';
 
 export class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
-    // public static of<P extends NonNullable<unknown>>(
-    //     oldState: GameStateWithTable<P>,
-    //     newBoard: P[][],
-    // ): GameStateWithTable<P> {
-    //     return new GameStateWithTable(
-    //         newBoard,
-    //         oldState.turn,
-    //     );
-    // }
-
-    public static withPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>( // TODO: wtf a static wither
+    public static withPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
         oldState: T,
         coord: Coord,
         value: Q,
-        stateAdapter: (oldState: T, newBoard: Table<Q>) => T)
-    : T
-    {
+        stateAdapter: (oldState: T, newBoard: Table<Q>) => T,
+    ): T {
         const newBoard: Q[][] = oldState.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
         return stateAdapter(oldState, newBoard);

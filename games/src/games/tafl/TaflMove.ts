@@ -2,14 +2,14 @@ import { MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 
 import { TaflFailure } from './TaflFailure';
 
 export abstract class TaflMove extends MoveCoordToCoord {
 
     public static isValidDirection(start: Coord, end: Coord): MGPValidation {
-        const dir: MGPFallible<Ordinal> = start.getDirectionToward(end);
+        const dir: MGPFallible<EightDirection> = start.getDirectionToward(end);
         if (dir.isFailure() || dir.get().isDiagonal()) {
             return MGPValidation.failure(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
         }

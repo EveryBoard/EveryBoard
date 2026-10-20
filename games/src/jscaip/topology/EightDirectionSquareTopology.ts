@@ -2,21 +2,21 @@ import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
-import { Ordinal } from '../Ordinal';
+import { EightDirection } from '../EightDirection';
 
 import { Topology } from './Topology';
 
-export class OrdinalSquareTopology implements Topology<Ordinal> {
+export class EightDirectionSquareTopology implements Topology<EightDirection> {
 
     private readonly directions: Set<Direction> = new Set([
-        Ordinal.UP,
-        Ordinal.UP_RIGHT,
-        Ordinal.RIGHT,
-        Ordinal.DOWN_RIGHT,
-        Ordinal.DOWN,
-        Ordinal.DOWN_LEFT,
-        Ordinal.LEFT,
-        Ordinal.UP_LEFT,
+        EightDirection.UP,
+        EightDirection.UP_RIGHT,
+        EightDirection.RIGHT,
+        EightDirection.DOWN_RIGHT,
+        EightDirection.DOWN,
+        EightDirection.DOWN_LEFT,
+        EightDirection.LEFT,
+        EightDirection.UP_LEFT,
     ]);
 
     public getDirections(): Set<Direction> {

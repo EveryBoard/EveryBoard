@@ -7,7 +7,7 @@ import { SuperRules } from '@everyboard/games';
 import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
 import { HexagonalTopology } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
 import { OrthogonalSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
 import { TriangularTopology } from '@everyboard/games';
@@ -68,7 +68,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
     private getLayout(): Layout {
         const state: TopologicGameState<P> = this.state();
         const topology: Topology<Direction> = state.getTopology();
-        if (topology instanceof OrdinalSquareTopology ||
+        if (topology instanceof EightDirectionSquareTopology ||
             topology instanceof OrthogonalSquareTopology
         ) {
             return this.squareLayout;

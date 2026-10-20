@@ -7,11 +7,11 @@ import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
@@ -37,7 +37,7 @@ describe('ConnectNAlignmentMinimax', () => {
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
+    const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
     const defaultShape: TopologicShape<Direction> = new RectangularShape(
         defaultConfig.boardSize,

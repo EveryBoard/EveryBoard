@@ -4,7 +4,7 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
@@ -73,16 +73,16 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     // Returns the directions allowed for the move of a player
-    public static playerDirections(player: Player): Array<Ordinal> {
+    public static playerDirections(player: Player): Array<EightDirection> {
         if (player === Player.ONE) {
-            return [Ordinal.DOWN, Ordinal.DOWN_LEFT, Ordinal.DOWN_RIGHT];
+            return [EightDirection.DOWN, EightDirection.DOWN_LEFT, EightDirection.DOWN_RIGHT];
         } else {
-            return [Ordinal.UP, Ordinal.UP_LEFT, Ordinal.UP_RIGHT];
+            return [EightDirection.UP, EightDirection.UP_LEFT, EightDirection.UP_RIGHT];
         }
     }
 
     // Check if a direction is allowed for a given player
-    public static directionAllowedForPlayer(dir: Ordinal, player: Player): boolean {
+    public static directionAllowedForPlayer(dir: EightDirection, player: Player): boolean {
         if (player === Player.ZERO) {
             return dir.y < 0;
         } else {
@@ -137,12 +137,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             }
             //    - move direction is linear
-            const directionOptional: MGPFallible<Ordinal> = Ordinal.factory.fromMove(start, end);
+            const directionOptional: MGPFallible<EightDirection> = EightDirection.factory.fromMove(start, end);
             if (directionOptional.isFailure()) {
                 return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }
             //    - move direction is toward the opponent's line
-            const dir: Ordinal = directionOptional.get();
+            const dir: EightDirection = directionOptional.get();
             if (KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer()) === false) {
                 return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }

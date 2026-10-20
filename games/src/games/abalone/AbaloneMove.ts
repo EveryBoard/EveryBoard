@@ -3,7 +3,7 @@ import { ArrayUtils, Encoder, MGPFallible, MGPOptional, Utils } from '@everyboar
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { MoveCoord } from '../../jscaip/MoveCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 
 type AbaloneMoveFields = [Coord, HexaDirection, MGPOptional<Coord>];
 
@@ -22,7 +22,7 @@ export class AbaloneMove extends MoveCoord {
     public static ofDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): AbaloneMove {
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
-        const direction: Ordinal = coords[1].getDirectionToward(coords[0]).get();
+        const direction: EightDirection = coords[1].getDirectionToward(coords[0]).get();
         const hexaDirectionOptional: MGPFallible<HexaDirection> =
             HexaDirection.factory.fromDelta(direction.x, direction.y);
         Utils.assert(hexaDirectionOptional.isSuccess(), 'Invalid direction'); // Should be ensured by component

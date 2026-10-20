@@ -5,7 +5,7 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
@@ -71,7 +71,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const content: PlayerOrNone = state.getPieceAt(coord);
                 if (content === player) {
                     groups[coord.y][coord.x] = id;
-                    for (const dir of Ordinal.ORDINALS) {
+                    for (const dir of EightDirection.EIGHT_DIRECTIONS) {
                         const next: Coord = coord.getNext(dir);
                         if (state.isOnBoard(next)) {
                             stack.push(next);
@@ -123,7 +123,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return LinesOfActionRules.isLegal(move, state);
     }
 
-    private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Ordinal): number {
+    private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: EightDirection): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
             if (state.getPieceAt(coord).isPlayer()) {
@@ -133,10 +133,10 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return count;
     }
 
-    private static getLineCoords(pos: Coord, dir: Ordinal): Coord[] {
-        const entranceAndDir: [Coord, Ordinal] = LinesOfActionRules.getEntranceAndForwardDirection(pos, dir);
+    private static getLineCoords(pos: Coord, dir: EightDirection): Coord[] {
+        const entranceAndDir: [Coord, EightDirection] = LinesOfActionRules.getEntranceAndForwardDirection(pos, dir);
         let current: Coord = entranceAndDir[0];
-        const forwardDirection: Ordinal = entranceAndDir[1];
+        const forwardDirection: EightDirection = entranceAndDir[1];
         const coords: Coord[] = [];
         while (LinesOfActionState.isOnBoard(current)) {
             coords.push(current);
@@ -145,22 +145,22 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return coords;
     }
 
-    private static getEntranceAndForwardDirection(pos: Coord, dir: Ordinal): [Coord, Ordinal] {
+    private static getEntranceAndForwardDirection(pos: Coord, dir: EightDirection): [Coord, EightDirection] {
         switch (dir) {
-            case Ordinal.UP:
-            case Ordinal.DOWN:
-                return [new Coord(pos.x, 0), Ordinal.DOWN];
-            case Ordinal.LEFT:
-            case Ordinal.RIGHT:
-                return [new Coord(0, pos.y), Ordinal.RIGHT];
-            case Ordinal.UP_RIGHT:
-            case Ordinal.DOWN_LEFT:
-                return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), Ordinal.UP_RIGHT];
+            case EightDirection.UP:
+            case EightDirection.DOWN:
+                return [new Coord(pos.x, 0), EightDirection.DOWN];
+            case EightDirection.LEFT:
+            case EightDirection.RIGHT:
+                return [new Coord(0, pos.y), EightDirection.RIGHT];
+            case EightDirection.UP_RIGHT:
+            case EightDirection.DOWN_LEFT:
+                return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), EightDirection.UP_RIGHT];
             default:
-                Utils.expectToBeMultiple(dir, [Ordinal.UP_LEFT, Ordinal.DOWN_RIGHT]);
+                Utils.expectToBeMultiple(dir, [EightDirection.UP_LEFT, EightDirection.DOWN_RIGHT]);
                 return [
                     new Coord(pos.x - Math.min(pos.x, pos.y), pos.y - Math.min(pos.x, pos.y)),
-                    Ordinal.DOWN_RIGHT,
+                    EightDirection.DOWN_RIGHT,
                 ];
         }
     }
@@ -183,7 +183,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
 
     public static possibleTargets(state: LinesOfActionState, start: Coord): CoordSet {
         let targets: CoordSet = new CoordSet();
-        for (const dir of Ordinal.ORDINALS) {
+        for (const dir of EightDirection.EIGHT_DIRECTIONS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
             if (state.isOnBoard(target)) {

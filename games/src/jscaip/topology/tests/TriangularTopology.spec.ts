@@ -3,7 +3,7 @@ import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { Direction } from '../../Direction';
-import { Ordinal } from '../../Ordinal';
+import { EightDirection } from '../../EightDirection';
 import { TriangularTopology } from '../TriangularTopology';
 
 describe('TriangularTopology', () => {
@@ -13,25 +13,25 @@ describe('TriangularTopology', () => {
         const testCases: { start: Coord; direction: Direction; expectedDestination: Coord }[] = [
             // Even coords:
             //     - left & up-left are the same at distance 1
-            { start: new Coord(8, 8), direction: Ordinal.LEFT, expectedDestination: new Coord(7, 8) },
-            { start: new Coord(8, 8), direction: Ordinal.UP_LEFT, expectedDestination: new Coord(7, 8) },
+            { start: new Coord(8, 8), direction: EightDirection.LEFT, expectedDestination: new Coord(7, 8) },
+            { start: new Coord(8, 8), direction: EightDirection.UP_LEFT, expectedDestination: new Coord(7, 8) },
             //     - right & up-right are the same at distance 1
-            { start: new Coord(8, 8), direction: Ordinal.RIGHT, expectedDestination: new Coord(9, 8) },
-            { start: new Coord(8, 8), direction: Ordinal.UP_RIGHT, expectedDestination: new Coord(9, 8) },
+            { start: new Coord(8, 8), direction: EightDirection.RIGHT, expectedDestination: new Coord(9, 8) },
+            { start: new Coord(8, 8), direction: EightDirection.UP_RIGHT, expectedDestination: new Coord(9, 8) },
             //     - down & down left are the same at distance 1
-            { start: new Coord(8, 8), direction: Ordinal.DOWN, expectedDestination: new Coord(8, 9) },
-            { start: new Coord(8, 8), direction: Ordinal.DOWN_LEFT, expectedDestination: new Coord(8, 9) },
+            { start: new Coord(8, 8), direction: EightDirection.DOWN, expectedDestination: new Coord(8, 9) },
+            { start: new Coord(8, 8), direction: EightDirection.DOWN_LEFT, expectedDestination: new Coord(8, 9) },
 
             // Odd coords:
             //     - left & down-left are the same at distance one
-            { start: new Coord(7, 8), direction: Ordinal.LEFT, expectedDestination: new Coord(6, 8) },
-            { start: new Coord(7, 8), direction: Ordinal.DOWN_LEFT, expectedDestination: new Coord(6, 8) },
+            { start: new Coord(7, 8), direction: EightDirection.LEFT, expectedDestination: new Coord(6, 8) },
+            { start: new Coord(7, 8), direction: EightDirection.DOWN_LEFT, expectedDestination: new Coord(6, 8) },
             //     - up-left & up-right are the same at distance one
-            { start: new Coord(7, 8), direction: Ordinal.UP_LEFT, expectedDestination: new Coord(7, 7) },
-            { start: new Coord(7, 8), direction: Ordinal.UP_RIGHT, expectedDestination: new Coord(7, 7) },
+            { start: new Coord(7, 8), direction: EightDirection.UP_LEFT, expectedDestination: new Coord(7, 7) },
+            { start: new Coord(7, 8), direction: EightDirection.UP_RIGHT, expectedDestination: new Coord(7, 7) },
             //     - right & down-right are the same at distance one
-            { start: new Coord(7, 8), direction: Ordinal.RIGHT, expectedDestination: new Coord(8, 8) },
-            { start: new Coord(7, 8), direction: Ordinal.DOWN_RIGHT, expectedDestination: new Coord(8, 8) },
+            { start: new Coord(7, 8), direction: EightDirection.RIGHT, expectedDestination: new Coord(8, 8) },
+            { start: new Coord(7, 8), direction: EightDirection.DOWN_RIGHT, expectedDestination: new Coord(8, 8) },
         ];
         for (const testCase of testCases) {
             it(`${ testCase.start.toString() } + ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
@@ -52,14 +52,14 @@ describe('TriangularTopology', () => {
     describe('getNeighbors', () => {
 
         it('should return all 3 neighboring coordinates (even coord)', () => {
-            // Given
+            // Given triangular topology
             const topology: TriangularTopology = new TriangularTopology();
             const coord: Coord = new Coord(0, 1);
 
             // When evaluating neighbors
             const result: Set<Coord> = topology.getNeighbors(coord);
 
-            // Then
+            // Then it should return the three neighbors
             expect(
                 result.equals(
                     new Set([
@@ -72,14 +72,14 @@ describe('TriangularTopology', () => {
         });
 
         it('should return all 3 neighboring coordinates (odd coord)', () => {
-            // Given
+            // Given triangular topology
             const topology: TriangularTopology = new TriangularTopology();
             const coord: Coord = new Coord(0, 0);
 
             // When evaluating neighbors
             const result: Set<Coord> = topology.getNeighbors(coord);
 
-            // Then
+            // Then it should return the 3 neighbors
             expect(
                 result.equals(
                     new Set([

@@ -2,8 +2,935 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="4894728399261164928" datatype="html">
-        <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="3012694567108651369" datatype="html">
+        <source>This value is mandatory</source>
+      </trans-unit>
+      <trans-unit id="4231579860680569680" datatype="html">
+        <source>There is no such configuration element</source>
+      </trans-unit>
+      <trans-unit id="2018922024247045709" datatype="html">
+        <source>Width</source>
+      </trans-unit>
+      <trans-unit id="3033623772164647792" datatype="html">
+        <source>Height</source>
+      </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+      </trans-unit>
+      <trans-unit id="1997992313730455534" datatype="html">
+        <source>Number of aligned pieces needed to win</source>
+      </trans-unit>
+      <trans-unit id="6974294157928395807" datatype="html">
+        <source>Number of pieces dropped per turn</source>
+      </trans-unit>
+      <trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+      </trans-unit>
+      <trans-unit id="4053624367526659457" datatype="html">
+        <source>Number of pieces rows</source>
+      </trans-unit>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
+      </trans-unit>
+      <trans-unit id="2467835697178117742" datatype="html">
+        <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
+      </trans-unit>
+      <trans-unit id="4278049889323552316" datatype="html">
+        <source>You don&apos;t have enough pieces to push that group!</source>
+      </trans-unit>
+      <trans-unit id="8378144418238149992" datatype="html">
+        <source>You cannot push this piece because it is blocked by one of yours!</source>
+      </trans-unit>
+      <trans-unit id="7864006988432394989" datatype="html">
+        <source>This line contains pieces of your opponent or empty spaces, which is forbidden.</source>
+      </trans-unit>
+      <trans-unit id="507376328570453826" datatype="html">
+        <source>This move is impossible, some landing spaces are occupied.</source>
+      </trans-unit>
+      <trans-unit id="6088417909306773667" datatype="html">
+        <source>This space is not aligned with the current line.</source>
+      </trans-unit>
+      <trans-unit id="5816181883959997447" datatype="html">
+        <source>Abalone</source>
+      </trans-unit>
+      <trans-unit id="7060616157443124451" datatype="html">
+        <source>Number of pieces to capture in order to win</source>
+      </trans-unit>
+      <trans-unit id="1103013531201615772" datatype="html">
+        <source>Maximum pushing group size</source>
+      </trans-unit>
+      <trans-unit id="1280308994802128299" datatype="html">
+        <source>Deadly Abalone</source>
+      </trans-unit>
+      <trans-unit id="4382056880714150954" datatype="html">
+        <source>Pieces should only move downward!</source>
+      </trans-unit>
+      <trans-unit id="6303549979055320494" datatype="html">
+        <source>That square is already full, you cannot put a piece in it!</source>
+      </trans-unit>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
+      </trans-unit>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
+      </trans-unit>
+      <trans-unit id="139135108801629927" datatype="html">
+        <source>There is no possible transfer from that square!</source>
+      </trans-unit>
+      <trans-unit id="4497962271113144657" datatype="html">
+        <source>Apagos</source>
+      </trans-unit>
+      <trans-unit id="529510153551286303" datatype="html">
+        <source>Increment</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
+      </trans-unit>
+      <trans-unit id="2406587628849019715" datatype="html">
+        <source>Stack pieces instead of capturing them</source>
+      </trans-unit>
+      <trans-unit id="5703694246153191852" datatype="html">
+        <source>You must capture the highest number of pieces</source>
+      </trans-unit>
+      <trans-unit id="5513887234495231304" datatype="html">
+        <source>Simple pieces can capture backward</source>
+      </trans-unit>
+      <trans-unit id="5102353447213251496" datatype="html">
+        <source>Promoted pieces can travel long distance</source>
+      </trans-unit>
+      <trans-unit id="2785965642347214758" datatype="html">
+        <source>Occupy upper-left corner</source>
+      </trans-unit>
+      <trans-unit id="3072414657519570345" datatype="html">
+        <source>Can do frisian captures</source>
+      </trans-unit>
+      <trans-unit id="8702370392264661270" datatype="html">
+        <source>Piece that reaches the last line during a capture continues capturing as king</source>
+      </trans-unit>
+      <trans-unit id="3260884512753946998" datatype="html">
+        <source>Only promoted pieces can go backward.</source>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+      </trans-unit>
+      <trans-unit id="3726954835052044930" datatype="html">
+        <source>Frisian capture must be of even length!</source>
+      </trans-unit>
+      <trans-unit id="3645639684924416367" datatype="html">
+        <source>This is an invalid orthogonal move, a frisian capture must be at least steps of 4. Look at the indicators to help you!</source>
+      </trans-unit>
+      <trans-unit id="964675748683334375" datatype="html">
+        <source>Normal pieces cannot move like this!</source>
+      </trans-unit>
+      <trans-unit id="4897086529827321658" datatype="html">
+        <source>Flying capture is forbidden for normal pieces!</source>
+      </trans-unit>
+      <trans-unit id="5556528437720213364" datatype="html">
+        <source>No piece is allowed to do a long jump</source>
+      </trans-unit>
+      <trans-unit id="7678886963795480068" datatype="html">
+        <source>You cannot move orthogonally!</source>
+      </trans-unit>
+      <trans-unit id="4624388853987508390" datatype="html">
+        <source>You cannot capture the same square several times!</source>
+      </trans-unit>
+      <trans-unit id="8795923620032980614" datatype="html">
+        <source>You must do the longest capture possible!</source>
+      </trans-unit>
+      <trans-unit id="4849176470407657635" datatype="html">
+        <source>You cannot jump over several pieces!</source>
+      </trans-unit>
+      <trans-unit id="4596314344113953334" datatype="html">
+        <source>You have done a step after a capture. A move that starts with a capture can only contain captures.</source>
+      </trans-unit>
+      <trans-unit id="5226075040149407867" datatype="html">
+        <source>International Checkers</source>
+      </trans-unit>
+      <trans-unit id="692005285727565478" datatype="html">
+        <source>Lasca</source>
+      </trans-unit>
+      <trans-unit id="6011590532570079359" datatype="html">
+        <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
+      </trans-unit>
+      <trans-unit id="117738177627572036" datatype="html">
+        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
+      </trans-unit>
+      <trans-unit id="6928762188180587282" datatype="html">
+        <source>Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.</source>
+      </trans-unit>
+      <trans-unit id="7341385722923686160" datatype="html">
+        <source>You cannot capture from an empty space.</source>
+      </trans-unit>
+      <trans-unit id="1147571728036986329" datatype="html">
+        <source>Coerceo</source>
+      </trans-unit>
+      <trans-unit id="5853742640794164153" datatype="html">
+        <source>Use small board</source>
+      </trans-unit>
+      <trans-unit id="7251690675139944568" datatype="html">
+        <source>At your first turn, you must drop exactly one piece</source>
+      </trans-unit>
+      <trans-unit id="8366240299234525015" datatype="html">
+        <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
+      </trans-unit>
+      <trans-unit id="6623830127801606607" datatype="html">
+        <source>Square (4)</source>
+      </trans-unit>
+      <trans-unit id="8278187099465500134" datatype="html">
+        <source>Square (8)</source>
+      </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+      </trans-unit>
+      <trans-unit id="5440587977382249688" datatype="html">
+        <source>Triangular</source>
+      </trans-unit>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
+      </trans-unit>
+      <trans-unit id="2986159287834234807" datatype="html">
+        <source>N</source>
+      </trans-unit>
+      <trans-unit id="7983083284666629806" datatype="html">
+        <source>Drop after first turn</source>
+      </trans-unit>
+      <trans-unit id="4214033760774511143" datatype="html">
+        <source>Space shape</source>
+      </trans-unit>
+      <trans-unit id="4461597806169026629" datatype="html">
+        <source>Board shape</source>
+      </trans-unit>
+      <trans-unit id="330049428969329849" datatype="html">
+        <source>Toric Triangle should have even width</source>
+      </trans-unit>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
+      </trans-unit>
+      <trans-unit id="6331318865941875967" datatype="html">
+        <source>You cannot drop a piece during the moving phase.</source>
+      </trans-unit>
+      <trans-unit id="1634970085488730747" datatype="html">
+        <source>You cannot move a piece before both players have dropped all of their pieces.</source>
+      </trans-unit>
+      <trans-unit id="320724128460521577" datatype="html">
+        <source>A jump must be made over a piece, not over an empty square.</source>
+      </trans-unit>
+      <trans-unit id="6834108574871302489" datatype="html">
+        <source>A drop must occur in the central zone of the board.</source>
+      </trans-unit>
+      <trans-unit id="8451838259581996755" datatype="html">
+        <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
+      </trans-unit>
+      <trans-unit id="309495911608325428" datatype="html">
+        <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+      </trans-unit>
+      <trans-unit id="2724052802065983013" datatype="html">
+        <source>You cannot move the piece holding the ball.</source>
+      </trans-unit>
+      <trans-unit id="5364606037550605842" datatype="html">
+        <source>You must move by exactly one orthogonal space.</source>
+      </trans-unit>
+      <trans-unit id="2737840191812588251" datatype="html">
+        <source>The path of this pass is obstructed.</source>
+      </trans-unit>
+      <trans-unit id="6962674839842537174" datatype="html">
+        <source>A pass must be done in a straight line, orthogonally or diagonally.</source>
+      </trans-unit>
+      <trans-unit id="7841459528155785625" datatype="html">
+        <source>You can only perform one pass per turn.</source>
+      </trans-unit>
+      <trans-unit id="898651979160418937" datatype="html">
+        <source>You can only perform two translations per turn, not three.</source>
+      </trans-unit>
+      <trans-unit id="2023900957694052396" datatype="html">
+        <source>You cannot pass the ball to the opponent. You must pick one of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="3460005588993308010" datatype="html">
+        <source>You do not have any pieces of this type anymore.</source>
+      </trans-unit>
+      <trans-unit id="1718016291859374582" datatype="html">
+        <source>You cannot play here: this space is already full.</source>
+      </trans-unit>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
+      </trans-unit>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="290467566247457693" datatype="html">
+        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
+      </trans-unit>
+      <trans-unit id="5012524143343727947" datatype="html">
+        <source>You must select a piece or a stack of your color.</source>
+      </trans-unit>
+      <trans-unit id="5275339386917095598" datatype="html">
+        <source>You must select a stack.</source>
+      </trans-unit>
+      <trans-unit id="5544760040431913662" datatype="html">
+        <source>This stack cannot be moved because all 6 of its neighbors are occupied. You must select a stack with strictly less than 6 neighbors.</source>
+      </trans-unit>
+      <trans-unit id="5029201799654426347" datatype="html">
+        <source>This stack cannot move because it could never land on another piece.</source>
+      </trans-unit>
+      <trans-unit id="75731290119916717" datatype="html">
+        <source>A stack must always be moved by as many spaces as there are pieces in the stack.</source>
+      </trans-unit>
+      <trans-unit id="8101145555087657570" datatype="html">
+        <source>The stack must land on an occupied space.</source>
+      </trans-unit>
+      <trans-unit id="9221962864929282978" datatype="html">
+        <source>A stack must move in a straight line.</source>
+      </trans-unit>
+      <trans-unit id="6059738106874378452" datatype="html">
+        <source>You do not have pieces of this type anymore.</source>
+      </trans-unit>
+      <trans-unit id="2129733726620651846" datatype="html">
+        <source>You must put your piece on an empty square or on a smaller piece.</source>
+      </trans-unit>
+      <trans-unit id="5649666705061470825" datatype="html">
+        <source>You must pick your piece among the remaining ones.</source>
+      </trans-unit>
+      <trans-unit id="5001561383056924621" datatype="html">
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
+      </trans-unit>
+      <trans-unit id="2209428336874697936" datatype="html">
+        <source>You are performing a move, you must select a landing square.</source>
+      </trans-unit>
+      <trans-unit id="8208823537494951803" datatype="html">
+        <source>Encapsule</source>
+      </trans-unit>
+      <trans-unit id="3734443501087651549" datatype="html">
+        <source>Number of different piece sizes</source>
+      </trans-unit>
+      <trans-unit id="893013149323570447" datatype="html">
+        <source>Number of pieces for each size</source>
+      </trans-unit>
+      <trans-unit id="5530182224164938313" datatype="html">
+        <source>The move distance of your phalanx puts it out of the board.</source>
+      </trans-unit>
+      <trans-unit id="9197994342964027306" datatype="html">
+        <source>There is something in the way of your phalanx.</source>
+      </trans-unit>
+      <trans-unit id="5389576774289628382" datatype="html">
+        <source>Your phalanx must be bigger than the one you are capturing.</source>
+      </trans-unit>
+      <trans-unit id="8675949818775194064" datatype="html">
+        <source>You took a phalanx of size <x id="PH" equiv-text="p"/> and moved it <x id="PH_1" equiv-text="s"/> steps. Phalanx cannot move further than their sizes.</source>
+      </trans-unit>
+      <trans-unit id="5151115756771676188" datatype="html">
+        <source>This square is not aligned with the direction of the phalanx.</source>
+      </trans-unit>
+      <trans-unit id="5279717712059022209" datatype="html">
+        <source>A phalanx can&apos;t contain pieces outside of the board.</source>
+      </trans-unit>
+      <trans-unit id="3733956045714659124" datatype="html">
+        <source>A phalanx cannot contain an empty square.</source>
+      </trans-unit>
+      <trans-unit id="2183903120219891237" datatype="html">
+        <source>A phalanx cannot contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="7644192101130519142" datatype="html">
+        <source>Epaminondas</source>
+      </trans-unit>
+      <trans-unit id="7226802484619632640" datatype="html">
+        <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
+      </trans-unit>
+      <trans-unit id="6918785733984182442" datatype="html">
+        <source>You must select a valid capture that contains 4 pieces or more.</source>
+      </trans-unit>
+      <trans-unit id="6602326768713192004" datatype="html">
+        <source>There are still possible captures to be done.</source>
+      </trans-unit>
+      <trans-unit id="2434818181880718873" datatype="html">
+        <source>Pieces must be inserted in spaces on the edge of the board.</source>
+      </trans-unit>
+      <trans-unit id="7875793227562861246" datatype="html">
+        <source>You must select a valid placement direction.</source>
+      </trans-unit>
+      <trans-unit id="1164530071087410710" datatype="html">
+        <source>You must select a placement with a direction alongside the insertion space.</source>
+      </trans-unit>
+      <trans-unit id="1848361274892061756" datatype="html">
+        <source>You cannot place a piece on a complete line.</source>
+      </trans-unit>
+      <trans-unit id="1025279631840419081" datatype="html">
+        <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
+      </trans-unit>
+      <trans-unit id="8708684300793667483" datatype="html">
+        <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
+      </trans-unit>
+      <trans-unit id="4172293183843503071" datatype="html">
+        <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
+      </trans-unit>
+      <trans-unit id="4133892808569917446" datatype="html">
+        <source>We are in the counting phase, you must mark stones as dead or alive or accept the current board by passing your turn.</source>
+      </trans-unit>
+      <trans-unit id="4683884757780403263" datatype="html">
+        <source>You cannot accept before the counting phase.</source>
+      </trans-unit>
+      <trans-unit id="7258684846942631624" datatype="html">
+        <source>This intersection is already occupied.</source>
+      </trans-unit>
+      <trans-unit id="7089556689288687433" datatype="html">
+        <source>This space is already occupied.</source>
+      </trans-unit>
+      <trans-unit id="3878972107071324960" datatype="html">
+        <source>You cannot commit suicide.</source>
+      </trans-unit>
+      <trans-unit id="2969677193390047071" datatype="html">
+        <source>19 x 19</source>
+      </trans-unit>
+      <trans-unit id="287623417167941506" datatype="html">
+        <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+      </trans-unit>
+      <trans-unit id="8484396493346861583" datatype="html">
+        <source>Show zooms</source>
+      </trans-unit>
+      <trans-unit id="6402320009813668873" datatype="html">
+        <source>13 x 13</source>
+      </trans-unit>
+      <trans-unit id="4066004856246691695" datatype="html">
+        <source>9 x 9</source>
+      </trans-unit>
+      <trans-unit id="2798807656507405918" datatype="html">
+        <source>Standard</source>
+      </trans-unit>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="z"/></source>
+      </trans-unit>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
+      </trans-unit>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
+      </trans-unit>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
+      </trans-unit>
+      <trans-unit id="2686476818050661110" datatype="html">
+        <source>Hexodia</source>
+      </trans-unit>
+      <trans-unit id="4791280679911297134" datatype="html">
+        <source>The queen bee can only move to one of its direct neighbors.</source>
+      </trans-unit>
+      <trans-unit id="1639583872704216434" datatype="html">
+        <source>The beetle can only move to one of its direct neighbors.</source>
+      </trans-unit>
+      <trans-unit id="7402975532187036733" datatype="html">
+        <source>The grasshopper must move in a straight line.</source>
+      </trans-unit>
+      <trans-unit id="5523450052915914627" datatype="html">
+        <source>The grasshopper must jump over other pieces, without any empty spaces.</source>
+      </trans-unit>
+      <trans-unit id="8771557289052450532" datatype="html">
+        <source>The spider must move on neighboring spaces.</source>
+      </trans-unit>
+      <trans-unit id="3098163088355072426" datatype="html">
+        <source>The spider can only move around pieces that are in direct contact with it.</source>
+      </trans-unit>
+      <trans-unit id="7928136093693713176" datatype="html">
+        <source>The spider cannot go twice through the same space in the same move.</source>
+      </trans-unit>
+      <trans-unit id="2053370063642446913" datatype="html">
+        <source>The queen bee must be placed on the board before moving a piece.</source>
+      </trans-unit>
+      <trans-unit id="5380773634484088090" datatype="html">
+        <source>Only the beetle is allowed to climb over other pieces.</source>
+      </trans-unit>
+      <trans-unit id="8284939639567724336" datatype="html">
+        <source>You are not allowed to split the hive.</source>
+      </trans-unit>
+      <trans-unit id="4146942272384883649" datatype="html">
+        <source>This piece must be able to slide to its destination.</source>
+      </trans-unit>
+      <trans-unit id="4339124628235355617" datatype="html">
+        <source>You must place your queen bee at this turn!</source>
+      </trans-unit>
+      <trans-unit id="7948763683129821975" datatype="html">
+        <source>You cannot drop a piece next to one of your opponent&apos;s stack.</source>
+      </trans-unit>
+      <trans-unit id="8046013978585107003" datatype="html">
+        <source>You must always drop your piece on an empty space.</source>
+      </trans-unit>
+      <trans-unit id="106536486701689545" datatype="html">
+        <source>The piece you are dropping must be connected to the hive.</source>
+      </trans-unit>
+      <trans-unit id="3643526530572280396" datatype="html">
+        <source>This piece is not of the color you have to play.</source>
+      </trans-unit>
+      <trans-unit id="945155491646703687" datatype="html">
+        <source>You can only move forward, orthogonally or diagonally.</source>
+      </trans-unit>
+      <trans-unit id="551820034442685617" datatype="html">
+        <source>This move is blocked by another piece.</source>
+      </trans-unit>
+      <trans-unit id="1699965787783859469" datatype="html">
+        <source>You must play with the selected piece.</source>
+      </trans-unit>
+      <trans-unit id="6387863170048380356" datatype="html">
+        <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
+      </trans-unit>
+      <trans-unit id="3931959709762726685" datatype="html">
+        <source>You cannot jump over the opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="1376498600372177047" datatype="html">
+        <source>This piece has no possible move, select another one.</source>
+      </trans-unit>
+      <trans-unit id="7419338702295170530" datatype="html">
+        <source>You must flip your lodestone before putting it back on the board.</source>
+      </trans-unit>
+      <trans-unit id="8683881271933340082" datatype="html">
+        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them.</source>
+      </trans-unit>
+      <trans-unit id="3917449010922856612" datatype="html">
+        <source>You must place your lodestone on a non-crumbled square!</source>
+      </trans-unit>
+      <trans-unit id="2350186243435301157" datatype="html">
+        <source>You placed too many captures on the same pressure plate, which has not enough space left.</source>
+      </trans-unit>
+      <trans-unit id="4296510202733075370" datatype="html">
+        <source>You must place your captures on the pressure plates, on the side of the board.</source>
+      </trans-unit>
+      <trans-unit id="8506636863437595095" datatype="html">
+        <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
+      </trans-unit>
+      <trans-unit id="1525715186822490677" datatype="html">
+        <source>Awalé</source>
+      </trans-unit>
+      <trans-unit id="1493565703246564578" datatype="html">
+        <source>Ba-awa</source>
+      </trans-unit>
+      <trans-unit id="6243517581301426418" datatype="html">
+        <source>Split final seeds evenly</source>
+      </trans-unit>
+      <trans-unit id="796568684338354748" datatype="html">
+        <source>Even Ba-awa</source>
+      </trans-unit>
+      <trans-unit id="8840015526202664476" datatype="html">
+        <source>You must distribute one of your houses.</source>
+      </trans-unit>
+      <trans-unit id="4189334243342030215" datatype="html">
+        <source>You should choose a non-empty house to distribute.</source>
+      </trans-unit>
+      <trans-unit id="8846202449877054997" datatype="html">
+        <source>You should feed but you do not.</source>
+      </trans-unit>
+      <trans-unit id="1086558575410854374" datatype="html">
+        <source>Feed original house</source>
+      </trans-unit>
+      <trans-unit id="5863215957559063071" datatype="html">
+        <source>You must feed</source>
+      </trans-unit>
+      <trans-unit id="7654623560547531779" datatype="html">
+        <source>Pass by player store</source>
+      </trans-unit>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
+      </trans-unit>
+      <trans-unit id="356626260857129297" datatype="html">
+        <source>Continue distribution until capture or empty house</source>
+      </trans-unit>
+      <trans-unit id="7080802734755670775" datatype="html">
+        <source>Seeds by house</source>
+      </trans-unit>
+      <trans-unit id="3686980350710017232" datatype="html">
+        <source>Number of rows</source>
+      </trans-unit>
+      <trans-unit id="4321462166273172721" datatype="html">
+        <source>Kalah</source>
+      </trans-unit>
+      <trans-unit id="4174188766565583979" datatype="html">
+        <source>You must pick a piece from your side of the board in order to move it.</source>
+      </trans-unit>
+      <trans-unit id="4126120518252508337" datatype="html">
+        <source>This is not a valid promotion nor a valid capture.</source>
+      </trans-unit>
+      <trans-unit id="820589591452307194" datatype="html">
+        <source>You cannot perform a move that is the reverse of the previous one.</source>
+      </trans-unit>
+      <trans-unit id="4594736386763524275" datatype="html">
+        <source>Start coord cannot be out of range</source>
+      </trans-unit>
+      <trans-unit id="8024507002452740554" datatype="html">
+        <source>End coord cannot be out of range</source>
+      </trans-unit>
+      <trans-unit id="7020322239499292850" datatype="html">
+        <source>Pawns must move one step diagonally.</source>
+      </trans-unit>
+      <trans-unit id="4409865504289904426" datatype="html">
+        <source>Drones must move one or two steps in any direction.</source>
+      </trans-unit>
+      <trans-unit id="6266016430504496647" datatype="html">
+        <source>Please put your piece in an incomplete column.</source>
+      </trans-unit>
+      <trans-unit id="718535138834335364" datatype="html">
+        <source>Four in a Row</source>
+      </trans-unit>
+      <trans-unit id="6103371171681226169" datatype="html">
+        <source>If the quadrant to turn is neutral, please just use move without rotation.</source>
+      </trans-unit>
+      <trans-unit id="960314962671621462" datatype="html">
+        <source>No quadrant is neutral, you must pick a quadrant to rotate.</source>
+      </trans-unit>
+      <trans-unit id="3823427068887903090" datatype="html">
+        <source>Captured stones needed to win</source>
+      </trans-unit>
+      <trans-unit id="2370571702661444910" datatype="html">
+        <source>Size of captures</source>
+      </trans-unit>
+      <trans-unit id="682762602217958961" datatype="html">
+        <source>You must move your pieces upward.</source>
+      </trans-unit>
+      <trans-unit id="2162535855239454361" datatype="html">
+        <source>Your piece must land on the board or on 4 other pieces.</source>
+      </trans-unit>
+      <trans-unit id="2201596715619103633" datatype="html">
+        <source>You cannot move a supporting piece.</source>
+      </trans-unit>
+      <trans-unit id="70110199629015603" datatype="html">
+        <source>You cannot capture.</source>
+      </trans-unit>
+      <trans-unit id="1880810010962851052" datatype="html">
+        <source>Your first capture is invalid.</source>
+      </trans-unit>
+      <trans-unit id="8839913211108039860" datatype="html">
+        <source>Your second capture is invalid.</source>
+      </trans-unit>
+      <trans-unit id="2207725255932699379" datatype="html">
+        <source>You must capture one or two pieces, not more.</source>
+      </trans-unit>
+      <trans-unit id="5796940069053691279" datatype="html">
+        <source>You must give a piece.</source>
+      </trans-unit>
+      <trans-unit id="2211348294853632908" datatype="html">
+        <source>That piece is already on the board.</source>
+      </trans-unit>
+      <trans-unit id="6246016939611902421" datatype="html">
+        <source>You cannot give the piece that was in your hands.</source>
+      </trans-unit>
+      <trans-unit id="8844589419403065948" datatype="html">
+        <source>Quarto</source>
+      </trans-unit>
+      <trans-unit id="2864332255120486791" datatype="html">
+        <source>Player One Level</source>
+      </trans-unit>
+      <trans-unit id="6804516002090214742" datatype="html">
+        <source>Player Two Level</source>
+      </trans-unit>
+      <trans-unit id="5604193951980576244" datatype="html">
+        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="4809301322027947242" datatype="html">
+        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="941976348970067109" datatype="html">
+        <source>You must drop in your own territory</source>
+      </trans-unit>
+      <trans-unit id="2561363337853886115" datatype="html">
+        <source>You cannot drop in move phase</source>
+      </trans-unit>
+      <trans-unit id="6838858844517047193" datatype="html">
+        <source>You cannot move in drop phase</source>
+      </trans-unit>
+      <trans-unit id="4933773936312573082" datatype="html">
+        <source>You must drop all your pieces</source>
+      </trans-unit>
+      <trans-unit id="1577452622903571200" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less</source>
+      </trans-unit>
+      <trans-unit id="8012565028574700911" datatype="html">
+        <source>You cannot drop that many pieces</source>
+      </trans-unit>
+      <trans-unit id="8952465701867689047" datatype="html">
+        <source>You must drop pieces one by one</source>
+      </trans-unit>
+      <trans-unit id="7497498388753121757" datatype="html">
+        <source>You cannot land or drop on your castle</source>
+      </trans-unit>
+      <trans-unit id="5963846295180517656" datatype="html">
+        <source>You must only place your castle</source>
+      </trans-unit>
+      <trans-unit id="5637364645971249040" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
+      </trans-unit>
+      <trans-unit id="984815225652827868" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
+      </trans-unit>
+      <trans-unit id="2740099122933909931" datatype="html">
+        <source>Too many lines for territory, your opponent lines would merge with yours!</source>
+      </trans-unit>
+      <trans-unit id="810888510148304696" datatype="html">
+        <source>Automatic</source>
+      </trans-unit>
+      <trans-unit id="5830114547747897795" datatype="html">
+        <source>Piece by piece</source>
+      </trans-unit>
+      <trans-unit id="410841679211120323" datatype="html">
+        <source>By batch</source>
+      </trans-unit>
+      <trans-unit id="7549008463336671286" datatype="html">
+        <source>Quebec Castles</source>
+      </trans-unit>
+      <trans-unit id="7732765787483081988" datatype="html">
+        <source>Lines for territory</source>
+      </trans-unit>
+      <trans-unit id="6952700396277252102" datatype="html">
+        <source>Number of invaders</source>
+      </trans-unit>
+      <trans-unit id="8136810909201933801" datatype="html">
+        <source>Number of defenders</source>
+      </trans-unit>
+      <trans-unit id="859693719600901508" datatype="html">
+        <source>Is Rhombic</source>
+      </trans-unit>
+      <trans-unit id="3155220222252009452" datatype="html">
+        <source>Place castle yourself</source>
+      </trans-unit>
+      <trans-unit id="5344724322380814051" datatype="html">
+        <source>Drop mode</source>
+      </trans-unit>
+      <trans-unit id="8819839276456625538" datatype="html">
+        <source>You must pick a space from the edge of the board.</source>
+      </trans-unit>
+      <trans-unit id="8323142856025602350" datatype="html">
+        <source>Quixo</source>
+      </trans-unit>
+      <trans-unit id="2829152398724302132" datatype="html">
+        <source>Your move should switch at least one piece.</source>
+      </trans-unit>
+      <trans-unit id="3244681266393689381" datatype="html">
+        <source>Reversi</source>
+      </trans-unit>
+      <trans-unit id="3697715893908807208" datatype="html">
+        <source>Toric Reversi</source>
+      </trans-unit>
+      <trans-unit id="1982783281923413187" datatype="html">
+        <source>You can only rebound on dark spaces.</source>
+      </trans-unit>
+      <trans-unit id="1906861201256399546" datatype="html">
+        <source>You can only rebound on empty spaces.</source>
+      </trans-unit>
+      <trans-unit id="366304395805128715" datatype="html">
+        <source>You must pick one of your pyramids first.</source>
+      </trans-unit>
+      <trans-unit id="6312339673351478538" datatype="html">
+        <source>You must pick one of your pyramids.</source>
+      </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+      </trans-unit>
+      <trans-unit id="5908478672900888285" datatype="html">
+        <source>Those two spaces have no intermediary neighbor.</source>
+      </trans-unit>
+      <trans-unit id="7194810718741841575" datatype="html">
+        <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
+      </trans-unit>
+      <trans-unit id="5162969671337604607" datatype="html">
+        <source>You cannot insert a piece, all your pieces are already on the board.</source>
+      </trans-unit>
+      <trans-unit id="2237663589140902242" datatype="html">
+        <source>You do not have enough strength to push.</source>
+      </trans-unit>
+      <trans-unit id="6414951217478686255" datatype="html">
+        <source>You must move or rotate your piece.</source>
+      </trans-unit>
+      <trans-unit id="2533760570032755409" datatype="html">
+        <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
+      </trans-unit>
+      <trans-unit id="6641065739366631527" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+      </trans-unit>
+      <trans-unit id="3129880366808972802" datatype="html">
+        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+      </trans-unit>
+      <trans-unit id="4883858894354428469" datatype="html">
+        <source>Siam</source>
+      </trans-unit>
+      <trans-unit id="4789301325429521721" datatype="html">
+        <source>Number of piece by player</source>
+      </trans-unit>
+      <trans-unit id="6496295523512347479" datatype="html">
+        <source>Number of bonus mountains</source>
+      </trans-unit>
+      <trans-unit id="7963871986685218015" datatype="html">
+        <source>You cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="3925814099582230333" datatype="html">
+        <source>SiamMove should end or start on the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="5519545750670700019" datatype="html">
+        <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="2035984245529775458" datatype="html">
+        <source>You cannot move yet. Pick a space where you will put a new piece.</source>
+      </trans-unit>
+      <trans-unit id="5972149122807464966" datatype="html">
+        <source>Several groups are of the same size, you must pick the one to keep.</source>
+      </trans-unit>
+      <trans-unit id="586640917828080274" datatype="html">
+        <source>You cannot choose which part to keep when one is smaller than the other.</source>
+      </trans-unit>
+      <trans-unit id="8942923511988910642" datatype="html">
+        <source>You cannot put new pieces anymore. Pick a piece to move.</source>
+      </trans-unit>
+      <trans-unit id="1582776814244416485" datatype="html">
+        <source>You must choose one of the biggest groups to keep it.</source>
+      </trans-unit>
+      <trans-unit id="3079321797470229596" datatype="html">
+        <source>You cannot pick an empty space. Pick one of the biggest groups.</source>
+      </trans-unit>
+      <trans-unit id="4110234759792602964" datatype="html">
+        <source>You must put this piece next to another piece.</source>
+      </trans-unit>
+      <trans-unit id="3553471239341143775" datatype="html">
+        <source>Six</source>
+      </trans-unit>
+      <trans-unit id="1431305578867281747" datatype="html">
+        <source>Number of pieces to drop per player</source>
+      </trans-unit>
+      <trans-unit id="6387064828361949367" datatype="html">
+        <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+      </trans-unit>
+      <trans-unit id="2597247746010343961" datatype="html">
+        <source>Squarz</source>
+      </trans-unit>
+      <trans-unit id="323770883664351270" datatype="html">
+        <source>Jump Size</source>
+      </trans-unit>
+      <trans-unit id="4456476499852991526" datatype="html">
+        <source>You cannot land on an occupied square.</source>
+      </trans-unit>
+      <trans-unit id="299718976758118618" datatype="html">
+        <source>Once you left the central throne, you cannot return to it.</source>
+      </trans-unit>
+      <trans-unit id="1513340614663053294" datatype="html">
+        <source>Soldiers cannot sit on the throne.</source>
+      </trans-unit>
+      <trans-unit id="6790757046240382671" datatype="html">
+        <source>Tafl moves must be orthogonal.</source>
+      </trans-unit>
+      <trans-unit id="9195784792324730674" datatype="html">
+        <source>Central throne is left for good</source>
+      </trans-unit>
+      <trans-unit id="2524296888634788857" datatype="html">
+        <source>Edges are king&apos;s ennemy</source>
+      </trans-unit>
+      <trans-unit id="2642196868516331796" datatype="html">
+        <source>Central throne can surround king</source>
+      </trans-unit>
+      <trans-unit id="3540730147473795195" datatype="html">
+        <source>King far from home can be sandwiched</source>
+      </trans-unit>
+      <trans-unit id="3329390039243374527" datatype="html">
+        <source>Invader starts</source>
+      </trans-unit>
+      <trans-unit id="947579386294731197" datatype="html">
+        <source>Brandhub</source>
+      </trans-unit>
+      <trans-unit id="5306696079242551443" datatype="html">
+        <source>Hnefatafl</source>
+      </trans-unit>
+      <trans-unit id="8322068603814456434" datatype="html">
+        <source>Tablut</source>
+      </trans-unit>
+      <trans-unit id="1347435830524797455" datatype="html">
+        <source>Standard Teeko</source>
+      </trans-unit>
+      <trans-unit id="6407662856197686253" datatype="html">
+        <source>Piece can teleport</source>
+      </trans-unit>
+      <trans-unit id="560394398723321416" datatype="html">
+        <source>Teleport Teeko</source>
+      </trans-unit>
+      <trans-unit id="1739222080553143193" datatype="html">
+        <source>Those two spaces are not neighbors!</source>
+      </trans-unit>
+      <trans-unit id="4853714910007564389" datatype="html">
+        <source>There is no way to put a piece there!</source>
+      </trans-unit>
+      <trans-unit id="7841599074494103882" datatype="html">
+        <source>You cannot drop on only one piece!</source>
+      </trans-unit>
+      <trans-unit id="4138926893172482803" datatype="html">
+        <source>You cannot drop a piece on uneven grounds!</source>
+      </trans-unit>
+      <trans-unit id="9155303779171419902" datatype="html">
+        <source>You cannot put a new ring after the tenth turn.</source>
+      </trans-unit>
+      <trans-unit id="1259286853143283501" datatype="html">
+        <source>You cannot put a marker in a ring before placing all of your rings.</source>
+      </trans-unit>
+      <trans-unit id="923761852987939376" datatype="html">
+        <source>The direction of your move is invalid: a move is made along a straight line.</source>
+      </trans-unit>
+      <trans-unit id="4828021707700375959" datatype="html">
+        <source>You can only capture your own markers.</source>
+      </trans-unit>
+      <trans-unit id="8518184052895338328" datatype="html">
+        <source>You must pick one of your own rings to move.</source>
+      </trans-unit>
+      <trans-unit id="5102601060485644767" datatype="html">
+        <source>Your ring must land on an empty space.</source>
+      </trans-unit>
+      <trans-unit id="1286643089876989148" datatype="html">
+        <source>A ring can only jump over markers or empty spaces, not over another ring.</source>
+      </trans-unit>
+      <trans-unit id="3047973571712211401" datatype="html">
+        <source>Your ring must land on the first empty space after a group of markers.</source>
+      </trans-unit>
+      <trans-unit id="5146449464465539521" datatype="html">
+        <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>
+      </trans-unit>
+      <trans-unit id="7542102025019708759" datatype="html">
+        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
+      </trans-unit>
+      <trans-unit id="7484306131506665789" datatype="html">
+        <source>You have selected a piece of the opponent. You must pick one of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="5966391152315784819" datatype="html">
+        <source>You have selected an empty space, you must select one of your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="7236012742212037533" datatype="html">
+        <source>You must click on an empty space.</source>
+      </trans-unit>
+      <trans-unit id="8686180677883367844" datatype="html">
+        <source>You must click on an empty square.</source>
+      </trans-unit>
+      <trans-unit id="8905154297816550312" datatype="html">
+        <source>Your landing space should be empty or contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="1137390440747939689" datatype="html">
+        <source>You cannot capture your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="2056314675813734949" datatype="html">
+        <source>You cannot pass your turn.</source>
+      </trans-unit>
+      <trans-unit id="2698327260846195509" datatype="html">
+        <source>You must drop your piece on an empty space.</source>
+      </trans-unit>
+      <trans-unit id="5019447873100403310" datatype="html">
+        <source>You must pass your turn.</source>
+      </trans-unit>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
+      </trans-unit>
+      <trans-unit id="4065705313723361978" datatype="html">
+        <source>There is a piece between the piece you chose and its landing space.</source>
+      </trans-unit>
+      <trans-unit id="189691672447950321" datatype="html">
+        <source>You must move on a direct neighboring space.</source>
       </trans-unit>
       <trans-unit id="2330911039423728715" datatype="html">
         <source>0 points</source>
@@ -67,6 +994,15 @@
       </trans-unit>
       <trans-unit id="6608381869213568684" datatype="html">
         <source><x id="PH" equiv-text="n"/> stacks under control</source>
+      </trans-unit>
+      <trans-unit id="4408456168772857996" datatype="html">
+        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>
+      </trans-unit>
+      <trans-unit id="701935636628882602" datatype="html">
+        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/></source>
+      </trans-unit>
+      <trans-unit id="4894728399261164928" datatype="html">
+        <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
       </trans-unit>
       <trans-unit id="6153797048311741939" datatype="html">
         <source>User settings</source>
@@ -338,29 +1274,8 @@
       <trans-unit id="5280175192994998668" datatype="html">
         <source>A multi-layered remix of the Go Game!</source>
       </trans-unit>
-      <trans-unit id="718535138834335364" datatype="html">
-        <source>Four in a Row</source>
-      </trans-unit>
-      <trans-unit id="1525715186822490677" datatype="html">
-        <source>Awalé</source>
-      </trans-unit>
-      <trans-unit id="8844589419403065948" datatype="html">
-        <source>Quarto</source>
-      </trans-unit>
-      <trans-unit id="8322068603814456434" datatype="html">
-        <source>Tablut</source>
-      </trans-unit>
-      <trans-unit id="3244681266393689381" datatype="html">
-        <source>Reversi</source>
-      </trans-unit>
       <trans-unit id="7297944290589265560" datatype="html">
         <source>Go</source>
-      </trans-unit>
-      <trans-unit id="8208823537494951803" datatype="html">
-        <source>Encapsule</source>
-      </trans-unit>
-      <trans-unit id="4883858894354428469" datatype="html">
-        <source>Siam</source>
       </trans-unit>
       <trans-unit id="5046769358659448397" datatype="html">
         <source>Sahara</source>
@@ -371,23 +1286,11 @@
       <trans-unit id="773015283188822187" datatype="html">
         <source>Kamisado</source>
       </trans-unit>
-      <trans-unit id="8323142856025602350" datatype="html">
-        <source>Quixo</source>
-      </trans-unit>
       <trans-unit id="8191425615273627117" datatype="html">
         <source>Dvonn</source>
       </trans-unit>
-      <trans-unit id="7644192101130519142" datatype="html">
-        <source>Epaminondas</source>
-      </trans-unit>
       <trans-unit id="4541467181400942955" datatype="html">
         <source>Gipf</source>
-      </trans-unit>
-      <trans-unit id="1147571728036986329" datatype="html">
-        <source>Coerceo</source>
-      </trans-unit>
-      <trans-unit id="3553471239341143775" datatype="html">
-        <source>Six</source>
       </trans-unit>
       <trans-unit id="240931235644942730" datatype="html">
         <source>Lines of Action</source>
@@ -395,20 +1298,11 @@
       <trans-unit id="3574809577617204460" datatype="html">
         <source>Pentago</source>
       </trans-unit>
-      <trans-unit id="5816181883959997447" datatype="html">
-        <source>Abalone</source>
-      </trans-unit>
       <trans-unit id="5094417734463136297" datatype="html">
         <source>Yinsh</source>
       </trans-unit>
-      <trans-unit id="4497962271113144657" datatype="html">
-        <source>Apagos</source>
-      </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
-      </trans-unit>
-      <trans-unit id="947579386294731197" datatype="html">
-        <source>Brandhub</source>
       </trans-unit>
       <trans-unit id="4214831981215024999" datatype="html">
         <source>Conspirateurs</source>
@@ -419,17 +1313,11 @@
       <trans-unit id="4371580300145721044" datatype="html">
         <source>Martian Chess</source>
       </trans-unit>
-      <trans-unit id="5306696079242551443" datatype="html">
-        <source>Hnefatafl</source>
-      </trans-unit>
       <trans-unit id="6220801899147470326" datatype="html">
         <source>Hive</source>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
-      </trans-unit>
-      <trans-unit id="692005285727565478" datatype="html">
-        <source>Lasca</source>
       </trans-unit>
       <trans-unit id="8745205959337703089" datatype="html">
         <source>Connect Six</source>
@@ -440,38 +1328,14 @@
       <trans-unit id="6202245590217996824" datatype="html">
         <source>Teeko</source>
       </trans-unit>
-      <trans-unit id="4321462166273172721" datatype="html">
-        <source>Kalah</source>
-      </trans-unit>
       <trans-unit id="809030787784855848" datatype="html">
         <source>Diaballik</source>
-      </trans-unit>
-      <trans-unit id="1493565703246564578" datatype="html">
-        <source>Ba-awa</source>
-      </trans-unit>
-      <trans-unit id="2597247746010343961" datatype="html">
-        <source>Squarz</source>
-      </trans-unit>
-      <trans-unit id="2686476818050661110" datatype="html">
-        <source>Hexodia</source>
       </trans-unit>
       <trans-unit id="7666378010332934902" datatype="html">
         <source>Triangular Go</source>
       </trans-unit>
-      <trans-unit id="5226075040149407867" datatype="html">
-        <source>International Checkers</source>
-      </trans-unit>
-      <trans-unit id="7549008463336671286" datatype="html">
-        <source>Quebec Castles</source>
-      </trans-unit>
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
-      </trans-unit>
-      <trans-unit id="3697715893908807208" datatype="html">
-        <source>Toric Reversi</source>
-      </trans-unit>
-      <trans-unit id="5468337301522272954" datatype="html">
-        <source>Bashni</source>
       </trans-unit>
       <trans-unit id="9017157884114080234" datatype="html">
         <source>Zoomed Go</source>
@@ -816,7 +1680,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser?.name }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser()?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="5277703651684233917" datatype="html">
         <source>Players agreed to draw.</source>
@@ -890,39 +1754,6 @@
       <trans-unit id="4506170566742059239" datatype="html">
         <source>00:30</source>
       </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
-      </trans-unit>
-      <trans-unit id="3012694567108651369" datatype="html">
-        <source>This value is mandatory</source>
-      </trans-unit>
-      <trans-unit id="4231579860680569680" datatype="html">
-        <source>There is no such configuration element</source>
-      </trans-unit>
-      <trans-unit id="2018922024247045709" datatype="html">
-        <source>Width</source>
-      </trans-unit>
-      <trans-unit id="3033623772164647792" datatype="html">
-        <source>Height</source>
-      </trans-unit>
-      <trans-unit id="45739481977493163" datatype="html">
-        <source>Size</source>
-      </trans-unit>
-      <trans-unit id="1997992313730455534" datatype="html">
-        <source>Number of aligned pieces needed to win</source>
-      </trans-unit>
-      <trans-unit id="6974294157928395807" datatype="html">
-        <source>Number of pieces dropped per turn</source>
-      </trans-unit>
-      <trans-unit id="5348930337239726346" datatype="html">
-        <source>Number of empty rows</source>
-      </trans-unit>
-      <trans-unit id="4053624367526659457" datatype="html">
-        <source>Number of pieces rows</source>
-      </trans-unit>
-      <trans-unit id="6874699210811358423" datatype="html">
-        <source>Toric</source>
-      </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
       </trans-unit>
@@ -989,33 +1820,6 @@
       <trans-unit id="1930146585049479552" datatype="html">
         <source>You cannot click, this is a demo.</source>
       </trans-unit>
-      <trans-unit id="2467835697178117742" datatype="html">
-        <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
-      </trans-unit>
-      <trans-unit id="4278049889323552316" datatype="html">
-        <source>You don&apos;t have enough pieces to push that group!</source>
-      </trans-unit>
-      <trans-unit id="8378144418238149992" datatype="html">
-        <source>You cannot push this piece because it is blocked by one of yours!</source>
-      </trans-unit>
-      <trans-unit id="7864006988432394989" datatype="html">
-        <source>This line contains pieces of your opponent or empty spaces, which is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="507376328570453826" datatype="html">
-        <source>This move is impossible, some landing spaces are occupied.</source>
-      </trans-unit>
-      <trans-unit id="6088417909306773667" datatype="html">
-        <source>This space is not aligned with the current line.</source>
-      </trans-unit>
-      <trans-unit id="7060616157443124451" datatype="html">
-        <source>Number of pieces to capture in order to win</source>
-      </trans-unit>
-      <trans-unit id="1103013531201615772" datatype="html">
-        <source>Maximum pushing group size</source>
-      </trans-unit>
-      <trans-unit id="1280308994802128299" datatype="html">
-        <source>Deadly Abalone</source>
-      </trans-unit>
       <trans-unit id="5878048397926852057" datatype="html">
         <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
       </trans-unit>
@@ -1042,24 +1846,6 @@
       </trans-unit>
       <trans-unit id="7123653594948067002" datatype="html">
         <source>Score</source>
-      </trans-unit>
-      <trans-unit id="4382056880714150954" datatype="html">
-        <source>Pieces should only move downward!</source>
-      </trans-unit>
-      <trans-unit id="6303549979055320494" datatype="html">
-        <source>That square is already full, you cannot put a piece in it!</source>
-      </trans-unit>
-      <trans-unit id="4038709557650879610" datatype="html">
-        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
-      </trans-unit>
-      <trans-unit id="7840393692836937676" datatype="html">
-        <source>There are no remaining pieces of that color to drop!</source>
-      </trans-unit>
-      <trans-unit id="139135108801629927" datatype="html">
-        <source>There is no possible transfer from that square!</source>
-      </trans-unit>
-      <trans-unit id="529510153551286303" datatype="html">
-        <source>Increment</source>
       </trans-unit>
       <trans-unit id="8322338146903087210" datatype="html">
         <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
@@ -1162,69 +1948,6 @@
       </trans-unit>
       <trans-unit id="3989795384384835435" datatype="html">
         <source>You did not capture everything!</source>
-      </trans-unit>
-      <trans-unit id="2406587628849019715" datatype="html">
-        <source>Stack pieces instead of capturing them</source>
-      </trans-unit>
-      <trans-unit id="5703694246153191852" datatype="html">
-        <source>You must capture the highest number of pieces</source>
-      </trans-unit>
-      <trans-unit id="5513887234495231304" datatype="html">
-        <source>Simple pieces can capture backward</source>
-      </trans-unit>
-      <trans-unit id="5102353447213251496" datatype="html">
-        <source>Promoted pieces can travel long distance</source>
-      </trans-unit>
-      <trans-unit id="2785965642347214758" datatype="html">
-        <source>Occupy upper-left corner</source>
-      </trans-unit>
-      <trans-unit id="3072414657519570345" datatype="html">
-        <source>Can do frisian captures</source>
-      </trans-unit>
-      <trans-unit id="8702370392264661270" datatype="html">
-        <source>Piece that reaches the last line during a capture continues capturing as king</source>
-      </trans-unit>
-      <trans-unit id="3260884512753946998" datatype="html">
-        <source>Only promoted pieces can go backward.</source>
-      </trans-unit>
-      <trans-unit id="1347067654692503433" datatype="html">
-        <source>You must capture when it is possible!</source>
-      </trans-unit>
-      <trans-unit id="3183138660002989080" datatype="html">
-        <source>You must finish this capture!</source>
-      </trans-unit>
-      <trans-unit id="6689969573280113485" datatype="html">
-        <source>This piece cannot move!</source>
-      </trans-unit>
-      <trans-unit id="3726954835052044930" datatype="html">
-        <source>Frisian capture must be of even length!</source>
-      </trans-unit>
-      <trans-unit id="3645639684924416367" datatype="html">
-        <source>This is an invalid orthogonal move, a frisian capture must be at least steps of 4. Look at the indicators to help you!</source>
-      </trans-unit>
-      <trans-unit id="964675748683334375" datatype="html">
-        <source>Normal pieces cannot move like this!</source>
-      </trans-unit>
-      <trans-unit id="4897086529827321658" datatype="html">
-        <source>Flying capture is forbidden for normal pieces!</source>
-      </trans-unit>
-      <trans-unit id="5556528437720213364" datatype="html">
-        <source>No piece is allowed to do a long jump</source>
-      </trans-unit>
-      <trans-unit id="7678886963795480068" datatype="html">
-        <source>You cannot move orthogonally!</source>
-      </trans-unit>
-      <trans-unit id="4624388853987508390" datatype="html">
-        <source>You cannot capture the same square several times!</source>
-      </trans-unit>
-      <trans-unit id="8795923620032980614" datatype="html">
-        <source>You must do the longest capture possible!</source>
-      </trans-unit>
-      <trans-unit id="4849176470407657635" datatype="html">
-        <source>You cannot jump over several pieces!</source>
-      </trans-unit>
-      <trans-unit id="4596314344113953334" datatype="html">
-        <source>You have done a step after a capture. A move that starts with a capture can only contain captures.</source>
       </trans-unit>
       <trans-unit id="3181357103919988717" datatype="html">
         <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
@@ -1331,21 +2054,6 @@
       <trans-unit id="6354536314365385481" datatype="html">
         <source>When making multiple captures, you cannot jump twice over the same stack. The captured commander is immediately placed under your capturing stack, while the rest of the captured stack stays on its square. Even if this exposes another opposing commander, you cannot capture that stack again during the same move.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture as much pieces as possible.</source>
       </trans-unit>
-      <trans-unit id="6011590532570079359" datatype="html">
-        <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
-      </trans-unit>
-      <trans-unit id="117738177627572036" datatype="html">
-        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
-      </trans-unit>
-      <trans-unit id="6928762188180587282" datatype="html">
-        <source>Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.</source>
-      </trans-unit>
-      <trans-unit id="7341385722923686160" datatype="html">
-        <source>You cannot capture from an empty space.</source>
-      </trans-unit>
-      <trans-unit id="5853742640794164153" datatype="html">
-        <source>Use small board</source>
-      </trans-unit>
       <trans-unit id="8275758037847807394" datatype="html">
         <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles. The triangles are the spaces on which pieces move during the game. The tiles can be removed from the board (you will see how later). The dark pieces belong to the first player and can only move on the dark spaces, while the light pieces belong to the second player and can only move on the light spaces. The object of the game is to capture all of the opponent&apos;s pieces.</source>
       </trans-unit>
@@ -1422,39 +2130,6 @@
       <trans-unit id="4996962520612005595" datatype="html">
         <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
-      <trans-unit id="6820617839935911342" datatype="html">
-        <source>First turns must have exactly one drop</source>
-      </trans-unit>
-      <trans-unit id="8366240299234525015" datatype="html">
-        <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
-      </trans-unit>
-      <trans-unit id="6623830127801606607" datatype="html">
-        <source>Square (4)</source>
-      </trans-unit>
-      <trans-unit id="8278187099465500134" datatype="html">
-        <source>Square (8)</source>
-      </trans-unit>
-      <trans-unit id="35620818119550087" datatype="html">
-        <source>Hexagonal</source>
-      </trans-unit>
-      <trans-unit id="5440587977382249688" datatype="html">
-        <source>Triangular</source>
-      </trans-unit>
-      <trans-unit id="8336049305072615544" datatype="html">
-        <source>Square</source>
-      </trans-unit>
-      <trans-unit id="2986159287834234807" datatype="html">
-        <source>N</source>
-      </trans-unit>
-      <trans-unit id="7983083284666629806" datatype="html">
-        <source>Drop after first turn</source>
-      </trans-unit>
-      <trans-unit id="4214033760774511143" datatype="html">
-        <source>Space shape</source>
-      </trans-unit>
-      <trans-unit id="4461597806169026629" datatype="html">
-        <source>Board shape</source>
-      </trans-unit>
       <trans-unit id="1631778170068001983" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
       </trans-unit>
@@ -1472,27 +2147,6 @@
       </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
-      </trans-unit>
-      <trans-unit id="4237198021995785268" datatype="html">
-        <source>Your piece should land on a neighboring square.</source>
-      </trans-unit>
-      <trans-unit id="6331318865941875967" datatype="html">
-        <source>You cannot drop a piece during the moving phase.</source>
-      </trans-unit>
-      <trans-unit id="1634970085488730747" datatype="html">
-        <source>You cannot move a piece before both players have dropped all of their pieces.</source>
-      </trans-unit>
-      <trans-unit id="320724128460521577" datatype="html">
-        <source>A jump must be made over a piece, not over an empty square.</source>
-      </trans-unit>
-      <trans-unit id="6834108574871302489" datatype="html">
-        <source>A drop must occur in the central zone of the board.</source>
-      </trans-unit>
-      <trans-unit id="8451838259581996755" datatype="html">
-        <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
-      </trans-unit>
-      <trans-unit id="309495911608325428" datatype="html">
-        <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
       </trans-unit>
       <trans-unit id="2678466693137107679" datatype="html">
         <source>Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
@@ -1536,27 +2190,6 @@
       <trans-unit id="4649711232397678200" datatype="html">
         <source>Jump</source>
       </trans-unit>
-      <trans-unit id="2724052802065983013" datatype="html">
-        <source>You cannot move the piece holding the ball.</source>
-      </trans-unit>
-      <trans-unit id="5364606037550605842" datatype="html">
-        <source>You must move by exactly one orthogonal space.</source>
-      </trans-unit>
-      <trans-unit id="2737840191812588251" datatype="html">
-        <source>The path of this pass is obstructed.</source>
-      </trans-unit>
-      <trans-unit id="6962674839842537174" datatype="html">
-        <source>A pass must be done in a straight line, orthogonally or diagonally.</source>
-      </trans-unit>
-      <trans-unit id="7841459528155785625" datatype="html">
-        <source>You can only perform one pass per turn.</source>
-      </trans-unit>
-      <trans-unit id="898651979160418937" datatype="html">
-        <source>You can only perform two translations per turn, not three.</source>
-      </trans-unit>
-      <trans-unit id="2023900957694052396" datatype="html">
-        <source>You cannot pass the ball to the opponent. You must pick one of your pieces.</source>
-      </trans-unit>
       <trans-unit id="6598638598311685089" datatype="html">
         <source>The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.</source>
       </trans-unit>
@@ -1596,21 +2229,6 @@
       <trans-unit id="5930186357813280917" datatype="html">
         <source>MCTS (3, no dups)</source>
       </trans-unit>
-      <trans-unit id="3460005588993308010" datatype="html">
-        <source>You do not have any pieces of this type anymore.</source>
-      </trans-unit>
-      <trans-unit id="1718016291859374582" datatype="html">
-        <source>You cannot play here: this space is already full.</source>
-      </trans-unit>
-      <trans-unit id="8802049007421476454" datatype="html">
-        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
-      </trans-unit>
-      <trans-unit id="3031759944936090505" datatype="html">
-        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
-      </trans-unit>
-      <trans-unit id="290467566247457693" datatype="html">
-        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
-      </trans-unit>
       <trans-unit id="354630056284498570" datatype="html">
         <source>Initial board and player pieces</source>
       </trans-unit>
@@ -1643,27 +2261,6 @@
       </trans-unit>
       <trans-unit id="7535479567631818273" datatype="html">
         <source>Dummy</source>
-      </trans-unit>
-      <trans-unit id="5012524143343727947" datatype="html">
-        <source>You must select a piece or a stack of your color.</source>
-      </trans-unit>
-      <trans-unit id="5275339386917095598" datatype="html">
-        <source>You must select a stack.</source>
-      </trans-unit>
-      <trans-unit id="5544760040431913662" datatype="html">
-        <source>This stack cannot be moved because all 6 of its neighbors are occupied. You must select a stack with strictly less than 6 neighbors.</source>
-      </trans-unit>
-      <trans-unit id="5029201799654426347" datatype="html">
-        <source>This stack cannot move because it could never land on another piece.</source>
-      </trans-unit>
-      <trans-unit id="75731290119916717" datatype="html">
-        <source>A stack must always be moved by as many spaces as there are pieces in the stack.</source>
-      </trans-unit>
-      <trans-unit id="8101145555087657570" datatype="html">
-        <source>The stack must land on an occupied space.</source>
-      </trans-unit>
-      <trans-unit id="9221962864929282978" datatype="html">
-        <source>A stack must move in a straight line.</source>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -1732,27 +2329,6 @@
       <trans-unit id="5456673610183497320" datatype="html">
         <source>Stacks</source>
       </trans-unit>
-      <trans-unit id="6059738106874378452" datatype="html">
-        <source>You do not have pieces of this type anymore.</source>
-      </trans-unit>
-      <trans-unit id="2129733726620651846" datatype="html">
-        <source>You must put your piece on an empty square or on a smaller piece.</source>
-      </trans-unit>
-      <trans-unit id="5649666705061470825" datatype="html">
-        <source>You must pick your piece among the remaining ones.</source>
-      </trans-unit>
-      <trans-unit id="5001561383056924621" datatype="html">
-        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
-      </trans-unit>
-      <trans-unit id="2209428336874697936" datatype="html">
-        <source>You are performing a move, you must select a landing square.</source>
-      </trans-unit>
-      <trans-unit id="3734443501087651549" datatype="html">
-        <source>Number of different piece sizes</source>
-      </trans-unit>
-      <trans-unit id="893013149323570447" datatype="html">
-        <source>Number of pieces for each size</source>
-      </trans-unit>
       <trans-unit id="7821413127222759201" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
       </trans-unit>
@@ -1775,30 +2351,6 @@
       </trans-unit>
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
-      </trans-unit>
-      <trans-unit id="5530182224164938313" datatype="html">
-        <source>The move distance of your phalanx puts it out of the board.</source>
-      </trans-unit>
-      <trans-unit id="9197994342964027306" datatype="html">
-        <source>There is something in the way of your phalanx.</source>
-      </trans-unit>
-      <trans-unit id="5389576774289628382" datatype="html">
-        <source>Your phalanx must be bigger than the one you are capturing.</source>
-      </trans-unit>
-      <trans-unit id="8675949818775194064" datatype="html">
-        <source>You took a phalanx of size <x id="PH" equiv-text="p"/> and moved it <x id="PH_1" equiv-text="s"/> steps. Phalanx cannot move further than their sizes.</source>
-      </trans-unit>
-      <trans-unit id="5151115756771676188" datatype="html">
-        <source>This square is not aligned with the direction of the phalanx.</source>
-      </trans-unit>
-      <trans-unit id="5279717712059022209" datatype="html">
-        <source>A phalanx can&apos;t contain pieces outside of the board.</source>
-      </trans-unit>
-      <trans-unit id="3733956045714659124" datatype="html">
-        <source>A phalanx cannot contain an empty square.</source>
-      </trans-unit>
-      <trans-unit id="2183903120219891237" datatype="html">
-        <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1850,33 +2402,6 @@
       </trans-unit>
       <trans-unit id="360730166369316579" datatype="html">
         <source>Attack</source>
-      </trans-unit>
-      <trans-unit id="7226802484619632640" datatype="html">
-        <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
-      </trans-unit>
-      <trans-unit id="6918785733984182442" datatype="html">
-        <source>You must select a valid capture that contains 4 pieces or more.</source>
-      </trans-unit>
-      <trans-unit id="6602326768713192004" datatype="html">
-        <source>There are still possible captures to be done.</source>
-      </trans-unit>
-      <trans-unit id="2434818181880718873" datatype="html">
-        <source>Pieces must be inserted in spaces on the edge of the board.</source>
-      </trans-unit>
-      <trans-unit id="7875793227562861246" datatype="html">
-        <source>You must select a valid placement direction.</source>
-      </trans-unit>
-      <trans-unit id="1164530071087410710" datatype="html">
-        <source>You must select a placement with a direction alongside the insertion space.</source>
-      </trans-unit>
-      <trans-unit id="1848361274892061756" datatype="html">
-        <source>You cannot place a piece on a complete line.</source>
-      </trans-unit>
-      <trans-unit id="1025279631840419081" datatype="html">
-        <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
-      </trans-unit>
-      <trans-unit id="8708684300793667483" datatype="html">
-        <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
       </trans-unit>
       <trans-unit id="5510421842359017901" datatype="html">
         <source>The goal of Gipf is to capture the opponent&apos;s piece so that the opponent can no longer play.
@@ -1948,44 +2473,8 @@
       <trans-unit id="2182334345707735267" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
       </trans-unit>
-      <trans-unit id="4172293183843503071" datatype="html">
-        <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
-      </trans-unit>
-      <trans-unit id="4133892808569917446" datatype="html">
-        <source>We are in the counting phase, you must mark stones as dead or alive or accept the current board by passing your turn.</source>
-      </trans-unit>
-      <trans-unit id="4683884757780403263" datatype="html">
-        <source>You cannot accept before the counting phase.</source>
-      </trans-unit>
-      <trans-unit id="7258684846942631624" datatype="html">
-        <source>This intersection is already occupied.</source>
-      </trans-unit>
-      <trans-unit id="7089556689288687433" datatype="html">
-        <source>This space is already occupied.</source>
-      </trans-unit>
-      <trans-unit id="3878972107071324960" datatype="html">
-        <source>You cannot commit suicide.</source>
-      </trans-unit>
       <trans-unit id="4586260971442685870" datatype="html">
         <source>Territory</source>
-      </trans-unit>
-      <trans-unit id="2969677193390047071" datatype="html">
-        <source>19 x 19</source>
-      </trans-unit>
-      <trans-unit id="287623417167941506" datatype="html">
-        <source>Handicap</source>
-      </trans-unit>
-      <trans-unit id="6421460271971606186" datatype="html">
-        <source>Zoom</source>
-      </trans-unit>
-      <trans-unit id="8484396493346861583" datatype="html">
-        <source>Show zooms</source>
-      </trans-unit>
-      <trans-unit id="6402320009813668873" datatype="html">
-        <source>13 x 13</source>
-      </trans-unit>
-      <trans-unit id="4066004856246691695" datatype="html">
-        <source>9 x 9</source>
       </trans-unit>
       <trans-unit id="1472088308118018916" datatype="html">
         <source>Preliminary information</source>
@@ -2082,9 +2571,6 @@
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
       </trans-unit>
-      <trans-unit id="2798807656507405918" datatype="html">
-        <source>Standard</source>
-      </trans-unit>
       <trans-unit id="4651970609990845575" datatype="html">
         <source>The game of Hexagonal Go is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
@@ -2117,18 +2603,6 @@
       </trans-unit>
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
-      </trans-unit>
-      <trans-unit id="6552934315157659079" datatype="html">
-        <source>Zoom <x id="PH" equiv-text="z"/></source>
-      </trans-unit>
-      <trans-unit id="1733084177692338637" datatype="html">
-        <source>(medium)</source>
-      </trans-unit>
-      <trans-unit id="4707463689820472290" datatype="html">
-        <source>(small)</source>
-      </trans-unit>
-      <trans-unit id="7789802452524788997" datatype="html">
-        <source>(large)</source>
       </trans-unit>
       <trans-unit id="3430912882867311505" datatype="html">
         <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
@@ -2183,51 +2657,6 @@
       </trans-unit>
       <trans-unit id="25408930270688683" datatype="html">
         <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
-      </trans-unit>
-      <trans-unit id="4791280679911297134" datatype="html">
-        <source>The queen bee can only move to one of its direct neighbors.</source>
-      </trans-unit>
-      <trans-unit id="1639583872704216434" datatype="html">
-        <source>The beetle can only move to one of its direct neighbors.</source>
-      </trans-unit>
-      <trans-unit id="7402975532187036733" datatype="html">
-        <source>The grasshopper must move in a straight line.</source>
-      </trans-unit>
-      <trans-unit id="5523450052915914627" datatype="html">
-        <source>The grasshopper must jump over other pieces, without any empty spaces.</source>
-      </trans-unit>
-      <trans-unit id="8771557289052450532" datatype="html">
-        <source>The spider must move on neighboring spaces.</source>
-      </trans-unit>
-      <trans-unit id="3098163088355072426" datatype="html">
-        <source>The spider can only move around pieces that are in direct contact with it.</source>
-      </trans-unit>
-      <trans-unit id="7928136093693713176" datatype="html">
-        <source>The spider cannot go twice through the same space in the same move.</source>
-      </trans-unit>
-      <trans-unit id="2053370063642446913" datatype="html">
-        <source>The queen bee must be placed on the board before moving a piece.</source>
-      </trans-unit>
-      <trans-unit id="5380773634484088090" datatype="html">
-        <source>Only the beetle is allowed to climb over other pieces.</source>
-      </trans-unit>
-      <trans-unit id="8284939639567724336" datatype="html">
-        <source>You are not allowed to split the hive.</source>
-      </trans-unit>
-      <trans-unit id="4146942272384883649" datatype="html">
-        <source>This piece must be able to slide to its destination.</source>
-      </trans-unit>
-      <trans-unit id="4339124628235355617" datatype="html">
-        <source>You must place your queen bee at this turn!</source>
-      </trans-unit>
-      <trans-unit id="7948763683129821975" datatype="html">
-        <source>You cannot drop a piece next to one of your opponent&apos;s stack.</source>
-      </trans-unit>
-      <trans-unit id="8046013978585107003" datatype="html">
-        <source>You must always drop your piece on an empty space.</source>
-      </trans-unit>
-      <trans-unit id="106536486701689545" datatype="html">
-        <source>The piece you are dropping must be connected to the hive.</source>
       </trans-unit>
       <trans-unit id="3008604417903239806" datatype="html">
         <source>Hive is a game without a board, where pieces are placed on the side of each other, in a contiguous block called the hive. Each player has 11 pieces, representing various insects.</source>
@@ -2301,18 +2730,6 @@
       <trans-unit id="545011647716248042" datatype="html">
         <source>Mobility</source>
       </trans-unit>
-      <trans-unit id="3643526530572280396" datatype="html">
-        <source>This piece is not of the color you have to play.</source>
-      </trans-unit>
-      <trans-unit id="945155491646703687" datatype="html">
-        <source>You can only move forward, orthogonally or diagonally.</source>
-      </trans-unit>
-      <trans-unit id="551820034442685617" datatype="html">
-        <source>This move is blocked by another piece.</source>
-      </trans-unit>
-      <trans-unit id="1699965787783859469" datatype="html">
-        <source>You must play with the selected piece.</source>
-      </trans-unit>
       <trans-unit id="5017168027824461530" datatype="html">
         <source>At Kamisado, there are two ways to win the game:
         either by moving one of your pieces on the opponent&apos;s starting line,
@@ -2371,15 +2788,6 @@
       <trans-unit id="5504136696096277083" datatype="html">
         <source>Advancement</source>
       </trans-unit>
-      <trans-unit id="6387863170048380356" datatype="html">
-        <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
-      </trans-unit>
-      <trans-unit id="3931959709762726685" datatype="html">
-        <source>You cannot jump over the opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="1376498600372177047" datatype="html">
-        <source>This piece has no possible move, select another one.</source>
-      </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
@@ -2436,24 +2844,6 @@
       </trans-unit>
       <trans-unit id="5944812089887969249" datatype="html">
         <source>Groups</source>
-      </trans-unit>
-      <trans-unit id="7419338702295170530" datatype="html">
-        <source>You must flip your lodestone before putting it back on the board.</source>
-      </trans-unit>
-      <trans-unit id="8683881271933340082" datatype="html">
-        <source>As long as there are pressure plates, you must place all the pieces that you have captured on them.</source>
-      </trans-unit>
-      <trans-unit id="3917449010922856612" datatype="html">
-        <source>You must place your lodestone on a non-crumbled square!</source>
-      </trans-unit>
-      <trans-unit id="2350186243435301157" datatype="html">
-        <source>You placed too many captures on the same pressure plate, which has not enough space left.</source>
-      </trans-unit>
-      <trans-unit id="4296510202733075370" datatype="html">
-        <source>You must place your captures on the pressure plates, on the side of the board.</source>
-      </trans-unit>
-      <trans-unit id="8506636863437595095" datatype="html">
-        <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
       </trans-unit>
       <trans-unit id="5605685662838531265" datatype="html">
         <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The object of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
@@ -2596,12 +2986,6 @@
       <trans-unit id="4966070806582905191" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
-      <trans-unit id="6243517581301426418" datatype="html">
-        <source>Split final seeds evenly</source>
-      </trans-unit>
-      <trans-unit id="796568684338354748" datatype="html">
-        <source>Even Ba-awa</source>
-      </trans-unit>
       <trans-unit id="6179314931812970793" datatype="html">
         <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
       </trans-unit>
@@ -2637,36 +3021,6 @@
       </trans-unit>
       <trans-unit id="2821967115826330186" datatype="html">
         <source>There it is, you captured all remaining seeds.</source>
-      </trans-unit>
-      <trans-unit id="8840015526202664476" datatype="html">
-        <source>You must distribute one of your houses.</source>
-      </trans-unit>
-      <trans-unit id="4189334243342030215" datatype="html">
-        <source>You should choose a non-empty house to distribute.</source>
-      </trans-unit>
-      <trans-unit id="8846202449877054997" datatype="html">
-        <source>You should feed but you do not.</source>
-      </trans-unit>
-      <trans-unit id="1086558575410854374" datatype="html">
-        <source>Feed original house</source>
-      </trans-unit>
-      <trans-unit id="5863215957559063071" datatype="html">
-        <source>You must feed</source>
-      </trans-unit>
-      <trans-unit id="7654623560547531779" datatype="html">
-        <source>Pass by player store</source>
-      </trans-unit>
-      <trans-unit id="4475848272710836308" datatype="html">
-        <source>Continue distribution after last seed ends in store</source>
-      </trans-unit>
-      <trans-unit id="356626260857129297" datatype="html">
-        <source>Continue distribution until capture or empty house</source>
-      </trans-unit>
-      <trans-unit id="7080802734755670775" datatype="html">
-        <source>Seeds by house</source>
-      </trans-unit>
-      <trans-unit id="3686980350710017232" datatype="html">
-        <source>Number of rows</source>
       </trans-unit>
       <trans-unit id="4012808273739972279" datatype="html">
         <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>
@@ -2721,27 +3075,6 @@
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>
-      </trans-unit>
-      <trans-unit id="4174188766565583979" datatype="html">
-        <source>You must pick a piece from your side of the board in order to move it.</source>
-      </trans-unit>
-      <trans-unit id="4126120518252508337" datatype="html">
-        <source>This is not a valid promotion nor a valid capture.</source>
-      </trans-unit>
-      <trans-unit id="820589591452307194" datatype="html">
-        <source>You cannot perform a move that is the reverse of the previous one.</source>
-      </trans-unit>
-      <trans-unit id="4594736386763524275" datatype="html">
-        <source>Start coord cannot be out of range</source>
-      </trans-unit>
-      <trans-unit id="8024507002452740554" datatype="html">
-        <source>End coord cannot be out of range</source>
-      </trans-unit>
-      <trans-unit id="7020322239499292850" datatype="html">
-        <source>Pawns must move one step diagonally.</source>
-      </trans-unit>
-      <trans-unit id="4409865504289904426" datatype="html">
-        <source>Drones must move one or two steps in any direction.</source>
       </trans-unit>
       <trans-unit id="101461993624237538" datatype="html">
         <source>At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
@@ -2830,9 +3163,6 @@
       <trans-unit id="5831506127438574716" datatype="html">
         <source>Your piece is still in you territory!</source>
       </trans-unit>
-      <trans-unit id="6266016430504496647" datatype="html">
-        <source>Please put your piece in an incomplete column.</source>
-      </trans-unit>
       <trans-unit id="4036586801649294358" datatype="html">
         <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
         The first player plays Dark, the second plays Light.
@@ -2863,12 +3193,6 @@
       <trans-unit id="5935897420698942151" datatype="html">
         <source>You can also align 4 pieces diagonally or vertically.</source>
       </trans-unit>
-      <trans-unit id="6103371171681226169" datatype="html">
-        <source>If the quadrant to turn is neutral, please just use move without rotation.</source>
-      </trans-unit>
-      <trans-unit id="960314962671621462" datatype="html">
-        <source>No quadrant is neutral, you must pick a quadrant to rotate.</source>
-      </trans-unit>
       <trans-unit id="6958056470119838689" datatype="html">
         <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.</source>
       </trans-unit>
@@ -2894,12 +3218,6 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
-      <trans-unit id="3823427068887903090" datatype="html">
-        <source>Captured stones needed to win</source>
-      </trans-unit>
-      <trans-unit id="2370571702661444910" datatype="html">
-        <source>Size of captures</source>
-      </trans-unit>
       <trans-unit id="481364308060927522" datatype="html">
         <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
       </trans-unit>
@@ -2917,27 +3235,6 @@
       </trans-unit>
       <trans-unit id="5109014320867695717" datatype="html">
         <source>Remember, to win you can either align 5 or your pieces, or capture 10 pieces of your opponent. Here, as Light, you have already captured 8 pieces and you only need two more to win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, you can win in two ways. Win!</source>
-      </trans-unit>
-      <trans-unit id="682762602217958961" datatype="html">
-        <source>You must move your pieces upward.</source>
-      </trans-unit>
-      <trans-unit id="2162535855239454361" datatype="html">
-        <source>Your piece must land on the board or on 4 other pieces.</source>
-      </trans-unit>
-      <trans-unit id="2201596715619103633" datatype="html">
-        <source>You cannot move a supporting piece.</source>
-      </trans-unit>
-      <trans-unit id="70110199629015603" datatype="html">
-        <source>You cannot capture.</source>
-      </trans-unit>
-      <trans-unit id="1880810010962851052" datatype="html">
-        <source>Your first capture is invalid.</source>
-      </trans-unit>
-      <trans-unit id="8839913211108039860" datatype="html">
-        <source>Your second capture is invalid.</source>
-      </trans-unit>
-      <trans-unit id="2207725255932699379" datatype="html">
-        <source>You must capture one or two pieces, not more.</source>
       </trans-unit>
       <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
@@ -3000,21 +3297,6 @@
       <trans-unit id="2874924373232293084" datatype="html">
         <source>Reserve</source>
       </trans-unit>
-      <trans-unit id="5796940069053691279" datatype="html">
-        <source>You must give a piece.</source>
-      </trans-unit>
-      <trans-unit id="2211348294853632908" datatype="html">
-        <source>That piece is already on the board.</source>
-      </trans-unit>
-      <trans-unit id="6246016939611902421" datatype="html">
-        <source>You cannot give the piece that was in your hands.</source>
-      </trans-unit>
-      <trans-unit id="2864332255120486791" datatype="html">
-        <source>Player One Level</source>
-      </trans-unit>
-      <trans-unit id="6804516002090214742" datatype="html">
-        <source>Player Two Level</source>
-      </trans-unit>
       <trans-unit id="760255515343953338" datatype="html">
         <source>Quarto is an alignment game. The goal is to align four pieces that have at least one common aspect:&lt;ul&gt;&lt;li&gt;their color (light or dark),&lt;/li&gt;&lt;li&gt;their size (big or small),&lt;/li&gt;&lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;&lt;li&gt;their shape (round or square).&lt;/li&gt;&lt;/ul&gt;Here, we have a board with a victory by an alignment of dark pieces. Note that the pieces are not owned by any player.</source>
       </trans-unit>
@@ -3044,75 +3326,6 @@
       </trans-unit>
       <trans-unit id="2467449610168621115" datatype="html">
         <source>Wrong, you could have won by making a square.</source>
-      </trans-unit>
-      <trans-unit id="5604193951980576244" datatype="html">
-        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
-      </trans-unit>
-      <trans-unit id="4809301322027947242" datatype="html">
-        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
-      </trans-unit>
-      <trans-unit id="941976348970067109" datatype="html">
-        <source>You must drop in your own territory</source>
-      </trans-unit>
-      <trans-unit id="2561363337853886115" datatype="html">
-        <source>You cannot drop in move phase</source>
-      </trans-unit>
-      <trans-unit id="6838858844517047193" datatype="html">
-        <source>You cannot move in drop phase</source>
-      </trans-unit>
-      <trans-unit id="4933773936312573082" datatype="html">
-        <source>You must drop all your pieces</source>
-      </trans-unit>
-      <trans-unit id="1577452622903571200" datatype="html">
-        <source>You must drop all your remaining pieces, not more not less</source>
-      </trans-unit>
-      <trans-unit id="8012565028574700911" datatype="html">
-        <source>You cannot drop that many pieces</source>
-      </trans-unit>
-      <trans-unit id="8952465701867689047" datatype="html">
-        <source>You must drop pieces one by one</source>
-      </trans-unit>
-      <trans-unit id="7497498388753121757" datatype="html">
-        <source>You cannot land or drop on your castle</source>
-      </trans-unit>
-      <trans-unit id="5963846295180517656" datatype="html">
-        <source>You must only place your castle</source>
-      </trans-unit>
-      <trans-unit id="5637364645971249040" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
-      </trans-unit>
-      <trans-unit id="984815225652827868" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
-      </trans-unit>
-      <trans-unit id="2740099122933909931" datatype="html">
-        <source>Too many lines for territory, your opponent lines would merge with yours!</source>
-      </trans-unit>
-      <trans-unit id="810888510148304696" datatype="html">
-        <source>Automatic</source>
-      </trans-unit>
-      <trans-unit id="5830114547747897795" datatype="html">
-        <source>Piece by piece</source>
-      </trans-unit>
-      <trans-unit id="410841679211120323" datatype="html">
-        <source>By batch</source>
-      </trans-unit>
-      <trans-unit id="7732765787483081988" datatype="html">
-        <source>Lines for territory</source>
-      </trans-unit>
-      <trans-unit id="6952700396277252102" datatype="html">
-        <source>Number of invaders</source>
-      </trans-unit>
-      <trans-unit id="8136810909201933801" datatype="html">
-        <source>Number of defenders</source>
-      </trans-unit>
-      <trans-unit id="859693719600901508" datatype="html">
-        <source>Is Rhombic</source>
-      </trans-unit>
-      <trans-unit id="3155220222252009452" datatype="html">
-        <source>Place castle yourself</source>
-      </trans-unit>
-      <trans-unit id="5344724322380814051" datatype="html">
-        <source>Drop mode</source>
       </trans-unit>
       <trans-unit id="4108446576215978761" datatype="html">
         <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
@@ -3159,9 +3372,6 @@
       <trans-unit id="8332720029342556814" datatype="html">
         <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
       </trans-unit>
-      <trans-unit id="8819839276456625538" datatype="html">
-        <source>You must pick a space from the edge of the board.</source>
-      </trans-unit>
       <trans-unit id="1849305746346487286" datatype="html">
         <source>At Quixo, the goal is to align 5 of your pieces.
         The first player plays with dark pieces, the second with light pieces.
@@ -3197,9 +3407,6 @@
       </trans-unit>
       <trans-unit id="9017523517963235509" datatype="html">
         <source>Piece Count</source>
-      </trans-unit>
-      <trans-unit id="2829152398724302132" datatype="html">
-        <source>Your move should switch at least one piece.</source>
       </trans-unit>
       <trans-unit id="4123522127538652179" datatype="html">
         <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
@@ -3255,27 +3462,6 @@
       <trans-unit id="8991600964307142646" datatype="html">
         <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
       </trans-unit>
-      <trans-unit id="1982783281923413187" datatype="html">
-        <source>You can only rebound on dark spaces.</source>
-      </trans-unit>
-      <trans-unit id="1906861201256399546" datatype="html">
-        <source>You can only rebound on empty spaces.</source>
-      </trans-unit>
-      <trans-unit id="366304395805128715" datatype="html">
-        <source>You must pick one of your pyramids first.</source>
-      </trans-unit>
-      <trans-unit id="6312339673351478538" datatype="html">
-        <source>You must pick one of your pyramids.</source>
-      </trans-unit>
-      <trans-unit id="2094727233255278649" datatype="html">
-        <source>Those two spaces are not neighbors.</source>
-      </trans-unit>
-      <trans-unit id="5908478672900888285" datatype="html">
-        <source>Those two spaces have no intermediary neighbor.</source>
-      </trans-unit>
-      <trans-unit id="7194810718741841575" datatype="html">
-        <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
-      </trans-unit>
       <trans-unit id="7379617497808564008" datatype="html">
         <source>Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.</source>
@@ -3317,39 +3503,6 @@
       </trans-unit>
       <trans-unit id="3293657922924170725" datatype="html">
         <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
-      </trans-unit>
-      <trans-unit id="5162969671337604607" datatype="html">
-        <source>You cannot insert a piece, all your pieces are already on the board.</source>
-      </trans-unit>
-      <trans-unit id="2237663589140902242" datatype="html">
-        <source>You do not have enough strength to push.</source>
-      </trans-unit>
-      <trans-unit id="6414951217478686255" datatype="html">
-        <source>You must move or rotate your piece.</source>
-      </trans-unit>
-      <trans-unit id="2533760570032755409" datatype="html">
-        <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
-      </trans-unit>
-      <trans-unit id="6641065739366631527" datatype="html">
-        <source>You must select a valid destination (highlighted on the board) for your piece</source>
-      </trans-unit>
-      <trans-unit id="3129880366808972802" datatype="html">
-        <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
-      </trans-unit>
-      <trans-unit id="4789301325429521721" datatype="html">
-        <source>Number of piece by player</source>
-      </trans-unit>
-      <trans-unit id="6496295523512347479" datatype="html">
-        <source>Number of bonus mountains</source>
-      </trans-unit>
-      <trans-unit id="7963871986685218015" datatype="html">
-        <source>You cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
-      </trans-unit>
-      <trans-unit id="3925814099582230333" datatype="html">
-        <source>SiamMove should end or start on the board: <x id="PH" equiv-text="move.toString()"/></source>
-      </trans-unit>
-      <trans-unit id="5519545750670700019" datatype="html">
-        <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
       </trans-unit>
       <trans-unit id="8745202933853690845" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions:&lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
@@ -3395,30 +3548,6 @@
       </trans-unit>
       <trans-unit id="1779552786277618671" datatype="html">
         <source>Distance</source>
-      </trans-unit>
-      <trans-unit id="2035984245529775458" datatype="html">
-        <source>You cannot move yet. Pick a space where you will put a new piece.</source>
-      </trans-unit>
-      <trans-unit id="5972149122807464966" datatype="html">
-        <source>Several groups are of the same size, you must pick the one to keep.</source>
-      </trans-unit>
-      <trans-unit id="586640917828080274" datatype="html">
-        <source>You cannot choose which part to keep when one is smaller than the other.</source>
-      </trans-unit>
-      <trans-unit id="8942923511988910642" datatype="html">
-        <source>You cannot put new pieces anymore. Pick a piece to move.</source>
-      </trans-unit>
-      <trans-unit id="1582776814244416485" datatype="html">
-        <source>You must choose one of the biggest groups to keep it.</source>
-      </trans-unit>
-      <trans-unit id="3079321797470229596" datatype="html">
-        <source>You cannot pick an empty space. Pick one of the biggest groups.</source>
-      </trans-unit>
-      <trans-unit id="4110234759792602964" datatype="html">
-        <source>You must put this piece next to another piece.</source>
-      </trans-unit>
-      <trans-unit id="1431305578867281747" datatype="html">
-        <source>Number of pieces to drop per player</source>
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
@@ -3491,12 +3620,6 @@
       <trans-unit id="4427129289566046309" datatype="html">
         <source>Shape</source>
       </trans-unit>
-      <trans-unit id="6387064828361949367" datatype="html">
-        <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
-      </trans-unit>
-      <trans-unit id="323770883664351270" datatype="html">
-        <source>Jump Size</source>
-      </trans-unit>
       <trans-unit id="4941408928262720844" datatype="html">
         <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
       </trans-unit>
@@ -3523,33 +3646,6 @@
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
-      </trans-unit>
-      <trans-unit id="4456476499852991526" datatype="html">
-        <source>You cannot land on an occupied square.</source>
-      </trans-unit>
-      <trans-unit id="299718976758118618" datatype="html">
-        <source>Once you left the central throne, you cannot return to it.</source>
-      </trans-unit>
-      <trans-unit id="1513340614663053294" datatype="html">
-        <source>Soldiers cannot sit on the throne.</source>
-      </trans-unit>
-      <trans-unit id="6790757046240382671" datatype="html">
-        <source>Tafl moves must be orthogonal.</source>
-      </trans-unit>
-      <trans-unit id="9195784792324730674" datatype="html">
-        <source>Central throne is left for good</source>
-      </trans-unit>
-      <trans-unit id="2524296888634788857" datatype="html">
-        <source>Edges are king&apos;s ennemy</source>
-      </trans-unit>
-      <trans-unit id="2642196868516331796" datatype="html">
-        <source>Central throne can surround king</source>
-      </trans-unit>
-      <trans-unit id="3540730147473795195" datatype="html">
-        <source>King far from home can be sandwiched</source>
-      </trans-unit>
-      <trans-unit id="3329390039243374527" datatype="html">
-        <source>Invader starts</source>
       </trans-unit>
       <trans-unit id="7559617831371314788" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
@@ -3632,15 +3728,6 @@
       <trans-unit id="2976149661707388406" datatype="html">
         <source>Escape &gt; Pieces &gt; Control</source>
       </trans-unit>
-      <trans-unit id="1347435830524797455" datatype="html">
-        <source>Standard Teeko</source>
-      </trans-unit>
-      <trans-unit id="6407662856197686253" datatype="html">
-        <source>Piece can teleport</source>
-      </trans-unit>
-      <trans-unit id="560394398723321416" datatype="html">
-        <source>Teleport Teeko</source>
-      </trans-unit>
       <trans-unit id="3648165339236868481" datatype="html">
         <source>The object of the game is to align your 4 pieces, or to form a square with them.</source>
       </trans-unit>
@@ -3655,18 +3742,6 @@
       </trans-unit>
       <trans-unit id="4133557660322432859" datatype="html">
         <source>Congratulations, you won! Remember that you can also win by creating a line.</source>
-      </trans-unit>
-      <trans-unit id="1739222080553143193" datatype="html">
-        <source>Those two spaces are not neighbors!</source>
-      </trans-unit>
-      <trans-unit id="4853714910007564389" datatype="html">
-        <source>There is no way to put a piece there!</source>
-      </trans-unit>
-      <trans-unit id="7841599074494103882" datatype="html">
-        <source>You cannot drop on only one piece!</source>
-      </trans-unit>
-      <trans-unit id="4138926893172482803" datatype="html">
-        <source>You cannot drop a piece on uneven grounds!</source>
       </trans-unit>
       <trans-unit id="1296355206706368557" datatype="html">
         <source>At Trexo, the object of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
@@ -3688,33 +3763,6 @@
       </trans-unit>
       <trans-unit id="3210337788599026628" datatype="html">
         <source>To win at Trexo, you need to align 5 of your pieces. Only the piece on top counts, the hidden piece are no longer threats, and a victory can include pieces on differents heights. Since you have to put the piece of your opponent first, if you create a victory for them, you lose, even if you aligned 5 of your pieces too.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
-      </trans-unit>
-      <trans-unit id="9155303779171419902" datatype="html">
-        <source>You cannot put a new ring after the tenth turn.</source>
-      </trans-unit>
-      <trans-unit id="1259286853143283501" datatype="html">
-        <source>You cannot put a marker in a ring before placing all of your rings.</source>
-      </trans-unit>
-      <trans-unit id="923761852987939376" datatype="html">
-        <source>The direction of your move is invalid: a move is made along a straight line.</source>
-      </trans-unit>
-      <trans-unit id="4828021707700375959" datatype="html">
-        <source>You can only capture your own markers.</source>
-      </trans-unit>
-      <trans-unit id="8518184052895338328" datatype="html">
-        <source>You must pick one of your own rings to move.</source>
-      </trans-unit>
-      <trans-unit id="5102601060485644767" datatype="html">
-        <source>Your ring must land on an empty space.</source>
-      </trans-unit>
-      <trans-unit id="1286643089876989148" datatype="html">
-        <source>A ring can only jump over markers or empty spaces, not over another ring.</source>
-      </trans-unit>
-      <trans-unit id="3047973571712211401" datatype="html">
-        <source>Your ring must land on the first empty space after a group of markers.</source>
-      </trans-unit>
-      <trans-unit id="5146449464465539521" datatype="html">
-        <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>
       </trans-unit>
       <trans-unit id="7525019515401716113" datatype="html">
         <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
@@ -3765,45 +3813,6 @@
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, playing Dark, you can capture two rings, do it!</source>
-      </trans-unit>
-      <trans-unit id="7542102025019708759" datatype="html">
-        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
-      </trans-unit>
-      <trans-unit id="7484306131506665789" datatype="html">
-        <source>You have selected a piece of the opponent. You must pick one of your pieces.</source>
-      </trans-unit>
-      <trans-unit id="5966391152315784819" datatype="html">
-        <source>You have selected an empty space, you must select one of your own pieces.</source>
-      </trans-unit>
-      <trans-unit id="7236012742212037533" datatype="html">
-        <source>You must click on an empty space.</source>
-      </trans-unit>
-      <trans-unit id="8686180677883367844" datatype="html">
-        <source>You must click on an empty square.</source>
-      </trans-unit>
-      <trans-unit id="8905154297816550312" datatype="html">
-        <source>Your landing space should be empty or contain a piece of the opponent.</source>
-      </trans-unit>
-      <trans-unit id="1137390440747939689" datatype="html">
-        <source>You cannot capture your own pieces.</source>
-      </trans-unit>
-      <trans-unit id="2056314675813734949" datatype="html">
-        <source>You cannot pass your turn.</source>
-      </trans-unit>
-      <trans-unit id="2698327260846195509" datatype="html">
-        <source>You must drop your piece on an empty space.</source>
-      </trans-unit>
-      <trans-unit id="5019447873100403310" datatype="html">
-        <source>You must pass your turn.</source>
-      </trans-unit>
-      <trans-unit id="1153768241274180865" datatype="html">
-        <source>You must choose different starting and ending coordinates.</source>
-      </trans-unit>
-      <trans-unit id="4065705313723361978" datatype="html">
-        <source>There is a piece between the piece you chose and its landing space.</source>
-      </trans-unit>
-      <trans-unit id="189691672447950321" datatype="html">
-        <source>You must move on a direct neighboring space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
@@ -3882,12 +3891,6 @@
       </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
-      </trans-unit>
-      <trans-unit id="4408456168772857996" datatype="html">
-        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>
-      </trans-unit>
-      <trans-unit id="701935636628882602" datatype="html">
-        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/></source>
       </trans-unit>
     </body>
   </file>

@@ -424,7 +424,7 @@ describe('InternationalCheckersComponent', () => {
             testUtils.expectElementNotToExist('#square-6-5-piece-1');
         }));
 
-        it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
+        it('should cancel move when trying invalid direction move mid-capture', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
             const state: CheckersState = OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
