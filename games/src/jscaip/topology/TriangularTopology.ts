@@ -24,7 +24,7 @@ export class TriangularTopology implements Topology<TriangularDirection> {
     }
 
     public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
-        if (direction.y === 0) { // No weird behavior for LEFT and RIGHT
+        if (direction.y === 0) {
             return coord.getNext(direction, distance);
         }
         if (this.canGoUp(coord)) {

@@ -1,7 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Topology } from '../topology/Topology';
+
 import { Shape } from './Shape';
 
 

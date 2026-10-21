@@ -3,7 +3,7 @@ import { Coord } from '../../../jscaip/Coord';
 import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -11,7 +11,6 @@ import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDire
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-
 
 describe('ConnectNMoveGenerator', () => {
 

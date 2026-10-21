@@ -60,15 +60,13 @@ describe('TriangularTopology', () => {
             const result: Set<Coord> = topology.getNeighbors(coord);
 
             // Then it should return the three neighbors
-            expect(
-                result.equals(
-                    new Set([
-                        new Coord(-1, 1),
-                        new Coord(1, 1),
-                        new Coord(0, 0),
-                    ]),
-                ),
-            ).toBeTrue();
+            expect(result.equals(
+                new Set([
+                    new Coord(-1, 1),
+                    new Coord(1, 1),
+                    new Coord(0, 0),
+                ]),
+            )).toBeTrue();
         });
 
         it('should return all 3 neighboring coordinates (odd coord)', () => {
@@ -80,15 +78,13 @@ describe('TriangularTopology', () => {
             const result: Set<Coord> = topology.getNeighbors(coord);
 
             // Then it should return the 3 neighbors
-            expect(
-                result.equals(
-                    new Set([
-                        new Coord(-1, 0),
-                        new Coord(1, 0),
-                        new Coord(0, 1),
-                    ]),
-                ),
-            ).toBeTrue();
+            expect(result.equals(
+                new Set([
+                    new Coord(-1, 0),
+                    new Coord(1, 0),
+                    new Coord(0, 1),
+                ]),
+            )).toBeTrue();
         });
     });
 });

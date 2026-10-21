@@ -5,12 +5,12 @@
     <g id="pieces">
         @for (coordAndContent of coordsAndContents(); track $index) {
             @if (coordAndContent.content.isReachable()) {
-                <g [attr.transform]="getTopologicTranslationAt(coordAndContent.coord)">
-                    <polygon [attr.id]="'click-' + getTopologicCellId(coordAndContent.coord)"
-                             [attr.points]="getTopologicPolygonAt(coordAndContent.coord)"
+                <g [attr.transform]="topologicTranslationMap().get(coordAndContent.coord).get()">
+                    <polygon [attr.id]="'click-' + topologicCellIdMap().get(coordAndContent.coord).get()"
+                             [attr.points]="topologicPolygonMap().get(coordAndContent.coord).get()"
                              (click)="onClick(coordAndContent.coord)"
                              class="base"
-                             [ngClass]="getSpaceClass(coordAndContent.coord.x, coordAndContent.coord.y)"
+                             [ngClass]="spaceClasses()[coordAndContent.coord.y][coordAndContent.coord.x]"
                     />
                 </g>
             }
@@ -18,29 +18,30 @@
     </g>
     @for (droppedCoord of droppedCoords(); track $index; let i = $index) {
         <polygon [attr.id]="'dropped-' + droppedCoord.x + '-' + droppedCoord.y"
-                 [attr.transform]="getTopologicTranslationAt(droppedCoord)"
-                 [attr.points]="getTopologicPolygonAt(droppedCoord)"
+                 [attr.transform]="topologicTranslationMap().get(droppedCoord).get()"
+                 [attr.points]="topologicPolygonMap().get(droppedCoord).get()"
                  (click)="onClick(droppedCoord)"
                  class="base"
-                 [ngClass]="getSpaceClass(droppedCoord.x, droppedCoord.y)"
+                 [ngClass]="spaceClasses()[droppedCoord.y][droppedCoord.x]"
                  class="base moved-stroke"
         />
     }
     @for (victoryCoord of victoryCoords(); track $index; let i = $index) {
         <polygon [attr.id]="'victory-coord-' + victoryCoord.x + '-' + victoryCoord.y"
-                 [attr.transform]="getTopologicTranslationAt(victoryCoord)"
-                 [attr.points]="getTopologicPolygonAt(victoryCoord)"
+                 [attr.transform]="topologicTranslationMap().get(victoryCoord).get()"
+
+                 [attr.points]="topologicPolygonMap().get(victoryCoord).get()"
                  class="base"
-                 [ngClass]="getSpaceClass(victoryCoord.x, victoryCoord.y)"
+                 [ngClass]="spaceClasses()[victoryCoord.y][victoryCoord.x]"
                  class="base moved-stroke"
         />
     }
     @for (lastMoved of lastMoveds(); track $index; let i = $index) {
         <polygon [attr.id]="'last-drop-' + lastMoved.x + '-' + lastMoved.y"
-                 [attr.transform]="getTopologicTranslationAt(lastMoved)"
-                 [attr.points]="getTopologicPolygonAt(lastMoved)"
+                 [attr.transform]="topologicTranslationMap().get(lastMoved).get()"
+                 [attr.points]="topologicPolygonMap().get(lastMoved).get()"
                  class="base"
-                 [ngClass]="getSpaceClass(lastMoved.x, lastMoved.y)"
+                 [ngClass]="spaceClasses()[lastMoved.y][lastMoved.x]"
                  class="base moved-stroke"
         />
     }

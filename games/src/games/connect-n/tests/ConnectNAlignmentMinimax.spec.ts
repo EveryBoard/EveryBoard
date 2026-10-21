@@ -17,7 +17,6 @@ import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-
 class ConnectNAlignmentMinimax
     extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
 {

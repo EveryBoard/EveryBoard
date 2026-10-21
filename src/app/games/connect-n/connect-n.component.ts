@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
 
-import { Coord, Table } from '@everyboard/games';
+import { Coord, Table, TableUtils } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -15,7 +15,6 @@ import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
-import { TableUtils } from 'games/src';
 
 @Component({
     selector: 'app-connect-n',
@@ -106,45 +105,28 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         return owners;
     });
 
-    // protected readonly spaceClasses: WritableSignal<ReadonlyArray<string>> = signal(() => {
-    //     return TableUtils.map(
-    //         this.ownerMap(),
-    //         (owner: PlayerOrNone) => {
-    //             const classes: string[] = [];
-    //             if (this.droppedCoords().contains(coord)) {
-    //                 classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
-    //                 classes.push('highlighted-stroke');
-    //             } else {
-    //                 classes.push(this.getPlayerClass(owner));
-    //                 if (this.victoryCoords().contains(coord)) {
-    //                     classes.push('victory-stroke');
-    //                 }
-    //                 if (this.lastMoveds().contains(coord)) {
-    //                     classes.push('last-move-stroke');
-    //                 }
-    //             }
-    //         },
-    //     );
-    // });
-
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
-        const owner: PlayerOrNone = this.state().getPieceAt(coord).getPlayer();
-        const classes: string[] = [];
-        if (this.droppedCoords().contains(coord)) {
-            classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
-            classes.push('highlighted-stroke');
-        } else {
-            classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords().contains(coord)) {
-                classes.push('victory-stroke');
-            }
-            if (this.lastMoveds().contains(coord)) {
-                classes.push('last-move-stroke');
-            }
-        }
-        return classes;
-    }
+    protected readonly spaceClasses: Signal<Table<ReadonlyArray<string>>> = computed(() => {
+        return TableUtils.map(
+            this.ownerMap(),
+            (owner: PlayerOrNone, x: number, y: number) => {
+                const coord: Coord = new Coord(x, y);
+                const classes: string[] = [];
+                if (this.droppedCoords().contains(coord)) {
+                    classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
+                    classes.push('highlighted-stroke');
+                } else {
+                    classes.push(this.getPlayerClass(owner));
+                    if (this.victoryCoords().contains(coord)) {
+                        classes.push('victory-stroke');
+                    }
+                    if (this.lastMoveds().contains(coord)) {
+                        classes.push('last-move-stroke');
+                    }
+                }
+                return classes;
+            },
+        );
+    });
 
     public override cancelMoveAttempt(): void {
         this.droppedCoords.set(new Set());
