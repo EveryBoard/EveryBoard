@@ -39,13 +39,7 @@ func (h *Handler) handleSubscribeGame(gameId model.GameID) error {
 			if configRoom == nil {
 				return apperror.ErrorUnknownGame
 			}
-			cg := &model.CurrentGame{
-				GameID:   gameId,
-				GameName: game.GameName,
-				Creator:  configRoom.Creator.User,
-				Opponent: configRoom.ChosenOpponent.MinimalUserOrNil(),
-				Role:     model.UserRoleObserver,
-			}
+			cg := model.NewCurrentGame(configRoom, model.UserRoleObserver)
 			if err = h.setCurrentGame(&buf, store, h.user, cg); err != nil {
 				return err
 			}
@@ -361,33 +355,13 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 				return err
 			}
 
-			creator := h.user
-			var opponent model.MinimalUser
-			if creator.ID == rematchGame.PlayerZero.User.ID {
-				opponent = rematchGame.PlayerOne.User
-			} else {
-				opponent = rematchGame.PlayerZero.User
-			}
-
 			// Set the current game of both players
-			cgZero := &model.CurrentGame{
-				GameID:   rematchGame.GameID,
-				GameName: rematchGame.GameName,
-				Creator:  creator,
-				Opponent: &opponent,
-				Role:     model.UserRolePlayer,
-			}
+			cgZero := model.NewCurrentGame(rematchConfigRoom, model.UserRolePlayer)
 			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerZero.User, cgZero); err != nil {
 				return err
 			}
 
-			cgOne := &model.CurrentGame{
-				GameID:   rematchGame.GameID,
-				GameName: rematchGame.GameName,
-				Creator:  creator,
-				Opponent: &opponent,
-				Role:     model.UserRolePlayer,
-			}
+			cgOne := model.NewCurrentGame(rematchConfigRoom, model.UserRolePlayer)
 			if err = h.setCurrentGame(&buf, store, rematchGame.PlayerOne.User, cgOne); err != nil {
 				return err
 			}

@@ -3,8 +3,8 @@ package store
 import "github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 
 type ConfigRoomStore interface {
-	GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error)
-	CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error)
+	GetConfigRoom(gameID model.GameID) (*model.ConfigRoom, error)
+	CreateConfigRoom(creator model.MinimalUser, gameName string, botIdentifier *model.BotIdentifier) (*model.ConfigRoom, error)
 	DeleteConfigRoom(configRoom *model.ConfigRoom) error
 	SelectOpponent(configRoom *model.ConfigRoom, opponent model.MinimalUser) error
 	RemoveOpponent(configRoom *model.ConfigRoom) error
@@ -14,19 +14,19 @@ type ConfigRoomStore interface {
 	FinishConfigRoom(configRoom *model.ConfigRoom) error
 	CreateRematch(configRoom *model.ConfigRoom, creator model.MinimalUser, game *model.Game) (*model.ConfigRoom, error)
 	ApplyToConfigRooms(action func(model.ConfigRoom) error) error
-	AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error
+	AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error
 	DeleteCandidate(configRoom *model.ConfigRoom, uid string) error
-	ApplyToCandidates(gameId model.GameID, action func(model.Candidate) error) error
+	ApplyToCandidates(gameID model.GameID, action func(model.Candidate) error) error
 }
 
 type GameStore interface {
 	ListGames() ([]model.Game, error)
-	GetGame(gameId model.GameID) (*model.Game, error)
+	GetGame(gameID model.GameID) (*model.Game, error)
 	CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error)
 	SetGameResult(game *model.Game, result model.Result) error
-	AddEvent(gameId model.GameID, event *model.GameEvent) error
-	ApplyToGameEvents(gameId model.GameID, action func(*model.GameEvent) error) error
-	ApplyToObservers(gameId model.GameID, action func(model.MinimalUser) error) error
+	AddEvent(gameID model.GameID, event *model.GameEvent) error
+	ApplyToGameEvents(gameID model.GameID, action func(*model.GameEvent) error) error
+	ApplyToObservers(gameID model.GameID, action func(model.MinimalUser) error) error
 }
 
 type EloStore interface {
@@ -43,8 +43,8 @@ type CurrentGameStore interface {
 }
 
 type ChatStore interface {
-	AddChatMessage(gameId model.GameID, message *model.Message) error
-	ApplyToMessagesOfGame(gameId model.GameID, action func(*model.Message) error) error
+	AddChatMessage(gameID model.GameID, message *model.Message) error
+	ApplyToMessagesOfGame(gameID model.GameID, action func(*model.Message) error) error
 }
 
 type Store interface {

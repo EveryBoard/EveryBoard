@@ -48,6 +48,7 @@ func migrateCandidates(db *gorm.DB) error {
 		{legacy: "user_id", current: "player_id"},
 		{legacy: "user_name", current: "player_name"},
 		{legacy: "elo", current: "player_elo"},
+		{legacy: "bot_identifier", current: "player_bot_identifier"},
 	}
 	for _, columns := range legacyColumns {
 		if !db.Migrator().HasColumn("candidates", columns.legacy) {

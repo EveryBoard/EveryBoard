@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { getUserDisplayName } from '../../../domain/BotIdentifier';
 import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
@@ -43,14 +44,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const currentGame: CurrentGame = this.currentGame().get();
         const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
         if (currentGame.role === 'Observer' || currentGame.role === 'Candidate') {
-            return $localize`${gameName} by ${currentGame.creator.name}`;
+            const creatorName: string = getUserDisplayName(
+                currentGame.creator,
+                currentGame.creatorBotIdentifier,
+            );
+            return $localize`${gameName} by ${creatorName}`;
         }
         if (currentGame.opponent == null) {
             return $localize`${gameName} (waiting for opponent)`;
         }
         const opponentName: string = this.connectedUser().id === currentGame.creator.id ?
-            Utils.getNonNullable(currentGame.opponent.name) :
-            currentGame.creator.name;
+            getUserDisplayName(
+                Utils.getNonNullable(currentGame.opponent),
+                currentGame.opponentBotIdentifier,
+            ) :
+            getUserDisplayName(currentGame.creator, currentGame.creatorBotIdentifier);
         return $localize`${gameName} against ${opponentName}`;
     });
 
