@@ -1,6 +1,6 @@
 module github.com/EveryBoard/EveryBoard
 
-go 1.26.9
+go 1.26.10
 
 require (
 	cloud.google.com/go/firestore v1.25.0
