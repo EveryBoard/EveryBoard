@@ -24,7 +24,7 @@ import { TriangularLayout } from '../layout/TriangularLayout';
 
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,
-                                             S extends TopologicGameState<P>,
+                                             S extends TopologicGameState<P, Direction>,
                                              P extends NonNullable<unknown>,
                                              C extends RulesConfig = EmptyRulesConfig,
                                              L = void>

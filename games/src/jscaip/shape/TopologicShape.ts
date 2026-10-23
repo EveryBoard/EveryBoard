@@ -21,6 +21,8 @@ export abstract class TopologicShape<D extends Direction> implements Shape<D> {
 
     public abstract isOnBoard(coord: Coord): boolean;
 
+    public abstract isNotOnBoard(coord: Coord): boolean;
+
     public abstract getNextCoord(coord: Coord, direction: D, distance: number): MGPOptional<Coord>;
 
 }

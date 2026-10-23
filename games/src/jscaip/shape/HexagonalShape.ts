@@ -40,7 +40,21 @@ export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
         const y: number = coord.y;
         const minyx: number = this.side - 1;
         const maxyx: number = 3 * minyx;
-        return minyx <= x + y && x + y <= maxyx;
+        return 0 <= x &&
+               0 <= y &&
+               minyx <= x + y &&
+               x + y <= maxyx;
+    }
+
+    public isNotOnBoard(coord: Coord): boolean {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const minyx: number = this.side - 1;
+        const maxyx: number = 3 * minyx;
+        return x < 0 ||
+               y < 0 ||
+               x + y < minyx ||
+               maxyx < x + y;
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {

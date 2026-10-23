@@ -63,6 +63,11 @@ export class TriangularShape<D extends Direction> extends TopologicShape<D> {
         return minyx <= coord.x + coord.y && coord.x - coord.y < this.side;
     }
 
+    public isNotOnBoard(coord: Coord): boolean {
+        const minyx: number = this.side - 1;
+        return coord.x + coord.y < minyx || this.side <= coord.x - coord.y;
+    }
+
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
         const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
         if (this.isOnBoard(next)) {

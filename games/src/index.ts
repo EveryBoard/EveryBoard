@@ -44,10 +44,11 @@ export { GipfCapture } from './jscaip/GipfProjectHelper'; // TODO: nooon
 export { GobanConfig } from './jscaip/GobanConfig';
 export { GobanUtils } from './jscaip/GobanUtils';
 export { HexaDirection } from './jscaip/HexaDirection';
+export { TriangularDirection } from './jscaip/TriangularDirection';
 export { FlatHexaOrientation, HexaOrientation, PointyHexaOrientation } from './jscaip/HexaOrientation';
 export { Line } from './jscaip/Line';
 export { Move } from './jscaip/Move';
-export { EightDirection as EightDirection } from './jscaip/EightDirection';
+export { EightDirection } from './jscaip/EightDirection';
 export { Orthogonal } from './jscaip/Orthogonal';
 export { Player, PlayerOrNone } from './jscaip/Player';
 export { PlayerMap, PlayerNumberMap } from './jscaip/PlayerMap';

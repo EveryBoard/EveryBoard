@@ -29,7 +29,7 @@ import { MGPValidators } from '../../utils/MGPValidator';
 import { ConnectNFailure } from './ConnectNFailure';
 import { ConnectNMove } from './ConnectNMove';
 
-export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
+export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece, Direction>> {}
 
 export const TopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
@@ -69,7 +69,7 @@ type HelperMapKey = {
 type HelperMap = MGPMap<HelperMapKey, TopologicNInARowHelper<FourStatePiece, Direction>>;
 
 export class ConnectNRules extends ConfigurableRules<ConnectNMove,
-                                                     TopologicGameState<FourStatePiece>,
+                                                     TopologicGameState<FourStatePiece, Direction>,
                                                      ConnectNConfig>
 {
     private static singleton: MGPOptional<ConnectNRules> = MGPOptional.empty();
@@ -143,7 +143,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         }
     }
 
-    public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
+    public static getVictoriousCoords(
+        state: TopologicGameState<FourStatePiece, Direction>,
+        config: ConnectNConfig,
+    ): Coord[] {
         return new TopologicNInARowHelper(
             (piece: FourStatePiece) => {
                 return piece.getPlayer();
@@ -158,10 +161,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override applyLegalMove(move: ConnectNMove,
-                                   state: TopologicGameState<FourStatePiece>,
-    ): TopologicGameState<FourStatePiece> {
+                                   state: TopologicGameState<FourStatePiece, Direction>,
+    ): TopologicGameState<FourStatePiece, Direction> {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        let resultingState: TopologicGameState<FourStatePiece> = state;
+        let resultingState: TopologicGameState<FourStatePiece, Direction> = state;
         for (const coord of move.coords) {
             resultingState = resultingState.withPieceAt(coord, player);
         }
@@ -169,7 +172,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override isLegal(move: ConnectNMove,
-                            state: TopologicGameState<FourStatePiece>,
+                            state: TopologicGameState<FourStatePiece, Direction>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
         if (state.turn === 0 && move.coords.size() > 1) {
@@ -189,7 +192,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return MGPValidation.SUCCESS;
     }
 
-    public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
+    public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece, Direction> {
         const topology: Topology<Direction> = ConnectNRules.getTopology(config);
         const shape: TopologicShape<Direction> = ConnectNRules.getShape(config, topology);
         let maxX: number = 0;
@@ -209,10 +212,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override getGameStatus(
-        node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece>>,
+        node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece, Direction>>,
         config: ConnectNConfig,
     ): GameStatus {
-        const state: TopologicGameState<FourStatePiece> = node.gameState;
+        const state: TopologicGameState<FourStatePiece, Direction> = node.gameState;
         const victoriousCoord: Coord[] = ConnectNRules.getVictoriousCoords(state, config);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
@@ -224,7 +227,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         }
     }
 
-    private isBoardFull(state: TopologicGameState<FourStatePiece>): boolean {
+    private isBoardFull(state: TopologicGameState<FourStatePiece, Direction>): boolean {
         return state
             .getAllCoords()
             .filter((coord: Coord) => {

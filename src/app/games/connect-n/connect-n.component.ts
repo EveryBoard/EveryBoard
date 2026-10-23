@@ -7,6 +7,7 @@ import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
 import { ConnectNAlignmentHeuristic } from '@everyboard/games/connect-n';
 import { ConnectNMove } from '@everyboard/games/connect-n';
 import { ConnectNMoveGenerator } from '@everyboard/games/connect-n';
@@ -24,7 +25,7 @@ import { TopologicGameComponent } from '../../components/game-components/topolog
 })
 export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
                                                               ConnectNMove,
-                                                              TopologicGameState<FourStatePiece>,
+                                                              TopologicGameState<FourStatePiece, Direction>,
                                                               FourStatePiece,
                                                               ConnectNConfig>
 {
@@ -55,7 +56,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: TopologicGameState<FourStatePiece> = this.state();
+        const state: TopologicGameState<FourStatePiece, Direction> = this.state();
         this.coordsAndContents.set(state.getCoordsAndContents());
         this.victoryCoords.set(new Set(
             ConnectNRules.getVictoriousCoords(state, this.config()),
@@ -93,11 +94,11 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         const owners: PlayerOrNone[][] = [];
         for (const coordAndContent of this.state().getCoordsAndContents()) {
             const y: number = coordAndContent.coord.y;
-            while (owners.length < y) {
+            while (owners.length <= y) {
                 owners.push([]);
             }
             const x: number = coordAndContent.coord.x;
-            while (owners[y].length < x) {
+            while (owners[y].length <= x) {
                 owners[y].push(PlayerOrNone.NONE);
             }
             owners[y][x] = coordAndContent.content.getPlayer();

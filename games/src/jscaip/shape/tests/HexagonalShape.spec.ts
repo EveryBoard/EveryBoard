@@ -78,5 +78,38 @@ describe('HexagonalShape', () => {
 
     });
 
+    describe('isOnBoard / isNotOnBoard', () => {
+
+        it('should include the good coords', () => {
+            // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
+            // and whose value are wether or not that coord should count as on board on a side=2 hexagon
+            const shape: HexagonalShape<Direction> = new HexagonalShape(2, topology);
+            const matrix: boolean[][] = [
+                [false, false, false, false, false],
+                [false, false,  true,  true, false],
+                [false,  true,  true,  true, false],
+                [false,  true,  true, false, false],
+                [false, false, false, false, false],
+            ];
+
+            // When checking each coord if they're on board
+            // Then reality should map this map
+            for (let y: number = 0; y < matrix.length; y++) {
+                for (let x: number = 0; x < matrix[y].length; x++) {
+                    const expected: boolean = matrix[y][x];
+                    const coord: Coord = new Coord(x - 1, y - 1);
+                    const isOnBoard: boolean = shape.isOnBoard(coord);
+                    const isNotOnBoard: boolean = shape.isNotOnBoard(coord);
+                    expect(isOnBoard)
+                        .withContext(`isOnBoard(${ coord.toString() }) should be ${ expected }`)
+                        .toBe(expected);
+                    expect(isNotOnBoard)
+                        .withContext(`isNotOnBoard(${ coord.toString() }) should be ${ !expected }`)
+                        .toBe(!expected);
+                }
+            }
+        });
+    });
+
 });
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '@everyboard/games';
+import { Coord, EightDirection, HexaDirection } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -15,6 +15,7 @@ import { TopologicGameStateWithTable } from '@everyboard/games';
 import { HexagonalTopology } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
 import { TriangularTopology } from '@everyboard/games';
+import { TriangularDirection } from '@everyboard/games';
 import { ConnectNMove } from '@everyboard/games/connect-n';
 import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 
@@ -83,7 +84,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -118,7 +119,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -156,7 +157,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -199,7 +200,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -238,7 +239,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -277,7 +278,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -320,7 +321,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 7);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -365,7 +366,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -403,7 +404,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
@@ -446,7 +447,7 @@ describe('ConnectNComponent', () => {
                     [N, X, X, _, _, _, _, _, N],
                     [_, X, _, _, _, _, _, _, _],
                 ], 7);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
                 triangularTopology,
                 new TriangularShape(5, triangularTopology),
                 gameState,
@@ -498,7 +499,7 @@ describe('ConnectNComponent', () => {
                     [_, _, _, _, _, _, N, N, N],
                     [_, _, _, _, _, N, N, N, N],
                 ], 8);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
                 hexagonalTopology,
                 new HexagonalShape(5, hexagonalTopology),
                 gameState,

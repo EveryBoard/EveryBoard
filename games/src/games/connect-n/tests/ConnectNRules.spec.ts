@@ -2,10 +2,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
+import { EightDirection } from '../../../jscaip/EightDirection';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { TriangularDirection } from '../../../jscaip/TriangularDirection';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { TorusShape } from '../../../jscaip/shape/TorusShape';
@@ -40,7 +42,7 @@ describe('ConnectNRules (with default config)', () => {
 
     let rules: ConnectNRules;
     const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-    const defaultShape: TopologicShape<Direction> = new RectangularShape(
+    const defaultShape: TopologicShape<EightDirection> = new RectangularShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
         defaultTopology,
@@ -54,7 +56,8 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should consider move illegal when coord is out of board', () => {
             // Given the initial state
-            const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
+            const state: TopologicGameState<FourStatePiece, EightDirection> =
+                ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
             const move: ConnectNMove = ConnectNMove.of([new Coord(-1, -1)]);
@@ -66,35 +69,35 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
+            const state: TopologicGameState<FourStatePiece, EightDirection> =
+                ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
             const move: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
 
             // Then the move should succeed
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable<FourStatePiece>([
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                ], 1);
-            const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            const expectedState: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 expectedGameState,
@@ -104,7 +107,8 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
-            const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
+            const state: TopologicGameState<FourStatePiece, EightDirection> =
+                ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping two pieces
             const move: ConnectNMove = ConnectNMove.of([new Coord(11, 11), new Coord(10, 10)]);
@@ -120,7 +124,7 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should forbid move where second coord is out of range', () => {
             // Given any board on second turn
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -141,7 +145,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -157,7 +161,7 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should forbid move where first coord is out of range', () => {
             // Given any board on second turn
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -178,7 +182,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -215,7 +219,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -253,7 +257,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -269,7 +273,7 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should allow move that drop two pieces on empty pieces', () => {
             // Given a board with pieces on it
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -290,7 +294,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -298,29 +302,28 @@ describe('ConnectNRules (with default config)', () => {
 
             // When dropping pieces on empty squares
             const move: ConnectNMove = ConnectNMove.of([new Coord(7, 7), new Coord(8, 8)]);
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable<FourStatePiece>([
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                ], 2);
-            const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 2);
+            const expectedState: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 expectedGameState,
@@ -332,7 +335,7 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should refuse dropping only one piece after first turn', () => {
             // Given a board that is not first turn
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -353,7 +356,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -368,7 +371,7 @@ describe('ConnectNRules (with default config)', () => {
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -389,7 +392,7 @@ describe('ConnectNRules (with default config)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -407,7 +410,7 @@ describe('ConnectNRules (with default config)', () => {
 
         it('should draw when no one can play anymore', () => {
             // Given the wildly unlikely case in which in 180 turn no one wins
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -428,7 +431,7 @@ describe('ConnectNRules (with default config)', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
             ], 180);
-            const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 gameState,
@@ -437,29 +440,28 @@ describe('ConnectNRules (with default config)', () => {
             // When playing the last 181st turn
             const move: ConnectNMove =
                 ConnectNMove.of([new Coord(17, 18), new Coord(18, 18)]);
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable<FourStatePiece>([
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                    [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
-                ], 181);
-            const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
+            ], 181);
+            const expectedState: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
                 expectedGameState,
@@ -515,7 +517,7 @@ describe('ConnectNRules (with hexagonal config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
             new RectangularShape(19, 19, hexagonalTopology),
             gameState,
@@ -558,7 +560,7 @@ describe('ConnectNRules (with hexagonal config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
             new RectangularShape(19, 19, hexagonalTopology),
             gameState,
@@ -601,7 +603,7 @@ describe('ConnectNRules (with hexagonal config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
             new RectangularShape(19, 19, hexagonalTopology),
             gameState,
@@ -624,7 +626,7 @@ describe('ConnectNRules (with hexagonal config)', () => {
             topology: 'HEXAGONAL',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -645,7 +647,7 @@ describe('ConnectNRules (with hexagonal config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
             new RectangularShape(19, 19, hexagonalTopology),
             gameState,
@@ -680,7 +682,7 @@ describe('ConnectNRules (with triangular config)', () => {
             topology: 'TRIANGULAR',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -702,7 +704,7 @@ describe('ConnectNRules (with triangular config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
             new TriangularShape(19, triangularTopology),
             gameState,
@@ -725,7 +727,7 @@ describe('ConnectNRules (with triangular config)', () => {
             topology: 'TRIANGULAR',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -747,7 +749,7 @@ describe('ConnectNRules (with triangular config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
             new TriangularShape(19, triangularTopology),
             gameState,
@@ -770,7 +772,7 @@ describe('ConnectNRules (with triangular config)', () => {
             topology: 'TRIANGULAR',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, X, X, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, X, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -792,7 +794,7 @@ describe('ConnectNRules (with triangular config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
             new TriangularShape(19, triangularTopology),
             gameState,
@@ -818,7 +820,8 @@ describe('ConnectNRules (with triangular config)', () => {
         };
 
         // When rendering initial state
-        const expectedInitialState: TopologicGameState<FourStatePiece> = rules.getInitialState(customConfig);
+        const expectedInitialState: TopologicGameState<FourStatePiece, TriangularDirection> =
+            rules.getInitialState(customConfig);
 
         // Then it should be a good sized triangle
         const gameState: SimpleGameStateWithTable<FourStatePiece> =
@@ -829,11 +832,12 @@ describe('ConnectNRules (with triangular config)', () => {
                 [N, _, _, _, _, _, _, _, N],
                 [_, _, _, _, _, _, _, _, _],
             ], 0);
-        const actualInitialState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-            triangularTopology,
-            new TriangularShape(5, triangularTopology),
-            gameState,
-        );
+        const actualInitialState: TopologicGameState<FourStatePiece, TriangularDirection> =
+            new TopologicGameStateWithTable(
+                triangularTopology,
+                new TriangularShape(5, triangularTopology),
+                gameState,
+            );
         expect(actualInitialState).toEqual(expectedInitialState);
     });
 });
@@ -878,7 +882,7 @@ describe('ConnectNRules (with rectangular torus config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
             new TorusShape(19, 19, squareTopology),
             gameState,
@@ -902,7 +906,7 @@ describe('ConnectNRules (with rectangular torus config)', () => {
             shape: 'TORIC',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -924,7 +928,7 @@ describe('ConnectNRules (with rectangular torus config)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
             new TorusShape(19, 19, squareTopology),
             gameState,
@@ -948,7 +952,7 @@ describe('ConnectNRules (with rectangular torus config)', () => {
             shape: 'TORIC',
         };
 
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -969,7 +973,7 @@ describe('ConnectNRules (with rectangular torus config)', () => {
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+        const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
             new TorusShape(19, 19, squareTopology),
             gameState,

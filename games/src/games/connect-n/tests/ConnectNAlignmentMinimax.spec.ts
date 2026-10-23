@@ -18,7 +18,7 @@ import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 class ConnectNAlignmentMinimax
-    extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
+    extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece, Direction>, ConnectNConfig>
 {
 
     public constructor() {
@@ -33,7 +33,7 @@ class ConnectNAlignmentMinimax
 
 describe('ConnectNAlignmentMinimax', () => {
 
-    let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
+    let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece, Direction>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
     const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
@@ -74,7 +74,7 @@ describe('ConnectNAlignmentMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 4);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+        const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,
@@ -117,7 +117,7 @@ describe('ConnectNAlignmentMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 3);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+        const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,
@@ -173,7 +173,7 @@ describe('ConnectNAlignmentMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+        const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,
@@ -212,7 +212,7 @@ describe('ConnectNAlignmentMinimax', () => {
             shape: 'HEXAGONAL',
             boardSize: 5,
         };
-        const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(customConfig);
+        const state: TopologicGameState<FourStatePiece, Direction> = ConnectNRules.get().getInitialState(customConfig);
         const node: ConnectNNode = new ConnectNNode(state);
 
         // When asking and applying best move

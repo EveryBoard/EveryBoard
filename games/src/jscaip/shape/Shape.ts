@@ -11,6 +11,8 @@ export interface Shape<D extends Direction> {
 
     isOnBoard(coord: Coord): boolean;
 
+    isNotOnBoard(coord: Coord): boolean;
+
     getNextCoord(coord: Coord, direction: D, distance: number): MGPOptional<Coord>;
 
 }

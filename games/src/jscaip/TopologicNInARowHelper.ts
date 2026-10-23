@@ -20,6 +20,5 @@ export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Di
 
     protected override getNextCoord(coord: Coord, dir: D, distance: number = 1): MGPOptional<Coord> {
         return this.shape.getNextCoord(coord, dir, distance);
-        // TODO: Toric shape must only have EVEN triangular board
     }
 }

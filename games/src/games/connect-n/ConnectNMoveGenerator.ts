@@ -2,6 +2,7 @@ import { Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectNMove } from '../connect-n/ConnectNMove';
@@ -9,7 +10,7 @@ import { ConnectNMove } from '../connect-n/ConnectNMove';
 import { ConnectNConfig, ConnectNNode } from './ConnectNRules';
 
 export class ConnectNMoveGenerator
-    extends MoveGenerator<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
+    extends MoveGenerator<ConnectNMove, TopologicGameState<FourStatePiece, Direction>, ConnectNConfig>
 {
 
     public override getListMoves(node: ConnectNNode, config: ConnectNConfig): ConnectNMove[] {
@@ -20,7 +21,7 @@ export class ConnectNMoveGenerator
         }
     }
 
-    private getFirstMove(state: TopologicGameState<FourStatePiece>): ConnectNMove[] {
+    private getFirstMove(state: TopologicGameState<FourStatePiece, Direction>): ConnectNMove[] {
         const centers: Coord[] = state.getCenters();
         const center: Coord = centers[0];
         return [
@@ -46,7 +47,7 @@ export class ConnectNMoveGenerator
     }
 
     private getBiggerMove(
-        state: TopologicGameState<FourStatePiece>,
+        state: TopologicGameState<FourStatePiece, Direction>,
         ongoingMove: Set<Coord>,
         initialCoords: Set<Coord>,
     ): Set<Set<Coord>> {
@@ -64,7 +65,7 @@ export class ConnectNMoveGenerator
     /**
      * This function returns the set of coords that are empty but have occupied neighbors
      */
-    private getUsefulCoordsMap(state: TopologicGameState<FourStatePiece>): Set<Coord> {
+    private getUsefulCoordsMap(state: TopologicGameState<FourStatePiece, Direction>): Set<Coord> {
         let usefulCoord: Set<Coord> = new Set();
         const coordsAndContents: { coord: Coord; content: FourStatePiece }[] = state.getCoordsAndContents();
         const playerCoordsAndContents: { coord: Coord; content: FourStatePiece }[] = coordsAndContents
@@ -84,7 +85,7 @@ export class ConnectNMoveGenerator
      * @param coord the coord to add to this map
      */
     private getNeighboringCoords(
-        state: TopologicGameState<FourStatePiece>,
+        state: TopologicGameState<FourStatePiece, Direction>,
         coord: Coord,
     ): Set<Coord> {
         return new Set([
@@ -92,7 +93,7 @@ export class ConnectNMoveGenerator
         ]);
     }
 
-    private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece>, coord: Coord): Set<Coord> {
+    private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece, Direction>, coord: Coord): Set<Coord> {
         return state.getTopology()
             .getNeighbors(coord)
             .filter((c: Coord) => state.isOnBoard(c))

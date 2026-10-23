@@ -34,7 +34,7 @@ describe('ConnectNMoveGenerator', () => {
         // Given the initial node
         const width: number = defaultConfig.boardSize;
         const height: number = defaultConfig.boardSize;
-        const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
+        const state: TopologicGameState<FourStatePiece, Direction> = ConnectNRules.get().getInitialState(defaultConfig);
         const node: ConnectNNode = new ConnectNNode(state);
 
         // When listing the moves
@@ -75,7 +75,7 @@ describe('ConnectNMoveGenerator', () => {
                 ],
                 3,
             );
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+        const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,
