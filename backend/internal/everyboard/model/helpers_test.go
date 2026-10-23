@@ -2,9 +2,11 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func ExpectMarshallingToWorkBothWays[T any](t *testing.T, object T, expectedJSON string) {
@@ -19,10 +21,10 @@ func ExpectMarshallingToWork[T any](t *testing.T, object T, expectedJSON string)
 
 	// When mashalling it
 	data, err := json.Marshal(object)
-	assert.Nil(t, err, "failed to marshal")
+	require.NoError(t, err, "failed to marshal")
 
 	// Then it should provide the expected JSON
-	assert.Equal(t, expectedJSON, string(data), "serializing does not provide the expected JSON")
+	assert.JSONEq(t, expectedJSON, string(data), "serializing does not provide the expected JSON")
 }
 
 func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) {
@@ -30,7 +32,7 @@ func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) 
 	// When unmarshalling it
 	var objectAgain T
 	err := json.Unmarshal([]byte(validJSON), &objectAgain)
-	assert.Nil(t, err, "deserialization failed")
+	require.NoError(t, err, "deserialization failed")
 
 	// Then it should match the expected object
 	// We need to check it with deep equality in case there are pointers due to nullable values
