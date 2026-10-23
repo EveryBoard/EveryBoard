@@ -297,8 +297,8 @@ func TestApplyToObservers(t *testing.T) {
 	// Then we should see exactly two observers
 	expectObservers := func(count int) {
 		seen := 0
-		err := store.ApplyToObservers(42, func(user model.MinimalUser) error {
-			seen = seen + 1
+		err := store.ApplyToObservers(42, func(_ model.MinimalUser) error {
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate observers")
@@ -322,7 +322,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	errors := make(chan error, numRequests)
 
 	for i := range numRequests {
-		go func(id int) {
+		go func(_ int) {
 			defer wg.Done()
 
 			err := dbStore.Transaction(func(s Store) error {
@@ -382,6 +382,6 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	t.Logf("Games in DB: %d", len(configRooms))
 
 	// Then it should have been exactly 1
-	assert.Equal(t, 1, len(configRooms), "Should only have created one game")
+	assert.Len(t, configRooms, 1, "Should only have created one game")
 	assert.Equal(t, 1, numSuccess, "Should only have one successful creation")
 }

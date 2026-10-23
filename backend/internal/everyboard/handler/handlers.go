@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
@@ -107,9 +108,8 @@ func (h *Handler) Handle(messageType string, messageData map[string]json.RawMess
 	if err == nil {
 		return
 	}
-	e, ok := err.(apperror.BackendError)
-	if ok {
-		h.SendError(e)
+	if backendError, ok := errors.AsType[apperror.BackendError](err); ok {
+		h.SendError(backendError)
 		return
 	}
 	printableData, _ := json.Marshal(messageData)

@@ -1,7 +1,7 @@
 package ws
 
 import (
-	"fmt"
+	"errors"
 	"sync"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -70,8 +70,8 @@ func (s *FakeStore) ConfigRoomForTest(gameId model.GameID) *model.ConfigRoom {
 	if configRoom == nil {
 		return nil
 	}
-	copy := *configRoom
-	return &copy
+	clone := *configRoom
+	return &clone
 }
 
 func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
@@ -81,8 +81,8 @@ func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
 	if game == nil {
 		return nil
 	}
-	copy := *game
-	return &copy
+	clone := *game
+	return &clone
 }
 
 func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
@@ -92,8 +92,8 @@ func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
 	if currentGame == nil {
 		return nil
 	}
-	copy := *currentGame
-	return &copy
+	clone := *currentGame
+	return &clone
 }
 
 func (s *FakeStore) CandidatesForTest(gameId model.GameID) []model.Candidate {
@@ -326,7 +326,7 @@ func (s *FakeStore) GetGame(gameId model.GameID) (*model.Game, error) {
 
 func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
 	if configRoom.ChosenOpponent == nil {
-		return nil, fmt.Errorf("cannot create a game if a config room has no opponent")
+		return nil, errors.New("cannot create a game if a config room has no opponent")
 	}
 
 	starter := configRoom.FirstPlayer

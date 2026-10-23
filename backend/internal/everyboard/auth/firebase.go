@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -23,7 +24,7 @@ type FirebaseLike interface {
 	// linking what is done here with the request being handled; this is a go
 	// concept that allows for example to cancel the firestore request in case
 	// the client that made the initial request has left.
-	Fetch(context context.Context, collection string, path string) (map[string]interface{}, error)
+	Fetch(context context.Context, collection string, path string) (map[string]any, error)
 	// Verify an identity token and returns the user id that it corresponds to.
 	// If it's not a valid token, it returns an error instead.
 	VerifyToken(context context.Context, token string) (string, error)
@@ -54,25 +55,25 @@ type Firebase struct {
 func (f *Firebase) Initialize() error {
 	if f.UseEmulator {
 		if f.ProjectID == "" {
-			return fmt.Errorf("Project ID is not set but emulator needs it. Use PROJECT_ID environment variable")
+			return errors.New("project ID is not set but emulator needs it; use PROJECT_ID environment variable")
 		}
 
 		// Need to prepare the environment variable otherwise the firebase lib will not like it
 		err := os.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
 		if err != nil {
-			return fmt.Errorf("Cannot set environment variable?! %v", err)
+			return fmt.Errorf("cannot set FIRESTORE_EMULATOR_HOST: %w", err)
 		}
 		err = os.Setenv("FIREBASE_AUTH_EMULATOR_HOST", "localhost:9099")
 		if err != nil {
-			return fmt.Errorf("Cannot set environment variable?! %v", err)
+			return fmt.Errorf("cannot set FIREBASE_AUTH_EMULATOR_HOST: %w", err)
 		}
 	} else {
 		if f.ServiceAccountFile == "" {
-			return fmt.Errorf("Service account file is not set. Use SERVICE_ACCOUNT environment variable")
+			return errors.New("service account file is not set; use SERVICE_ACCOUNT environment variable")
 		}
 		_, err := os.Stat(f.ServiceAccountFile)
 		if err != nil {
-			return fmt.Errorf("Cannot access service account file %s: %v", f.ServiceAccountFile, err)
+			return fmt.Errorf("cannot access service account file %s: %w", f.ServiceAccountFile, err)
 		}
 	}
 
@@ -82,24 +83,24 @@ func (f *Firebase) Initialize() error {
 		conf := &firebase.Config{ProjectID: f.ProjectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 		if err != nil {
-			return fmt.Errorf("cannot initialize firebase with emulator: %v", err)
+			return fmt.Errorf("cannot initialize firebase with emulator: %w", err)
 		}
 	} else {
 		opts := option.WithAuthCredentialsFile(option.ServiceAccount, f.ServiceAccountFile)
 		app, err = firebase.NewApp(context.Background(), nil, opts)
 		if err != nil {
-			return fmt.Errorf("cannot connect to firebase: %v", err)
+			return fmt.Errorf("cannot connect to firebase: %w", err)
 		}
 	}
 
 	authClient, err := app.Auth(context.Background())
 	if err != nil {
-		return fmt.Errorf("cannot setup firebase auth: %v", err)
+		return fmt.Errorf("cannot setup firebase auth: %w", err)
 	}
 
 	firestoreClient, err := app.Firestore(context.Background())
 	if err != nil {
-		return fmt.Errorf("cannot setup firebase firestore: %v", err)
+		return fmt.Errorf("cannot setup firebase firestore: %w", err)
 	}
 
 	f.auth = authClient
@@ -107,11 +108,11 @@ func (f *Firebase) Initialize() error {
 	return nil
 }
 
-func (f Firebase) Fetch(context context.Context, collection string, path string) (map[string]interface{}, error) {
+func (f Firebase) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
 	docRef := f.firestore.Collection(collection).Doc(path)
 	docSnapshot, err := docRef.Get(context)
 	if err != nil {
-		return nil, fmt.Errorf("cannot fetch document: %v", err)
+		return nil, fmt.Errorf("cannot fetch document: %w", err)
 	}
 	return docSnapshot.Data(), nil
 }
@@ -122,35 +123,34 @@ func (f Firebase) VerifyToken(context context.Context, token string) (string, er
 		// So we need to manually check the token that is created by the emulator.
 		tokenParts := strings.Split(token, ".")
 		if len(tokenParts) != 3 {
-			return "", fmt.Errorf("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
+			return "", errors.New("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
 		}
 
 		// We only care here about the second part, which contains the payload
 		payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
 		if err != nil {
-			return "", fmt.Errorf("invalid payload encoding") // payload is not a b64 string
+			return "", errors.New("invalid payload encoding") // payload is not a b64 string
 		}
 
-		var claims map[string]interface{}
+		var claims map[string]any
 		err = json.Unmarshal(payloadBytes, &claims)
 		if err != nil {
-			return "", fmt.Errorf("invalid payload") // payload cannot be decoded as a map
+			return "", errors.New("invalid payload") // payload cannot be decoded as a map
 		}
 
 		sub, ok := claims["sub"].(string)
 		if !ok {
-			return "", fmt.Errorf("missing 'sub' part of token")
+			return "", errors.New("missing 'sub' part of token")
 		}
 		return sub, nil
-	} else {
-		verifiedToken, err := f.auth.VerifyIDToken(context, token)
-		if err != nil {
-			return "", fmt.Errorf("invalid token: %v", err)
-		}
-		user_id, ok := verifiedToken.Claims["user_id"].(string)
-		if !ok {
-			return "", fmt.Errorf("missing 'user_id' part of token")
-		}
-		return user_id, err
 	}
+	verifiedToken, err := f.auth.VerifyIDToken(context, token)
+	if err != nil {
+		return "", fmt.Errorf("invalid token: %w", err)
+	}
+	user_id, ok := verifiedToken.Claims["user_id"].(string)
+	if !ok {
+		return "", errors.New("missing 'user_id' part of token")
+	}
+	return user_id, err
 }

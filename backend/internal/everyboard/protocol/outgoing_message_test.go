@@ -3,6 +3,8 @@ package protocol
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/stretchr/testify/require"
 )
