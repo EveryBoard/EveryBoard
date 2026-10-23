@@ -21,6 +21,8 @@ func w(end EndType) float64 {
 		return 0.5
 	case Victory:
 		return 1
+	case Loss:
+		return 0
 	default:
 		return 0
 	}
@@ -31,9 +33,8 @@ func k(gamesPlayed uint) float64 {
 		return 60.
 	} else if gamesPlayed < 40 {
 		return 40.
-	} else {
-		return 20.
 	}
+	return 20.
 }
 
 func winProbability(eloOfWinner float64, eloOfLoser float64) float64 {
@@ -52,13 +53,11 @@ func newEloValue(oldEloValue float64, difference float64) float64 {
 			return 1.0 // Losing their first match, they win 1 elo
 		} else if oldEloValue <= 100.0 {
 			return oldEloValue // They don't lose elo if they are below 100
-		} else {
-			// Otherwise, they can't go below 100
-			return math.Max(100.0, oldEloValue+difference)
 		}
-	} else {
-		return oldEloValue + difference
+		// Otherwise, they can't go below 100
+		return math.Max(100.0, oldEloValue+difference)
 	}
+	return oldEloValue + difference
 }
 
 func ComputeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) model.Elo {

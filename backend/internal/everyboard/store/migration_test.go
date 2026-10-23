@@ -49,7 +49,7 @@ func TestMigrateCandidatesRemovesLegacyColumns(t *testing.T) {
 	require.NoError(t, db.First(&candidate, 1).Error, "cannot read migrated candidate")
 	assert.Equal(t, model.GameID(12), candidate.GameID)
 	assert.Equal(t, model.MinimalUser{ID: "foo", Name: "Foo"}, candidate.PlayerInfo.User)
-	assert.Equal(t, 42.0, candidate.PlayerInfo.Elo)
+	assert.InDelta(t, 42.0, candidate.PlayerInfo.Elo, 0.000001)
 
 	store := &GORMStore{db: db}
 	err = store.AddCandidate(

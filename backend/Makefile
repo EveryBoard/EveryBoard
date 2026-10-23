@@ -26,14 +26,14 @@ format:
 	go fmt ./...
 
 test:
-	go test ./... -failfast
+	go test $(GO_TEST_FLAGS) ./... -failfast
 
 test-postgres:
 	@test -n "$$POSTGRES_TEST_DSN" || (echo "POSTGRES_TEST_DSN must be set" >&2; exit 1)
-	go test ./... -run '^TestPostgres' -count=1
+	go test $(GO_TEST_FLAGS) ./... -run '^TestPostgres' -count=1
 
 coverage:
-	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
+	go test $(GO_TEST_FLAGS) ./... -coverpkg=./... -cover -coverprofile=coverage.out
 
 view-coverage: coverage
 	go tool cover -html=coverage.out -o coverage.html
@@ -47,7 +47,13 @@ check-fmt:
 	test -z "$$(gofmt -l .)"
 
 lint:
-	golangci-lint run
+	go tool golangci-lint run
+
+vet:
+	go vet ./...
+
+vulncheck:
+	go tool govulncheck ./...
 
 clean:
 	go clean -testcache
@@ -72,4 +78,4 @@ docker: prod
 deploy: docker
 	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d --network everyboard -p $(listen-port):8081 -e DISCORD_WEBHOOK_URL='$$DISCORD_WEBHOOK_URL' -e FRONTEND_URL='$$FRONTEND_URL' backend-$(target) /backend $(args)" < "backend-$(target).tar"
 
-.PHONY: build deps tidy run test test-postgres coverage view-coverage check-coverage lint clean prod deploy
+.PHONY: build deps tidy run test test-postgres coverage view-coverage check-coverage check-fmt lint vet vulncheck clean prod deploy
