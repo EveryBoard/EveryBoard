@@ -19,13 +19,13 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 
 	// Given an established connection
 	c := EstablishWebSocketConnection(t, "foo")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// When subscribing to lobby
 	sendRawMessage(t, c, `["SubscribeLobby"]`)
 	time.Sleep(100 * time.Millisecond)
 
-	// Then we should should be subscribed
+	// Then we should be subscribed
 	require.True(t, config.Subscriptions.IsSubscribed("foo"), "user should be subscribed to lobby")
 }
 
@@ -62,7 +62,7 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 
 	// Given an established connection to a server with a config room and a lobby message
 	c := EstablishWebSocketConnection(t, "bar")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// When subscribing to the lobby
 	sendRawMessage(t, c, `["SubscribeLobby"]`)
@@ -80,7 +80,7 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -89,7 +89,7 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 	t.Run("AlreadyInGame", func(t *testing.T) {
 		uid := "user_already_in_game"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		fakeStore.SetCurrentGameForTest(uid, &model.CurrentGame{
 			GameID: model.GameID(1000),
@@ -109,7 +109,7 @@ func TestLobbyUserCannotSendMove(t *testing.T) {
 	defer stopServer()
 
 	c := EstablishWebSocketConnection(t, "malicious")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	sendRawMessage(t, c, `["SubscribeLobby"]`)
 	// When they send a move
