@@ -3,19 +3,19 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { Direction } from '../../Direction';
-import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
+import { TriangularTopology } from '../../topology/TriangularTopology';
 import { Topology } from '../../topology/Topology';
 import { TriangularShape } from '../TriangularShape';
+import { TriangularDirection } from '../../TriangularDirection';
 
 describe('TriangularShape', () => {
 
-    const topology: Topology<Direction> = new EightDirectionSquareTopology();
+    const topology: Topology<TriangularDirection> = new TriangularTopology();
 
     describe('getCenters', () => {
 
         it('should return the center for side 1', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(1, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(1, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -26,7 +26,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 2', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(2, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(2, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -37,7 +37,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the 6 centers for side 3', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(3, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(3, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -49,7 +49,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 4', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(4, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(4, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -60,7 +60,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 5', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(5, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(5, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -71,7 +71,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the 6 centers for side 6', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(6, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(6, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -87,7 +87,7 @@ describe('TriangularShape', () => {
     describe('getAllCoords', () => {
 
         it('should return the correct coordinates for side 1', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(1, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
@@ -95,7 +95,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the correct coordinates for side 2', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(2, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
 
@@ -107,7 +107,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the correct coordinates for side 3', () => {
-            const shape: TriangularShape<Direction> = new TriangularShape(3, topology);
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([
@@ -119,5 +119,36 @@ describe('TriangularShape', () => {
         });
 
     });
+
+    describe('isOnBoard / isNotOnBoard', () => {
+
+        it('should include the good coords', () => {
+            // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
+            // and whose value are wether or not that coord should count as on board on a side=2 triangle
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(2, topology);
+            const matrix: boolean[][] = [
+                [false, false, false, false, false],
+                [false, false, true, false, false],
+                [false, true, true, true, false],
+                [false, false, false, false, false],
+            ];
+
+            // When checking each coord if they're on board
+            // Then reality should map this map
+            for (let y: number = 0; y < matrix.length; y++) {
+                for (let x: number = 0; x < matrix[y].length; x++) {
+                    const expected: boolean = matrix[y][x];
+                    const coord: Coord = new Coord(x - 1, y - 1);
+                    const isOnBoard: boolean = shape.isOnBoard(coord);
+                    const isNotOnBoard: boolean = shape.isNotOnBoard(coord);
+                    expect(isOnBoard)
+                        .withContext(`isOnBoard(${ coord.toString() }) should be ${ expected }`)
+                        .toBe(expected);
+                    expect(isNotOnBoard)
+                        .withContext(`isNotOnBoard(${ coord.toString() }) should be ${ !expected }`)
+                        .toBe(!expected);
+                }
+            }
+        });
 
 });

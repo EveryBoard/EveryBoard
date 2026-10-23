@@ -29,9 +29,6 @@ export class HexagonalTopology implements Topology<HexaDirection> {
             ...this.getDirections().map(
                 (direction: HexaDirection) => this.getNextCoord(coord, direction),
             ),
-            ...this.getDirections().map(
-                (direction: HexaDirection) => this.getNextCoord(coord, direction, -1),
-            ),
         ]);
     }
 

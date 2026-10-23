@@ -1,14 +1,13 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
 import { EightDirection } from '../EightDirection';
 
 import { Topology } from './Topology';
 
 export class EightDirectionSquareTopology implements Topology<EightDirection> {
 
-    private readonly directions: Set<Direction> = new Set([
+    private readonly directions: Set<EightDirection> = new Set([
         EightDirection.UP,
         EightDirection.UP_RIGHT,
         EightDirection.RIGHT,
@@ -19,21 +18,18 @@ export class EightDirectionSquareTopology implements Topology<EightDirection> {
         EightDirection.UP_LEFT,
     ]);
 
-    public getDirections(): Set<Direction> {
+    public getDirections(): Set<EightDirection> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
+    public getNextCoord(coord: Coord, direction: EightDirection, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction),
-            ),
-            ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction, -1),
+                (direction: EightDirection) => this.getNextCoord(coord, direction),
             ),
         ]);
     }

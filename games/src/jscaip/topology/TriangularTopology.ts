@@ -1,8 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
-import { EightDirection } from '../EightDirection';
+import { EightDirection } from '../EightDirection'; // TODO: kill this, it make no fucking sens in the hell of dead !
 import { TriangularDirection } from '../TriangularDirection';
 import { Vector } from '../Vector';
 
@@ -10,7 +9,7 @@ import { Topology } from './Topology';
 
 export class TriangularTopology implements Topology<TriangularDirection> {
 
-    private readonly directions: Set<Direction> = new Set([
+    private readonly directions: Set<TriangularDirection> = new Set([
         TriangularDirection.LEFT,
         TriangularDirection.UP_LEFT,
         TriangularDirection.UP_RIGHT,
@@ -19,7 +18,7 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         TriangularDirection.DOWN_LEFT,
     ]);
 
-    public getDirections(): Set<Direction> {
+    public getDirections(): Set<TriangularDirection> {
         return this.directions;
     }
 

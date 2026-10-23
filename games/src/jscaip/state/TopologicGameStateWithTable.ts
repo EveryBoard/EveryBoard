@@ -20,7 +20,15 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>, D exten
     }
 
     public override getCoordsAndContents(): { coord: Coord; content: P }[] {
-        return this.gameStateWithTable.getCoordsAndContents();
+        return this
+            .getShape()
+            .getAllCoords()
+            .map((coord: Coord) => {
+                return {
+                    coord,
+                    content: this.gameStateWithTable.getPieceAt(coord),
+                };
+            });
     }
 
     public getPieceAt(coord: Coord): P {

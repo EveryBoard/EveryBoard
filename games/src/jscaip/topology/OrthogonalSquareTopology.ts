@@ -28,9 +28,6 @@ export class OrthogonalSquareTopology implements Topology<Orthogonal> {
             ...this.getDirections().map(
                 (direction: Orthogonal) => this.getNextCoord(coord, direction),
             ),
-            ...this.getDirections().map(
-                (direction: Orthogonal) => this.getNextCoord(coord, direction, -1),
-            ),
         ]);
     }
 
