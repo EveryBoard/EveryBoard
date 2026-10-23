@@ -107,6 +107,7 @@ type ConfigRoom struct {
 	GameName       string          `gorm:"not null" json:"gameName"`
 }
 
+// AfterFind restores a nil chosen opponent when GORM initializes the embedded pointer from NULL columns.
 func (c *ConfigRoom) AfterFind(_ *gorm.DB) error {
 	if c.ChosenOpponent != nil && c.ChosenOpponent.User.ID == "" {
 		c.ChosenOpponent = nil
