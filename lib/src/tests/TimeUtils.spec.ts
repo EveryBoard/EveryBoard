@@ -11,7 +11,7 @@ describe('TimeUtils', () => {
             // Given a sleep promise of 100ms
             let resolved: boolean = false;
             const sleepPromise: Promise<void> = TimeUtils.sleep(100);
-            sleepPromise.then(() => resolved = true);
+            void sleepPromise.then(() => resolved = true);
 
             // When 99 ms have elapsed
             jasmine.clock().tick(99);
