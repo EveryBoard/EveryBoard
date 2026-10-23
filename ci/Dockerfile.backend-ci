@@ -4,7 +4,7 @@ RUN npm install --global firebase-tools@15.29.0 \
     && npm cache clean --force \
     && firebase setup:emulators:firestore
 
-FROM golang:1.26.9-trixie AS ci
+FROM golang:1.26.10-trixie AS ci
 
 ENV PATH=/usr/local/bin:$PATH
 
