@@ -1,19 +1,20 @@
 package session
 
 import (
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
-	"github.com/stretchr/testify/require"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
+	"github.com/stretchr/testify/require"
 )
 
 func TestConnectionWorkflow(t *testing.T) {
 	// Given a connection manager with no connection for a user
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	manager := NewConnectionManager[*MockConnection]()
-	require.Equal(t, 0, len(manager.AllUserConnections(user)), "user should not have connections before adding one")
+	require.Empty(t, manager.AllUserConnections(user), "user should not have connections before adding one")
 
 	// When we add a connection
 	connection := &MockConnection{ID: 42}
@@ -21,7 +22,7 @@ func TestConnectionWorkflow(t *testing.T) {
 
 	// Then it should be there
 	connections := manager.AllUserConnections(user)
-	require.Equal(t, 1, len(connections), "user should have one connection")
+	require.Len(t, connections, 1, "user should have one connection")
 
 	require.True(t, connections.Has(connection), "user connections should contain the added connection")
 
@@ -30,7 +31,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.AddConnection(user, otherConnection)
 	// Then it should be there along with the other one
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 2, len(connections), "user should have two connections")
+	require.Len(t, connections, 2, "user should have two connections")
 
 	require.True(t, connections.Has(connection), "user connections should contain the first connection")
 	require.True(t, connections.Has(otherConnection), "user connections should contain the second connection")
@@ -47,7 +48,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.RemoveConnection(user, connection)
 	// Then it shouldn't be there
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 1, len(connections), "user should have one connection after removing one")
+	require.Len(t, connections, 1, "user should have one connection after removing one")
 
 	require.True(t, connections.Has(otherConnection), "remaining connection should still be registered")
 
@@ -55,7 +56,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	manager.RemoveConnection(user, otherConnection)
 	// Then we should not have any more connection
 	connections = manager.AllUserConnections(user)
-	require.Equal(t, 0, len(connections), "user should have no connections after removing all")
+	require.Empty(t, connections, "user should have no connections after removing all")
 }
 
 type CountMessagesConnection struct {
@@ -63,13 +64,13 @@ type CountMessagesConnection struct {
 	receiveNext      chan struct{} // to signal that we should receive the next message
 }
 
-func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) error {
+func (c *CountMessagesConnection) WriteMessage(_ int, _ []byte) error {
 	<-c.receiveNext // wait for being signalled to receive the next message (to simulate network delays)
 	c.messagesReceived.Add(1)
 	return nil
 }
 
-func (c *CountMessagesConnection) SetWriteDeadline(t time.Time) error {
+func (c *CountMessagesConnection) SetWriteDeadline(_ time.Time) error {
 	return nil
 }
 
@@ -86,13 +87,13 @@ func TestManyMessages(t *testing.T) {
 	manager.AddConnection(user, connection)
 	// When sending many messages (to simulate a player reconnecting and receiving all events)
 	numberOfMessages := 100
-	for _ = range numberOfMessages {
+	for range numberOfMessages {
 		manager.SendMessage(connection, protocol.ChatMessage{})
 	}
 
 	// Then it should not lose messages
 	require.Equal(t, int32(0), connection.messagesReceived.Load(), "connection should not receive messages before processing starts")
-	for _ = range numberOfMessages {
+	for range numberOfMessages {
 		connection.receiveNext <- struct{}{} // will make it receive one more message
 	}
 	time.Sleep(100 * time.Millisecond) // wait a bit to make sure every message has been processed
