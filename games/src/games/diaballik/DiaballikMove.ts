@@ -1,10 +1,10 @@
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Move } from '../../jscaip/Move';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { EightDirection } from '../../jscaip/EightDirection';
 import { Vector } from '../../jscaip/Vector';
 
 import { DiaballikFailure } from './DiaballikFailure';

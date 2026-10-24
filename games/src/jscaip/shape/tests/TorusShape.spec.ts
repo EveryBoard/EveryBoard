@@ -2,14 +2,14 @@
 import { MGPOptional, Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { Direction } from '../../Direction';
 import { EightDirection } from '../../EightDirection';
+import { HexaDirection } from '../../HexaDirection';
+import { TriangularDirection } from '../../TriangularDirection';
 import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
 import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { TorusShape } from '../TorusShape';
-import { HexaDirection, TriangularDirection } from 'games/dist';
 
 describe('TorusShape (with Square Topology)', () => {
 

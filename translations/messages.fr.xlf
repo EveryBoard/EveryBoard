@@ -1813,7 +1813,7 @@
         <source>Pieces &gt; Tiles &gt; Freedom</source>
         <target>Pièces &gt; Tuiles &gt; Libertés</target>
       </trans-unit>
-      <trans-unit id="6820617839935911342" datatype="html">
+      <trans-unit id="7251690675139944568" datatype="html">
         <source>At your first turn, you must drop exactly one piece</source>
         <target>Le premier tour doit contenir exactmenent une pièce</target>
       </trans-unit>
@@ -2729,6 +2729,10 @@
       <trans-unit id="4461597806169026629" datatype="html">
         <source>Board shape</source>
         <target>Forme du plateau</target>
+      </trans-unit>
+      <trans-unit id="330049428969329849" datatype="html">
+        <source>Toric board with triangle space should have even width</source>
+        <target>Les plateau toriques avec des cases triangulaire doivent avoir des largeur paires</target>
       </trans-unit>
       <trans-unit id="5964817756364095565" datatype="html">
         <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>

@@ -1,8 +1,8 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
 import { EightDirection } from '../../jscaip/EightDirection';
+import { MoveCoord } from '../../jscaip/MoveCoord';
 
 import { EpaminondasFailure } from './EpaminondasFailure';
 

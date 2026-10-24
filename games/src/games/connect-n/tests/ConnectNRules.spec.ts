@@ -988,4 +988,33 @@ describe('ConnectNRules (with rectangular torus config)', () => {
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
     });
+
+    it('should notify victory when aligning less than 6 stone but completing a line torically', () => {
+        // Given an rectangular and toric config and a board with 3 aligned pieces but torically completing a line
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'SQUARE (8)',
+            shape: 'TORIC',
+            boardSize: 3,
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+            [X, O, _],
+            [X, O, _],
+            [X, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
+            squareTopology,
+            new TorusShape(3, 3, squareTopology),
+            gameState,
+        );
+        const move: ConnectNMove = ConnectNMove.of([new Coord(0, 0), new Coord(0, 1)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
+        // When checking the game status
+        // Then it should be an ongoing game
+        RulesUtils.expectToBeOngoing(rules, node, customConfig);
+    });
 });

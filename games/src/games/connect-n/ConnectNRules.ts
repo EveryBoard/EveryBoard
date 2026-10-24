@@ -96,7 +96,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
             config.topology === 'TRIANGULAR' &&
             config.boardSize % 2 !== 0
         ) {
-            return MGPValidation.failure($localize`Toric Triangle should have even width`);
+            return MGPValidation.failure($localize`Toric board with triangle space should have even width`);
         }
         return MGPValidation.SUCCESS;
     }

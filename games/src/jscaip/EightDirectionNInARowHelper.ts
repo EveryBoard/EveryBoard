@@ -1,5 +1,5 @@
-import { NInARowHelper } from './NInARowHelper';
 import { EightDirection } from './EightDirection';
+import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
 import { GameStateWithCoords } from './state/GameStateWithCoords';
 

@@ -9,9 +9,9 @@ import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescr
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DirectionFailure } from '../../jscaip/Direction';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { EightDirection } from '../../jscaip/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';

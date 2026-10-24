@@ -1,8 +1,8 @@
 import { MGPFallible } from '@everyboard/lib';
 
 import { Coord } from './Coord';
-import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 import { EightDirection } from './EightDirection';
+import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 import { RulesFailure } from './RulesFailure';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {

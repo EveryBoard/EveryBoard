@@ -4,8 +4,8 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { GameStatus } from '../../jscaip/GameStatus';
 import { EightDirection } from '../../jscaip/EightDirection';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
@@ -155,7 +155,13 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 return [new Coord(0, pos.y), EightDirection.RIGHT];
             case EightDirection.UP_RIGHT:
             case EightDirection.DOWN_LEFT:
-                return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), EightDirection.UP_RIGHT];
+                return [
+                    new Coord(
+                        Math.max(0, (pos.x + pos.y) - 7),
+                        Math.min(7, pos.x + pos.y),
+                    ),
+                    EightDirection.UP_RIGHT,
+                ];
             default:
                 Utils.expectToBeMultiple(dir, [EightDirection.UP_LEFT, EightDirection.DOWN_RIGHT]);
                 return [

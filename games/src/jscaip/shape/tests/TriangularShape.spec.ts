@@ -3,10 +3,10 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { TriangularTopology } from '../../topology/TriangularTopology';
-import { Topology } from '../../topology/Topology';
-import { TriangularShape } from '../TriangularShape';
 import { TriangularDirection } from '../../TriangularDirection';
+import { Topology } from '../../topology/Topology';
+import { TriangularTopology } from '../../topology/TriangularTopology';
+import { TriangularShape } from '../TriangularShape';
 
 describe('TriangularShape', () => {
 
@@ -150,5 +150,7 @@ describe('TriangularShape', () => {
                 }
             }
         });
+
+    });
 
 });

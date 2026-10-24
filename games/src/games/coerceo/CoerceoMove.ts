@@ -1,9 +1,9 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { EightDirection } from '../../jscaip/EightDirection';
 import { Vector } from '../../jscaip/Vector';
 
 import { CoerceoFailure } from './CoerceoFailure';

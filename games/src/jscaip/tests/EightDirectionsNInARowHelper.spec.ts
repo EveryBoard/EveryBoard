@@ -1,8 +1,8 @@
 import { Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../AI/BoardValue';
-import { GameStatus } from '../GameStatus';
 import { EightDirectionNInARowHelper } from '../EightDirectionNInARowHelper';
+import { GameStatus } from '../GameStatus';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
@@ -17,7 +17,7 @@ describe('EightDirection N In A Row Helper', () => {
 
     it('should count exactly one victory', () => {
         // Given a board with a victory
-        const helper: EightDirectionNInARowHelper<PlayerOrNone> = new EightDirectionNInARowHelper<PlayerOrNone>(Utils.identity, 4);
+        const helper: EightDirectionNInARowHelper<PlayerOrNone> = new EightDirectionNInARowHelper(Utils.identity, 4);
         const board: Table<PlayerOrNone> = [
             [_, O, _, _],
             [_, _, _, _],

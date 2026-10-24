@@ -1,11 +1,11 @@
-/* eslint-disable max-lines-per-function */
+
 import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../Coord';
+import { EightDirection } from '../EightDirection';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
-import { EightDirection } from '../EightDirection';
 
 class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 

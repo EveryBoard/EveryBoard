@@ -3,8 +3,8 @@ import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
 import { EightDirection } from '../../jscaip/EightDirection';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';

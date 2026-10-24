@@ -1,8 +1,8 @@
 import { MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { EightDirection } from '../../jscaip/EightDirection';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 
 import { TaflFailure } from './TaflFailure';
 

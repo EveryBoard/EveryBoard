@@ -1,9 +1,9 @@
 import { Encoder, MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { EightDirection } from '../../jscaip/EightDirection';
 
 import { LinesOfActionState } from './LinesOfActionState';
 

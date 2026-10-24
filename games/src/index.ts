@@ -40,7 +40,7 @@ export { CoordSet } from './jscaip/CoordSet';
 export { Direction, DirectionFailure } from './jscaip/Direction';
 export { FourStatePiece } from './jscaip/FourStatePiece';
 export { GameStatus } from './jscaip/GameStatus';
-export { GipfCapture } from './jscaip/GipfProjectHelper'; // TODO: nooon
+export { GipfCapture } from './jscaip/GipfProjectHelper'; // TODO FOR REVIEW: est-ce ça meilleure place ??
 export { GobanConfig } from './jscaip/GobanConfig';
 export { GobanUtils } from './jscaip/GobanUtils';
 export { HexaDirection } from './jscaip/HexaDirection';
