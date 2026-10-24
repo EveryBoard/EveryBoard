@@ -54,9 +54,10 @@ interface DropArrow {
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
 
-    protected readonly svgTransformZero: string = this.getSVGTranslation(this.SPACE_SIZE / 2, - this.SPACE_SIZE / 2);
-
-    protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
+    protected readonly svgTransformPlayerZero: string =
+        this.getSVGTranslation(this.SPACE_SIZE / 2, - this.SPACE_SIZE / 2);
+    protected readonly svgTransformPlayerOne: string =
+        this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
 
     private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.state().board);
     private readonly width: Signal<number> = computed(() => this.board().length);
@@ -110,13 +111,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         });
     });
 
-    protected readonly remainingPieceZeroCxList: Signal<ReadonlyArray<number>> = computed(() => {
+    protected readonly remainingPieceZeroCenters: Signal<ReadonlyArray<number>> = computed(() => {
         return ArrayUtils.range(this.remaining().get(Player.ZERO)).map((x: number) => {
             return this.boardWidth() - this.getRemainingPieceCx(x);
         });
     });
 
-    protected readonly remainingPieceOneCxList: Signal<ReadonlyArray<number>> = computed(() => {
+    protected readonly remainingPieceOneCenters: Signal<ReadonlyArray<number>> = computed(() => {
         return ArrayUtils.range(this.remaining().get(Player.ONE)).map((x: number) => {
             return this.boardWidth() - this.getRemainingPieceCx(x);
         });
