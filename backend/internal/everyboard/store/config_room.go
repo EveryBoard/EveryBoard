@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
