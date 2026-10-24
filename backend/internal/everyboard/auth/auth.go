@@ -2,7 +2,7 @@ package auth
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"net/http"
 	"strings"
 )
@@ -14,17 +14,17 @@ type User struct {
 }
 
 func FetchUserDocument(context context.Context, uid string) (*User, error) {
-	return FetchUserDocumentWithClient(firebaseClient, context, uid)
+	return FetchUserDocumentWithClient(context, firebaseClient, uid)
 }
 
-func FetchUserDocumentWithClient(client FirebaseLike, context context.Context, uid string) (*User, error) {
+func FetchUserDocumentWithClient(context context.Context, client FirebaseLike, uid string) (*User, error) {
 	doc, err := client.Fetch(context, "users", uid)
 	if err != nil {
 		return nil, err
 	}
 	username, ok := doc["username"].(string)
 	if !ok {
-		return nil, fmt.Errorf("user document does not contain a string 'username'")
+		return nil, errors.New("user document does not contain a string 'username'")
 	}
 	isBot, ok := doc["isBot"].(bool)
 	if !ok {
@@ -40,12 +40,12 @@ func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
 func VerifyTokenAndGetUserWithClient(client FirebaseLike, r *http.Request) (string, *User, error) {
 	authorizationHeader := r.Header.Get("Sec-WebSocket-Protocol")
 	if authorizationHeader == "" {
-		return "", nil, fmt.Errorf("no authorization header")
+		return "", nil, errors.New("no authorization header")
 	}
 
 	parts := strings.SplitN(authorizationHeader, ",", 2)
 	if len(parts) != 2 || strings.TrimSpace(parts[0]) != "Authorization" {
-		return "", nil, fmt.Errorf("invalid authorization header")
+		return "", nil, errors.New("invalid authorization header")
 	}
 	token := strings.TrimSpace(parts[1])
 
@@ -54,6 +54,6 @@ func VerifyTokenAndGetUserWithClient(client FirebaseLike, r *http.Request) (stri
 		return "", nil, err
 	}
 
-	user, err := FetchUserDocumentWithClient(client, r.Context(), uid)
+	user, err := FetchUserDocumentWithClient(r.Context(), client, uid)
 	return uid, user, err
 }

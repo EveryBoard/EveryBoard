@@ -1,7 +1,7 @@
 name: CI/CD On Action
 
 env:
-  GO_VERSION: 1.26
+  GO_VERSION: 1.26.10
   NODE_VERSION: 24
   PYTHON_VERSION: 3.13
 
@@ -52,6 +52,14 @@ jobs:
       - name: Run linter in the CI container
         run: make ci-lint
 
+  vulnerability:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Run Go vulnerability check in the CI container
+        run: make ci-vuln
+
   images:
     runs-on: ubuntu-24.04
     steps:
@@ -70,7 +78,7 @@ jobs:
 
   deployment:
     runs-on: ubuntu-24.04
-    needs: [build-front, tests-front, tests-back, linter, images, translations]
+    needs: [build-front, tests-front, tests-back, linter, vulnerability, images, translations]
     environment: netlify
     if: github.event_name == 'push' &&
           contains('
