@@ -3,7 +3,7 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Player } from '../../jscaip/Player';
 
 import { MartianChessMove } from './MartianChessMove';
@@ -41,7 +41,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     public getMovesForPawnAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = [];
-        for (const diagonal of Ordinal.DIAGONALS) {
+        for (const diagonal of EightDirection.DIAGONALS) {
             const landingCoord: Coord = coord.getNext(diagonal);
             if (MartianChessState.isOnBoard(landingCoord)) {
                 landingCoords.push(landingCoord);
@@ -100,7 +100,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     }
     private getLandingCoordsForLinearMove(startingCoord: Coord, state: MartianChessState, maxDist: number): Coord[] {
         const landingCoords: Coord[] = [];
-        for (const dir of Ordinal.ORDINALS) {
+        for (const dir of EightDirection.EIGHT_DIRECTIONS) {
             let dist: number = 1;
             let landingCoord: Coord = startingCoord.getNext(dir, dist);
             let possible: boolean = state.hasPieceAt(landingCoord, MartianChessPiece.EMPTY);

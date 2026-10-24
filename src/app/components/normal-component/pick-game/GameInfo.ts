@@ -11,6 +11,7 @@ import { BaAwaRules } from '@everyboard/games/ba-awa';
 import { BashniRules } from '@everyboard/games/bashni';
 import { BrandhubRules } from '@everyboard/games/brandhub';
 import { CoerceoRules } from '@everyboard/games/coerceo';
+import { ConnectNRules } from '@everyboard/games/connect-n';
 import { ConnectSixRules } from '@everyboard/games/connect-six';
 import { ConspirateursRules } from '@everyboard/games/conspirateurs';
 import { DiaballikRules } from '@everyboard/games/diaballik';
@@ -64,6 +65,8 @@ import { LascaTutorial } from '../../../games/checkers/lasca/LascaTutorial';
 import { LascaComponent } from '../../../games/checkers/lasca/lasca.component';
 import { CoerceoTutorial } from '../../../games/coerceo/CoerceoTutorial';
 import { CoerceoComponent } from '../../../games/coerceo/coerceo.component';
+import { ConnectNTutorial } from '../../../games/connect-n/ConnectNTutorial';
+import { ConnectNComponent } from '../../../games/connect-n/connect-n.component';
 import { ConnectSixTutorial } from '../../../games/connect-six/ConnectSixTutorial';
 import { ConnectSixComponent } from '../../../games/connect-six/connect-six.component';
 import { ConspirateursTutorial } from '../../../games/conspirateurs/ConspirateursTutorial';
@@ -219,6 +222,7 @@ export class GameInfo {
             new GameInfo($localize`Toric Reversi`,          'ToricReversi',          ToricReversiComponent,          new ToricReversiTutorial(),          ToricReversiRules.get(),          new Date('2026-08-10'), GameDescription.TORIC_REVERSI()         ), // 43:                             * Martin
             new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2026-08-17'), GameDescription.BASHNI()                ), // 44:                             * Quentin
             new GameInfo($localize`Zoomed Go`,              'ZoomedGo',              ZoomedGoComponent,              new ZoomedGoTutorial(),              ZoomedGoRules.get(),              new Date('2026-08-20'), GameDescription.ZOOMED_GO()             ), // 45:                             * Martin
+            new GameInfo($localize`Connect N`,              'ConnectN',              ConnectNComponent,              new ConnectNTutorial(),              ConnectNRules.get(),              new Date('2026-10-21'), GameDescription.CONNECT_SIX()           ), // 46:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

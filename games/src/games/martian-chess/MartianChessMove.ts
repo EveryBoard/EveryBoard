@@ -1,8 +1,8 @@
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
 import { Localized } from '../../utils/LocaleUtils';
@@ -37,7 +37,7 @@ export class MartianChessMove extends MoveCoordToCoord {
         if (end.equals(start)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         }
-        const dir: MGPFallible<Ordinal> = Ordinal.factory.fromDelta(end.x - start.x, end.y - start.y);
+        const dir: MGPFallible<EightDirection> = EightDirection.factory.fromDelta(end.x - start.x, end.y - start.y);
         if (dir.isFailure()) {
             return MGPFallible.failure(dir.getReason());
         }

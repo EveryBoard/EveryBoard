@@ -4,7 +4,7 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player } from '../../jscaip/Player';
 
@@ -262,7 +262,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const opponent: Player = state.getCurrentOpponent();
         const ends: Coord[] = [];
         // A pass is in any direction, as long as it reaches a player piece and is not obstructed
-        for (const direction of Ordinal.factory.all) {
+        for (const direction of EightDirection.factory.all) {
             let coord: Coord = start.getNext(direction);
             while (state.coordIsNotOwnedBy(coord, opponent)) {
                 const piece: DiaballikPiece = state.getPieceAt(coord);

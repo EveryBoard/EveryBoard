@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="board"
+     [attr.viewBox]="viewBoxString()"
+     preserveAspectRatio="xMidYMid meet">
+    <g id="pieces">
+        @for (coordAndContent of coordsAndContents(); track $index) {
+            @if (coordAndContent.content.isReachable()) {
+                <g [attr.transform]="topologicTranslationMap().get(coordAndContent.coord).get()">
+                    <polygon [attr.id]="'click-' + topologicCellIdMap().get(coordAndContent.coord).get()"
+                             [attr.points]="topologicPolygonMap().get(coordAndContent.coord).get()"
+                             (click)="onClick(coordAndContent.coord)"
+                             class="base"
+                             [ngClass]="spaceClasses()[coordAndContent.coord.y][coordAndContent.coord.x]"
+                    />
+                </g>
+            }
+        }
+    </g>
+    @for (droppedCoord of droppedCoords(); track $index; let i = $index) {
+        <polygon [attr.id]="'dropped-' + droppedCoord.x + '-' + droppedCoord.y"
+                 [attr.transform]="topologicTranslationMap().get(droppedCoord).get()"
+                 [attr.points]="topologicPolygonMap().get(droppedCoord).get()"
+                 (click)="onClick(droppedCoord)"
+                 class="base"
+                 [ngClass]="spaceClasses()[droppedCoord.y][droppedCoord.x]"
+                 class="base moved-stroke"
+        />
+    }
+    @for (victoryCoord of victoryCoords(); track $index; let i = $index) {
+        <polygon [attr.id]="'victory-coord-' + victoryCoord.x + '-' + victoryCoord.y"
+                 [attr.transform]="topologicTranslationMap().get(victoryCoord).get()"
+
+                 [attr.points]="topologicPolygonMap().get(victoryCoord).get()"
+                 class="base"
+                 [ngClass]="spaceClasses()[victoryCoord.y][victoryCoord.x]"
+                 class="base moved-stroke"
+        />
+    }
+    @for (lastMoved of lastMoveds(); track $index; let i = $index) {
+        <polygon [attr.id]="'last-drop-' + lastMoved.x + '-' + lastMoved.y"
+                 [attr.transform]="topologicTranslationMap().get(lastMoved).get()"
+                 [attr.points]="topologicPolygonMap().get(lastMoved).get()"
+                 class="base"
+                 [ngClass]="spaceClasses()[lastMoved.y][lastMoved.x]"
+                 class="base moved-stroke"
+        />
+    }
+</svg>

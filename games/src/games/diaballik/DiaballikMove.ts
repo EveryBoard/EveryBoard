@@ -1,10 +1,10 @@
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { Move } from '../../jscaip/Move';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
 
 import { DiaballikFailure } from './DiaballikFailure';
@@ -15,7 +15,7 @@ export class DiaballikBallPass extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(DiaballikBallPass.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<DiaballikBallPass> {
-        const direction: MGPFallible<Ordinal> = Ordinal.factory.fromMove(start, end);
+        const direction: MGPFallible<EightDirection> = EightDirection.factory.fromMove(start, end);
         if (direction.isFailure()) {
             return MGPFallible.failure(DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
         }

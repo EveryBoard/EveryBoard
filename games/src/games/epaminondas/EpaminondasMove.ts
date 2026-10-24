@@ -1,17 +1,17 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/EightDirection';
 import { MoveCoord } from '../../jscaip/MoveCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
 
 import { EpaminondasFailure } from './EpaminondasFailure';
 
-type EpaminondasMoveFields = [Coord, number, number, Ordinal];
+type EpaminondasMoveFields = [Coord, number, number, EightDirection];
 
 export class EpaminondasMove extends MoveCoord {
 
     public static encoder: Encoder<EpaminondasMove> = Encoder.tuple(
-        [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), Ordinal.encoder],
+        [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), EightDirection.encoder],
         (m: EpaminondasMove): EpaminondasMoveFields => [m.coord, m.phalanxSize, m.stepSize, m.direction],
         (fields: EpaminondasMoveFields): EpaminondasMove =>
             new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]));
@@ -20,7 +20,7 @@ export class EpaminondasMove extends MoveCoord {
                        y: number,
                        public readonly phalanxSize: number,
                        public readonly stepSize: number,
-                       public readonly direction: Ordinal)
+                       public readonly direction: EightDirection)
     {
         super(x, y);
         Utils.assert(phalanxSize > 0, 'Must select minimum one piece (got ' + phalanxSize + ').');

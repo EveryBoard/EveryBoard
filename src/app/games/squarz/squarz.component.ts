@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -76,7 +76,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         const moveEnd: Coord = move.getEnd();
         this.movedPieces.push(moveEnd);
         this.movedSpaces.push(moveEnd);
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const neighbor: Coord = moveEnd.getNext(direction);
             if (previousState.hasPieceAt(neighbor, previousOpponent)) {
                 this.captured.push(neighbor);
