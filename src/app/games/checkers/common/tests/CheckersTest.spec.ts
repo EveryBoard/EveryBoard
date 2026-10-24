@@ -18,6 +18,11 @@ import { RulesConfigUtils } from '../../../../components/wrapper-components/rule
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersComponent } from '../checkers.component';
 
+type StateAndMove = {
+    state: CheckersState;
+    move: CheckersMove;
+}
+
 export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {
     component: Type<C>; // InternationalCheckersComponent, LascaComponent, etc
     gameName: string; // 'InternationalCheckers', 'Lasca', etc
@@ -56,35 +61,20 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
         coord: Coord;
     };
 
-    simpleCaptureTest: {
-        // A state on which a simple capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a simple capture is possible
+    simpleCaptureTest: StateAndMove;
 
-    promotionTest: {
-        // A state on which a promotion is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a promotion is possible
+    promotionTest: StateAndMove;
 
-    complexCaptureTest: {
-        // A state on which a complex capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a complex capture is possible
+    complexCaptureTest: StateAndMove;
 
-    returnToStartCaptureTest: {
-        // A state on which a multiple capture can end on its starting coordinate
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a multiple capture can end on its starting coordinate
+    returnToStartCaptureTest: StateAndMove;
 
-    invalidCaptureTest: {
-        // A state on which an invalid capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which an invalid capture is possible
+    invalidCaptureTest: StateAndMove;
 
     // A move that can be done after secondMove but that is not orthogonal (described as two coords)
     invalidThirdMoveTest: {
