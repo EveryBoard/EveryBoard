@@ -27,7 +27,6 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         }
         if (this.canGoUp(coord)) {
             if (direction.y === -1) {
-                // TODO: twice in the same direction is tricky in triangles !
                 return new Coord(coord.x, coord.y - distance);
             }
         } else {
