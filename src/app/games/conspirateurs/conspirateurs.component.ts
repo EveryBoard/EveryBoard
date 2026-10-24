@@ -8,7 +8,6 @@ import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
-import { MGPFallible, MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 import { ConspirateursHeuristic } from '@everyboard/games/conspirateurs';
 import {
     ConspirateursMove,
@@ -19,6 +18,7 @@ import {
 import { ConspirateursMoveGenerator } from '@everyboard/games/conspirateurs';
 import { ConspirateursRules } from '@everyboard/games/conspirateurs';
 import { ConspirateursState } from '@everyboard/games/conspirateurs';
+import { MGPFallible, MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
