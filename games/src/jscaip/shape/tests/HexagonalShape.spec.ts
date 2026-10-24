@@ -3,7 +3,7 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { HexaDirection } from '../../HexaDirection';
+import { HexaDirection } from '../../direction/HexaDirection';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
 import { Topology } from '../../topology/Topology';
 import { HexagonalShape } from '../HexagonalShape';

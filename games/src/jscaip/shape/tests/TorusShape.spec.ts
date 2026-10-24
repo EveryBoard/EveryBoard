@@ -2,9 +2,9 @@
 import { MGPOptional, Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { EightDirection } from '../../EightDirection';
-import { HexaDirection } from '../../HexaDirection';
-import { TriangularDirection } from '../../TriangularDirection';
+import { EightDirection } from '../../direction/EightDirection';
+import { HexaDirection } from '../../direction/HexaDirection';
+import { TriangularDirection } from '../../direction/TriangularDirection';
 import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
 import { Topology } from '../../topology/Topology';

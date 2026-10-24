@@ -4,7 +4,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
+import { DirectionFailure } from '../../../jscaip/direction/Direction';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';

@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { PylosCoord } from '../PylosCoord';
 
 describe('PylosCoord', () => {

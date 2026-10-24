@@ -3,7 +3,7 @@ import { TestUtils } from '@everyboard/lib/testing';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
+import { DodecaHexaDirection } from '../../../jscaip/direction/DodecaHexaDirection';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

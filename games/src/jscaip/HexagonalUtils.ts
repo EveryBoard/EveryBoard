@@ -1,5 +1,5 @@
 import { Coord } from './Coord';
-import { HexaDirection } from './HexaDirection';
+import { HexaDirection } from './direction/HexaDirection';
 import { TableUtils } from './TableUtils';
 
 export class HexagonalUtils {

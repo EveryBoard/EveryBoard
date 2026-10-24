@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';

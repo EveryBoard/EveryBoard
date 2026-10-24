@@ -2,7 +2,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { Orthogonal } from '../../Orthogonal';
+import { Orthogonal } from '../../direction/Orthogonal';
 import { OrthogonalSquareTopology } from '../OrthogonalSquareTopology';
 
 describe('OrthogonalSquareTopology', () => {

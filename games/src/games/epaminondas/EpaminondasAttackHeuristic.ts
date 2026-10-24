@@ -1,6 +1,6 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';

@@ -2,7 +2,7 @@ import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Move } from '../../jscaip/Move';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';

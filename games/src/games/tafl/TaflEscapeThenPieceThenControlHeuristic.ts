@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player } from '../../jscaip/Player';
 
 import { TaflConfig } from './TaflConfig';

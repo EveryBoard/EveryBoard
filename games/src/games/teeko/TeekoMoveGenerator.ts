@@ -1,6 +1,6 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { PlayerOrNone } from '../../jscaip/Player';
 
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';

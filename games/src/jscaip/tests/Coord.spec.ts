@@ -2,8 +2,8 @@
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
-import { EightDirection } from '../EightDirection';
+import { Direction } from '../direction/Direction';
+import { EightDirection } from '../direction/EightDirection';
 
 describe('Coord', () => {
 

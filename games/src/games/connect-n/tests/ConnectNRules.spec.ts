@@ -2,12 +2,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { EightDirection } from '../../../jscaip/EightDirection';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { TriangularDirection } from '../../../jscaip/TriangularDirection';
+import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { TorusShape } from '../../../jscaip/shape/TorusShape';

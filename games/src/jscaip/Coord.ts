@@ -1,6 +1,6 @@
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
-import { EightDirection } from './EightDirection';
+import { EightDirection } from './direction/EightDirection';
 import { Vector } from './Vector';
 
 export class CoordFailure {

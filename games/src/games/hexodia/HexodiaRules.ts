@@ -6,7 +6,7 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';
+import { DodecaHexaDirection } from '../../jscaip/direction/DodecaHexaDirection';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';

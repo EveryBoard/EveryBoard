@@ -2,8 +2,8 @@
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { DirectionFactory, DirectionFailure } from '../Direction';
-import { EightDirection } from '../EightDirection';
+import { DirectionFactory, DirectionFailure } from '../direction/Direction';
+import { EightDirection } from '../direction/EightDirection';
 
 describe('EightDirection', () => {
 

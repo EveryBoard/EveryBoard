@@ -1,4 +1,4 @@
-import { EightDirection } from './EightDirection';
+import { EightDirection } from './direction/EightDirection';
 import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
 import { GameStateWithCoords } from './state/GameStateWithCoords';

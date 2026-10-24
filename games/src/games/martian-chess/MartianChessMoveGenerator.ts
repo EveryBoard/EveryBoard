@@ -3,7 +3,7 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Player } from '../../jscaip/Player';
 
 import { MartianChessMove } from './MartianChessMove';

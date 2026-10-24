@@ -1,8 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { EightDirection } from '../EightDirection'; // TODO: kill this, it make no fucking sens in the hell of dead !
-import { TriangularDirection } from '../TriangularDirection';
+import { TriangularDirection } from '../direction/TriangularDirection';
 import { Vector } from '../Vector';
 
 import { Topology } from './Topology';
@@ -28,11 +27,12 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         }
         if (this.canGoUp(coord)) {
             if (direction.y === -1) {
-                return coord.getNext(EightDirection.UP, distance);
+                // TODO: twice in the same direction is tricky in triangles !
+                return new Coord(coord.x, coord.y - distance);
             }
         } else {
             if (direction.y === 1) {
-                return coord.getNext(EightDirection.DOWN, distance);
+                return new Coord(coord.x, coord.y + distance);
             }
         }
         return coord.getNext(new Vector(direction.x, 0), distance);
@@ -44,9 +44,11 @@ export class TriangularTopology implements Topology<TriangularDirection> {
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
-            coord.getNext(EightDirection.LEFT),
-            coord.getNext(EightDirection.RIGHT),
-            this.canGoUp(coord) ? coord.getNext(EightDirection.UP) : coord.getNext(EightDirection.DOWN),
+            coord.getNext(TriangularDirection.LEFT),
+            coord.getNext(TriangularDirection.RIGHT),
+            this.canGoUp(coord) ?
+                new Coord(coord.x, coord.y - 1) :
+                new Coord(coord.x, coord.y + 1),
         ]);
     }
 

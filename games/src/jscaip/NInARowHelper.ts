@@ -2,7 +2,7 @@ import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
-import { Direction } from './Direction';
+import { Direction } from './direction/Direction';
 import { Player, PlayerOrNone } from './Player';
 import { GameStateWithCoords } from './state/GameStateWithCoords';
 

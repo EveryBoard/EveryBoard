@@ -3,7 +3,7 @@ import { MGPMap, Set } from '@everyboard/lib';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { Player } from '../../jscaip/Player';
 

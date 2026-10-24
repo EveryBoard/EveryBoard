@@ -7,6 +7,8 @@ import { Direction, DirectionFactory } from './Direction';
  */
 export class EightDirection extends Direction {
 
+    private readonly type: string = 'EightDirection'; // To force type distinction
+
     public static readonly UP: EightDirection = new EightDirection(0, -1);
     public static readonly UP_RIGHT: EightDirection = new EightDirection(1, -1);
     public static readonly RIGHT: EightDirection = new EightDirection(1, 0);

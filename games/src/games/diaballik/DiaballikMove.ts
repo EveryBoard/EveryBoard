@@ -1,7 +1,7 @@
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/EightDirection';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Move } from '../../jscaip/Move';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';

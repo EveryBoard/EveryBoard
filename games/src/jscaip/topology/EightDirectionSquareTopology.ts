@@ -1,7 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { EightDirection } from '../EightDirection';
+import { EightDirection } from '../direction/EightDirection';
 
 import { Topology } from './Topology';
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { DodecaHexaDirection } from '../DodecaHexaDirection';
+import { DodecaHexaDirection } from '../direction/DodecaHexaDirection';
 
 describe('DodecaHexaDirection', () => {
 

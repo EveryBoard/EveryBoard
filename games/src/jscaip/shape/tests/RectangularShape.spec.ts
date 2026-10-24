@@ -2,7 +2,7 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { EightDirection } from '../../EightDirection';
+import { EightDirection } from '../../direction/EightDirection';
 import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { Topology } from '../../topology/Topology';
 import { RectangularShape } from '../RectangularShape';

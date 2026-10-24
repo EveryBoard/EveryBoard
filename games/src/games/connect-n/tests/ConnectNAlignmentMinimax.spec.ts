@@ -4,7 +4,7 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
+import { Direction } from '../../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../../jscaip/shape/TopologicShape';

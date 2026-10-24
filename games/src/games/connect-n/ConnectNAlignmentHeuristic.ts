@@ -1,7 +1,7 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
+import { Direction } from '../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';

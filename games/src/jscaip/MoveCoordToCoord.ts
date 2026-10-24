@@ -1,7 +1,7 @@
 import { MGPFallible } from '@everyboard/lib';
 
 import { Coord } from './Coord';
-import { EightDirection } from './EightDirection';
+import { EightDirection } from './direction/EightDirection';
 import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 import { RulesFailure } from './RulesFailure';
 

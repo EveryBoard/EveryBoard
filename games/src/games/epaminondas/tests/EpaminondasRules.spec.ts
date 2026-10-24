@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { EightDirection } from '../../../jscaip/EightDirection';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';

@@ -6,7 +6,7 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';

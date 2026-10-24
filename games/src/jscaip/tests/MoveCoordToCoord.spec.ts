@@ -3,7 +3,7 @@ import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../Coord';
-import { EightDirection } from '../EightDirection';
+import { EightDirection } from '../direction/EightDirection';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
 

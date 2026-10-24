@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { EightDirection } from '../../../jscaip/EightDirection';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { MoveTestUtils } from '../../../jscaip/tests/MoveTestUtils.spec';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { EpaminondasMove } from '../EpaminondasMove';

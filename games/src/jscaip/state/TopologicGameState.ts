@@ -1,5 +1,5 @@
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Direction } from '../direction/Direction';
 import { TopologicShape } from '../shape/TopologicShape';
 import { Topology } from '../topology/Topology';
 

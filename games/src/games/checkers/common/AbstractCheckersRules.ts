@@ -3,7 +3,7 @@ import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { EightDirection } from '../../../jscaip/EightDirection';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Player } from '../../../jscaip/Player';
 import { ConfigurableRules } from '../../../jscaip/Rules';

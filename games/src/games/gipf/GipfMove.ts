@@ -2,7 +2,7 @@ import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Move } from '../../jscaip/Move';
 
 type GipfPlacementFields = [Coord, MGPOptional<HexaDirection>];

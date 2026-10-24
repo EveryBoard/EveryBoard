@@ -3,7 +3,7 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { TriangularDirection } from '../../TriangularDirection';
+import { TriangularDirection } from '../../direction/TriangularDirection';
 import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { TriangularShape } from '../TriangularShape';

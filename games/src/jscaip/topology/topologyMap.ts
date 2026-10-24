@@ -1,6 +1,6 @@
 import { MGPMap } from '@everyboard/lib';
 
-import { Direction } from '../Direction';
+import { Direction } from '../direction/Direction';
 
 import { EightDirectionSquareTopology } from './EightDirectionSquareTopology';
 import { HexagonalTopology } from './HexagonalTopology';
