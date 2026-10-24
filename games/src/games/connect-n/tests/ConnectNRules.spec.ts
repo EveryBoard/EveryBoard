@@ -475,6 +475,73 @@ describe('ConnectNRules (with default config)', () => {
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
+        it('should allow move with less drop when board is full after drops', () => {
+            // Given any board with not enough space to do your last move fully (without victory)
+            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, _],
+            ], 180);
+            const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
+                defaultTopology,
+                defaultShape,
+                gameState,
+            );
+
+            // When doing that last move incomplete
+            const move: ConnectNMove =
+                ConnectNMove.of([new Coord(17, 18), new Coord(18, 18)]);
+            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable([
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
+            ], 181);
+            const expectedState: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
+                defaultTopology,
+                defaultShape,
+                expectedGameState,
+            );
+
+            // Then it should be a draw
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            const previousNode: ConnectNNode = new ConnectNNode(expectedState);
+            const node: ConnectNNode =
+                new ConnectNNode(expectedState, MGPOptional.of(previousNode), MGPOptional.of(move));
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        });
+
     });
 
 });

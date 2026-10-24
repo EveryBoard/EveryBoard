@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
@@ -54,7 +55,7 @@ describe('ConnectSixRules', () => {
             const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
-            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1));
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -66,7 +67,7 @@ describe('ConnectSixRules', () => {
             const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
 
             // Then the move should succeed
             const expectedState: ConnectSixState = new ConnectSixState([
@@ -136,7 +137,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When doing a move whose second coord is out of range
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1));
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -168,7 +169,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When doing a move whose second coord is out of range
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(-2, -2), new Coord(0, 0)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(-2, -2), new Coord(0, 0));
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
@@ -201,7 +202,7 @@ describe('ConnectSixRules', () => {
 
             // When dropping piece on it with the first coord already occupied
             const move: ConnectSixMove =
-                ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10)) as ConnectSixMove;
+                ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -233,7 +234,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When dropping piece on it with the second coord already occupied
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(9, 9));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -265,7 +266,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When dropping pieces on empty squares
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(7, 7), new Coord(8, 8)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(7, 7), new Coord(8, 8));
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -379,7 +380,7 @@ describe('ConnectSixRules', () => {
             ], 180);
             // When playing the last 181st turn
             const move: ConnectSixMove =
-                ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18)) as ConnectSixMove;
+                ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18));
             const expectedState: ConnectSixState = new ConnectSixState([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -405,6 +406,63 @@ describe('ConnectSixRules', () => {
             // Then the board should be a draw
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        });
+
+        it('should allow move with less drop when board is full after drops', () => {
+            // Given any board with not enough space to do your last move fully (without victory)
+            const state: ConnectSixState = new ConnectSixState([
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, _],
+            ], 180);
+
+            // When doing that last move incomplete
+            const move: ConnectSixMove =
+                ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18)) as ConnectSixMove;
+            const expectedState: ConnectSixState = new ConnectSixState([
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
+                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
+            ], 181);
+
+            // Then it should be a draw
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            const previousNode: ConnectSixNode = new ConnectSixNode(expectedState);
+            const node: ConnectSixNode =
+                new ConnectSixNode(expectedState, MGPOptional.of(previousNode), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
