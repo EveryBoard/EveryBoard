@@ -505,7 +505,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public setInteractive(interactive: boolean): void {
-        this.getGameComponent().setInteractive(interactive);
+        this.getGameComponent().interactive.set(interactive);
     }
 
     /**
