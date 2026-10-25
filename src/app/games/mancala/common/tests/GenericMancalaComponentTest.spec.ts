@@ -417,6 +417,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should display filled-then-captured capture', fakeAsync(async() => {
             // Given a board where some empty space could filled then captured
             await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state);
+
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.fillThenCapture);
             await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.fillThenCapture.move, defaultConfig);
@@ -438,6 +439,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const mancalaComponent: MancalaComponent<MancalaRules> = mancalaTestUtils.testUtils.getGameComponent();
             const config: MancalaConfig = mancalaComponent.rules.getDefaultRulesConfig();
             const state: MancalaState = mancalaComponent.rules.getInitialState(config);
+
             // When hashing it through the declared AI config
             const hash: string = mancalaComponent.aiConfig.minimax[0].hash!(state);
 

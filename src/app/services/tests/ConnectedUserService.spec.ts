@@ -569,6 +569,7 @@ describe('ConnectedUserService', () => {
 
         it('should reject existing usernames', async() => {
             const userService: UserService = TestBed.inject(UserService);
+
             // When the username is set to an username that is not available
             spyOn(userService, 'usernameIsAvailable').and.resolveTo(false);
             const result: MGPValidation = await connectedUserService.setUsername('not-available');
@@ -672,8 +673,10 @@ describe('ConnectedUserService', () => {
             await connectedUserService.doRegister(username, email, password);
             const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
             spyOn(user, 'getIdToken').and.callFake(async() => 'MyIdToken');
+
             // When getting the id token
             const idToken: string = await connectedUserService.getIdToken();
+
             // Then it should fetch the one of the user
             expect(idToken).toEqual('MyIdToken');
             expect(user.getIdToken).toHaveBeenCalled();

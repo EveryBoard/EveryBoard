@@ -321,11 +321,13 @@ describe('EncapsuleComponent', () => {
     it('should display victory highlight', fakeAsync(async() => {
         // Given a board with a victory
         const x: EncapsuleSpace = _.put(mediumLight);
-        const board: EncapsuleSpace[][] = [
-            [x, _, _],
+        const;
+
+            // When ],
             [_, x, _],
             [_, _, x],
         ];
+
         // When displaying it
 
         await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));

@@ -177,6 +177,7 @@ describe('TablutRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
+
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });

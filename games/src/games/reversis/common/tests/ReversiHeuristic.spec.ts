@@ -97,6 +97,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const strongerState: ReversiState = new ReversiState(strongerBoard, 2);
+
         // When computing the board value
         // Then the control of the corner should be preferred
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

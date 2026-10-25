@@ -38,6 +38,7 @@ describe('KamisadoHeuristic', () => {
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const node: KamisadoNode = new KamisadoNode(state);
+
         // When computing the board value
         // Then the score should be the advantage of zero over one
         expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2]);
