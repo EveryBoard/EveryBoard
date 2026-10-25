@@ -132,6 +132,11 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
 
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        // nothing to do here !
+    }
+
     public getPlayerClassAtXY(x: number, y: number): string {
         const piece: FourStatePiece = this.state().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getPlayer());
