@@ -58,7 +58,7 @@ describe('KamisadoComponent', () => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click-0-7'); // Select initial piece
         testUtils.expectElementToExist('.selected-data');
-        testUtils.expectElementToExist('.selected-piece-0-7');
+        testUtils.expectElementToExist('#selected-piece-0-7');
 
         // When clicking on the same piece
         await testUtils.expectClickFailure('#click-0-7');
