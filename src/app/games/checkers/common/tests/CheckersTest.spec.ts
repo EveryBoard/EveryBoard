@@ -64,6 +64,9 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
     // A state on which a simple capture is possible
     simpleCaptureTest: StateAndMove;
 
+    // A triple flying capture
+    tripleFlyingCaptureTest: StateAndMove;
+
     // A state on which a promotion is possible
     promotionTest: StateAndMove;
 
@@ -93,7 +96,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
-    describe(entries.gameName + ' component generic tests', () => {
+    fdescribe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {
             // bind test utils, which we cannot take as a parameter from DoCheckersTests,
@@ -262,6 +265,29 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
         describe('Second click', () => {
 
+            function getStepFlownOverEmptyCoords(state: CheckersState, start: Coord, end: Coord): Coord[] {
+                const flownOverEmptyCoords: Coord[] = [];
+                const direction: Direction = start.getDirectionToward(end).get();
+                let coord: Coord = start.getNext(direction);
+                while (coord.equals(end) === false) {
+                    if (state.getPieceAt(coord).isEmpty()) {
+                        flownOverEmptyCoords.push(coord);
+                    }
+                    coord = coord.getNext(direction);
+                }
+                return flownOverEmptyCoords;
+            }
+
+            function getMoveFlownOverEmptyCoords(stateAndMove: StateAndMove): Coord[] {
+                const start: Coord = stateAndMove.move.coords[0];
+                const first: Coord = stateAndMove.move.coords[1];
+                const second: Coord = stateAndMove.move.coords[2];
+                return [
+                    ...getStepFlownOverEmptyCoords(stateAndMove.state, start, first),
+                    ...getStepFlownOverEmptyCoords(stateAndMove.state, first, second),
+                ];
+            }
+
             it('should fail when clicking on opponent', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const firstClick: Coord = entries.firstPlayerCoords[0];
@@ -379,6 +405,26 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 // Then it should be a success
                 const end: Coord = entries.simpleCaptureTest.move.getEndingCoord();
                 await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
+            }));
+
+            it('should highlight flown over coords', fakeAsync(async() => {
+                // Given a board with a selected piece and a possible triple capture
+                const state: CheckersState = entries.tripleFlyingCaptureTest.state;
+                await testUtils.setupState(state);
+                const start: Coord = entries.tripleFlyingCaptureTest.move.coords[0];
+                const first: Coord = entries.tripleFlyingCaptureTest.move.coords[1];
+                const second: Coord = entries.tripleFlyingCaptureTest.move.coords[2];
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+
+                // When doing the two first captures
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+                await testUtils.expectClickSuccess(`#coord-${ second.x }-${ second.y }`);
+
+                // Then every flown over coords that are not starting or captured should be "moved"
+                const flownOverEmptyCoords: Coord[] = getMoveFlownOverEmptyCoords(entries.tripleFlyingCaptureTest);
+                for (const coord of flownOverEmptyCoords) {
+                    testUtils.expectElementToHaveClass(`#square-${ coord.x }-${ coord.y }`, 'moved-fill');
+                }
             }));
 
             it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {

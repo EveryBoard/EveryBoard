@@ -270,7 +270,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const lastCoord: Coord = this.currentMoveClicks()[this.currentMoveClicks().length - 1];
         const steppedOver: Coord[] = lastCoord.getCoordsToward(clicked);
         let capturedCoords: Set<Coord> = this.capturedCoords();
-        let flownOverCoords: Set<Coord> = new Set();
+        let flownOverCoords: Set<Coord> = this.flownOverCoords();
         for (const coord of steppedOver) {
             if (this.constructedState().get().getPieceAt(coord).isOccupied()) {
                 capturedCoords = capturedCoords.addElement(coord);

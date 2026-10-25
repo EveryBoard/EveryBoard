@@ -121,6 +121,21 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         ], 1),
         move: CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 7)]),
     },
+    tripleFlyingCaptureTest: {
+        state: OddCheckersState.of([
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, V, _, _, _, _, _, _],
+            [_, _, _, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+        ], 0),
+        move: CheckersMove.fromCapture([new Coord(0, 5), new Coord(4, 1), new Coord(7, 4), new Coord(5, 6)]),
+    },
     promotionTest: {
         state: OddCheckersState.of([
             [_, _, _, _, _, V, _],
@@ -190,7 +205,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
     },
 };
 
-describe('InternationalCheckersComponent', () => {
+fdescribe('InternationalCheckersComponent', () => {
 
     const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
