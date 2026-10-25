@@ -13,7 +13,7 @@ function expectEqualityBetweenSetOfSets<T extends Comparable>(expected: T[][], a
             remainingExpected.splice(index, 1);
         }
         expect(index)
-            .withContext(`Expected ${JSON.stringify(actualList)} to have a matching list`)
+            .withContext(`Expected ${JSON.stringify(actualList)} to have a matching set`)
             .toBeGreaterThanOrEqual(0);
     }
     expect(remainingExpected)
