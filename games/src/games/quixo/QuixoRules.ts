@@ -93,8 +93,8 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         return sums;
     }
 
-    public static getVictoriousCoords(state: QuixoState): Coord[] {
-        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+    public static getVictoriousSpaces(state: QuixoState): Coord[] {
+        const victoriousCoords: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
         const opponentCoords: Coord[] =
             QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
         const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
@@ -106,7 +106,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
             }
         } else {
             // if there is no player coords, then opponent won
-            // if there is both player coords,
+            // if there is both players coords,
             // Then player made opponent win by making two victories
             return opponentCoords;
         }
@@ -201,7 +201,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
 
     public override getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
-        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const victoriousCoords: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
         const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));
         const winners: Set<PlayerOrNone> = new Set(unreducedWinners);
         if (winners.size() === 0) {

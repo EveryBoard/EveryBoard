@@ -34,7 +34,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
     public static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 6);
 
-    public static getVictoriousCoords(state: ConnectSixState): Coord[] {
+    public static getVictoriousSpaces(state: ConnectSixState): Coord[] {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
 
@@ -110,7 +110,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
 
     public override getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
-        const victoriousCoord: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
+        const victoriousCoords: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }

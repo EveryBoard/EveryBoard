@@ -97,7 +97,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.board = this.state().getCopiedBoard();
         this.renderBoardPiece();
         this.calculateLeftPieceCoords();
-        this.victoryCoords.set(EncapsuleRules.get().getVictoriousCoords(this.state(), config));
+        this.victoryCoords.set(EncapsuleRules.get().getVictoriousSpaces(this.state(), config));
         this.setRingStrokeWidth();
     }
 

@@ -340,7 +340,7 @@ describe('EncapsuleComponent', () => {
         }));
 
         it(`should not display opponent's non-victory highlight`, fakeAsync(async() => {
-            // Given a board with both player having 3 pieces aligned
+            // Given a board with both players having 3 pieces aligned
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 1, 1]);
             const board: EncapsuleSpace[][] = [
                 [X__, _X_, __X],

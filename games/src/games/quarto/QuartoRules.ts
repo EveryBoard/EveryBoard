@@ -550,7 +550,7 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return initialPatterns.flatMap((pattern: VictoryPattern) => pattern.getAllPatterns(state));
     }
 
-    public getVictoriousCoords(state: QuartoState, config: QuartoConfig): Set<Coord> {
+    public getVictoriousSpaces(state: QuartoState, config: QuartoConfig): Set<Coord> {
         const maxPatternLevel: number = Math.max(config.playerZeroLevel, config.playerOneLevel);
         const patterns: VictoryPattern[] = this.getPatterns(maxPatternLevel, state);
         for (const pattern of patterns) {

@@ -12,7 +12,7 @@ import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 
-fdescribe('EncapsuleRules', () => {
+describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
     const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
@@ -88,8 +88,8 @@ fdescribe('EncapsuleRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
-    it('should know last player loose by creating victory for both player at once', () => {
-        // Given a board on which Player.ZERO just gave alignment to both player
+    it('should know last player loose by creating victory for both players at once', () => {
+        // Given a board on which at the beginning of Player.ONE's turn, both players have an alignment
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 1, 1]);
         const expectedBoard: EncapsuleSpace[][] = [
             [X__, _X_, __X],

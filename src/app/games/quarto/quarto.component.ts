@@ -69,7 +69,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         const config: QuartoConfig = this.config();
-        this.victoriousCoords = this.rules.getVictoriousCoords(state, config);
+        this.victoriousCoords = this.rules.getVictoriousSpaces(state, config);
     }
 
     @ClickHandler((coord: Coord) => `#click-coord-${ coord.x }-${ coord.y }`)

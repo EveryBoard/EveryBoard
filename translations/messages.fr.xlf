@@ -3340,7 +3340,7 @@
         <target>Égalité</target>
       </trans-unit>
       <trans-unit id="7055933300672028135" datatype="html">
-        <source>In the special case where a move ends up connecting all pieces of both player, simultaneously,
+        <source>In the special case where a move ends up connecting all pieces of both players, simultaneously,
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You're playing Dark, force the tie in one move.</source>
         <target>Dans le cas spécial où un mouvement résulte en une connexion complète des pièces des deux joueurs,
@@ -3472,7 +3472,7 @@
         <target>Fin au temps</target>
       </trans-unit>
       <trans-unit id="3700959958039999617" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You're playing Light, do the last move.</source>
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both players have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You're playing Light, do the last move.</source>
         <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">

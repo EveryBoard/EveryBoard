@@ -544,7 +544,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.ofRepresentation(board, 40);
 
-                // When making both player drop below 6 pieces
+                // When making both players drop below 6 pieces
                 const move: SixMove = SixMove.ofTranslation(new Coord(4, 1), new Coord(-1, 1));
 
                 // Then the one with the more pieces remaining win
@@ -567,7 +567,7 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.ofRepresentation(board, 42);
 
-                // When dropping both player below 6 pieces
+                // When dropping both players below 6 pieces
                 const move: SixMove = SixMove.ofTranslation(new Coord(4, 1), new Coord(6, 1));
 
                 // Then the player with the more piece win

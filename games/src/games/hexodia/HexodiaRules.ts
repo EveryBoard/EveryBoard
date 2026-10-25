@@ -76,7 +76,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         return HexodiaRules.helpers.get(size).get();
     }
 
-    public static getVictoriousCoords(state: FourStatePieceGameStateWithTable, config: HexodiaConfig): Coord[] {
+    public static getVictoriousSpaces(state: FourStatePieceGameStateWithTable, config: HexodiaConfig): Coord[] {
         return HexodiaRules.getHexodiaHelper(config).getVictoriousCoord(state);
     }
 
@@ -143,7 +143,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
 
     public override getGameStatus(node: HexodiaNode, config: HexodiaConfig): GameStatus {
         const state: FourStatePieceGameStateWithTable = node.gameState;
-        const victoriousCoord: Coord[] = HexodiaRules.getVictoriousCoords(state, config);
+        const victoriousCoords: Coord[] = HexodiaRules.getVictoriousSpaces(state, config);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
