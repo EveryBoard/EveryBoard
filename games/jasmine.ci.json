@@ -6,7 +6,7 @@
         "ts-node/register/type-check",
         "tsconfig-paths/register"
     ],
-    "helpers": ["browser-globals-setup.ts", "ci-setup.ts", "coverage-setup.ts"],
+    "helpers": ["browser-globals-setup.ts", "ci-setup.ts"],
     "env": {
         "forbidDuplicateNames": false,
         "random": true,

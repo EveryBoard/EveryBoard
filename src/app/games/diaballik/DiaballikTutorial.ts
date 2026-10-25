@@ -1,8 +1,8 @@
 
 import { Coord } from '@everyboard/games';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games';
-import { DiaballikRules } from '@everyboard/games';
-import { DiaballikPiece, DiaballikState } from '@everyboard/games';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games/diaballik';
+import { DiaballikRules } from '@everyboard/games/diaballik';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games/diaballik';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

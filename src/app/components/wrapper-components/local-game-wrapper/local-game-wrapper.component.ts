@@ -5,7 +5,13 @@ import { ParamMap } from '@angular/router';
 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '@everyboard/games';
 import { MCTSConfig, MinimaxConfig } from '@everyboard/games';
-import { AIInstanceRegistry, PlayerSelection, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '@everyboard/games';
+import {
+    AIInstanceRegistry,
+    PlayerSelection,
+    createIterativeDeepeningMinimaxFromConfig,
+    createMCTSFromConfig,
+    createMinimaxFromConfig,
+} from '@everyboard/games';
 import { AbstractNode, GameNodeStats } from '@everyboard/games';
 import { IterativeDeepeningMinimax } from '@everyboard/games';
 import { MCTS } from '@everyboard/games';

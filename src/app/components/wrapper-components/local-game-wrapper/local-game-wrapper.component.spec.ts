@@ -3,7 +3,6 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { P4Config, P4Rules } from '@everyboard/games';
 import { AIDepthLimitOptions, AIOptions, AbstractAI } from '@everyboard/games';
 import { MinimaxConfig } from '@everyboard/games';
 import { GameNode } from '@everyboard/games';
@@ -13,10 +12,11 @@ import { Minimax } from '@everyboard/games';
 import { GameStatus } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { P4Heuristic } from '@everyboard/games';
-import { P4Move } from '@everyboard/games';
-import { P4OrderedMoveGenerator } from '@everyboard/games';
-import { P4State } from '@everyboard/games';
+import { P4Config, P4Rules } from '@everyboard/games/p4';
+import { P4Heuristic } from '@everyboard/games/p4';
+import { P4Move } from '@everyboard/games/p4';
+import { P4OrderedMoveGenerator } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';

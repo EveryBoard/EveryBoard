@@ -4,12 +4,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"log"
 	"net/http"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/handler"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -29,13 +30,25 @@ func tokenForUser(uid string) string {
 	return fmt.Sprintf("Authorization, %s.%s.", b64("{}"), b64(fmt.Sprintf(`{"sub":"%s"}`, uid)))
 }
 
+func dialWebSocket(url string, headers http.Header) (*websocket.Conn, int, error) {
+	connection, response, err := websocket.DefaultDialer.Dial(url, headers)
+	statusCode := 0
+	if response != nil {
+		statusCode = response.StatusCode
+		if response.Body != nil {
+			_ = response.Body.Close()
+		}
+	}
+	return connection, statusCode, err
+}
+
 func EstablishWebSocketConnection(t *testing.T, uid string) *websocket.Conn {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, statusCode, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
 
-	require.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
+	require.Equal(t, http.StatusSwitchingProtocols, statusCode, "expected websocket upgrade")
 
 	// We should always receive a first message (about our current game)
 	_, _, err = c.ReadMessage()
@@ -165,7 +178,7 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 func (sb ScenarioBuilder) Cleanup() {
 	sb.cleanupOnce.Do(func() {
 		for _, conn := range sb.connections {
-			conn.Close()
+			_ = conn.Close()
 		}
 		for _, f := range sb.cleanupFunctions {
 			f()
@@ -326,11 +339,11 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 	sb.subscribeConfigRoom(userId, gameId)
 
 	user := sb.getUser(userId)
-	if userId != configRoom.Creator.ID {
+	if userId != configRoom.Creator.User.ID {
 		// All configRoom subscribers (including the new one) see CandidateJoined
 		for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
 			expectMessage(sb.t, sb.getConnection(subscriber),
-				fmt.Sprintf(`["CandidateJoined",{"candidate":%s,"elo":0}]`, toJSON(sb.t, user)))
+				fmt.Sprintf(`["CandidateJoined",{"candidate":{"user":%s,"elo":0}}]`, toJSON(sb.t, user)))
 		}
 		// The new subscriber receives their CurrentGameUpdate
 		currentGame := sb.fakeStore.CurrentGameForTest(userId)
@@ -347,7 +360,7 @@ func (sb ScenarioBuilder) SubscribeGame(userId string, gameId model.GameID) {
 
 	sb.subscribeGame(userId, gameId)
 
-	isObserver := game.PlayerZero.ID != userId && game.PlayerOne.ID != userId
+	isObserver := game.PlayerZero.User.ID != userId && game.PlayerOne.User.ID != userId
 	if isObserver {
 		currentGame := sb.fakeStore.CurrentGameForTest(userId)
 		expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
@@ -447,8 +460,8 @@ func (sb ScenarioBuilder) ReviewConfig(userId string) {
 func (sb ScenarioBuilder) AcceptConfig(userId string) {
 	gameId := sb.getSubscribedGameId(userId)
 	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
-	userCreator := configRoom.Creator
-	userOpponent := *configRoom.ChosenOpponent
+	userCreator := configRoom.Creator.User
+	userOpponent := configRoom.ChosenOpponent.User
 
 	sendRawMessage(sb.t, sb.getConnection(userId), `["AcceptConfig"]`)
 
@@ -591,10 +604,10 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	// Find the opponent from the rematch game
 	var opponentId string
 	rematchGame := sb.fakeStore.GameForTest(rematchId)
-	if rematchGame.PlayerZero.ID == creator.ID {
-		opponentId = rematchGame.PlayerOne.ID
+	if rematchGame.PlayerZero.User.ID == creator.ID {
+		opponentId = rematchGame.PlayerOne.User.ID
 	} else {
-		opponentId = rematchGame.PlayerZero.ID
+		opponentId = rematchGame.PlayerZero.User.ID
 	}
 	currentGameOpponent := sb.fakeStore.CurrentGameForTest(opponentId)
 
@@ -616,7 +629,7 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 }
 
 func readWithTimeout(t *testing.T, c *websocket.Conn) []byte {
-	c.SetReadDeadline(time.Now().Add(2 * time.Second))
+	require.NoError(t, c.SetReadDeadline(time.Now().Add(2*time.Second)))
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		t.Logf("ReadMessage failed (might be expected): %v", err)

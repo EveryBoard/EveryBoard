@@ -2,12 +2,13 @@ package ws
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
@@ -20,14 +21,14 @@ func TestHandleSubscribeGameDoesNotExist(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
 
 	c := dial("user_game_not_exists")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	encodedID, _ := model.EncodeID(model.GameID(9999))
 	err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
@@ -42,7 +43,7 @@ func TestSubscribeGameRollback(t *testing.T) {
 
 	uid := "rollback-user"
 	c := EstablishWebSocketConnection(t, uid)
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// Encode a game ID that decodes successfully but does not exist in the store.
 	missingID, err := model.EncodeID(model.GameID(999999))
@@ -62,7 +63,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -71,22 +72,25 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	t.Run("TakeBack", func(t *testing.T) {
 		uid := "player0"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(700)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"TakeBack"}]`))
@@ -97,24 +101,27 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 	t.Run("Draw", func(t *testing.T) {
 		uid := "player_draw"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(800)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
-			Creator:        model.MinimalUser{ID: uid, Name: uid},
-			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Draw"}]`))
@@ -132,7 +139,7 @@ func TestHandleGameEnd(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -141,24 +148,24 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerZero", func(t *testing.T) {
 		uid := "player_w0"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(900)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
-			Creator:        model.MinimalUser{ID: uid, Name: uid},
-			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":0}]`))
@@ -171,24 +178,24 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerOne", func(t *testing.T) {
 		uid := "player_w1"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(901)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
-			PlayerOne:  model.MinimalUser{ID: uid, Name: uid},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "player0", Name: "player0"}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
-			Creator:        model.MinimalUser{ID: "player0", Name: "player0"},
-			ChosenOpponent: &model.MinimalUser{ID: uid, Name: uid},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: "player0", Name: "player0"}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":1}]`))
@@ -201,24 +208,24 @@ func TestHandleGameEnd(t *testing.T) {
 	t.Run("WinnerNone", func(t *testing.T) {
 		uid := "player_wnone"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(902)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Result:     model.ResultInProgress,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
-			Creator:        model.MinimalUser{ID: uid, Name: uid},
-			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 			Status:         model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":2}]`))
@@ -236,7 +243,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -244,7 +251,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 
 	t.Run("NotSubscribed", func(t *testing.T) {
 		c := dial("user_not_sub")
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
 		require.NoError(t, err, "WriteMessage failed")
@@ -255,17 +262,20 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 	t.Run("GameNotFinished", func(t *testing.T) {
 		uid := "user_not_finished"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(300)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
-			Creator: model.MinimalUser{ID: uid, Name: uid},
+			Creator: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID),
+		))
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
@@ -282,7 +292,7 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 	dial := func(uid string) *websocket.Conn {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+		c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
@@ -292,29 +302,32 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 		uid := "player_timeout_test"
 		opponent := "opponent_timeout_test"
 		c := dial(uid)
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 
 		gameID := model.GameID(7000)
 		encodedID, _ := model.EncodeID(gameID)
 		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			GameName:   "test-game",
-			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
-			PlayerOne:  model.MinimalUser{ID: opponent, Name: opponent},
+			PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: opponent, Name: opponent}},
 			Result:     model.ResultTimeoutOfOne,
 		})
 		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
-			Creator:        model.MinimalUser{ID: uid, Name: uid},
-			ChosenOpponent: &model.MinimalUser{ID: opponent, Name: opponent},
+			Creator:        model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+			ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: opponent, Name: opponent}},
 			Status:         model.StatusFinished,
 			GameName:       "test-game",
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+		require.NoError(t, c.WriteMessage(
+			websocket.TextMessage,
+			fmt.Appendf(nil, `["SubscribeGame",{"gameId":"%s"}]`, encodedID),
+		))
 		foundGameUpdate := false
 		foundSyncEvent := false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), "GameUpdate") {
 				foundGameUpdate = true
@@ -410,23 +423,23 @@ func TestSendMoveFromConfigRoomCreatorWhoIsNotGamePlayer(t *testing.T) {
 	fakeStore.SetGameForTest(gameID, &model.Game{
 		GameID:     gameID,
 		GameName:   "test-game",
-		PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
-		PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+		PlayerZero: model.PlayerInfo{User: model.MinimalUser{ID: "player0", Name: "player0"}},
+		PlayerOne:  model.PlayerInfo{User: model.MinimalUser{ID: "player1", Name: "player1"}},
 		Result:     model.ResultInProgress,
 	})
 	fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 		ID:             gameID,
-		Creator:        model.MinimalUser{ID: uid, Name: uid},
-		ChosenOpponent: &model.MinimalUser{ID: opponent, Name: opponent},
+		Creator:        model.PlayerInfo{User: model.MinimalUser{ID: uid, Name: uid}},
+		ChosenOpponent: &model.PlayerInfo{User: model.MinimalUser{ID: opponent, Name: opponent}},
 		Status:         model.StatusStarted,
 		GameName:       "test-game",
 	})
 
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	c, _, err := dialWebSocket(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 	readWithTimeout(t, c)
 
 	err = c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))

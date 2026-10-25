@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 import { GameStatus } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
@@ -205,7 +205,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-        expect(Utils.getNonNullable(wrapper.currentUser).name).toEqual('creator');
+        expect(Utils.getNonNullable(wrapper.currentUser()).name).toEqual('creator');
     }));
 
     it('should no longer have GameCreationComponent and should have QuartoComponent instead', fakeAsync(async() => {
@@ -257,7 +257,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ...PreparationOptions.withoutClocks,
             game: {
                 ...GameMocks.STARTED,
-                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                playerZero: {
+                    ...GameMocks.STARTED.playerZero,
+                    user: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+                },
             },
         });
         await receiveSync();

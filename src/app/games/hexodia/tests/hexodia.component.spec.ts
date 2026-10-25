@@ -6,8 +6,8 @@ import { FourStatePiece } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { FourStatePieceGameStateWithTable } from '@everyboard/games';
-import { HexodiaMove } from '@everyboard/games';
-import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
+import { HexodiaMove } from '@everyboard/games/hexodia';
+import { HexodiaConfig, HexodiaRules } from '@everyboard/games/hexodia';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaComponent } from '../hexodia.component';

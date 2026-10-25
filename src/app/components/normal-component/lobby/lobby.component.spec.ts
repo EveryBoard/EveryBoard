@@ -251,7 +251,9 @@ describe('LobbyComponent', () => {
     it('should display creator elo as a whole rounded number', fakeAsync(async() => {
         // Given a lobby with an existing game, with a creator elo
         testUtils.detectChanges();
-        setActiveConfigRooms(MGPMap.from({ gameId: { ...configRoom, creatorElo: 12.67865 } }));
+        setActiveConfigRooms(MGPMap.from({
+            gameId: { ...configRoom, creator: { ...configRoom.creator, elo: 12.67865 } },
+        }));
 
         // When displaying it
         testUtils.detectChanges();
