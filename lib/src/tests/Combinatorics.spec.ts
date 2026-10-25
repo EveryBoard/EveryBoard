@@ -9,6 +9,9 @@ function expectEqualityBetweenSetOfSets<T extends Comparable>(expected: T[][], a
         const index: number = remainingExpected.findIndex(
             (expectedList: T[]) => areUnorderedListsEqual(expectedList, actualList),
         );
+        if (index >= 0) {
+            remainingExpected.splice(index, 1);
+        }
         expect(index)
             .withContext(`Expected ${JSON.stringify(actualList)} to have a matching list`)
             .toBeGreaterThanOrEqual(0);
