@@ -166,7 +166,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
 };
 
 
-fdescribe('LascaComponent', () => {
+describe('LascaComponent', () => {
 
     const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 

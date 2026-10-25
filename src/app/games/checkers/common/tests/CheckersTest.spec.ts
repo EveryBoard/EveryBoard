@@ -96,7 +96,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
-    fdescribe(entries.gameName + ' component generic tests', () => {
+    describe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {
             // bind test utils, which we cannot take as a parameter from DoCheckersTests,
