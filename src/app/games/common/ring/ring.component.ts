@@ -18,7 +18,7 @@ export class RingComponent {
 
     public readonly width: InputSignal<number> = input.required();
 
-    public readonly midRingClasses: InputSignal<string | string[]> = input.required();
+    public readonly midRingClasses: InputSignal<string | ReadonlyArray<string>> = input.required();
 
     private readonly outsideStrokeInsideRadius: Signal<number> = computed(() =>
         this.outsideRadius() - this.strokeWidth(),
