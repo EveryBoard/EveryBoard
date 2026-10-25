@@ -39,7 +39,7 @@
               [attr.height]="SPACE_SIZE"
               class="no-fill mid-stroke clickable-stroke"/>
     }
-    @for (possibleMove of possibleMoves; track $index) {
+    @for (possibleMove of possibleMoves(); track $index) {
         <g id="arrow-{{ possibleMove.arrow.start.x }}-{{ possibleMove.arrow.start.y }}-to-{{ possibleMove.arrow.landing.x }}-{{ possibleMove.arrow.landing.y }}"
            app-dir-arrow
            [arrow]="possibleMove.arrow"/>

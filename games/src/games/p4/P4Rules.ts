@@ -89,8 +89,8 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
 
     public override getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
-        const victoriousCoord: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
-        if (victoriousCoord.length > 0) {
+        const victoriousCoords: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
         const width: number = state.getWidth();
@@ -98,7 +98,7 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
         return state.turn === (width * height) ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 
-    public getVictoriousCoords(state: P4State): Coord[] {
+    public getVictoriousSpaces(state: P4State): Coord[] {
         return this.P4_HELPER.getVictoriousCoord(state);
     }
 

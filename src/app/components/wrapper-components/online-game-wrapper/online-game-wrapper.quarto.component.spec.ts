@@ -585,7 +585,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
 
             it('should only propose to accept take back when opponent asked', fakeAsync(async() => {
-                // Given a board where opponent did not ask to take back and where both player could ask
+                // Given a board where opponent did not ask to take back and where both players could ask
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await receiveSync();
                 await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);

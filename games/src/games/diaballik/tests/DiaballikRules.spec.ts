@@ -404,7 +404,7 @@ describe('DiaballikRules', () => {
         });
 
         it('should detect defeat from current player when both form a blocking line', () => {
-            // Given a state where both player are blocking the opponent, with 3 touching pieces
+            // Given a state where both players are blocking the opponent, with 3 touching pieces
             const state: DiaballikState = new DiaballikState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
