@@ -3,7 +3,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
+import { DirectionFailure } from '../../../jscaip/direction/Direction';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -854,7 +854,7 @@ describe('QuebecCastlesRules', () => {
                     const coord: Coord = new Coord(7, 7);
                     const state: QuebecCastlesState = rules
                         .getInitialState(customConfig)
-                        .setPieceAt(coord, Player.ZERO);
+                        .withPieceAt(coord, Player.ZERO);
 
                     // When dropping on the same coord again
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop([coord]);

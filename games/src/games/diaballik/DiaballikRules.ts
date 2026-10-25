@@ -5,9 +5,9 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordFailure } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
@@ -159,7 +159,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
 
         // The straight-line path between origin and destination contains no other piece
-        const direction: Ordinal = Ordinal.factory.fromMove(start, end).get();
+        const direction: EightDirection = EightDirection.factory.fromMove(start, end).get();
         const afterStart: Coord = start.getNext(direction);
         for (let coord: Coord = afterStart; coord.equals(end) === false; coord = coord.getNext(direction)) {
             if (state.getPieceAt(coord) !== DiaballikPiece.NONE) {
@@ -300,7 +300,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             // A piece in the first column is considered connected
             return true;
         }
-        for (const direction of [Ordinal.LEFT, Ordinal.UP_LEFT, Ordinal.DOWN_LEFT]) {
+        for (const direction of [EightDirection.LEFT, EightDirection.UP_LEFT, EightDirection.DOWN_LEFT]) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.coordIsOwnedBy(neighbor, player)) {
                 return true;

@@ -3,7 +3,7 @@ import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';

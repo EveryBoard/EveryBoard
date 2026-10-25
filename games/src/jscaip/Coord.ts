@@ -1,6 +1,6 @@
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
-import { Ordinal } from './Ordinal';
+import { EightDirection } from './direction/EightDirection';
 import { Vector } from './Vector';
 
 export class CoordFailure {
@@ -101,8 +101,8 @@ export class Coord extends Vector {
         return false;
     }
 
-    public getDirectionToward(c: Coord): MGPFallible<Ordinal> {
-        return Ordinal.factory.fromMove(this, c);
+    public getDirectionToward(c: Coord): MGPFallible<EightDirection> {
+        return EightDirection.factory.fromMove(this, c);
     }
 
     public getOrthogonalDistance(c: Coord): number {
@@ -166,7 +166,7 @@ export class Coord extends Vector {
         if (this.equals(c)) {
             return coords;
         }
-        const dir: Ordinal = this.getDirectionToward(c).get();
+        const dir: EightDirection = this.getDirectionToward(c).get();
         let coord: Coord = this.getNext(dir, 1);
         while (coord.equals(c) === false) {
             coords.push(coord);
@@ -208,11 +208,11 @@ export class Coord extends Vector {
     }
 
     /**
-     * Ordinal as in both orthogonal and diagonal
+     * EightDirection as in both orthogonal and diagonal
      * @returns the list of coord that are considered as neighbor coords, here, the 8 ones
      */
-    public getOrdinalNeighbors(): Coord[] {
-        return Ordinal.ORDINALS.map((direction: Ordinal) => this.getNext(direction));
+    public getEightDirectionNeighbors(): Coord[] {
+        return EightDirection.EIGHT_DIRECTIONS.map((direction: EightDirection) => this.getNext(direction));
     }
 
 }

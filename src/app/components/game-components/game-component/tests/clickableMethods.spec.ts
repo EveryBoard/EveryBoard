@@ -1,5 +1,5 @@
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { DiamPiece } from '@everyboard/games/diam';
@@ -13,7 +13,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onPieceClick: [new Coord(0, 0)],
         onSpaceClick: [new Coord(0, 0)],
         onInvisibleSpaceClick: [new Coord(0, 0)],
-        chooseDirection: [Ordinal.UP],
+        chooseDirection: [EightDirection.UP],
     },
     Apagos: {
         onSquareClick: [0],
@@ -28,6 +28,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onSpaceClick: [new Coord(0, 0)],
     },
     ConnectSix: { onClick: [0, 0] },
+    ConnectN: { onClick: [new Coord(0, 0)] },
     Conspirateurs: { onClick: [new Coord(0, 0)] },
     Diaballik: {
         onClick: [0, 0],

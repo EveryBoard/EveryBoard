@@ -225,7 +225,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToExist('#square-6-6-piece-2');
         }));
 
-        it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
+        it('should cancel move when trying invalid direction move mid-capture', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
             const state: CheckersState = EvenCheckersState.of([
                 [__, __, __, __, __, __, __],

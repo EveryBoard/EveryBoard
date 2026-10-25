@@ -1,9 +1,9 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
 
 import { CoerceoFailure } from './CoerceoFailure';
@@ -12,15 +12,15 @@ export class CoerceoStep {
 
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
 
-    public static UP_LEFT: CoerceoStep = new CoerceoStep(Ordinal.UP_LEFT, 'UP_LEFT');
+    public static UP_LEFT: CoerceoStep = new CoerceoStep(EightDirection.UP_LEFT, 'UP_LEFT');
 
-    public static UP_RIGHT: CoerceoStep = new CoerceoStep(Ordinal.UP_RIGHT, 'UP_RIGHT');
+    public static UP_RIGHT: CoerceoStep = new CoerceoStep(EightDirection.UP_RIGHT, 'UP_RIGHT');
 
     public static RIGHT: CoerceoStep = new CoerceoStep(new Vector(2, 0), 'RIGHT');
 
-    public static DOWN_LEFT: CoerceoStep = new CoerceoStep(Ordinal.DOWN_LEFT, 'DOWN_LEFT');
+    public static DOWN_LEFT: CoerceoStep = new CoerceoStep(EightDirection.DOWN_LEFT, 'DOWN_LEFT');
 
-    public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(Ordinal.DOWN_RIGHT, 'DOWN_RIGHT');
+    public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(EightDirection.DOWN_RIGHT, 'DOWN_RIGHT');
 
     public static readonly STEPS: CoerceoStep[] = [
         CoerceoStep.LEFT,

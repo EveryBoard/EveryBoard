@@ -1,5 +1,5 @@
 
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { EpaminondasMove } from '@everyboard/games/epaminondas';
 import { EpaminondasConfig, EpaminondasRules } from '@everyboard/games/epaminondas';
@@ -63,7 +63,7 @@ export class EpaminondasTutorial extends Tutorial {
             $localize`Moving a piece`,
             $localize`Here is the starting board. Dark plays first. Let's start with moving a single piece:<ol><li>Click on a piece.</li><li>Click on a empty neighboring square.</li></ol><br/>You're playing Dark, move a piece.`,
             EpaminondasRules.get().getInitialState(defaultConfig),
-            new EpaminondasMove(0, 10, 1, 1, Ordinal.UP),
+            new EpaminondasMove(0, 10, 1, 1, EightDirection.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.phalanxSize === 1) {
                     return MGPValidation.SUCCESS;
@@ -77,7 +77,7 @@ export class EpaminondasTutorial extends Tutorial {
             $localize`Moving a phalanx`,
             $localize`A line of several pieces is called a phalanx. Let us now see how to move a phalanx along a line:<ol><li>Click on the first piece of the phalanx.</li><li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li></ol><br/>You're playing Dark, move a phalanx!`,
             EpaminondasRules.get().getInitialState(defaultConfig),
-            new EpaminondasMove(0, 11, 2, 1, Ordinal.UP),
+            new EpaminondasMove(0, 11, 2, 1, EightDirection.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.phalanxSize > 1) {
                     return MGPValidation.SUCCESS;
@@ -104,7 +104,7 @@ export class EpaminondasTutorial extends Tutorial {
                 [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, O, O, O, O, O, O, O],
             ], 0),
-            [new EpaminondasMove(2, 10, 4, 2, Ordinal.UP)],
+            [new EpaminondasMove(2, 10, 4, 2, EightDirection.UP)],
             $localize`Congratulations, you made it! Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.`,
             $localize`Failed, you have not captured the phalanx.`,
         ),

@@ -1,8 +1,8 @@
 import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Direction } from '../../jscaip/direction/Direction';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Vector } from '../../jscaip/Vector';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 

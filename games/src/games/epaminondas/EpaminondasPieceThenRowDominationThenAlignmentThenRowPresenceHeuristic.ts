@@ -1,6 +1,6 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
@@ -27,7 +27,7 @@ export class EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuris
                     pieces += mod;
                     wasPresent.put(player, mod);
                     row += mod;
-                    for (const dir of [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT]) {
+                    for (const dir of [EightDirection.UP_LEFT, EightDirection.UP, EightDirection.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);
                         while (node.gameState.hasPieceAt(neighbor, player)) {
                             alignement += mod;

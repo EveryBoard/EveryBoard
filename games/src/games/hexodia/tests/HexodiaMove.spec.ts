@@ -27,7 +27,7 @@ describe('HexodiaMove', () => {
     describe('equals', () => {
 
         it('should be equal when coords are equal', () => {
-            // Given two move with equal coord
+            // Given two moves with equal coords
             const first: HexodiaMove = HexodiaMove.of([new Coord(0, 0), new Coord(1, 1)]);
             const second: HexodiaMove = HexodiaMove.of([new Coord(0, 0), new Coord(1, 1)]);
 
@@ -47,7 +47,7 @@ describe('HexodiaMove', () => {
         });
 
         it('should be equal when reversed, hence (a, b) == (b, a)', () => {
-            // Given two move with equal coords but switched
+            // Given two moves with equal coords but switched
             const first: HexodiaMove = HexodiaMove.of([new Coord(0, 0), new Coord(1, 1)]);
             const second: HexodiaMove = HexodiaMove.of([new Coord(1, 1), new Coord(0, 0)]);
 
@@ -57,7 +57,7 @@ describe('HexodiaMove', () => {
         });
 
         it('should be equal when coord is equal', () => {
-            // Given two move with equal coord
+            // Given two moves with equal coords
             const first: HexodiaMove = HexodiaMove.of([new Coord(0, 0)]);
             const second: HexodiaMove = HexodiaMove.of([new Coord(0, 0)]);
 
@@ -67,7 +67,7 @@ describe('HexodiaMove', () => {
         });
 
         it('should be different when coords are different', () => {
-            // Given two move with different coord
+            // Given two moves with different coords
             const first: HexodiaMove = HexodiaMove.of([new Coord(0, 0)]);
             const second: HexodiaMove = HexodiaMove.of([new Coord(1, 1)]);
 

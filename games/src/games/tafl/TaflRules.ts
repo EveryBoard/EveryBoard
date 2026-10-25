@@ -2,9 +2,9 @@ import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -65,7 +65,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
                 return MGPValidation.failure(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
-        const dir: Ordinal = move.getStart().getDirectionToward(move.getEnd()).get();
+        const dir: EightDirection = move.getStart().getDirectionToward(move.getEnd()).get();
         const dist: number = move.getStart().getOrthogonalDistance(move.getEnd());
         let inspectedCoord: Coord = move.getStart().getNext(dir);
         for (let i: number = 1; i < dist; i++) {

@@ -5,9 +5,9 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -34,8 +34,8 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
             },
         });
 
-    public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 5);
+    public static readonly QUIXO_HELPER: EightDirectionNInARowHelper<PlayerOrNone> =
+        new EightDirectionNInARowHelper(Utils.identity, 5);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();

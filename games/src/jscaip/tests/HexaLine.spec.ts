@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { HexaDirection } from '../HexaDirection';
+import { HexaDirection } from '../direction/HexaDirection';
 import { HexaLine } from '../HexaLine';
 
 describe('HexaLine', () => {

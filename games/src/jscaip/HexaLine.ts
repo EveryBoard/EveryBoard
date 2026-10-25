@@ -1,7 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from './Coord';
-import { HexaDirection } from './HexaDirection';
+import { HexaDirection } from './direction/HexaDirection';
 
 export class HexaLine {
     public static fromTwoCoords(coord1: Coord, coord2: Coord): MGPOptional<HexaLine> {

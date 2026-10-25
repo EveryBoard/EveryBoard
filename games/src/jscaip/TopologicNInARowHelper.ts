@@ -1,0 +1,24 @@
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from './Coord';
+import { Direction } from './direction/Direction';
+import { NInARowHelper } from './NInARowHelper';
+import { PlayerOrNone } from './Player';
+import { TopologicShape } from './shape/TopologicShape';
+
+export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Direction>
+    extends NInARowHelper<T, D>
+{
+
+    public constructor(
+        getOwner: (piece: T) => PlayerOrNone,
+        N: number,
+        public readonly shape: TopologicShape<D>,
+    ) {
+        super(getOwner, N, shape.getTopology().getDirections().toList());
+    }
+
+    protected override getNextCoord(coord: Coord, dir: D, distance: number = 1): MGPOptional<Coord> {
+        return this.shape.getNextCoord(coord, dir, distance);
+    }
+}

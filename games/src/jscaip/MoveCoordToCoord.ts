@@ -1,8 +1,8 @@
 import { MGPFallible } from '@everyboard/lib';
 
 import { Coord } from './Coord';
+import { EightDirection } from './direction/EightDirection';
 import { MoveWithTwoCoords } from './MoveWithTwoCoords';
-import { Ordinal } from './Ordinal';
 import { RulesFailure } from './RulesFailure';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
@@ -16,8 +16,8 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         return this.getStart().getLinearDistanceToward(this.getEnd(), false);
     }
 
-    public getDirection(): MGPFallible<Ordinal> {
-        return Ordinal.factory.fromMove(this.getStart(), this.getEnd());
+    public getDirection(): MGPFallible<EightDirection> {
+        return EightDirection.factory.fromMove(this.getStart(), this.getEnd());
     }
 
     public getStart(): Coord {

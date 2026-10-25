@@ -7,7 +7,7 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';

@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, signal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { Table3DUtils, TableUtils } from '@everyboard/games';
 import { TrexoAlignmentHeuristic } from '@everyboard/games/trexo';
@@ -192,7 +192,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const piece: TrexoPiece = this.state().getPieceAtXYZ(x, y, z);
         const pieceCoord: Coord = new Coord(x, y);
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
-        for (const dir of Ordinal.ORTHOGONALS) {
+        for (const dir of EightDirection.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
             if (TrexoState.isOnBoard(neighborCoord)) {
                 const neighborStack: TrexoPieceStack = this.state().getPieceAt(neighborCoord);

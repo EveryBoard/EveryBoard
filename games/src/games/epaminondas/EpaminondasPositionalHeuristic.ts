@@ -1,7 +1,7 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Player } from '../../jscaip/Player';
 
 import { EpaminondasMove } from './EpaminondasMove';
@@ -28,13 +28,13 @@ export class EpaminondasPositionalHeuristic
             const coord: Coord = coordAndContent.coord;
             const player: Player = coordAndContent.content;
             let avancement: number; // between 0 and 11
-            let dirs: Ordinal[];
+            let dirs: EightDirection[];
             if (player === Player.ZERO) {
                 avancement = height - coord.y;
-                dirs = [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT];
+                dirs = [EightDirection.UP_LEFT, EightDirection.UP, EightDirection.UP_RIGHT];
             } else {
                 avancement = coord.y + 1;
-                dirs = [Ordinal.DOWN_LEFT, Ordinal.DOWN, Ordinal.DOWN_RIGHT];
+                dirs = [EightDirection.DOWN_LEFT, EightDirection.DOWN, EightDirection.DOWN_RIGHT];
             }
             const mod: number = player.getScoreModifier();
             total += avancement * mod;

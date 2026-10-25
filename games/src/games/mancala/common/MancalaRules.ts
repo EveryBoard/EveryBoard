@@ -3,7 +3,7 @@ import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils, Set } fr
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
@@ -306,7 +306,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         let coord: Coord = new Coord(distribution.x, distribution.y);
         const initial: Coord = new Coord(distribution.x, distribution.y);
         let seedsInHand: number = previousLapResult.resultingState.getPieceAt(initial);
-        let resultingState: MancalaState = previousLapResult.resultingState.setPieceAt(initial, 0);
+        let resultingState: MancalaState = previousLapResult.resultingState.withPieceAt(initial, 0);
         const player: Player = resultingState.getCurrentPlayer();
         // to remember in order not to sow in the starting space if we make a full turn
         const filledCoords: Coord[] = [];

@@ -1,7 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Orthogonal } from '../Orthogonal';
+import { Orthogonal } from '../direction/Orthogonal';
 import { TableUtils } from '../TableUtils';
 
 export class TriangularCheckerBoard {

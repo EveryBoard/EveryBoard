@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';

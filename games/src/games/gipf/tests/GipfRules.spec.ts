@@ -5,7 +5,7 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';

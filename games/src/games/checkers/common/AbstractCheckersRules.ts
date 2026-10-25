@@ -3,8 +3,8 @@ import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player } from '../../../jscaip/Player';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -280,8 +280,8 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         // Since player zero must go up and player one go down
         const verticalDirection: number = pieceOwner.getYDirection();
         const directions: Vector[] = [
-            Ordinal.factory.fromDelta(-1, verticalDirection).get(), // left diagonal
-            Ordinal.factory.fromDelta(1, verticalDirection).get(), // right diagonal
+            EightDirection.factory.fromDelta(-1, verticalDirection).get(), // left diagonal
+            EightDirection.factory.fromDelta(1, verticalDirection).get(), // right diagonal
         ];
         if (isCapture && config.frisianCaptureAllowed) {
             const frisianForward: Vector = new Vector(0, 2 * verticalDirection);
@@ -298,8 +298,8 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         const isLegalCaptureBackward: boolean = isCapture && config.simplePieceCanCaptureBackwards;
         if (state.getPieceAt(coord).getCommander().isPromoted || isLegalCaptureBackward) {
             directions.push(
-                Ordinal.factory.fromDelta(-1, - verticalDirection).get(), // down left diagonal
-                Ordinal.factory.fromDelta(1, - verticalDirection).get(), // down right diagonal
+                EightDirection.factory.fromDelta(-1, - verticalDirection).get(), // down left diagonal
+                EightDirection.factory.fromDelta(1, - verticalDirection).get(), // down right diagonal
             );
         }
         return directions;
@@ -535,7 +535,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     }
 
     private getDirectionValidity(start: Coord, end: Coord, config: CheckersConfig): MGPValidation {
-        const direction: MGPFallible<Ordinal> = start.getDirectionToward(end);
+        const direction: MGPFallible<EightDirection> = start.getDirectionToward(end);
         if (direction.isFailure()) {
             return MGPValidation.failure(direction.getReason());
         }

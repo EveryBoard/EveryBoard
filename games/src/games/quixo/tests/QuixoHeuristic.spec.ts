@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { QuixoHeuristic } from '../QuixoHeuristic';

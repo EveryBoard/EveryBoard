@@ -68,7 +68,7 @@ describe('HexodiaComponent', () => {
         }));
 
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
-            // Given a component with one move already done
+            // Given a board with a last move
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -137,7 +137,7 @@ describe('HexodiaComponent', () => {
     describe('second click', () => {
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
-            // Given a component where you already dropped your first piece
+            // Given a component where player already dropped their first piece
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -170,7 +170,7 @@ describe('HexodiaComponent', () => {
         }));
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
-            // Given a component where you already dropped your first piece
+            // Given a component where player already dropped their first piece
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -203,7 +203,7 @@ describe('HexodiaComponent', () => {
         }));
 
         it('should show last move again when cancelling move', fakeAsync(async() => {
-            // Given a component with one move already done, and a first click done
+            // Given a component where player already dropped their first piece
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -228,7 +228,7 @@ describe('HexodiaComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click-8-8');
 
-            // When clicking on an empty square
+            // When clicking on a piece dropped during this turn
             await testUtils.expectClickFailure('#click-8-8');
 
             // Then the dropped piece should be displayed
@@ -239,7 +239,7 @@ describe('HexodiaComponent', () => {
 
     describe('view', () => {
 
-        it('should show highlight when victory occur', fakeAsync(async() => {
+        it('should show highlight when victory occurs', fakeAsync(async() => {
             // Given a board where current player is about to win
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -265,7 +265,7 @@ describe('HexodiaComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click-6-8');
 
-            // When finishing your move
+            // When finishing the move
             const move: HexodiaMove = HexodiaMove.of([new Coord(6, 8), new Coord(5, 8)]);
 
             // Then the victory squares should be highlighted
@@ -306,7 +306,7 @@ describe('HexodiaComponent', () => {
             const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
             await testUtils.setupState(state, { previousMove });
 
-            // Then last piece should have the highlight
+            // Then the last moved piece should have the highlight
             testUtils.expectElementToHaveClass('#piece-9-9', 'last-move-stroke');
         }));
 
@@ -339,7 +339,7 @@ describe('HexodiaComponent', () => {
             // When displaying it
             await testUtils.setupState(state, { previousMove });
 
-            // Then last piece should have the highlight
+            // Then the most recently moved pieces should have the highlight
             testUtils.expectElementToHaveClass('#piece-10-9', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#piece-11-9', 'last-move-stroke');
         }));
