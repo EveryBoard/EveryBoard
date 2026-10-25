@@ -1,9 +1,9 @@
 
 import { Ordinal } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { EpaminondasMove } from '@everyboard/games';
-import { EpaminondasConfig, EpaminondasRules } from '@everyboard/games';
-import { EpaminondasState } from '@everyboard/games';
+import { EpaminondasMove } from '@everyboard/games/epaminondas';
+import { EpaminondasConfig, EpaminondasRules } from '@everyboard/games/epaminondas';
+import { EpaminondasState } from '@everyboard/games/epaminondas';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

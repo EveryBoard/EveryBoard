@@ -10,11 +10,11 @@ import (
 )
 
 func TestCors(t *testing.T) {
-	server := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}), gameStoreStub{})
 
-	request := httptest.NewRequest(http.MethodOptions, "/ws", nil)
+	request := httptest.NewRequestWithContext(t.Context(), http.MethodOptions, "/ws", nil)
 	recorder := httptest.NewRecorder()
 
 	server.Handler.ServeHTTP(recorder, request)
@@ -26,7 +26,7 @@ func TestCors(t *testing.T) {
 
 func TestVersion(t *testing.T) {
 	server := New("127.0.0.1:0", "*", http.NotFoundHandler(), gameStoreStub{})
-	request := httptest.NewRequest(http.MethodGet, "/version", nil)
+	request := httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/version", nil)
 	recorder := httptest.NewRecorder()
 
 	server.Handler.ServeHTTP(recorder, request)

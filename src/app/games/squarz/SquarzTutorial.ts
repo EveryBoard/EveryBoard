@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { SquarzMove } from '@everyboard/games';
-import { SquarzConfig, SquarzRules } from '@everyboard/games';
-import { SquarzState } from '@everyboard/games';
+import { SquarzMove } from '@everyboard/games/squarz';
+import { SquarzConfig, SquarzRules } from '@everyboard/games/squarz';
+import { SquarzState } from '@everyboard/games/squarz';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

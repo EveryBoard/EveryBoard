@@ -4,8 +4,10 @@
   "scripts": {
     "ng": "ng",
     "dependencies:build": "npm --prefix lib run build && npm --prefix games run build",
+    "dependencies:watch": "concurrently --kill-others --names lib,games \"npm --prefix lib run watch\" \"npm --prefix games run watch\"",
+    "start:angular": "ng serve --configuration=debug",
     "prestart": "npm run dependencies:build",
-    "start": "ng serve --configuration=debug",
+    "start": "concurrently --kill-others --names lib,games,angular \"npm --prefix lib run watch\" \"npm --prefix games run watch\" \"npm run start:angular\"",
     "start:emulator": "bash ./scripts/start-in-emulator.sh",
     "prebuild": "npm run dependencies:build",
     "build": "ng build --configuration=production",
@@ -24,6 +26,8 @@
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
     "gamestest:ci": "cd games && npm ci && npm run test:ci && npm run coverage",
+    "check": "npm run lint && npm run check:games-exports",
+    "check:games-exports": "node --import tsx scripts/check-games-exports.ts",
     "prelint": "npm run eslint-rules:test",
     "lint": "eslint \"**/*.ts\" \"src/app/**/*.html\" --quiet",
     "e2e": "python ./e2e/launch.py"
@@ -35,8 +39,8 @@
     "@angular/forms": "^21.2.22",
     "@angular/platform-browser": "^21.2.22",
     "@angular/router": "^21.2.22",
-    "@everyboard/lib": "file:lib",
     "@everyboard/games": "file:games",
+    "@everyboard/lib": "file:lib",
     "@fortawesome/angular-fontawesome": "^4.0.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-brands-svg-icons": "^7.3.1",
@@ -67,8 +71,8 @@
     "@typescript-eslint/eslint-plugin": "^8.68.0",
     "@typescript-eslint/rule-tester": "^8.68.0",
     "@typescript-eslint/utils": "^8.68.0",
-    "angular-cli-ghpages": "^3.1.0",
     "angular-eslint": "^21.4.0",
+    "concurrently": "^10.0.6",
     "eslint": "^9.39.5",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.31.0",
@@ -83,6 +87,7 @@
     "karma-jasmine-html-reporter": "^2.3.0",
     "karma-time-stats-reporter": "^0.1.0",
     "sass": "^1.103.1",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.68.0"
   }

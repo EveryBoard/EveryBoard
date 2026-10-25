@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -20,7 +21,7 @@ func main() {
 	}
 	log.Println("All good, ready to play games?")
 	err = server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("Error when running server: %v", err)
 	}
 }

@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
 import { Coord3D } from '@everyboard/games';
-import { TrexoMove } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games/trexo';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TrexoHalfPieceComponent } from '../trexo-half-piece.component';

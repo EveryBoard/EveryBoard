@@ -4,7 +4,7 @@ import { Component, input, InputSignal } from '@angular/core';
 import { Coord } from '@everyboard/games';
 import { Coord3D } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
-import { TrexoMove } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games/trexo';
 import { Utils } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';

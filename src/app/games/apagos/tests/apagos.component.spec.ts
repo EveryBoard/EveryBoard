@@ -2,10 +2,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
-import { ApagosMove } from '@everyboard/games';
-import { ApagosConfig, ApagosRules } from '@everyboard/games';
-import { ApagosState } from '@everyboard/games';
-import { ApagosFailure } from '@everyboard/games';
+import { ApagosMove } from '@everyboard/games/apagos';
+import { ApagosConfig, ApagosRules } from '@everyboard/games/apagos';
+import { ApagosState } from '@everyboard/games/apagos';
+import { ApagosFailure } from '@everyboard/games/apagos';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ApagosComponent } from '../apagos.component';

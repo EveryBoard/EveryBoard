@@ -5,9 +5,9 @@ import { Orthogonal } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { QuixoMove } from '@everyboard/games';
-import { QuixoState } from '@everyboard/games';
-import { QuixoFailure } from '@everyboard/games';
+import { QuixoMove } from '@everyboard/games/quixo';
+import { QuixoState } from '@everyboard/games/quixo';
+import { QuixoFailure } from '@everyboard/games/quixo';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuixoComponent } from '../quixo.component';

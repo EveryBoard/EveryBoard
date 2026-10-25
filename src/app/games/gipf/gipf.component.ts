@@ -9,13 +9,13 @@ import { FlatHexaOrientation } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { EmptyRulesConfig } from '@everyboard/games';
-import { GipfFailure } from '@everyboard/games';
-import { GipfMove, GipfPlacement } from '@everyboard/games';
-import { GipfMoveGenerator } from '@everyboard/games';
-import { GipfLegalityInformation, GipfRules } from '@everyboard/games';
-import { GipfScoreHeuristic } from '@everyboard/games';
-import { GipfState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { GipfFailure } from '@everyboard/games/gipf';
+import { GipfMove, GipfPlacement } from '@everyboard/games/gipf';
+import { GipfMoveGenerator } from '@everyboard/games/gipf';
+import { GipfLegalityInformation, GipfRules } from '@everyboard/games/gipf';
+import { GipfScoreHeuristic } from '@everyboard/games/gipf';
+import { GipfState } from '@everyboard/games/gipf';
 import { MGPFallible, MGPOptional, MGPValidation, MGPMap, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -60,10 +60,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private readonly constructedState: WritableSignal<GipfState> = signal(this.state());
 
     public readonly possibleCaptures: WritableSignal<ReadonlyArray<GipfCapture>> = signal([]);
-    private readonly initialCaptures: WritableSignal<Set<GipfCapture>> = signal(new Set());
+    private readonly initialCaptures: WritableSignal<ReadonlyArray<GipfCapture>> = signal([]);
     private readonly placement: WritableSignal<MGPOptional<GipfPlacement>> = signal(MGPOptional.empty());
     private readonly placementEntrance: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
-    private readonly finalCaptures: WritableSignal<Set<GipfCapture>> = signal(new Set());
+    private readonly finalCaptures: WritableSignal<ReadonlyArray<GipfCapture>> = signal([]);
 
     public constructor() {
         super('Gipf');
@@ -207,7 +207,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.possibleCaptures.set(GipfRules.getPossibleCaptures(this.constructedState()));
         switch (this.movePhase()) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
-                this.initialCaptures.set(this.initialCaptures().addElement(capture));
+                this.initialCaptures.set([
+                    ...this.initialCaptures(),
+                    capture,
+                ]);
                 if (this.possibleCaptures().length === 0) {
                     return this.moveToPlacementPhase();
                 } else {
@@ -215,7 +218,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                 }
             default:
                 Utils.expectToBe(this.movePhase(), GipfComponent.PHASE_FINAL_CAPTURE);
-                this.finalCaptures.set(this.finalCaptures().addElement(capture));
+                this.finalCaptures.set([
+                    ...this.finalCaptures(),
+                    capture,
+                ]);
                 if (this.possibleCaptures().length === 0) {
                     return this.tryMove(
                         this.initialCaptures(),
@@ -315,9 +321,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return this.selectPlacementDirection(direction.toOptional());
     }
 
-    private tryMove(initialCaptures: Set<GipfCapture>,
-                    placement: GipfPlacement,
-                    finalCaptures: Set<GipfCapture>): Promise<MGPValidation> {
+    private tryMove(
+        initialCaptures: ReadonlyArray<GipfCapture>,
+        placement: GipfPlacement,
+        finalCaptures: ReadonlyArray<GipfCapture>,
+    ): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
         return this.chooseMove(move);
     }
@@ -326,7 +334,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.constructedState.set(this.state());
         this.captured.set(new MGPMap());
         this.moved.set(new Set());
-        this.initialCaptures.set(new Set());
+        this.initialCaptures.set([]);
         this.placement.set(MGPOptional.empty());
         this.placementEntrance.set(MGPOptional.empty());
         this.finalCaptures.set([]);

@@ -4,9 +4,9 @@ import { FourStatePiece } from '@everyboard/games';
 import { GipfCapture } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { GipfMove, GipfPlacement } from '@everyboard/games';
-import { GipfRules } from '@everyboard/games';
-import { GipfState } from '@everyboard/games';
+import { GipfMove, GipfPlacement } from '@everyboard/games/gipf';
+import { GipfRules } from '@everyboard/games/gipf';
+import { GipfState } from '@everyboard/games/gipf';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
