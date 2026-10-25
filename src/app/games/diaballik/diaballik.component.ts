@@ -292,13 +292,13 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
             } else {
                 this.currentSelection.set(MGPOptional.of(clickedCoord));
                 if (clickedPiece.holdsBall) {
-                    this.indicators.set(new Set(
+                    this.indicators.set(
                         this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord),
-                    ));
+                    );
                 } else {
-                    this.indicators.set(new Set(
+                    this.indicators.set(
                         this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord),
-                    ));
+                    );
                 }
                 return MGPValidation.SUCCESS;
             }
