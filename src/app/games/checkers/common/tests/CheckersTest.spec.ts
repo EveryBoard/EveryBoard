@@ -18,6 +18,11 @@ import { RulesConfigUtils } from '../../../../components/wrapper-components/rule
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersComponent } from '../checkers.component';
 
+type StateAndMove = {
+    state: CheckersState;
+    move: CheckersMove;
+}
+
 export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {
     component: Type<C>; // InternationalCheckersComponent, LascaComponent, etc
     gameName: string; // 'InternationalCheckers', 'Lasca', etc
@@ -56,35 +61,23 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
         coord: Coord;
     };
 
-    simpleCaptureTest: {
-        // A state on which a simple capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a simple capture is possible
+    simpleCaptureTest: StateAndMove;
 
-    promotionTest: {
-        // A state on which a promotion is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A triple flying capture
+    tripleFlyingCaptureTest: StateAndMove;
 
-    complexCaptureTest: {
-        // A state on which a complex capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a promotion is possible
+    promotionTest: StateAndMove;
 
-    returnToStartCaptureTest: {
-        // A state on which a multiple capture can end on its starting coordinate
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a complex capture is possible
+    complexCaptureTest: StateAndMove;
 
-    invalidCaptureTest: {
-        // A state on which an invalid capture is possible
-        state: CheckersState;
-        move: CheckersMove;
-    };
+    // A state on which a multiple capture can end on its starting coordinate
+    returnToStartCaptureTest: StateAndMove;
+
+    // A state on which an invalid capture is possible
+    invalidCaptureTest: StateAndMove;
 
     // A move that can be done after secondMove but that is not orthogonal (described as two coords)
     invalidThirdMoveTest: {
@@ -272,6 +265,29 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
         describe('Second click', () => {
 
+            function getStepFlownOverEmptyCoords(state: CheckersState, start: Coord, end: Coord): Coord[] {
+                const flownOverEmptyCoords: Coord[] = [];
+                const direction: Direction = start.getDirectionToward(end).get();
+                let coord: Coord = start.getNext(direction);
+                while (coord.equals(end) === false) {
+                    if (state.getPieceAt(coord).isEmpty()) {
+                        flownOverEmptyCoords.push(coord);
+                    }
+                    coord = coord.getNext(direction);
+                }
+                return flownOverEmptyCoords;
+            }
+
+            function getMoveFlownOverEmptyCoords(stateAndMove: StateAndMove): Coord[] {
+                const start: Coord = stateAndMove.move.coords[0];
+                const first: Coord = stateAndMove.move.coords[1];
+                const second: Coord = stateAndMove.move.coords[2];
+                return [
+                    ...getStepFlownOverEmptyCoords(stateAndMove.state, start, first),
+                    ...getStepFlownOverEmptyCoords(stateAndMove.state, first, second),
+                ];
+            }
+
             it('should fail when clicking on opponent', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const firstClick: Coord = entries.firstPlayerCoords[0];
@@ -389,6 +405,26 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 // Then it should be a success
                 const end: Coord = entries.simpleCaptureTest.move.getEndingCoord();
                 await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
+            }));
+
+            it('should highlight flown over coords', fakeAsync(async() => {
+                // Given a board with a selected piece and a possible triple capture
+                const state: CheckersState = entries.tripleFlyingCaptureTest.state;
+                await testUtils.setupState(state);
+                const start: Coord = entries.tripleFlyingCaptureTest.move.coords[0];
+                const first: Coord = entries.tripleFlyingCaptureTest.move.coords[1];
+                const second: Coord = entries.tripleFlyingCaptureTest.move.coords[2];
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+
+                // When doing the two first captures
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+                await testUtils.expectClickSuccess(`#coord-${ second.x }-${ second.y }`);
+
+                // Then every flown over coords that are not starting or captured should be "moved"
+                const flownOverEmptyCoords: Coord[] = getMoveFlownOverEmptyCoords(entries.tripleFlyingCaptureTest);
+                for (const coord of flownOverEmptyCoords) {
+                    testUtils.expectElementToHaveClass(`#square-${ coord.x }-${ coord.y }`, 'moved-fill');
+                }
             }));
 
             it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
