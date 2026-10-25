@@ -41,8 +41,8 @@ func TestDBGameFlow(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
-			seen = seen + 1
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate game events")
@@ -112,8 +112,8 @@ func TestManyGameEvents(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
-			seen = seen + 1
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate game events")
