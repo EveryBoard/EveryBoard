@@ -96,8 +96,8 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     public static getVictoriousSpaces(state: QuixoState): Coord[] {
         const victoriousCoords: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
         const opponentCoords: Coord[] =
-            QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
-        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
+            QuixoRules.getPlayersCoords(victoriousCoords, state, state.getPreviousOpponent());
+        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoords, state, state.getPreviousPlayer());
         if (opponentCoords.length === 0) {
             if (playerCoords.length === 0) {
                 return []; // Nobody won
@@ -202,7 +202,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     public override getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
         const victoriousCoords: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
-        const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));
+        const unreducedWinners: PlayerOrNone[] = victoriousCoords.map((coord: Coord) => state.getPieceAt(coord));
         const winners: Set<PlayerOrNone> = new Set(unreducedWinners);
         if (winners.size() === 0) {
             return GameStatus.ONGOING;

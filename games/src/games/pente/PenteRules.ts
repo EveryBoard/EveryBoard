@@ -118,7 +118,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoords: Coord[] = this.getHelper(config).getVictoriousCoord(state);
-        if (victoriousCoord.length > 0) {
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(opponent);
         }
         if (this.stillHaveEmptySquare(state)) {

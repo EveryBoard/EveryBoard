@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPFallible, MGPMap, MGPOptional, Set } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig } from '../../config/NumberConfig';
 import { RulesConfig } from '../../config/RulesConfig';
@@ -133,9 +133,9 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         const victoriousCoords: Coord[] =
             this.getHelper(config).getVictoriousCoord(state);
         const opponentCoords: ReadonlyArray<Coord> =
-            this.filterSpacesByOwner(victoriousCoord, state, state.getPreviousOpponent());
+            this.filterSpacesByOwner(victoriousCoords, state, state.getPreviousOpponent());
         const playerCoords: ReadonlyArray<Coord> =
-            this.filterSpacesByOwner(victoriousCoord, state, state.getPreviousPlayer());
+            this.filterSpacesByOwner(victoriousCoords, state, state.getPreviousPlayer());
         if (opponentCoords.length === 0) {
             if (playerCoords.length === 0) {
                 return []; // Nobody won
@@ -224,11 +224,11 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
 
     public override getGameStatus(node: EncapsuleNode, config: EncapsuleConfig): GameStatus {
         const state: EncapsuleState = node.gameState;
-        const victoriousCoord: ReadonlyArray<Coord> = this.getVictoriousSpaces(state, config);
-        if (victoriousCoord.length === 0) {
+        const victoriousCoords: ReadonlyArray<Coord> = this.getVictoriousSpaces(state, config);
+        if (victoriousCoords.length === 0) {
             return GameStatus.ONGOING;
         } else {
-            const winner: Player = state.getPieceAt(victoriousCoord[0]).getBiggest().getPlayer() as Player;
+            const winner: Player = state.getPieceAt(victoriousCoords[0]).getBiggest().getPlayer() as Player;
             return GameStatus.getVictory(winner);
         }
     }

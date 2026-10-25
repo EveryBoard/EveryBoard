@@ -272,15 +272,15 @@ describe('QuixoRules', () => {
                 [O, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
-            const expectedVictoriousCoord: CoordSet = new CoordSet([
+            const victoriousCoords: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
+            const expectedVictoriousCoords: CoordSet = new CoordSet([
                 new Coord(0, 4),
                 new Coord(1, 3),
                 new Coord(2, 2),
                 new Coord(3, 1),
                 new Coord(4, 0),
             ]);
-            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+            expect(victoriousCoords.equals(expectedVictoriousCoords)).toBeTrue();
         });
 
         it('should return victorious diagonal when rectangular board', () => {
@@ -293,7 +293,7 @@ describe('QuixoRules', () => {
                 [_, _, _, _, _, _, O],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
+            const victoriousCoords: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
             const expectedVictoriousCoord: CoordSet = new CoordSet([
                 new Coord(2, 0),
                 new Coord(3, 1),
@@ -301,7 +301,7 @@ describe('QuixoRules', () => {
                 new Coord(5, 3),
                 new Coord(6, 4),
             ]);
-            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+            expect(victoriousCoords.equals(expectedVictoriousCoord)).toBeTrue();
         });
 
         it('should return victorious line from opponent, not yours, when creating two', () => {
@@ -316,7 +316,7 @@ describe('QuixoRules', () => {
             const state: QuixoState = new QuixoState(board, 1);
 
             // When evaluating victorious coords
-            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
+            const victoriousCoords: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
 
             // Then it should be only the opponent coord
             const expectedVictoriousCoord: CoordSet = new CoordSet([
@@ -326,7 +326,7 @@ describe('QuixoRules', () => {
                 new Coord(1, 3),
                 new Coord(1, 4),
             ]);
-            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+            expect(victoriousCoords.equals(expectedVictoriousCoord)).toBeTrue();
         });
 
         it('should return victorious line when giving opponent victory', () => {
@@ -341,7 +341,7 @@ describe('QuixoRules', () => {
             const state: QuixoState = new QuixoState(board, 1);
 
             // When evaluating victorious coords
-            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
+            const victoriousCoords: CoordSet = new CoordSet(QuixoRules.getVictoriousSpaces(state));
 
             // Then it should be only the opponent coord
             const expectedVictoriousCoord: CoordSet = new CoordSet([
@@ -351,7 +351,7 @@ describe('QuixoRules', () => {
                 new Coord(2, 3),
                 new Coord(2, 4),
             ]);
-            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+            expect(victoriousCoords.equals(expectedVictoriousCoord)).toBeTrue();
         });
 
     });

@@ -111,7 +111,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
     public override getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
         const victoriousCoords: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
-        if (victoriousCoord.length > 0) {
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
         if (TableUtils.contains(state.board, PlayerOrNone.NONE)) {

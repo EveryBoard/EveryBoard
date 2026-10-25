@@ -144,7 +144,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
     public override getGameStatus(node: HexodiaNode, config: HexodiaConfig): GameStatus {
         const state: FourStatePieceGameStateWithTable = node.gameState;
         const victoriousCoords: Coord[] = HexodiaRules.getVictoriousSpaces(state, config);
-        if (victoriousCoord.length > 0) {
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
         if (TableUtils.contains(state.board, FourStatePiece.EMPTY)) {

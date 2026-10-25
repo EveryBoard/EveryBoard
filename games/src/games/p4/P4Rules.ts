@@ -90,7 +90,7 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
     public override getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
         const victoriousCoords: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
-        if (victoriousCoord.length > 0) {
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
         const width: number = state.getWidth();
