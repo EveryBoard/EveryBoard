@@ -109,7 +109,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     private async choosePiece(x: number, y: number): Promise<MGPValidation> {
         if (this.state().board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
-        } else if (this.state()[y][x].is(Player.ofTurn(this.getTurn()))) { // selected player's pyramid
+        } else if (this.state().board[y][x].is(Player.ofTurn(this.getTurn()))) { // selected player's pyramid
             const coord: Coord = new Coord(x, y);
             this.selectPiece(coord);
             return MGPValidation.SUCCESS;

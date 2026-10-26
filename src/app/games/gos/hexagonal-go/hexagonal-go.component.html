@@ -30,11 +30,13 @@
 
     @if (last().isPresent()) {
         @let lastCoord = last().get();
-        <polygon id="last-{{ lastCoord.x }}-{{ lastCoord.y }}"
-                 [attr.transform]="getHexaCenterTranslationAt(lastCoord)"
-                 [attr.points]="getHexaPoints()"
-                 [ngClass]="getPlayerClassAt(lastCoord)"
-                 class="last-move-stroke big-stroke no-fill"/>
+        @if (state().isOnBoard(lastCoord)) {
+            <polygon id="last-{{ lastCoord.x }}-{{ lastCoord.y }}"
+                     [attr.transform]="getHexaCenterTranslationAt(lastCoord)"
+                     [attr.points]="getHexaPoints()"
+                     [ngClass]="getPlayerClassAt(lastCoord)"
+                     class="last-move-stroke big-stroke no-fill"/>
+        }
     }
 
 </svg>
