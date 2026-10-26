@@ -18,11 +18,6 @@ import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 
-// interface ViewInfo {
-//     boardInfo: SpaceInfo[];
-//     remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>;
-// }
-
 interface SpaceInfo {
     readonly x: number;
     readonly spaceClasses: ReadonlyArray<string>;
@@ -339,7 +334,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     foregroundClasses.push('clickable-stroke-hover');
                 }
                 const pieceInfos: PieceInfo[] = ArrayUtils.copy(
-                    this.remainingPieces().get(piece.owner).get(),
+                    remainingPieces.get(piece.owner).get(),
                 );
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {

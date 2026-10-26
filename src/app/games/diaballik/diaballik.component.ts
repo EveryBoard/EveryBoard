@@ -50,7 +50,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     private readonly currentSelection: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     protected readonly hasMadePass: WritableSignal<boolean> = signal(false);
     protected readonly translationsMade: WritableSignal<number> = signal(0);
-    private readonly subMoves: WritableSignal<Set<DiaballikSubMove>> = signal(new Set());
+    private readonly subMoves: WritableSignal<ReadonlyArray<DiaballikSubMove>> = signal([]);
 
     private readonly lastMovedBalls: WritableSignal<Set<Coord>> = signal(new Set());
     private readonly lastMovedPieces: WritableSignal<Set<Coord>> = signal(new Set());
@@ -122,6 +122,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
         this.victoryCoord.set(MGPOptional.empty());
         const blockedLines: Line[] = [];
+        this.loserCoords.set(new Set());
         if (possibleVictory.isPresent()) {
             const victory: VictoryOrDefeatCoords = possibleVictory.get();
             if (victory instanceof VictoryCoord) {
@@ -188,7 +189,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         this.currentSelection.set(MGPOptional.empty());
         this.hasMadePass.set(false);
         this.translationsMade.set(0);
-        this.subMoves.set(new Set());
+        this.subMoves.set([]);
         this.indicators.set(new Set());
         this.currentlyMovedBalls.set(new Set());
         this.currentlyMovedPieces.set(new Set());
@@ -254,9 +255,12 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     private async addSubMove(subMove: DiaballikSubMove, stateAfterSubMove: DiaballikState): Promise<MGPValidation> {
         this.currentSelection.set(MGPOptional.empty());
         this.indicators.set(new Set());
-        this.subMoves.set(this.subMoves().addElement(subMove));
+        this.subMoves.set([
+            ...this.subMoves(),
+            subMove,
+        ]);
         this.stateInConstruction = stateAfterSubMove;
-        if (this.subMoves().size() === 3) {
+        if (this.subMoves().length === 3) {
             const move: DiaballikMove = new DiaballikMove(
                 this.subMoves()[0],
                 MGPOptional.of(this.subMoves()[1]),
@@ -315,7 +319,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
             // Just deselects
             this.currentSelection.set(MGPOptional.empty());
             this.indicators.set(new Set());
-            if (this.subMoves().size() === 0) {
+            if (this.subMoves().length === 0) {
                 // No sub moves constructed at all, cancel the move to show the last one
                 return this.cancelMove();
             }
@@ -361,13 +365,13 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public showDoneButton(): boolean {
-        return this.interactive() && this.subMoves().size() >= 1;
+        return this.interactive() && this.subMoves().length >= 1;
     }
 
     @ClickHandler(() => `#done`)
     public async done(): Promise<MGPValidation> {
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
-        if (this.subMoves().size() >= 2) {
+        if (this.subMoves().length >= 2) {
             second = MGPOptional.of(this.subMoves()[1]);
         }
         // Note: user can't click on done if there are either no sub move (button doesn't appear)
