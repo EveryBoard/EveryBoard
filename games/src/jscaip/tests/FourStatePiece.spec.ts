@@ -9,6 +9,7 @@ describe('FourStatePiece', () => {
             // When passed to ofPlayer()
             const fourStatePieceZero: FourStatePiece = FourStatePiece.ofPlayer(Player.ZERO);
             const fourStatePieceOne: FourStatePiece = FourStatePiece.ofPlayer(Player.ONE);
+
             // Then the resulting fourStatePiece should correspond
             expect(fourStatePieceZero).toBe(FourStatePiece.ZERO);
             expect(fourStatePieceOne).toBe(FourStatePiece.ONE);
@@ -22,6 +23,7 @@ describe('FourStatePiece', () => {
             const empty: FourStatePiece = FourStatePiece.EMPTY;
             const unreachable: FourStatePiece = FourStatePiece.UNREACHABLE;
             const fourStateList: FourStatePiece[] = [zero, one, empty, unreachable];
+
             // When comparing them together
             // Then none of them should correspond except themselves
             for (let i: number = 0; i < 4; i++) {

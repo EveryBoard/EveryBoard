@@ -46,6 +46,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, O2],
             ], 4);
             await testUtils.setupState(state);
+
             // When clicking on B2
             // Then this is not a legal selection for a shift
             await testUtils.expectClickFailure('#click-7-1', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

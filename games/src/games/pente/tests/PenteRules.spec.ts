@@ -186,6 +186,7 @@ describe('PenteRules', () => {
         // Given a state with available spaces and no victory
         const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
         const node: PenteNode = new PenteNode(state);
+
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });

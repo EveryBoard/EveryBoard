@@ -219,6 +219,7 @@ describe('LascaComponent', () => {
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-6', move);
+
             // Then a stack of three piece should exist
             testUtils.expectElementToExist('#square-6-6-piece-0');
             testUtils.expectElementToExist('#square-6-6-piece-1');
@@ -256,6 +257,7 @@ describe('LascaComponent', () => {
             // Given a state
             // When it is interactive
             testUtils.getGameComponent().interactive.set(true);
+
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-0-4', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-2-4', 'clickable-stroke');

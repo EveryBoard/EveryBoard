@@ -138,8 +138,10 @@ describe('Table2DWithPossibleNegativeIndices', () => {
     it('should return empty when accessing a non existing element', () => {
         // Given a table
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
+
         // When getting an element that does not exist
         const element: MGPOptional<number> = table.get(new Coord(0, 0));
+
         // Then it should be empty
         expect(element.isAbsent()).toBeTrue();
     });
@@ -149,8 +151,10 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
         const somePiece: number = 42; // dummy value to represent something stored in the table
         table.set(new Coord(1, 2), somePiece);
+
         // When getting the element
         const element: MGPOptional<number> = table.get(new Coord(1, 2));
+
         // Then the element exists and is the same
         expect(element.isPresent()).toBeTrue();
         expect(element.get()).toBe(somePiece);
@@ -162,6 +166,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         table.set(new Coord(0, 0), 1);
         table.set(new Coord(0, 1), 2);
         table.set(new Coord(1, 1), 3);
+
         // When iterating over the elements
         const seen: number[] = [];
         for (const cell of table) {

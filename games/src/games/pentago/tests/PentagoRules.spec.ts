@@ -119,6 +119,7 @@ describe('PentagoRules', () => {
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });

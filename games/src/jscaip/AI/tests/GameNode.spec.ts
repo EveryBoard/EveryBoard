@@ -110,6 +110,7 @@ describe('GameNode', () => {
             // Given a tree of game nodes
             // When getting its DOT graph
             const dot: string = treeRoot.showDot(rules, config).dot;
+
             // Then it should give the expected DOT graph
             const expectedDot: string = `digraph G {
     node_0 -> node_1 [label="MoveMock"; color="#994d00"];
@@ -129,6 +130,7 @@ describe('GameNode', () => {
             // Given a tree of game nodes
             // When showing it with a specific label
             const dot: string = terminalNode.showDot(rules, config, (node: MockNode) => 'foo').dot;
+
             // Then it should have shown the tree with the extra label
             const expectedDot: string = `digraph G {
     node_0 [label="#3: 4 - foo", style=filled, fillcolor="#994d00"];
@@ -140,6 +142,7 @@ describe('GameNode', () => {
             // Given a tree of game nodes
             // When showing it up to depth 1
             const dot: string = treeRoot.showDot(rules, config, undefined, 1).dot;
+
             // Then it should have only shown the relevant nodes
             const expectedDot: string = `digraph G {
     node_0 -> node_1 [label="MoveMock"; color="#994d00"];
@@ -156,8 +159,10 @@ describe('GameNode', () => {
             getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.ZERO_WON;
             });
+
             // When printing it
             const dot: string = terminalNode.showDot(rules, config).dot;
+
             // Then it should have printed the node with the player color
             const expectedDot: string = `digraph G {
     node_0 [label="#3: 4", style=filled, fillcolor="#994d00"];
@@ -170,8 +175,10 @@ describe('GameNode', () => {
             getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.ONE_WON;
             });
+
             // When printing it
             const dot: string = terminalNode.showDot(rules, config).dot;
+
             // Then it should have printed the node with the player color
             const expectedDot: string = `digraph G {
     node_0 [label="#3: 4", style=filled, fillcolor="#ffc34d"];
@@ -184,8 +191,10 @@ describe('GameNode', () => {
             getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.DRAW;
             });
+
             // When printing it
             const dot: string = terminalNode.showDot(rules, config).dot;
+
             // Then it should have printed the node in gray
             const expectedDot: string = `digraph G {
     node_0 [label="#3: 4", style=filled, fillcolor="gray"];

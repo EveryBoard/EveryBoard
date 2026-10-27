@@ -56,6 +56,7 @@ describe('Comparable', () => {
             // Given two non-comparable objects
             const nonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
             const otherNonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+
             // When comparing them
             // Then it should fail
             expect(() => comparableEquals(nonComparable, otherNonComparable)).toThrowError(expectedError);
