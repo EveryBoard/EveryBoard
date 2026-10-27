@@ -154,6 +154,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When getting all standard configs
         const configs: NamedRulesConfig<ConfigMock>[] = rulesConfigDescription.getStandardConfigs();
+
         // Then there should be the default + all named configs
         expect(configs.length).toEqual(2);
     });
@@ -162,6 +163,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When retrieving the default config
         const defaultConfig: NamedRulesConfig<ConfigMock> = rulesConfigDescription.getDefaultConfig();
+
         // Then it should get the right one
         expect(defaultConfig.name()).toEqual('Simple game');
         expect(defaultConfig.config.width).toEqual(7);
@@ -171,6 +173,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When retrieving the default config
         const otherConfigs: NamedRulesConfig<ConfigMock>[] = rulesConfigDescription.getNonDefaultStandardConfigs();
+
         // Then it should get the right one
         expect(otherConfigs.length).toEqual(1);
         expect(otherConfigs[0].name()).toEqual('Smaller game');
@@ -181,6 +184,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When retrieving its fields
         const fields: string[] = rulesConfigDescription.getFields();
+
         // Then it should get all fields
         expect(fields).toEqual(['width']);
     });
@@ -189,6 +193,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When retrieving a config by name
         const config: ConfigMock = rulesConfigDescription.getConfig('Smaller game');
+
         // Then it should get the right config
         expect(config.width).toEqual(5);
     });
@@ -197,6 +202,7 @@ describe('RulesConfigDescription', () => {
         // Given a rules config description
         // When retrieving its fields
         const fieldName: string = rulesConfigDescription.getFieldLocalizedName('width');
+
         // Then it should get all fields
         expect(fieldName).toEqual(RulesConfigDescriptionLocalizable.WIDTH());
     });

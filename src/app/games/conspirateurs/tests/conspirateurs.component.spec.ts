@@ -288,6 +288,7 @@ describe('ConspirateursComponent', () => {
         it('should forbid creation of invalid jumps', fakeAsync(async() => {
             // Given a selected piece
             await testUtils.expectClickSuccess('#click-5-4');
+
             // When clicking on an invalid jump target
             // Then it should fail
             await testUtils.expectClickFailure('#click-5-8', ConspirateursFailure.INVALID_JUMP());
@@ -297,6 +298,7 @@ describe('ConspirateursComponent', () => {
             // Given a jump being constructed
             await testUtils.expectClickSuccess('#click-5-4');
             await testUtils.expectClickSuccess('#click-5-2');
+
             // When clicking on an invalid jump target
             // Then it should fail
             await testUtils.expectClickFailure('#click-2-2', ConspirateursFailure.INVALID_JUMP());
@@ -444,6 +446,7 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40);
             await testUtils.setupState(state);
+
             // When displaying it
             // Then it should show a score of 2 for player 0 and 1 for player 1
             testUtils.expectTextToBe('#score-0', '2 protected pieces');

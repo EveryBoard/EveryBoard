@@ -64,8 +64,10 @@ describe('Minimax', () => {
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
         const mcts: MCTS<P4Move, P4State, P4Config> = new MCTS('MCTS', moveGenerator, P4Rules.get());
         mcts.chooseNextMove(node, { name: '100ms', maxSeconds: 0.1 }, defaultConfig);
+
         // When performing a minimax search
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
         // Then it should have computed the board value
         expect(node.getCache(minimax.name + '-score').isPresent()).toBeTrue();
     });
@@ -75,8 +77,10 @@ describe('Minimax', () => {
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
         minimax['useRandomness'] = true;
+
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
         // Then it should have selected it randomly among all the best
         expect(ArrayUtils.getRandomElement).toHaveBeenCalled();
     });
@@ -86,8 +90,10 @@ describe('Minimax', () => {
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
         minimax['useRandomness'] = false;
+
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
         // Then it should have selected it randomly among all the best
         expect(ArrayUtils.getRandomElement).not.toHaveBeenCalled();
     });
