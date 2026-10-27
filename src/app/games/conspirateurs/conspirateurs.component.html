@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (line of viewInfo.boardInfo; track $index; let y = $index) {
+    @for (line of boardInfo(); track $index; let y = $index) {
         <g>
             @for (square of line; track $index; let x = $index) {
                 <g id="click-{{ x }}-{{ y }}"
@@ -36,7 +36,7 @@
     @for (shelter of ALL_SHELTERS; track shelter.toString()) {
         <g>
             <rect class="base no-fill mid-stroke"
-                  [ngClass]="viewInfo.boardInfo[shelter.y][shelter.x].shelterClasses"
+                  [ngClass]="boardInfo()[shelter.y][shelter.x].shelterClasses"
                   (click)="onClick(shelter)"
                   [attr.x]="(SPACE_SIZE * shelter.x) + (2.5 * STROKE_WIDTH)"
                   [attr.y]="(SPACE_SIZE * shelter.y) + (2.5 * STROKE_WIDTH)"
@@ -44,30 +44,30 @@
                   [attr.height]="SPACE_SIZE - (3 * STROKE_WIDTH)"/>
         </g>
     }
-    @for (y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ZERO)); track y) {
+    @for (y of ArrayUtils.range(sidePieces().get(Player.ZERO)); track y) {
         <circle id="side-piece-0-{{ y }}"
                 [attr.cx]="-PIECE_RADIUS"
                 [attr.cy]="1670 - y * PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
                 class="base mid-stroke player0-fill"/>
     }
-    @for (y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ONE)); track y) {
+    @for (y of ArrayUtils.range(sidePieces().get(Player.ONE)); track y) {
         <circle id="side-piece-1-{{ y }}"
                 [attr.cx]="1715 + PIECE_RADIUS"
                 [attr.cy]="1670 - y * PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
                 class="base mid-stroke player1-fill"/>
     }
-    @if (viewInfo.dropPhase) {
+    @if (dropPhase()) {
         <rect [attr.x]="(SPACE_SIZE * CENTRAL_ZONE_START.x) + STROKE_WIDTH"
               [attr.y]="(SPACE_SIZE * CENTRAL_ZONE_START.y) + STROKE_WIDTH"
               [attr.width]="CENTRAL_ZONE_SIZE.x * SPACE_SIZE"
               [attr.height]="CENTRAL_ZONE_SIZE.y * SPACE_SIZE"
               class="base no-fill selectable-stroke huge-stroke"/>
     }
-    @if (lastMoveArrow.isPresent()) {
+    @if (lastMoveArrow().isPresent()) {
         <polyline id="lastJump"
                   class="base no-fill"
-                  [attr.points]="lastMoveArrow.get()"/>
+                  [attr.points]="lastMoveArrow().get()"/>
     }
 </svg>
