@@ -34,22 +34,26 @@ export class Combinatorics {
         return result;
     }
 
-    public static getSubsetsOfSize<T>(elements: T[], size: number): T[][] {
-        function subsets(length: number, start: number): T[][] {
-            if (elements.length <= start || length < 1) {
-                return [[]];
-            } else {
-                const results: T[][] = [];
-                while (start <= elements.length - length) {
-                    const first: T = elements[start];
-                    for (const subset of subsets(length - 1, start + 1)) {
-                        subset.push(first);
-                        results.push(subset);
-                    }
-                    ++start;
-                }
-                return results;
+    public static getSubsetsOfSize<T>(list: T[], size: number): T[][] {
+        function subsets(subsetSize: number, start: number): T[][] {
+            if (subsetSize === 0) {
+                return [[]]; // the only possible subset of size zero is the empty set
+            } else if (subsetSize < 0) {
+                return []; // No subset can be of negative size
             }
+            if (list.length <= start) {
+                return []; // No more subsets
+            }
+            const results: T[][] = [];
+            while (start <= list.length - subsetSize) {
+                const first: T = list[start];
+                for (const subset of subsets(subsetSize - 1, start + 1)) {
+                    subset.push(first);
+                    results.push(subset);
+                }
+                ++start;
+            }
+            return results;
         }
         return subsets(size, 0);
     }
