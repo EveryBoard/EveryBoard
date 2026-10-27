@@ -34,11 +34,13 @@ describe('LodestoneRules', () => {
     it('should allow placing a lodestone on an empty square', () => {
         // Given any state
         const state: LodestoneState = LodestoneRules.get().getInitialState();
+
         // When placing a lodestone on an empty square
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 4, bottom: 0, left: 0, right: 0 });
+
         // Then the move should succeed
         expect(rules.isLegal(move, state).isSuccess()).toBeTrue();
     });
@@ -176,6 +178,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 2, bottom: 0, left: 0, right: 0 });
+
         // Then both moves should be legal
         expect(rules.isLegal(pull, state).isSuccess()).toBeTrue();
         expect(rules.isLegal(push, state).isSuccess()).toBeTrue();
@@ -315,6 +318,7 @@ describe('LodestoneRules', () => {
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 12, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be illegal
         const reason: string = LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -568,6 +572,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 0, bottom: 1, left: 0, right: 0 });
+
         // Then the move should be valid and B falls
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
@@ -615,6 +620,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid, and the top pressure plate crumbles
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
@@ -662,6 +668,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid, and the top pressure plate crumbles a second time
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
@@ -710,6 +717,7 @@ describe('LodestoneRules', () => {
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid, and the top pressure plate crumbles *twice*
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
@@ -757,6 +765,7 @@ describe('LodestoneRules', () => {
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be illegal
         const reason: string = LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -785,6 +794,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
@@ -836,6 +846,7 @@ describe('LodestoneRules', () => {
                                                       'push',
                                                       'orthogonal',
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
+
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [

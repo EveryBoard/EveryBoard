@@ -75,6 +75,7 @@ describe('TriangularGoHeuristic', () => {
         ];
         const weakState: GoState =
             new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+
         // When computing their value
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);

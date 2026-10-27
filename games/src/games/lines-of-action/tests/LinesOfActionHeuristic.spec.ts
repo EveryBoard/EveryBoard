@@ -43,6 +43,7 @@ describe('LinesOfActionHeuristic', () => {
             [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
         ], 0);
+
         // When computing their values
         // Then it should prefer having less groups
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

@@ -42,6 +42,7 @@ describe('DiaballikDistanceHeuristic', () => {
             [_, _, _, _, _, _, _],
             [O, O, O, _, _, O, O],
         ], 0);
+
         // When computing their heuristic value
 
         // Then it should prefer the one with the ball closest to opponent line

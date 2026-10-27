@@ -238,6 +238,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // When doing a move
         spyOn(gameService, 'addMove').and.callThrough();
         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
         // Then it should be sent to the game service,
         expect(gameService.addMove).toHaveBeenCalledOnceWith(FIRST_MOVE_ENCODED);
         // and the displayed turn should be updated when receiving it back
@@ -245,6 +246,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // And when receiving a second move
         await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+
         // Then the displayed turn should also be updated
         expectTurnToBe(2);
 
@@ -283,11 +285,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // When receiving a move
         await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+
         // Then the displayed turn should be updated
         expectTurnToBe(1);
 
         // And when doing a second move
         await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+
         // Then the displayed turn should also be updated
         expectTurnToBe(2);
 
@@ -343,12 +347,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a board where you arrive late
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
+
             // When you receive a bunch of moves but no "sync" yet
             await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
             await receiveMove(Player.ZERO, SECOND_MOVE_ENCODED);
             await receiveMove(Player.ZERO, THIRD_MOVE_ENCODED);
             await receiveMove(Player.ZERO, FOURTH_MOVE_ENCODED);
             tick(2);
+
             // Then there's no animation
             expect(testUtils.getGameComponent().updateBoard).not.toHaveBeenCalledWith(true);
 
@@ -565,6 +571,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 await receiveSync();
+
                 // When displaying the page
                 // Then the take back button should not be there
                 testUtils.expectElementToBeDisabled('#proposeTakeBack');
@@ -576,8 +583,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 await receiveSync();
+
                 // When receiving a new move
                 await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+
                 // Then the take back button should not be there
                 testUtils.expectElementToBeDisabled('#proposeTakeBack');
 
@@ -1500,6 +1509,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
             // and a request
             await receiveRequest(Player.ZERO, 'TakeBack');
+
             // When displaying the component
             // Then we don't see any interaction button
             const forbiddenButtons: string[] = [

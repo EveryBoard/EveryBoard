@@ -40,6 +40,7 @@ describe('DvonnComponent', () => {
     it('should allow valid moves', fakeAsync(async() => {
         // Given that the user has selected a valid piece
         await testUtils.expectClickSuccess('#click-2-0');
+
         // When the user selects a valid destination
         // Then the move should be made
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
@@ -56,8 +57,10 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, OS, OK, __, __],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
+
         // When it is displayed
         await testUtils.setupState(state);
+
         // Then the player can pass
         const move: DvonnMove = DvonnMove.PASS;
         await testUtils.expectPassSuccess(move);
@@ -144,8 +147,10 @@ describe('DvonnComponent', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click-2-0');
+
         // When the user clicks on an invalid destination for this move, that is a valid piece for another move
         await testUtils.expectClickSuccess('#click-4-1');
+
         // Then it should have change the selection
         testUtils.expectElementNotToExist('#chosen-2-0');
         testUtils.expectElementToExist('#chosen-4-1');
@@ -163,8 +168,10 @@ describe('DvonnComponent', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click-2-0');
+
         // When the user click on a valid yet illegal destination, that is a valid for another move
         await testUtils.expectClickSuccess('#click-2-2');
+
         // Then it should have change the selection
         testUtils.expectElementNotToExist('#chosen-2-0');
         testUtils.expectElementToExist('#chosen-2-2');

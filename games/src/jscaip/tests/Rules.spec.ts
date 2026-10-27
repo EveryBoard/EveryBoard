@@ -83,6 +83,7 @@ describe('Rules', () => {
 
             // When checking if the move is legal
             const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove, defaultConfig);
+
             // Then it should fail with the expected reason
             expect(legality.isFailure()).toBeTrue();
             expect(legality.getReason()).toEqual('some reason');
