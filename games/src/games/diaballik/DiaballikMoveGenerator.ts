@@ -257,7 +257,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
     /**
      * Returns all legal pass ends for a pass starting at start
      */
-    public getPassEnds(state: DiaballikState, start: Coord): Coord[] {
+    public getPassEnds(state: DiaballikState, start: Coord): Set<Coord> {
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
         const ends: Coord[] = [];
@@ -273,13 +273,13 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 coord = coord.getNext(direction);
             }
         }
-        return ends;
+        return new Set(ends);
     }
 
     /**
      * Returns all legal translation ends for a translation starting at start
      */
-    public getTranslationEnds(state: DiaballikState, start: Coord): Coord[] {
+    public getTranslationEnds(state: DiaballikState, start: Coord): Set<Coord> {
         const ends: Coord[] = [];
         // A legal translation is an orthogonal translation that ends on an empty space
         for (const direction of Orthogonal.factory.all) {
@@ -288,6 +288,6 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 ends.push(end);
             }
         }
-        return ends;
+        return new Set(ends);
     }
 }
