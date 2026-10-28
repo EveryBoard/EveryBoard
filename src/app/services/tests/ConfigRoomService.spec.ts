@@ -79,6 +79,7 @@ describe('ConfigRoomService', () => {
             // When there are config room updates
             const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
+
             // Then we are notified about it
             expect(configRoom.isPresent()).toBeTrue();
             expect(configRoom.get()).toEqual(updatedConfigRoom);
@@ -100,6 +101,7 @@ describe('ConfigRoomService', () => {
 
             // When there is a config room deletion
             deleteConfigRoom('gameId');
+
             // Then we are notified about it
             expect(deleted).toBeTrue();
             subscription.unsubscribe();
@@ -122,6 +124,7 @@ describe('ConfigRoomService', () => {
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             const botIdentifier: BotIdentifier | null = null;
             addCandidate(candidate);
+
             // Then we are notified about it
             expect(candidates.length).toBe(1);
             expect(candidates[0]).toEqual({ user: candidate, elo: 0, botIdentifier });
@@ -167,8 +170,10 @@ describe('ConfigRoomService', () => {
                                              (_reason: string): void => {
                                                  errorsSeen += 1;
                                              });
+
             // When an error occurs
             sendError('some error');
+
             // Then we are notified about it
             expect(errorsSeen).toBe(1);
             subscription.unsubscribe();
@@ -188,6 +193,7 @@ describe('ConfigRoomService', () => {
                                              recordObservation,
                                              recordObservation);
             subscription.unsubscribe();
+
             // When anything occurs on the backend
             const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
@@ -196,6 +202,7 @@ describe('ConfigRoomService', () => {
             removeCandidate(candidate);
             sendError('some error');
             deleteConfigRoom('gameId');
+
             // Then we are NOT notified about it
             expect(observedSomething).toBeFalse();
         }));
@@ -212,8 +219,10 @@ describe('ConfigRoomService', () => {
                 rulesConfig: {},
             };
             spyOn(backendService, 'send').and.callThrough();
+
             // When we propose it
             await configRoomService.proposeConfig(proposal);
+
             // Then it should send ProposeConfig with our config to the backend
             expect(backendService.send).toHaveBeenCalledOnceWith(['ProposeConfig', { config: proposal }]);
         }));
@@ -224,8 +233,10 @@ describe('ConfigRoomService', () => {
             // Given an opponent
             const opponent: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             spyOn(backendService, 'send').and.callThrough();
+
             // When selecting them
             await configRoomService.selectOpponent(opponent);
+
             // Then it should send SelectOpponent with the opponent
             expect(backendService.send).toHaveBeenCalledOnceWith(['SelectOpponent', { opponent }]);
         }));
@@ -235,8 +246,10 @@ describe('ConfigRoomService', () => {
         it('should send a ReviewConfig message', fakeAsync(async() => {
             // Given a config we want to review (managed by the backend)
             spyOn(backendService, 'send').and.callThrough();
+
             // When we ask to review it
             await configRoomService.reviewConfig();
+
             // Then it should send the ReviewConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['ReviewConfig']);
         }));
@@ -247,8 +260,10 @@ describe('ConfigRoomService', () => {
         it('should send an AcceptConfig message', fakeAsync(async() => {
             // Given a config we want to accept (managed by the backend)
             spyOn(backendService, 'send').and.callThrough();
+
             // When we ask to accept it
             await configRoomService.acceptConfig();
+
             // Then it should send the AcceptConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['AcceptConfig']);
         }));

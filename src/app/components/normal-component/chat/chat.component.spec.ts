@@ -72,6 +72,7 @@ describe('ChatComponent', () => {
         testUtils.detectChanges();
 
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
+
         // Then the chat is not visible and the button changes its text
         expect(switchButton.nativeElement.textContent).toEqual('Show chat (no new message)');
         testUtils.expectElementNotToExist('#chatDiv');

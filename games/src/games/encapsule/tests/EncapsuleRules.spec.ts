@@ -197,6 +197,7 @@ describe('EncapsuleRules', () => {
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 2]);
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
+
         // When trying to put another piece on it
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1));
 

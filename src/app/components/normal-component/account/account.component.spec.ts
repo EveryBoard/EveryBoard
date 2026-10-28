@@ -24,6 +24,7 @@ describe('AccountComponent', () => {
     it('should redirect to reset password form when clicking on the corresponding button', fakeAsync(async() => {
         // Given some connected user
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+
         // When displaying the page
         // Then it should show a reset link pointing to the reset password component
         const button: DebugElement = testUtils.findElement('#reset');

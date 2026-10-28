@@ -59,9 +59,11 @@ describe('AIConfigUtils', () => {
 
         const minimax: Minimax<P4Move, P4State, P4Config> =
             registry.getOrCreate(config, 'minimax', () => createMinimaxFromConfig(rules, config));
+
         // When accessing the same minimax
         const minimaxAgain: Minimax<P4Move, P4State, P4Config> =
             registry.getOrCreate(config, 'minimax', () => createMinimaxFromConfig(rules, config));
+
         // Then it should be the same object
         expect(minimaxAgain).toBe(minimax);
 
@@ -70,6 +72,7 @@ describe('AIConfigUtils', () => {
             registry.getOrCreate(config, 'iterative-deepening', () =>
                 createIterativeDeepeningMinimaxFromConfig(rules, config),
             );
+
         // Then it should be different from the previous one
         expect<unknown>(iterativeDeepening).not.toBe(minimax);
     });
