@@ -134,6 +134,7 @@ describe('CurrentGameService', () => {
                     lastValue = currentGame;
                     resolvePromise();
                 });
+
             // When a currentGame update is received
             updateCurrentGame(withRole('Player'));
             await userHasUpdated;
@@ -163,6 +164,7 @@ describe('CurrentGameService', () => {
             // When the current game is updated again to null
             updateCurrentGame(null);
             tick(100);
+
             // Then it should not see the update
             expect(updates).toBe(1);
             subscription.unsubscribe();

@@ -71,9 +71,11 @@ describe('YinshComponent', () => {
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             // Given a state in placement phase, with all rings available
             testUtils.expectElementToExist('#PLAYER_ZERO-side-ring-5');
+
             // When When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
             await testUtils.expectMoveSuccess('#click-3-2', move);
+
             // Then it should not show the placed ring on the side anymore
             testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-5');
         }));
@@ -190,10 +192,12 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
+
             // When performing a simple move by clicking in the ring, then somewhere aligned
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 3)),
                                                   []);
+
             // Then it should succeed
             await testUtils.expectClickSuccess('#click-3-2');
             await testUtils.expectMoveSuccess('#click-3-3', move);
@@ -216,6 +220,7 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
+
             // When performing a move that flips the markers
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
@@ -247,6 +252,7 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
+
             // When performing a move that flips the markers
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
@@ -279,8 +285,10 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
             testUtils.expectElementNotToExist('#marker-3-2');
+
             // When clicking on the ring
             await testUtils.expectClickSuccess('#click-3-2');
+
             // Then it should show a marker there now
             testUtils.expectElementToHaveClass('#marker-3-2', 'player0-fill');
             testUtils.expectElementToHaveClass('#ring-3-2 > circle:nth-child(2)', 'player0-stroke');
@@ -310,6 +318,7 @@ describe('YinshComponent', () => {
                                                                    MGPOptional.of(new Coord(3, 2)))],
                                                   new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                                                   []);
+
             // Then it should succeed
             await testUtils.expectClickSuccess('#click-3-3'); // click the captured group
             await testUtils.expectClickSuccess('#click-3-2'); // click the ring
@@ -771,6 +780,7 @@ describe('YinshComponent', () => {
                 MGPOptional.of(new Coord(4, 2)),
                 [],
             );
+
             // Then it should succeed
             await testUtils.expectClickSuccess('#click-5-4'); // select first capture coord
             await testUtils.expectClickSuccess('#click-5-5'); // select second capture coord

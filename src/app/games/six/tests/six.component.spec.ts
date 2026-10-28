@@ -281,6 +281,7 @@ describe('SixComponent', () => {
             const state: SixState = SixState.ofRepresentation(board, 9);
             const config: SixConfig = { piecesPerPlayer: 5 };
             await testUtils.setupState(state, { config });
+
             // When displaying it
             // Then the score should be 0 and 1 pieces to drop
             testUtils.expectTextToBe('#score-0', '0 pieces to drop');
@@ -296,6 +297,7 @@ describe('SixComponent', () => {
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
             await testUtils.setupState(state);
+
             // When displaying it
             // Then the score should be the number of remaining pieces
             testUtils.expectTextToBe('#score-0', '6 remaining pieces');
@@ -320,6 +322,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 10);
+
             // When clicking on empty space after first click of 10th turn
             await testUtils.setupState(state, { config: customConfig });
 

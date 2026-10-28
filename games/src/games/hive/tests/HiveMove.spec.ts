@@ -18,6 +18,7 @@ describe('HiveMove', () => {
     it('should fail to create static moves', () => {
         // When creating a static move
         const fallibleMove: MGPFallible<HiveMove> = HiveMove.move(new Coord(0, 0), new Coord(0, 0));
+
         // Then it should fail
         expect(fallibleMove.isSuccess()).toBeFalse();
         const reason: string = RulesFailure.MOVE_CANNOT_BE_STATIC();

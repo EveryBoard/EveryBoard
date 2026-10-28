@@ -189,6 +189,7 @@ describe('PylosRules', () => {
 
         const otherMove: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0),
                                                       [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
+
         // Then the move should be illegal
         reason = PylosFailure.INVALID_SECOND_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, otherMove, reason, defaultConfig);
