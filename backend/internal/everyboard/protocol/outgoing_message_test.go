@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
-	"github.com/stretchr/testify/require"
 )
 
 func ExpectMarshallingToWorkAndTagToBe(t *testing.T, original OutgoingMessage, expectedJSON string, expectedTag string) {

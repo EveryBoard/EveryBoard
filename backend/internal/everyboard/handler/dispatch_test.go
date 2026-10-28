@@ -192,6 +192,20 @@ func TestHandleBotIdentifierValidation(t *testing.T) {
 			botIdentifier: botIdentifier,
 		},
 		{
+			name: "BotWithEmptyDisplayName",
+			user: model.MinimalUser{ID: "bot", Name: "bot", IsBot: true},
+			botIdentifier: &model.BotIdentifier{
+				DisplayName: "",
+			},
+		},
+		{
+			name: "BotWithWhitespaceOnlyDisplayName",
+			user: model.MinimalUser{ID: "bot", Name: "bot", IsBot: true},
+			botIdentifier: &model.BotIdentifier{
+				DisplayName: " \t\n",
+			},
+		},
+		{
 			name: "BotWithTooLongDisplayName",
 			user: model.MinimalUser{ID: "bot", Name: "bot", IsBot: true},
 			botIdentifier: &model.BotIdentifier{
@@ -250,10 +264,10 @@ func (f failingAddCandidateStore) Transaction(action func(store.Store) error) er
 }
 
 func (f failingAddCandidateStore) AddCandidate(
-	configRoom *model.ConfigRoom,
-	user model.MinimalUser,
-	elo float64,
-	botIdentifier *model.BotIdentifier,
+	_ *model.ConfigRoom,
+	_ model.MinimalUser,
+	_ float64,
+	_ *model.BotIdentifier,
 ) error {
 	return errors.New("cannot persist candidate")
 }

@@ -295,7 +295,7 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64, botIdentifier *model.BotIdentifier) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
 		GameID:     configRoom.ID,
-		PlayerInfo: model.PlayerInfo{User: user, Elo: elo},
+		PlayerInfo: model.PlayerInfo{User: user, Elo: elo, BotIdentifier: botIdentifier},
 	})
 	return nil
 }

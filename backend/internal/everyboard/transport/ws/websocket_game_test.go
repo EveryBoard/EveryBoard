@@ -87,7 +87,9 @@ func TestSubscribeGameReturnsPersistedBotIdentifiers(t *testing.T) {
 	}
 	fakeStore.SetGameForTest(gameID, game)
 	connection := EstablishWebSocketConnection(t, playerID)
-	defer connection.Close()
+	defer func() {
+		require.NoError(t, connection.Close())
+	}()
 	encodedID := encodeID(t, gameID)
 
 	// When the bot reconnects and subscribes to the game
