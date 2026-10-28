@@ -27,8 +27,7 @@ import { TriangularGameComponent } from '../../components/game-components/game-c
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaMove,
-                                                             SaharaState,
-                                                             FourStatePiece>
+                                                             SaharaState>
 {
     protected override computeViewBox(): ViewBox {
         const state: SaharaState = this.state();
@@ -99,7 +98,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {
             return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
-                  this.board[y][x] === player)
+                  this.state().board[y][x] === player)
         { // Must select pyramid
             return this.choosePiece(x, y);
         } else { // Must choose empty landing space
@@ -108,9 +107,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
 
     private async choosePiece(x: number, y: number): Promise<MGPValidation> {
-        if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
+        if (this.state().board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
-        } else if (this.board[y][x].is(Player.ofTurn(this.getTurn()))) { // selected player's pyramid
+        } else if (this.state().board[y][x].is(Player.ofTurn(this.getTurn()))) { // selected player's pyramid
             const coord: Coord = new Coord(x, y);
             this.selectPiece(coord);
             return MGPValidation.SUCCESS;
@@ -133,8 +132,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
 
+
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.state().board;
+        // nothing to do here !
     }
 
     public getPlayerClassAtXY(x: number, y: number): string {

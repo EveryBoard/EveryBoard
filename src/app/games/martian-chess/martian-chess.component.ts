@@ -128,8 +128,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         };
         this.encoder = MartianChessMove.encoder;
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
-
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
         this.SPACE_SIZE = MartianChessComponentUtils.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
         this.configViewTranslation = this.getConfigViewTranslation();
@@ -165,7 +166,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const scoreZero: number = this.state().getScoreOf(Player.ZERO);
         const scoreOne: number = this.state().getScoreOf(Player.ONE);
         this.countDown = this.state().countDown;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne)),
+        );
     }
 
     protected override async showLastMove(move: MartianChessMove): Promise<void> {

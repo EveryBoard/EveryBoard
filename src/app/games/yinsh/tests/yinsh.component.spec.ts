@@ -147,7 +147,7 @@ describe('YinshComponent', () => {
 
             // Then the score (0 - 0) should be displayed
             const expectedScore: MGPOptional<PlayerNumberMap> = MGPOptional.of(PlayerNumberMap.of(0, 0));
-            expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
+            expect(testUtils.getGameComponent().scores()).toEqual(expectedScore);
         }));
 
         it('should display score ring count when game is second phase', fakeAsync(async() => {
@@ -172,7 +172,7 @@ describe('YinshComponent', () => {
 
             // Then score (2 - 1) should be displayed
             const expectedScore: MGPOptional<PlayerNumberMap> = MGPOptional.of(PlayerNumberMap.of(2, 1));
-            expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
+            expect(testUtils.getGameComponent().scores()).toEqual(expectedScore);
         }));
 
         it('should allow a simple move without capture', fakeAsync(async() => {

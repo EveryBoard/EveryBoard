@@ -117,13 +117,14 @@ export abstract class AbstractGameService {
 })
 @Debug.log
 export class GameService extends AbstractGameService {
+
     private readonly backendService: BackendService = inject(BackendService);
 
     public override async subscribeTo(gameId: string,
                                       gameUpdate: (game: Game) => Promise<void>,
                                       gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-                                      error: (reason: string) => void)
-    : Promise<Subscription> {
+                                      error: (reason: string) => void,
+    ): Promise<Subscription> {
         const gameUpdateSubscription: Subscription =
             this.backendService.setCallback('GameUpdate', (message: BackendMessage): void => {
                 void gameUpdate(message.getArgument('game'));

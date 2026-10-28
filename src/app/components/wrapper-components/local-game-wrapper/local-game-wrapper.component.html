@@ -80,7 +80,7 @@
                             }
                         </div>
                     }
-                    @if (endGame === false && gameComponent.canPass) {
+                    @if (endGame === false && gameComponent.canPass()) {
                         <button id="pass-button"
                                 class="button is-primary is-fullwidth mb-1"
                                 (click)="gameComponent.pass()"

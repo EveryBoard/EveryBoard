@@ -163,7 +163,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.ground = this.getGround();
         this.remainingStacks = this.state().remainingPieces.toListOfStacks();
-        this.canPass = HiveRules.get().shouldPass(this.state());
+        this.canPass.set(HiveRules.get().shouldPass(this.state()));
         const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node());
         switch (gameStatus) {
             case GameStatus.ONGOING:
@@ -188,7 +188,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'HiveComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass(), 'HiveComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(HiveMove.PASS);
     }
 

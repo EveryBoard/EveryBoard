@@ -67,9 +67,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         mcts: [],
     };
 
-    public canPass: boolean = false;
+    public readonly canPass: WritableSignal<boolean> = signal(false);
 
-    public scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
+    public readonly scores: WritableSignal<MGPOptional<PlayerNumberMap>> = signal(MGPOptional.empty());
 
     public imagesLocation: string = 'assets/images/';
 
@@ -137,11 +137,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public hasScores(): boolean {
-        return this.scores.isPresent();
+        return this.scores().isPresent();
     }
 
     public getScore(player: Player): number {
-        return this.scores.get().get(player);
+        return this.scores().get().get(player);
     }
 
     protected getScoreName(): ScoreName {

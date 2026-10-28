@@ -14,9 +14,10 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public constructor(b: Table<number>,
                        turn: number,
-                       public readonly scores: PlayerNumberMap)
-    {
+                       public readonly scores: PlayerNumberMap,
+    ) {
         super(b, turn);
+        this.scores.makeImmutable();
     }
 
     public setPieceAt(coord: Coord, value: number): MancalaState {
