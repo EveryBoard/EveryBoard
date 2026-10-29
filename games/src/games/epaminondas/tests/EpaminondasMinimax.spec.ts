@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Ordinal } from '../../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
@@ -57,7 +57,7 @@ describe('EpaminondasMinimax', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const node: EpaminondasNode = new EpaminondasNode(state);
-        const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Ordinal.UP);
+        const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, EightDirection.UP);
         const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove).toEqual(capture);
     });

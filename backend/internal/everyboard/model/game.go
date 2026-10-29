@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -54,14 +55,12 @@ func (r *Result) UnmarshalJSON(data []byte) error {
 }
 
 type Game struct {
-	GameID        GameID      `gorm:"index;not null;foreignKey:ConfigRoom;primaryKey;autoIncrement:false" json:"-"`
-	GameName      string      `gorm:"not null" json:"gameName"`
-	PlayerZero    MinimalUser `gorm:"embedded;embeddedPrefix:player_zero_;not null" json:"playerZero"`
-	PlayerZeroElo float64     `gorm:"not null" json:"playerZeroElo"`
-	PlayerOne     MinimalUser `gorm:"embedded;embeddedPrefix:player_one_;not null" json:"playerOne"`
-	PlayerOneElo  float64     `gorm:"not null" json:"playerOneElo"`
-	Result        Result      `gorm:"not null" json:"result"`
-	Beginning     int64       `gorm:"not null" json:"beginning"`
+	GameID     GameID     `gorm:"index;not null;foreignKey:ConfigRoom;primaryKey;autoIncrement:false" json:"-"`
+	GameName   string     `gorm:"not null" json:"gameName"`
+	PlayerZero PlayerInfo `gorm:"embedded;embeddedPrefix:player_zero_" json:"playerZero"`
+	PlayerOne  PlayerInfo `gorm:"embedded;embeddedPrefix:player_one_" json:"playerOne"`
+	Result     Result     `gorm:"not null" json:"result"`
+	Beginning  int64      `gorm:"not null" json:"beginning"`
 }
 
 var GameRows = []string{
@@ -71,6 +70,6 @@ var GameRows = []string{
 	"result", "beginning",
 }
 
-func (g *Game) UnmarshalJSON(data []byte) error {
-	return fmt.Errorf("not allowed to unmarshall game")
+func (g *Game) UnmarshalJSON(_ []byte) error {
+	return errors.New("not allowed to unmarshall game")
 }

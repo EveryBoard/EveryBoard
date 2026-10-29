@@ -17,7 +17,7 @@ func TestDefaultClockAndRandomFunctions(t *testing.T) {
 		assert.Positive(t, nf)
 	})
 
-	t.Run("RandBool", func(t *testing.T) {
+	t.Run("RandBool", func(_ *testing.T) {
 		_ = RandBool()
 	})
 }

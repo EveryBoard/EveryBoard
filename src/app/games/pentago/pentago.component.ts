@@ -6,10 +6,10 @@ import { Coord } from '@everyboard/games';
 import { GameStatus } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { PentagoMove } from '@everyboard/games';
-import { PentagoMoveGenerator } from '@everyboard/games';
-import { PentagoRules } from '@everyboard/games';
-import { PentagoState } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games/pentago';
+import { PentagoMoveGenerator } from '@everyboard/games/pentago';
+import { PentagoRules } from '@everyboard/games/pentago';
+import { PentagoState } from '@everyboard/games/pentago';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

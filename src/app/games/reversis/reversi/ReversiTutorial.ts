@@ -1,12 +1,10 @@
-import { ReversiConfig } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
-import { ReversiRules } from '@everyboard/games';
-import { FourStatePiece } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
-import { RectangularShape } from '@everyboard/games';
+import { EightDirection, EightDirectionSquareTopology, FourStatePiece } from '@everyboard/games';
+import { RectangleShape } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/reversi';
+import { ReversiMove } from '@everyboard/games/reversi';
+import { ReversiState } from '@everyboard/games/reversi';
+import { ReversiRules } from '@everyboard/games/reversi';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -15,8 +13,8 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
-const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
 export class ReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

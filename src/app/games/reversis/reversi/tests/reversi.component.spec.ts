@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Ordinal } from '@everyboard/games';
-import { RectangularShape } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
+import { Direction, EightDirection } from '@everyboard/games';
+import { RectangleShape } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { ReversiConfig } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
-import { ReversiRules } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/reversi';
+import { ReversiMove } from '@everyboard/games/reversi';
+import { ReversiState } from '@everyboard/games/reversi';
+import { ReversiRules } from '@everyboard/games/reversi';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiComponent } from '../reversi.component';
@@ -24,8 +24,8 @@ fdescribe('ReversiComponent', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
-    const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-    const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+    const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+    const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
@@ -47,7 +47,7 @@ fdescribe('ReversiComponent', () => {
             [_, _, _, O, _, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 0);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         await testUtils.setupState(state);
 
         const move: ReversiMove = new ReversiMove(0, 4);
@@ -70,7 +70,7 @@ fdescribe('ReversiComponent', () => {
 
         it(`should hide last move's capture`, fakeAsync(async() => {
             // Given a board with a last move
-            const previousState: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+            const previousState: ReversiState<Direction> = ReversiRules.get().getInitialState(defaultConfig);
             const previousMove: ReversiMove = new ReversiMove(5, 3);
             const board: Table<FourStatePiece> = [
                 [_, _, _, _, _, _, _, _],
@@ -83,7 +83,7 @@ fdescribe('ReversiComponent', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-            const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+            const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
             await testUtils.setupState(state, { previousState, previousMove });
 
             const move: ReversiMove = new ReversiMove(5, 4);
@@ -108,7 +108,7 @@ fdescribe('ReversiComponent', () => {
             [O, X, _, _, _, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
 
         // When displaying the board
         await testUtils.setupState(state);

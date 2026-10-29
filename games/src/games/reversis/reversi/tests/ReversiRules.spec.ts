@@ -1,22 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { HexaDirection } from 'dist/app/jscaip/HexaDirection';
-
 import { MGPOptional } from '@everyboard/lib';
 
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
-import { Ordinal } from '../../../../jscaip/Ordinal';
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { Table } from '../../../../jscaip/TableUtils';
+import { Direction } from '../../../../jscaip/direction/Direction';
+import { EightDirection } from '../../../../jscaip/direction/EightDirection';
+import { HexaDirection } from '../../../../jscaip/direction/HexaDirection';
 import { HexagonShape } from '../../../../jscaip/shape/HexagonShape';
-import { RectangularShape } from '../../../../jscaip/shape/rere';
+import { RectangleShape } from '../../../../jscaip/shape/RectangleShape';
 import { TorusShape } from '../../../../jscaip/shape/TorusShape';
 import { TriangleShape } from '../../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { HexagonalTopology } from '../../../../jscaip/topology/HexagonalTopology';
-import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
 import { ReversiConfig, ReversiNode } from '../../common/AbstractReversiRules';
 import { ReversiFailure } from '../../common/ReversiFailure';
 import { ReversiMove } from '../../common/ReversiMove';
@@ -29,8 +29,10 @@ fdescribe('ReversiRules', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
-    const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-    const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+    const eightDirectionSquareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+    const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, eightDirectionSquareTopology);
+    const defaultInitialState: ReversiState<EightDirection> =
+        ReversiRules.get().getInitialState(ReversiRules.get().getDefaultRulesConfig()) as ReversiState<EightDirection>;
 
     let rules: ReversiRules;
     let defaultConfig: ReversiConfig;
@@ -48,7 +50,7 @@ fdescribe('ReversiRules', () => {
 
     it('First move should be legal and change score', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+        const state: ReversiState<EightDirection> = defaultInitialState;
 
         // When doing a legal move
         const move: ReversiMove = new ReversiMove(2, 4);
@@ -66,7 +68,8 @@ fdescribe('ReversiRules', () => {
         ];
         const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
             new SimpleGameStateWithTable(expectedBoard, 1);
-        const expectedState: ReversiState = new ReversiState(ordinalTopology, squareShape, expectedGameState);
+        const expectedState: ReversiState<Direction> =
+            new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
         const node: ReversiNode = new ReversiNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         expect(node.gameState.countScore()).toEqual(PlayerNumberMap.of(4, 1));
@@ -74,7 +77,7 @@ fdescribe('ReversiRules', () => {
 
     it('Passing at first turn should be illegal', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+        const state: ReversiState<Direction> = defaultInitialState;
 
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
@@ -86,7 +89,7 @@ fdescribe('ReversiRules', () => {
 
     it('should forbid non capturing move', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+        const state: ReversiState<Direction> = defaultInitialState;
 
         // When doing a non capturing move
         const move: ReversiMove = new ReversiMove(0, 0);
@@ -98,7 +101,7 @@ fdescribe('ReversiRules', () => {
 
     it('should forbid choosing occupied space', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+        const state: ReversiState<Direction> = defaultInitialState;
 
         // When playing on an occupied square
         const move: ReversiMove = new ReversiMove(3, 3);
@@ -121,14 +124,16 @@ fdescribe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> =
+            new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
 
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
 
         // Then the move should succeed
         const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const expectedState: ReversiState = new ReversiState(ordinalTopology, squareShape, expectedGameState);
+        const expectedState: ReversiState<EightDirection> =
+            new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -156,11 +161,13 @@ fdescribe('ReversiRules', () => {
                 [X, X, X, X, X, X, X, O],
             ];
             const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 59);
-            const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+            const state: ReversiState<Direction> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                 new SimpleGameStateWithTable(expectedBoard, 60);
-            const expectedState: ReversiState = new ReversiState(ordinalTopology, squareShape, expectedGameState);
+            const expectedState: ReversiState<EightDirection> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
@@ -188,11 +195,13 @@ fdescribe('ReversiRules', () => {
                 [O, O, O, O, O, O, O, X],
             ];
             const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 60);
-            const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+            const state: ReversiState<Direction> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                 new SimpleGameStateWithTable(expectedBoard, 61);
-            const expectedState: ReversiState = new ReversiState(ordinalTopology, squareShape, expectedGameState);
+            const expectedState: ReversiState<EightDirection> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -220,11 +229,13 @@ fdescribe('ReversiRules', () => {
                 [O, O, O, O, X, X, X, X],
             ];
             const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 60);
-            const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+            const state: ReversiState<Direction> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                 new SimpleGameStateWithTable(expectedBoard, 61);
-            const expectedState: ReversiState = new ReversiState(ordinalTopology, squareShape, expectedGameState);
+            const expectedState: ReversiState<EightDirection> =
+                new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
@@ -236,7 +247,7 @@ fdescribe('ReversiRules', () => {
 
         describe('Toric Board', () => {
 
-            const toricShape: TorusShape<Ordinal> = new TorusShape(8, 8, ordinalTopology);
+            const toricShape: TorusShape<EightDirection> = new TorusShape(8, 8, eightDirectionSquareTopology);
 
             const toricConfig: ReversiConfig = {
                 ...defaultConfig,
@@ -257,7 +268,8 @@ fdescribe('ReversiRules', () => {
                     [_, _, _, _, _, _, _, _],
                 ];
                 const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-                const state: ReversiState = new ReversiState(ordinalTopology, toricShape, gameState);
+                const state: ReversiState<Direction> =
+                    new ReversiState(eightDirectionSquareTopology, toricShape, gameState);
 
                 // When doing a move that captures pieces across the board
                 const move: ReversiMove = new ReversiMove(0, 3);
@@ -275,7 +287,8 @@ fdescribe('ReversiRules', () => {
                 ];
                 const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                     new SimpleGameStateWithTable(expectedBoard, 2);
-                const expectedState: ReversiState = new ReversiState(ordinalTopology, toricShape, expectedGameState);
+                const expectedState: ReversiState<EightDirection> =
+                    new ReversiState(eightDirectionSquareTopology, toricShape, expectedGameState);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
             });
 
@@ -292,7 +305,8 @@ fdescribe('ReversiRules', () => {
                     [_, _, _, _, X, _, _, _],
                 ];
                 const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 2);
-                const state: ReversiState = new ReversiState(ordinalTopology, toricShape, gameState);
+                const state: ReversiState<Direction> =
+                    new ReversiState(eightDirectionSquareTopology, toricShape, gameState);
 
                 // When doing a move that captures pieces across the board
                 const move: ReversiMove = new ReversiMove(4, 0);
@@ -310,7 +324,8 @@ fdescribe('ReversiRules', () => {
                 ];
                 const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                     new SimpleGameStateWithTable(expectedBoard, 3);
-                const expectedState: ReversiState = new ReversiState(ordinalTopology, toricShape, expectedGameState);
+                const expectedState: ReversiState<EightDirection> =
+                    new ReversiState(eightDirectionSquareTopology, toricShape, expectedGameState);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
             });
 
@@ -331,7 +346,7 @@ fdescribe('ReversiRules', () => {
                 };
 
                 // When rendering it
-                const state: ReversiState = ReversiRules.get().getInitialState(customConfig);
+                const state: ReversiState<Direction> = ReversiRules.get().getInitialState(customConfig);
 
                 // Then it should have hole in the middle and alternating piece owner around it
                 const expectedBoard: Table<FourStatePiece> = [
@@ -347,7 +362,7 @@ fdescribe('ReversiRules', () => {
                 ];
                 const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                     new SimpleGameStateWithTable(expectedBoard, 0);
-                const expectedState: ReversiState = new ReversiState(
+                const expectedState: ReversiState<Direction> = new ReversiState(
                     hexagonalTopology,
                     hexagonalShape,
                     expectedGameState,
@@ -356,7 +371,7 @@ fdescribe('ReversiRules', () => {
             });
 
         });
-// TODO FOR REVIEW: pour le reversi, ça n'ira avec le triangulaire que sur les tailles multiples de trois, pour que le centre soit respecté
+        // TODO FOR REVIEW: pour le reversi, ça n'ira avec le triangulaire que sur les tailles multiples de trois, pour que le centre soit respecté
         describe('Triangular Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
@@ -372,7 +387,7 @@ fdescribe('ReversiRules', () => {
                 };
 
                 // When rendering it
-                const state: ReversiState = ReversiRules.get().getInitialState(customConfig);
+                const state: ReversiState<Direction> = ReversiRules.get().getInitialState(customConfig);
 
                 // Then it should have hole in the middle and alternating piece owner around it
                 const expectedBoard: Table<FourStatePiece> = [
@@ -385,7 +400,7 @@ fdescribe('ReversiRules', () => {
                 ];
                 const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                     new SimpleGameStateWithTable(expectedBoard, 0);
-                const expectedState: ReversiState = new ReversiState(
+                const expectedState: ReversiState<Direction> = new ReversiState(
                     hexagonalTopology,
                     hexagonalShape,
                     expectedGameState,

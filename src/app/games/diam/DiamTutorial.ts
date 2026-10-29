@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
-import { DiamMoveDrop, DiamMoveShift } from '@everyboard/games';
-import { DiamPiece } from '@everyboard/games';
-import { DiamRules } from '@everyboard/games';
-import { DiamState } from '@everyboard/games';
+import { DiamMoveDrop, DiamMoveShift } from '@everyboard/games/diam';
+import { DiamPiece } from '@everyboard/games/diam';
+import { DiamRules } from '@everyboard/games/diam';
+import { DiamState } from '@everyboard/games/diam';
 
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

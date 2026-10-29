@@ -1,12 +1,12 @@
-import { FourStatePiece, Ordinal } from '@everyboard/games';
-import { ReversiConfig } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
-import { ToricReversiRules } from '@everyboard/games';
-import { RectangularShape } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
+import { FourStatePiece, SimpleGameStateWithTable } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
+import { RectangleShape } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/toric-reversi';
+import { ReversiMove } from '@everyboard/games/toric-reversi';
+import { ReversiState } from '@everyboard/games/toric-reversi';
+import { ToricReversiRules } from '@everyboard/games/toric-reversi';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -16,8 +16,8 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ToricReversiRules.get().getDefaultRulesConfig();
-const ordinalTopology: Topology<Ordinal> = new OrdinalSquareTopology();
-const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+const eightDirectionTopology: Topology<EightDirection> = new EightDirectionSquareTopology();
+const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, eightDirectionTopology);
 
 export class ToricReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -30,7 +30,7 @@ export class ToricReversiTutorial extends Tutorial {
             $localize`Left-right connectivity`,
             $localize`On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.<br/><br/>You are playing Dark. Do a capture.`,
             new ReversiState(
-                ordinalTopology,
+                eightDirectionTopology,
                 squareShape,
                 new SimpleGameStateWithTable([
                     [_, _, _, _, _, _, _, _],
@@ -51,7 +51,7 @@ export class ToricReversiTutorial extends Tutorial {
             $localize`Top-bottom connectivity`,
             $localize`The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.`,
             new ReversiState(
-                ordinalTopology,
+                eightDirectionTopology,
                 squareShape,
                 new SimpleGameStateWithTable([
                     [_, _, _, _, _, _, _, _],
@@ -72,7 +72,7 @@ export class ToricReversiTutorial extends Tutorial {
             $localize`Diagonal wrapping`,
             $localize`Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?`,
             new ReversiState(
-                ordinalTopology,
+                eightDirectionTopology,
                 squareShape,
                 new SimpleGameStateWithTable([
                     [_, _, _, _, _, _, _, X],

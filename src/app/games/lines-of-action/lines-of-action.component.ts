@@ -4,12 +4,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { LinesOfActionFailure } from '@everyboard/games';
-import { LinesOfActionHeuristic } from '@everyboard/games';
-import { LinesOfActionMove } from '@everyboard/games';
-import { LinesOfActionMoveGenerator } from '@everyboard/games';
-import { LinesOfActionRules } from '@everyboard/games';
-import { LinesOfActionState } from '@everyboard/games';
+import { LinesOfActionFailure } from '@everyboard/games/lines-of-action';
+import { LinesOfActionHeuristic } from '@everyboard/games/lines-of-action';
+import { LinesOfActionMove } from '@everyboard/games/lines-of-action';
+import { LinesOfActionMoveGenerator } from '@everyboard/games/lines-of-action';
+import { LinesOfActionRules } from '@everyboard/games/lines-of-action';
+import { LinesOfActionState } from '@everyboard/games/lines-of-action';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

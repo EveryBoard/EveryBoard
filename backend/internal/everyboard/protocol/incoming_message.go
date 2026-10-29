@@ -18,7 +18,7 @@ func DecodeIncomingMessage(message []byte) (string, map[string]json.RawMessage, 
 			return "", nil, err
 		}
 
-		var messagePayload map[string]json.RawMessage = nil
+		var messagePayload map[string]json.RawMessage
 		if len(array) == 2 {
 			err := json.Unmarshal(array[1], &messagePayload)
 			if err != nil {
@@ -26,7 +26,6 @@ func DecodeIncomingMessage(message []byte) (string, map[string]json.RawMessage, 
 			}
 		}
 		return messageType, messagePayload, nil
-	} else {
-		return "", nil, fmt.Errorf("improperly formatted message: %v", message)
 	}
+	return "", nil, fmt.Errorf("improperly formatted message: %v", message)
 }

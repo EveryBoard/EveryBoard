@@ -1,6 +1,6 @@
 import { Coord } from '@everyboard/games';
-import { QuebecCastlesMove } from '@everyboard/games';
-import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games';
+import { QuebecCastlesMove } from '@everyboard/games/quebec-castles';
+import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games/quebec-castles';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

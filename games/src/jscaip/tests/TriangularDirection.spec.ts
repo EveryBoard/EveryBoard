@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { TriangularDirection } from '../TriangularDirection';
+import { TriangularDirection } from '../direction/TriangularDirection';
 
 describe('TriangularDirection', () => {
 

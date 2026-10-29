@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
-import { Ordinal } from '../../../../jscaip/Ordinal';
+import { EightDirection } from '../../../../jscaip/EightDirection';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangularShape } from '../../../../jscaip/shape/rere';
+import { RectangleShape } from '../../../../jscaip/shape/rere';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiNode } from '../AbstractReversiRules';
 import { ReversiMove } from '../ReversiMove';
@@ -14,8 +14,8 @@ import { ReversiState } from '../ReversiState';
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
-const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
 fdescribe('ReversiOrderedMoveGenerator', () => {
 
@@ -38,7 +38,7 @@ fdescribe('ReversiOrderedMoveGenerator', () => {
             [_, _, _, _, X, O, X, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 2);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
 
         // When listing the moves

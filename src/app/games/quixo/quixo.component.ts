@@ -5,11 +5,11 @@ import { Coord } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { QuixoHeuristic } from '@everyboard/games';
-import { QuixoMove } from '@everyboard/games';
-import { QuixoMoveGenerator } from '@everyboard/games';
-import { QuixoRules } from '@everyboard/games';
-import { QuixoConfig, QuixoState } from '@everyboard/games';
+import { QuixoHeuristic } from '@everyboard/games/quixo';
+import { QuixoMove } from '@everyboard/games/quixo';
+import { QuixoMoveGenerator } from '@everyboard/games/quixo';
+import { QuixoRules } from '@everyboard/games/quixo';
+import { QuixoConfig, QuixoState } from '@everyboard/games/quixo';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';

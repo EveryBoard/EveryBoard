@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { TeekoDropMove, TeekoTranslationMove } from '@everyboard/games';
-import { TeekoRules } from '@everyboard/games';
-import { TeekoState } from '@everyboard/games';
+import { TeekoDropMove, TeekoTranslationMove } from '@everyboard/games/teeko';
+import { TeekoRules } from '@everyboard/games/teeko';
+import { TeekoState } from '@everyboard/games/teeko';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

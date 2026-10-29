@@ -9,16 +9,6 @@ import { GameStateWithTable } from './GameStateWithTable';
 
 export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourStatePiece> {
 
-    public static of(
-        oldState: FourStatePieceGameStateWithTable,
-        newBoard: Table<FourStatePiece>,
-    ): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(
-            newBoard,
-            oldState.turn,
-        );
-    }
-
     public getPlayerCoordsAndContent(): { coord: Coord; content: Player }[] {
         return this
             .getCoordsAndContents()
@@ -47,7 +37,7 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public coordIsOccupiedSquare(coord: Coord): boolean {
+    public coordIsOccupied(coord: Coord): boolean {
         const optional: MGPOptional<FourStatePiece> = this.getOptionalPieceAt(coord);
         if (optional.isPresent()) {
             return optional.get().isPlayer();
@@ -69,12 +59,17 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
             this,
             coord,
             value,
-            FourStatePieceGameStateWithTable.of,
+            (oldState: FourStatePieceGameStateWithTable, newBoard: Table<FourStatePiece>) => {
+                return new FourStatePieceGameStateWithTable(newBoard, oldState.turn);
+            },
         );
     }
 
     public incrementTurn(): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(this.getCopiedBoard(), this.turn + 1);
+        return new FourStatePieceGameStateWithTable(
+            this.getCopiedBoard(),
+            this.turn + 1,
+        );
     }
 
 }

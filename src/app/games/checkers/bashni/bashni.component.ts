@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BashniRules } from '@everyboard/games';
+import { BashniRules } from '@everyboard/games/bashni';
 
 import { CheckersComponent } from '../common/checkers.component';
 

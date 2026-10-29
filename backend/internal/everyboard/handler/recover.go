@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"runtime/debug"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
 )

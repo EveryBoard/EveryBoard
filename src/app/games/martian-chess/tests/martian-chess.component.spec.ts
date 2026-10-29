@@ -5,10 +5,10 @@ import { Coord } from '@everyboard/games';
 import { DirectionFailure } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { MartianChessMove } from '@everyboard/games';
-import { MartianChessPiece } from '@everyboard/games';
-import { MartianChessRules } from '@everyboard/games';
-import { MartianChessState } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games/martian-chess';
+import { MartianChessPiece } from '@everyboard/games/martian-chess';
+import { MartianChessRules } from '@everyboard/games/martian-chess';
+import { MartianChessState } from '@everyboard/games/martian-chess';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

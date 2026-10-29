@@ -6,17 +6,17 @@ import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { AbaloneFailure } from '@everyboard/games';
-import { AbaloneMove } from '@everyboard/games';
-import { AbaloneMoveGenerator } from '@everyboard/games';
-import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from '@everyboard/games';
-import { AbaloneScoreHeuristic } from '@everyboard/games';
-import { AbaloneState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { AbaloneFailure } from '@everyboard/games/abalone';
+import { AbaloneMove } from '@everyboard/games/abalone';
+import { AbaloneMoveGenerator } from '@everyboard/games/abalone';
+import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from '@everyboard/games/abalone';
+import { AbaloneScoreHeuristic } from '@everyboard/games/abalone';
+import { AbaloneState } from '@everyboard/games/abalone';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -66,7 +66,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .get()
         .getInitialState()
         .getCoordsAndContents()
-        .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors())).toList();
+        .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getEightDirectionNeighbors())).toList();
 
     public constructor() {
         super('Abalone');
@@ -146,7 +146,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (previousState.coordIsOccupiedSquare(moved)) {
+        while (previousState.coordIsOccupied(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }
@@ -325,9 +325,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignment: MGPFallible<Ordinal> = Ordinal.factory.fromMove(firstPiece, clicked);
+        const alignment: MGPFallible<EightDirection> = EightDirection.factory.fromMove(firstPiece, clicked);
         if (alignment.isSuccess()) {
-            const secondAlignment: MGPFallible<Ordinal> = Ordinal.factory.fromMove(lastPiece, clicked);
+            const secondAlignment: MGPFallible<EightDirection> = EightDirection.factory.fromMove(lastPiece, clicked);
             if (alignment.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getLinearDistanceToward(clicked);

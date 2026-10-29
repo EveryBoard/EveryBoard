@@ -1,7 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Orthogonal } from '../Orthogonal';
+import { Orthogonal } from '../direction/Orthogonal';
 
 import { Topology } from './Topology';
 
@@ -27,9 +27,6 @@ export class OrthogonalSquareTopology implements Topology<Orthogonal> {
         return new Set([
             ...this.getDirections().map(
                 (direction: Orthogonal) => this.getTopologyNextCoord(coord, direction),
-            ),
-            ...this.getDirections().map(
-                (direction: Orthogonal) => this.getTopologyNextCoord(coord, direction, -1),
             ),
         ]);
     }

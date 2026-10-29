@@ -104,8 +104,11 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
         return new TrexoState(newBoard, this.turn);
     }
 
-    public incrementTurn(): TrexoState {
-        return new TrexoState(this.getCopiedBoard(), this.turn + 1);
+    public override incrementTurn(): TrexoState {
+        return new TrexoState(
+            this.getCopiedBoard(),
+            this.turn + 1,
+        );
     }
 
     public override toString(): string {

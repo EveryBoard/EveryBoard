@@ -2,8 +2,8 @@ import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
@@ -21,7 +21,7 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
         for (const coordAndContent of state.getCoordsAndContents()) {
             const firstCoord: Coord = coordAndContent.coord;
             if (coordAndContent.content === player) {
-                for (const direction of Ordinal.ORDINALS) {
+                for (const direction of EightDirection.EIGHT_DIRECTIONS) {
                     let phalanxSize: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
                     while (state.hasPieceAt(nextCoord, player)) {

@@ -1,16 +1,17 @@
 import { signal, WritableSignal } from '@angular/core';
 
-
 import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
-import { TopologicReversiRules } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { ReversiConfig, ReversiLegalityInformation } from '@everyboard/games';
-import { ReversiHeuristic } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiMoveGenerator } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
+import { ReversiConfig } from '@everyboard/games/families/reversi';
+import { ReversiLegalityInformation } from '@everyboard/games/families/reversi';
+import { TopologicReversiRules } from '@everyboard/games/families/reversi';
+import { ReversiHeuristic } from '@everyboard/games/families/reversi';
+import { ReversiMove } from '@everyboard/games/families/reversi';
+import { ReversiMoveGenerator } from '@everyboard/games/families/reversi';
+import { ReversiState } from '@everyboard/games/families/reversi';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -19,7 +20,7 @@ import { TopologicGameComponent } from '../../../components/game-components/topo
 export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     extends TopologicGameComponent<R,
                                    ReversiMove,
-                                   ReversiState,
+                                   ReversiState<Direction>,
                                    FourStatePiece,
                                    ReversiConfig,
                                    ReversiLegalityInformation>
@@ -54,7 +55,7 @@ export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ReversiState = this.state();
+        const state: ReversiState<Direction> = this.state();
 
         // this.board = state.getCopiedBoard();
 

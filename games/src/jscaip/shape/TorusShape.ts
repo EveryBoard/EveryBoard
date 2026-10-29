@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './Shape';
+import { TopologicShape } from './TopologicShape';
 
 export class TorusShape<D extends Direction> extends TopologicShape<D> {
 
@@ -18,7 +18,10 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
 
     public getCenters(): Coord[] {
         return [
-            new Coord(Math.floor(this.width / 2), Math.floor(this.height / 2)),
+            new Coord(
+                Math.floor(this.width / 2),
+                Math.floor(this.height / 2),
+            ),
         ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
     }
 
@@ -35,6 +38,13 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
     public isOnBoard(coord: Coord): boolean {
         return 0 <= coord.x && coord.x < this.width &&
                0 <= coord.y && coord.y < this.height;
+    }
+
+    public isNotOnBoard(coord: Coord): boolean {
+        return coord.x < 0 ||
+               coord.y < 0 ||
+               this.width <= coord.x ||
+               this.height <= coord.y;
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {

@@ -32,8 +32,8 @@
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
       </trans-unit>
-      <trans-unit id="7899288557289749176" datatype="html">
-        <source>Torus</source>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
       </trans-unit>
       <trans-unit id="2467835697178117742" datatype="html">
         <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
@@ -176,8 +176,8 @@
       <trans-unit id="5853742640794164153" datatype="html">
         <source>Use small board</source>
       </trans-unit>
-      <trans-unit id="6820617839935911342" datatype="html">
-        <source>First turns must have exactly one drop</source>
+      <trans-unit id="7251690675139944568" datatype="html">
+        <source>At your first turn, you must drop exactly one piece</source>
       </trans-unit>
       <trans-unit id="8366240299234525015" datatype="html">
         <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
@@ -208,6 +208,9 @@
       </trans-unit>
       <trans-unit id="4461597806169026629" datatype="html">
         <source>Board shape</source>
+      </trans-unit>
+      <trans-unit id="330049428969329849" datatype="html">
+        <source>Toric Triangle should have even width</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -403,9 +406,6 @@
       </trans-unit>
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
-      </trans-unit>
-      <trans-unit id="35620818119550087" datatype="html">
-        <source>Hexagonal</source>
       </trans-unit>
       <trans-unit id="6552934315157659079" datatype="html">
         <source>Zoom <x id="PH" equiv-text="z"/></source>
@@ -1680,7 +1680,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser?.name }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser()?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="5277703651684233917" datatype="html">
         <source>Players agreed to draw.</source>

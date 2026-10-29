@@ -2,10 +2,10 @@
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-import { SixMove } from '@everyboard/games';
-import { SixRules } from '@everyboard/games';
-import { SixState } from '@everyboard/games';
 import { Localized } from '@everyboard/games';
+import { SixMove } from '@everyboard/games/six';
+import { SixRules } from '@everyboard/games/six';
+import { SixState } from '@everyboard/games/six';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

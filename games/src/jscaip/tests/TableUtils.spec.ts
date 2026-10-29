@@ -131,6 +131,34 @@ describe('TableUtils', () => {
         });
     });
 
+    describe('map', () => {
+
+        it('should provide index as optional second param to callback', () => {
+            // Given a table with any content
+            const table: Table<string> = [
+                ['it', 'has', 'no', 'importance'],
+                ['really', 'none', 'I swear'],
+                ['this', 'could', 'not matter', 'less'],
+            ];
+
+            // When mapping it and caring only about that second param
+            const mappedTable: Table<string> = TableUtils.map(
+                table,
+                (oldValue: string, x: number, y: number) => {
+                    return x + ' ' + y;
+                },
+            );
+
+            // Then it should have taken into account thoses x and y coord
+            const expectedTable: Table<string> = [
+                ['0 0', '1 0', '2 0', '3 0'],
+                ['0 1', '1 1', '2 1', '3 1'],
+                ['0 2', '1 2', '2 2', '3 2'],
+            ];
+            expect(mappedTable).toEqual(expectedTable);
+        });
+    });
+
 });
 
 describe('Table2DWithPossibleNegativeIndices', () => {

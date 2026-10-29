@@ -47,7 +47,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		logger.Error.Printf("WebSocket upgrade error: %v", err)
 		return
 	}
-	defer connection.Close()
+	defer func() { _ = connection.Close() }()
 
 	client := newClientSession(connection, minimalUser, h.store, h.connections, h.subscriptions, h.notifier)
 	if err := client.start(); err != nil {

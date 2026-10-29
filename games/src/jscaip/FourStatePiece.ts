@@ -21,7 +21,7 @@ export class FourStatePiece implements ComparableObject {
         }
     }
 
-    private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean, public readonly str: String) {
+    private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean, public readonly str: string) {
     }
 
     public equals(other: FourStatePiece): boolean {

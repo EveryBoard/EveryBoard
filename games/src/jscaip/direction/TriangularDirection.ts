@@ -4,6 +4,8 @@ import { Direction, DirectionFactory } from './Direction';
 
 export class TriangularDirection extends Direction {
 
+    private readonly type: string = 'TriangularDirection'; // To force type distinction
+
     public static readonly LEFT: TriangularDirection = new TriangularDirection(-1, 0);
     public static readonly UP_LEFT: TriangularDirection = new TriangularDirection(-1, -1);
     public static readonly UP_RIGHT: TriangularDirection = new TriangularDirection(1, -1);

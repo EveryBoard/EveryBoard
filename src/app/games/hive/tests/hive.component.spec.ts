@@ -4,11 +4,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { HiveDropMove, HiveMove } from '@everyboard/games';
-import { HivePiece } from '@everyboard/games';
-import { HiveRules } from '@everyboard/games';
-import { HiveState } from '@everyboard/games';
-import { HiveFailure } from '@everyboard/games';
+import { HiveDropMove, HiveMove } from '@everyboard/games/hive';
+import { HivePiece } from '@everyboard/games/hive';
+import { HiveRules } from '@everyboard/games/hive';
+import { HiveState } from '@everyboard/games/hive';
+import { HiveFailure } from '@everyboard/games/hive';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HiveComponent } from '../hive.component';

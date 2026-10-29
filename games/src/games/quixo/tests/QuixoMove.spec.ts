@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 import { QuixoNode, QuixoRules } from '../QuixoRules';

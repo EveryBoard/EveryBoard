@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { EnumConfig } from '../../config/EnumConfig';
 import { NumberConfig } from '../../config/NumberConfig';
@@ -6,17 +6,16 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
+import { Direction } from '../../jscaip/direction/Direction';
 import { HexagonShape } from '../../jscaip/shape/HexagonShape';
-import { RectangularShape } from '../../jscaip/shape/rere';
-import { TopologicShape } from '../../jscaip/shape/Shape';
+import { RectangleShape } from '../../jscaip/shape/RectangleShape';
+import { TopologicShape } from '../../jscaip/shape/TopologicShape';
 import { TorusShape } from '../../jscaip/shape/TorusShape';
 import { TriangleShape } from '../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
@@ -30,9 +29,9 @@ import { MGPValidators } from '../../utils/MGPValidator';
 import { ConnectNFailure } from './ConnectNFailure';
 import { ConnectNMove } from './ConnectNMove';
 
-export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
+export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece, Direction>> {}
 
-export const ConnectNTopologyNamer: Record<TopologyID, Localized> = {
+export const ConnectNTopologyNames: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
     'SQUARE (8)': () => $localize`Square (8)`,
     'HEXAGON': () => $localize`Hexagon`,
@@ -62,11 +61,20 @@ export type ConnectNConfig = {
 
 }
 
+type HelperMapKey = {
+    n: number;
+    topology: TopologyID;
+};
+
+type HelperMap = MGPMap<HelperMapKey, TopologicNInARowHelper<FourStatePiece, Direction>>;
+
 export class ConnectNRules extends ConfigurableRules<ConnectNMove,
-                                                     TopologicGameState<FourStatePiece>,
+                                                     TopologicGameState<FourStatePiece, Direction>,
                                                      ConnectNConfig>
 {
     private static singleton: MGPOptional<ConnectNRules> = MGPOptional.empty();
+
+    private static readonly helpers: HelperMap = new MGPMap();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ConnectNConfig> =
         new RulesConfigDescription<ConnectNConfig>({
@@ -75,10 +83,23 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                 n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
                 dropAfterFirstTurn: new NumberConfig(2, () => $localize`Drop after first turn`, MGPValidators.range(2, 10)),
                 boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
-                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, ConnectNTopologyNamer),
+                topology: new EnumConfig('SQUARE (8)', () => $localize`Space shape`, ConnectNTopologyNames),
                 shape: new EnumConfig('SQUARE', () => $localize`Board shape`, ConnectNShapes),
             },
+            validators: [
+                ConnectNRules.toricTriangleConfigMustOnlyBeEven,
+            ],
         });
+
+    private static toricTriangleConfigMustOnlyBeEven(config: ConnectNConfig): MGPValidation {
+        if (config.shape === 'TORUS' &&
+            config.topology === 'TRIANGLE' &&
+            config.boardSize % 2 !== 0
+        ) {
+            return MGPValidation.failure($localize`Toric board with triangle space should have even width`);
+        }
+        return MGPValidation.SUCCESS;
+    }
 
     public static get(): ConnectNRules {
         if (ConnectNRules.singleton.isAbsent()) {
@@ -87,7 +108,45 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return ConnectNRules.singleton.get();
     }
 
-    public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
+    public static getHelper(config: ConnectNConfig): TopologicNInARowHelper<FourStatePiece, Direction> {
+        const key: HelperMapKey = { n: config.n, topology: config.topology };
+        if (ConnectNRules.helpers.get(key).isAbsent()) {
+            const topology: Topology<Direction> = ConnectNRules.getTopology(config);
+            const shape: TopologicShape<Direction> = ConnectNRules.getShape(config, topology);
+            const helper: TopologicNInARowHelper<FourStatePiece, Direction> =
+                new TopologicNInARowHelper<FourStatePiece, Direction>(
+                    (piece: FourStatePiece) => piece.getPlayer(),
+                    config.n,
+                    shape,
+                );
+            ConnectNRules.helpers.put(key, helper);
+        }
+        return ConnectNRules.helpers.get(key).get();
+    }
+
+    private static getTopology(config: ConnectNConfig): Topology<Direction> {
+        return topologyMap.get(config.topology).get();
+    }
+
+    private static getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> {
+        switch (config.shape) {
+            case 'SQUARE': {
+                return new RectangleShape(config.boardSize, config.boardSize, topology);
+            } case 'HEXAGON': {
+                return new HexagonShape(config.boardSize, topology);
+            } case 'TORUS': {
+                return new TorusShape(config.boardSize, config.boardSize, topology);
+            } default: {
+                Utils.expectToBe(config.shape, 'TRIANGLE');
+                return new TriangleShape(config.boardSize, topology);
+            }
+        }
+    }
+
+    public static getVictoriousCoords(
+        state: TopologicGameState<FourStatePiece, Direction>,
+        config: ConnectNConfig,
+    ): Coord[] {
         return new TopologicNInARowHelper(
             (piece: FourStatePiece) => {
                 return piece.getPlayer();
@@ -102,10 +161,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override applyLegalMove(move: ConnectNMove,
-                                   state: TopologicGameState<FourStatePiece>,
-    ): TopologicGameState<FourStatePiece> {
+                                   state: TopologicGameState<FourStatePiece, Direction>,
+    ): TopologicGameState<FourStatePiece, Direction> {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        let resultingState: TopologicGameState<FourStatePiece> = state;
+        let resultingState: TopologicGameState<FourStatePiece, Direction> = state;
         for (const coord of move.coords) {
             resultingState = resultingState.withPieceAt(coord, player);
         }
@@ -113,14 +172,14 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override isLegal(move: ConnectNMove,
-                            state: TopologicGameState<FourStatePiece>,
+                            state: TopologicGameState<FourStatePiece, Direction>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
         if (state.turn === 0 && move.coords.size() > 1) {
-            return MGPFallible.failure(ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE());
+            return MGPFallible.failure(ConnectNFailure.YOU_MUST_DROP_ONE_AT_FIRST_TURN());
         }
         if (state.turn > 0 && move.coords.size() !== config.dropAfterFirstTurn) {
-            return MGPFallible.failure(ConnectNFailure.YOU_MUST_PLAY_EXACTLY(config.dropAfterFirstTurn));
+            return MGPFallible.failure(ConnectNFailure.YOU_MUST_PLAY_EXACTLY_N_PIECES(config.dropAfterFirstTurn));
         }
         for (const coord of move.coords) {
             if (state.isNotOnBoard(coord)) {
@@ -133,9 +192,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return MGPValidation.SUCCESS;
     }
 
-    public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
-        const topology: Topology<Direction> = this.getTopology(config);
-        const shape: TopologicShape<Direction> = this.getShape(config, topology);
+    public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece, Direction> {
+        const topology: Topology<Direction> = ConnectNRules.getTopology(config);
+        const shape: TopologicShape<Direction> = ConnectNRules.getShape(config, topology);
         let maxX: number = 0;
         let maxY: number = 0;
         for (const coord of shape.getAllCoords()) {
@@ -152,14 +211,14 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return new TopologicGameStateWithTable(topology, shape, gameStateWithTable);
     }
 
-    private getTopology(config: ConnectNConfig): Topology<Direction> {
+    private getTopology(config: ConnectNConfig): Topology<Direction> { // TODO DELETE
         return topologyMap.get(config.topology).get();
     }
 
-    private getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> {
+    private getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> { // TODO DELETE
         switch (config.shape) {
             case 'SQUARE': {
-                return new RectangularShape(config.boardSize, config.boardSize, topology);
+                return new RectangleShape(config.boardSize, config.boardSize, topology);
             } case 'HEXAGON': {
                 return new HexagonShape(config.boardSize, topology);
             } case 'TORUS': {
@@ -172,34 +231,13 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override getGameStatus(
-        node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece>>,
+        node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece, Direction>>,
         config: ConnectNConfig,
     ): GameStatus {
-        const state: TopologicGameState<FourStatePiece> = node.gameState;
-        if (state.turn === 0) {
-            return GameStatus.ONGOING;
-        }
-        // take the last move
-        const lastMove: ConnectNMove = node.previousMove.get();
-        const currentPlayer: Player = state.getCurrentOpponent();
-        for (const startCoord of lastMove.coords) {
-            for (const direction of state.getTopology().getDirections()) {
-                const directionCount: number = this.countAlignedPieceOf(
-                    state,
-                    currentPlayer,
-                    direction,
-                    startCoord,
-                );
-                const oppositeCount: number = this.countAlignedPieceOf(
-                    state,
-                    currentPlayer,
-                    direction.getOpposite(),
-                    startCoord,
-                );
-                if (directionCount + 1 + oppositeCount >= config.n) {
-                    return GameStatus.getVictory(currentPlayer);
-                }
-            }
+        const state: TopologicGameState<FourStatePiece, Direction> = node.gameState;
+        const victoriousCoord: Coord[] = ConnectNRules.getVictoriousCoords(state, config);
+        if (victoriousCoord.length > 0) {
+            return GameStatus.getVictory(state.getCurrentOpponent());
         }
         if (this.isBoardFull(state)) {
             return GameStatus.DRAW;
@@ -208,26 +246,12 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         }
     }
 
-    private isBoardFull(state: TopologicGameState<FourStatePiece>): boolean {
+    private isBoardFull(state: TopologicGameState<FourStatePiece, Direction>): boolean {
         return state
             .getAllCoords()
             .filter((coord: Coord) => {
                 return state.getPieceAt(coord).isPlayer() === false;
             }).length === 0;
-    }
-
-    private countAlignedPieceOf(state: TopologicGameState<FourStatePiece>,
-                                currentPlayer: Player,
-                                direction: Direction,
-                                coord: Coord,
-    ): number {
-        let count: number = 0;
-        let testedCoord: MGPOptional<Coord> = state.getShape().getNextCoord(coord, direction, 1);
-        while (testedCoord.isPresent() && state.hasPieceAt(testedCoord.get(), FourStatePiece.ofPlayer(currentPlayer))) {
-            testedCoord = state.getShape().getNextCoord(testedCoord.get(), direction, 1);
-            count++;
-        }
-        return count;
     }
 
 }

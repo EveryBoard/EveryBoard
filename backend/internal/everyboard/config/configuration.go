@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -32,7 +33,7 @@ func Read() (*Configuration, error) {
 	if os.Getenv("DATABASE_TYPE") == "postgres" {
 		databaseDsn := os.Getenv("DATABASE_DSN")
 		if databaseDsn == "" {
-			return nil, fmt.Errorf("for postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
+			return nil, errors.New("for postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
 		}
 		database = postgres.Open(databaseDsn)
 	} else {
@@ -57,7 +58,7 @@ func Read() (*Configuration, error) {
 	}
 
 	if config.Origin == "" {
-		return nil, fmt.Errorf("origin is not set. Use ALLOW_ORIGIN environment variable")
+		return nil, errors.New("origin is not set. Use ALLOW_ORIGIN environment variable")
 	}
 
 	return config, nil

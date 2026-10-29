@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"fmt"
 	"time"
 )
 
@@ -18,7 +19,11 @@ func nowFloatImpl() float64 {
 var NowFloat = nowFloatImpl
 
 func randBoolImpl() bool {
-	return rand.Intn(2) == 1
+	var randomByte [1]byte
+	if _, err := rand.Read(randomByte[:]); err != nil {
+		panic(fmt.Errorf("cannot generate random first player: %w", err))
+	}
+	return randomByte[0]&1 == 1
 }
 
 var RandBool = randBoolImpl

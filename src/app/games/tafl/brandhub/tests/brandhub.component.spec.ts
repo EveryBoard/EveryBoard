@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
-import { TaflPawn } from '@everyboard/games';
-import { TaflState } from '@everyboard/games';
-import { BrandhubMove } from '@everyboard/games';
-import { BrandhubRules } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games/brandhub';
+import { TaflState } from '@everyboard/games/brandhub';
+import { BrandhubMove } from '@everyboard/games/brandhub';
+import { BrandhubRules } from '@everyboard/games/brandhub';
 
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { BrandhubComponent } from '../brandhub.component';

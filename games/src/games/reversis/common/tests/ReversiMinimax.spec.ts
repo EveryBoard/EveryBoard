@@ -10,7 +10,7 @@ import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 import { ReversiState } from '../ReversiState';
 
 const rules: ReversiRules = ReversiRules.get();
-class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation> {
+class ReversiMinimax extends Minimax<ReversiMove, ReversiState<Direction>, ReversiConfig, ReversiLegalityInformation> {
     public constructor() {
         super(
             'Minimax',

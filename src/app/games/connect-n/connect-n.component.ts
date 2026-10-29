@@ -1,16 +1,17 @@
 import { NgClass } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
 
-import { Coord } from '@everyboard/games';
+import { Coord, Table, TableUtils } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
-import { ConnectNAlignmentHeuristic } from '@everyboard/games';
-import { ConnectNMove } from '@everyboard/games';
-import { ConnectNMoveGenerator } from '@everyboard/games';
-import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { ConnectNAlignmentHeuristic } from '@everyboard/games/connect-n';
+import { ConnectNMove } from '@everyboard/games/connect-n';
+import { ConnectNMoveGenerator } from '@everyboard/games/connect-n';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -24,7 +25,7 @@ import { TopologicGameComponent } from '../../components/game-components/topolog
 })
 export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
                                                               ConnectNMove,
-                                                              TopologicGameState<FourStatePiece>,
+                                                              TopologicGameState<FourStatePiece, Direction>,
                                                               FourStatePiece,
                                                               ConnectNConfig>
 {
@@ -53,13 +54,11 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: TopologicGameState<FourStatePiece> = this.state();
+        const state: TopologicGameState<FourStatePiece, Direction> = this.state();
         // this.coordsAndContents.set(state.getCoordsAndContents());
-        this.victoryCoords.set(
-            new Set(
-                ConnectNRules.getVictoriousCoords(state, this.config()),
-            ),
-        );
+        this.victoryCoords.set(new Set(
+            ConnectNRules.getVictoriousCoords(state, this.config()),
+        ));
     }
 
     public override async showLastMove(move: ConnectNMove): Promise<void> {
@@ -89,24 +88,44 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         }
     }
 
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
-        const owner: PlayerOrNone = this.state().getPieceAt(coord).getPlayer();
-        const classes: string[] = [];
-        if (this.droppedCoords().contains(coord)) {
-            classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
-            classes.push('highlighted-stroke');
-        } else {
-            classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords().contains(coord)) {
-                classes.push('victory-stroke');
+    protected readonly ownerMap: Signal<Table<PlayerOrNone>> = computed(() => {
+        const owners: PlayerOrNone[][] = [];
+        for (const coordAndContent of this.state().getCoordsAndContents()) {
+            const y: number = coordAndContent.coord.y;
+            while (owners.length <= y) {
+                owners.push([]);
             }
-            if (this.lastMoveds().contains(coord)) {
-                classes.push('last-move-stroke');
+            const x: number = coordAndContent.coord.x;
+            while (owners[y].length <= x) {
+                owners[y].push(PlayerOrNone.NONE);
             }
+            owners[y][x] = coordAndContent.content.getPlayer();
         }
-        return classes;
-    }
+        return owners;
+    });
+
+    protected readonly spaceClasses: Signal<Table<ReadonlyArray<string>>> = computed(() => {
+        return TableUtils.map(
+            this.ownerMap(),
+            (owner: PlayerOrNone, x: number, y: number) => {
+                const coord: Coord = new Coord(x, y);
+                const classes: string[] = [];
+                if (this.droppedCoords().contains(coord)) {
+                    classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
+                    classes.push('highlighted-stroke');
+                } else {
+                    classes.push(this.getPlayerClass(owner));
+                    if (this.victoryCoords().contains(coord)) {
+                        classes.push('victory-stroke');
+                    }
+                    if (this.lastMoveds().contains(coord)) {
+                        classes.push('last-move-stroke');
+                    }
+                }
+                return classes;
+            },
+        );
+    });
 
     public override cancelMoveAttempt(): void {
         this.droppedCoords.set(new Set());

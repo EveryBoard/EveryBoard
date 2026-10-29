@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './Shape';
+import { TopologicShape } from './TopologicShape';
 
 export class TriangleShape<D extends Direction> extends TopologicShape<D> {
 
@@ -61,6 +61,11 @@ export class TriangleShape<D extends Direction> extends TopologicShape<D> {
     public isOnBoard(coord: Coord): boolean {
         const minyx: number = this.side - 1;
         return minyx <= coord.x + coord.y && coord.x - coord.y < this.side;
+    }
+
+    public isNotOnBoard(coord: Coord): boolean {
+        const minyx: number = this.side - 1;
+        return coord.x + coord.y < minyx || this.side <= coord.x - coord.y;
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {

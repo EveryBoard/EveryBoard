@@ -2,16 +2,16 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { EmptyRulesConfig } from '@everyboard/games';
-import { MartianChessMove } from '@everyboard/games';
-import { MartianChessMoveGenerator } from '@everyboard/games';
-import { MartianChessPiece } from '@everyboard/games';
-import { MartianChessMoveResult, MartianChessRules } from '@everyboard/games';
-import { MartianChessScoreHeuristic } from '@everyboard/games';
-import { MartianChessState } from '@everyboard/games';
+import { MartianChessMove } from '@everyboard/games/martian-chess';
+import { MartianChessMoveGenerator } from '@everyboard/games/martian-chess';
+import { MartianChessPiece } from '@everyboard/games/martian-chess';
+import { MartianChessMoveResult, MartianChessRules } from '@everyboard/games/martian-chess';
+import { MartianChessScoreHeuristic } from '@everyboard/games/martian-chess';
+import { MartianChessState } from '@everyboard/games/martian-chess';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -233,7 +233,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const firstPiece: MartianChessPiece = this.state().getPieceAt(coord);
         let landingSquares: Coord[];
         if (firstPiece === MartianChessPiece.PAWN) {
-            landingSquares = Ordinal.DIAGONALS.map((d: Ordinal) => coord.getNext(d));
+            landingSquares = EightDirection.DIAGONALS.map((d: EightDirection) => coord.getNext(d));
         } else if (firstPiece === MartianChessPiece.DRONE) {
             landingSquares = this.getValidLinearLandingSquareUntil(coord, 2);
         } else {
@@ -250,7 +250,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     private getValidLinearLandingSquareUntil(coord: Coord, until: number): Coord[] {
-        return Ordinal.ORDINALS.flatMap((d: Ordinal) => {
+        return EightDirection.EIGHT_DIRECTIONS.flatMap((d: EightDirection) => {
             const landings: Coord[] = [];
             let landing: Coord = coord.getNext(d);
             let steps: number = 1;

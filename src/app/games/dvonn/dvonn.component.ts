@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { PointyHexaOrientation } from '@everyboard/games';
-import { DvonnMaxStacksHeuristic } from '@everyboard/games';
-import { DvonnMove } from '@everyboard/games';
-import { DvonnMoveGenerator } from '@everyboard/games';
-import { DvonnPieceStack } from '@everyboard/games';
-import { DvonnRules } from '@everyboard/games';
-import { DvonnScoreHeuristic } from '@everyboard/games';
-import { DvonnState } from '@everyboard/games';
+import { DvonnMaxStacksHeuristic } from '@everyboard/games/dvonn';
+import { DvonnMove } from '@everyboard/games/dvonn';
+import { DvonnMoveGenerator } from '@everyboard/games/dvonn';
+import { DvonnPieceStack } from '@everyboard/games/dvonn';
+import { DvonnRules } from '@everyboard/games/dvonn';
+import { DvonnScoreHeuristic } from '@everyboard/games/dvonn';
+import { DvonnState } from '@everyboard/games/dvonn';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

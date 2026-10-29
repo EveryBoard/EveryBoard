@@ -1,9 +1,9 @@
 import { Coord } from '@everyboard/games';
 import { GobanConfig } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { ConnectSixDrops, ConnectSixFirstMove } from '@everyboard/games';
-import { ConnectSixRules } from '@everyboard/games';
-import { ConnectSixState } from '@everyboard/games';
+import { ConnectSixDrops, ConnectSixFirstMove } from '@everyboard/games/connect-six';
+import { ConnectSixRules } from '@everyboard/games/connect-six';
+import { ConnectSixState } from '@everyboard/games/connect-six';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

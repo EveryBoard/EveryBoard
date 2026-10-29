@@ -2,15 +2,15 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { SquarzHeuristic } from '@everyboard/games';
-import { SquarzMove as SquarzMove } from '@everyboard/games';
-import { SquarzMoveGenerator } from '@everyboard/games';
-import { SquarzConfig, SquarzRules } from '@everyboard/games';
-import { SquarzState } from '@everyboard/games';
+import { SquarzHeuristic } from '@everyboard/games/squarz';
+import { SquarzMove as SquarzMove } from '@everyboard/games/squarz';
+import { SquarzMoveGenerator } from '@everyboard/games/squarz';
+import { SquarzConfig, SquarzRules } from '@everyboard/games/squarz';
+import { SquarzState } from '@everyboard/games/squarz';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -76,7 +76,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         const moveEnd: Coord = move.getEnd();
         this.movedPieces.push(moveEnd);
         this.movedSpaces.push(moveEnd);
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const neighbor: Coord = moveEnd.getNext(direction);
             if (previousState.hasPieceAt(neighbor, previousOpponent)) {
                 this.captured.push(neighbor);

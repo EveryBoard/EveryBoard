@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { LinesOfActionMove } from '@everyboard/games';
-import { LinesOfActionRules } from '@everyboard/games';
-import { LinesOfActionState } from '@everyboard/games';
+import { LinesOfActionMove } from '@everyboard/games/lines-of-action';
+import { LinesOfActionRules } from '@everyboard/games/lines-of-action';
+import { LinesOfActionState } from '@everyboard/games/lines-of-action';
 import { MGPValidation } from '@everyboard/lib';
 
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

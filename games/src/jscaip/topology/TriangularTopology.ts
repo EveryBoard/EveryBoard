@@ -1,16 +1,14 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
-import { Ordinal } from '../Ordinal';
-import { TriangularDirection } from '../TriangularDirection';
 import { Vector } from '../Vector';
+import { TriangularDirection } from '../direction/TriangularDirection';
 
 import { Topology } from './Topology';
 
 export class TriangularTopology implements Topology<TriangularDirection> {
 
-    private readonly directions: Set<Direction> = new Set([
+    private readonly directions: Set<TriangularDirection> = new Set([
         TriangularDirection.LEFT,
         TriangularDirection.UP_LEFT,
         TriangularDirection.UP_RIGHT,
@@ -19,21 +17,21 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         TriangularDirection.DOWN_LEFT,
     ]);
 
-    public getDirections(): Set<Direction> {
+    public getDirections(): Set<TriangularDirection> {
         return this.directions;
     }
 
     public getTopologyNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
-        if (direction.y === 0) { // No weird behavior for LEFT and RIGHT
+        if (direction.y === 0) {
             return coord.getNext(direction, distance);
         }
         if (this.canGoUp(coord)) {
             if (direction.y === -1) {
-                return coord.getNext(Ordinal.UP, distance);
+                return new Coord(coord.x, coord.y - distance);
             }
         } else {
             if (direction.y === 1) {
-                return coord.getNext(Ordinal.DOWN, distance);
+                return new Coord(coord.x, coord.y + distance);
             }
         }
         return coord.getNext(new Vector(direction.x, 0), distance);
@@ -45,9 +43,11 @@ export class TriangularTopology implements Topology<TriangularDirection> {
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
-            coord.getNext(Ordinal.LEFT),
-            coord.getNext(Ordinal.RIGHT),
-            this.canGoUp(coord) ? coord.getNext(Ordinal.UP) : coord.getNext(Ordinal.DOWN),
+            coord.getNext(TriangularDirection.LEFT),
+            coord.getNext(TriangularDirection.RIGHT),
+            this.canGoUp(coord) ?
+                new Coord(coord.x, coord.y - 1) :
+                new Coord(coord.x, coord.y + 1),
         ]);
     }
 

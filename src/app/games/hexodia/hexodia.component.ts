@@ -7,10 +7,10 @@ import { PointyHexaOrientation } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { FourStatePieceGameStateWithTable } from '@everyboard/games';
-import { HexodiaAlignmentHeuristic } from '@everyboard/games';
-import { HexodiaMove } from '@everyboard/games';
-import { HexodiaMoveGenerator } from '@everyboard/games';
-import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
+import { HexodiaAlignmentHeuristic } from '@everyboard/games/hexodia';
+import { HexodiaMove } from '@everyboard/games/hexodia';
+import { HexodiaMoveGenerator } from '@everyboard/games/hexodia';
+import { HexodiaConfig, HexodiaRules } from '@everyboard/games/hexodia';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

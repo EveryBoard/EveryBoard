@@ -1,8 +1,8 @@
 import { fakeAsync } from '@angular/core/testing';
 
-import { NewGameMove } from '@everyboard/games';
-import { NewGameRules } from '@everyboard/games';
-import { NewGameState } from '@everyboard/games';
+import { NewGameMove } from '@everyboard/games/new-game';
+import { NewGameRules } from '@everyboard/games/new-game';
+import { NewGameState } from '@everyboard/games/new-game';
 
 import { GameInfo } from '../../../components/normal-component/pick-game/GameInfo';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

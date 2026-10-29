@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { QuartoHeuristic } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoMoveGenerator } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
-import { QuartoConfig, QuartoRules } from '@everyboard/games';
-import { QuartoState } from '@everyboard/games';
+import { QuartoHeuristic } from '@everyboard/games/quarto';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoMoveGenerator } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
+import { QuartoConfig, QuartoRules } from '@everyboard/games/quarto';
+import { QuartoState } from '@everyboard/games/quarto';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

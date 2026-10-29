@@ -1,7 +1,7 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../jscaip/Player';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoConfig, TeekoNode } from './TeekoRules';
@@ -47,7 +47,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
             return this.getCoordsContaining(state, PlayerOrNone.NONE);
         } else {
             const possibleTargets: Coord[] = [];
-            for (const direction of Ordinal.factory.all) {
+            for (const direction of EightDirection.factory.all) {
                 const target: Coord = start.getNext(direction);
                 if (state.isEmptyAt(target)) {
                     possibleTargets.push(target);

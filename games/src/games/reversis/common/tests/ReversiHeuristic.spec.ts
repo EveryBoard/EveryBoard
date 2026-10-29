@@ -3,12 +3,12 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
-import { Ordinal } from '../../../../jscaip/Ordinal';
+import { EightDirection } from '../../../../jscaip/EightDirection';
 import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangularShape } from '../../../../jscaip/shape/rere';
+import { RectangleShape } from '../../../../jscaip/shape/rere';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiHeuristic } from '../ReversiHeuristic';
@@ -18,8 +18,8 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
-const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-const squareShape: RectangularShape<Ordinal> = new RectangularShape(8, 8, ordinalTopology);
+const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
 fdescribe('ReversiHeuristic', () => {
 
@@ -41,7 +41,7 @@ fdescribe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, X],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([16]);
@@ -59,7 +59,7 @@ fdescribe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([8]);
@@ -77,7 +77,7 @@ fdescribe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
-        const state: ReversiState = new ReversiState(ordinalTopology, squareShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([1]);
@@ -96,7 +96,7 @@ fdescribe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const weakerGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(weakerBoard, 2);
-        const weakerState: ReversiState = new ReversiState(ordinalTopology, squareShape, weakerGameState);
+        const weakerState: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, weakerGameState);
         const strongerBoard: Table<FourStatePiece> = [
             [O, O, O, _, _, _, _, _],
             [_, _, X, _, _, _, _, _],
@@ -108,7 +108,7 @@ fdescribe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const strongerGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(strongerBoard, 2);
-        const strongerState: ReversiState = new ReversiState(ordinalTopology, squareShape, strongerGameState);
+        const strongerState: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, strongerGameState);
         // When computing the board value
         // Then the control of the corner should be preferred
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

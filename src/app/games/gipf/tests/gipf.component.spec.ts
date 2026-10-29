@@ -8,10 +8,10 @@ import { HexaDirection } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { GipfMove, GipfPlacement } from '@everyboard/games';
-import { GipfRules } from '@everyboard/games';
-import { GipfState } from '@everyboard/games';
-import { GipfFailure } from '@everyboard/games';
+import { GipfMove, GipfPlacement } from '@everyboard/games/gipf';
+import { GipfRules } from '@everyboard/games/gipf';
+import { GipfState } from '@everyboard/games/gipf';
+import { GipfFailure } from '@everyboard/games/gipf';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Arrow } from '../../../components/game-components/arrow-component/Arrow';

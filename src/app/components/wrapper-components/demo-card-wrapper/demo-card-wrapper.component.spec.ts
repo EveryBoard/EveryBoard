@@ -2,15 +2,15 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { LodestoneNode, LodestoneRules } from '@everyboard/games';
-import { P4Config, P4Node, P4Rules } from '@everyboard/games';
 import { GameNode } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { AbstractRules } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
-import { P4Move } from '@everyboard/games';
-import { P4State } from '@everyboard/games';
+import { LodestoneNode, LodestoneRules } from '@everyboard/games/lodestone';
+import { P4Config, P4Node, P4Rules } from '@everyboard/games/p4';
+import { P4Move } from '@everyboard/games/p4';
+import { P4State } from '@everyboard/games/p4';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

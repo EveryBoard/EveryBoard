@@ -28,7 +28,7 @@ export class ReversiRules extends TopologicReversiRules {
             },
         });
 
-    public override getRulesConfigDescription(): RulesConfigDescription<ReversiConfig> {
+    public getRulesConfigDescription(): RulesConfigDescription<ReversiConfig> {
         return ReversiRules.RULES_CONFIG_DESCRIPTION;
     }
 

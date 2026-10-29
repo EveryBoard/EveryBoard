@@ -1,14 +1,13 @@
-import { Coord } from '@everyboard/games';
-import { Direction } from '@everyboard/games';
+import { Coord, EightDirection } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { TopologicGameStateWithTable } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
-import { ConnectNMove } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
-import { ConnectNConfig, ConnectNRules } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
 import { TopologicShape } from '@everyboard/games';
-import { RectangularShape } from '@everyboard/games';
+import { RectangleShape } from '@everyboard/games';
+import { ConnectNMove } from '@everyboard/games/connect-n';
+import { ConnectNConfig, ConnectNRules } from '@everyboard/games/connect-n';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -17,8 +16,8 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const defaultTopology: Topology<Direction> = new OrdinalSquareTopology();
-const defaultShape: TopologicShape<Direction> = new RectangularShape(
+const defaultTopology: Topology<EightDirection> = new EightDirectionSquareTopology();
+const defaultShape: TopologicShape<EightDirection> = new RectangleShape(
     defaultConfig.boardSize,
     defaultConfig.boardSize,
     defaultTopology,

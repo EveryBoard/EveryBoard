@@ -7,11 +7,11 @@ import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescr
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { SquarzFailure } from './SquarzFailure';
@@ -100,7 +100,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         if (moveDistance > 1) {
             resultingState = resultingState.withPieceAt(start, PlayerOrNone.NONE);
         }
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const neighbor: Coord = end.getNext(direction, 1);
             if (resultingState.hasPieceAt(neighbor, opponent)) {
                 resultingState = resultingState.withPieceAt(neighbor, player);

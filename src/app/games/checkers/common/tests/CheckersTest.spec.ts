@@ -5,12 +5,12 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { CheckersFailure } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersMoveGenerator } from '@everyboard/games';
 import { Direction, DirectionFailure } from '@everyboard/games';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games';
-import { CheckersStack, CheckersState } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games/families/checkers';
+import { CheckersMove } from '@everyboard/games/families/checkers';
+import { CheckersMoveGenerator } from '@everyboard/games/families/checkers';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '@everyboard/games/families/checkers';
+import { CheckersStack, CheckersState } from '@everyboard/games/families/checkers';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
@@ -282,7 +282,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await clickOnOpponentPieceAndFail();
             }));
 
-            it('should fail when doing impossible click (non ordinal direction)', fakeAsync(async() => {
+            it('should fail when doing impossible click (non eight direction)', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const firstCoord: Coord = entries.firstPlayerCoords[0];
                 await testUtils.expectClickSuccess(`#coord-${ firstCoord.x }-${ firstCoord.y }`);
@@ -293,7 +293,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await testUtils.expectClickFailure(`#coord-${ firstCoord.x + 2 }-${ firstCoord.y - 1 }`, reason);
             }));
 
-            it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
+            it('should fail when doing impossible click (eight direction)', fakeAsync(async() => {
                 // Given any board with a selected piece
                 const state: CheckersState = entries.invalidVerticalMoveTest.state;
                 const coord: Coord = entries.invalidVerticalMoveTest.coord;

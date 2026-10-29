@@ -1,6 +1,6 @@
 import { computed, Signal } from '@angular/core';
 
-import { Coord } from '@everyboard/games';
+import { Coord, Shape } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FlatHexaOrientation } from '@everyboard/games';
 import { Move } from '@everyboard/games';
@@ -8,11 +8,13 @@ import { SuperRules } from '@everyboard/games';
 import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
 import { HexagonalTopology } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
 import { OrthogonalSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
 import { TriangularTopology } from '@everyboard/games';
-import { Set, Utils } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
+import { Set } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
@@ -23,7 +25,7 @@ import { TriangularLayout } from '../layout/TriangularLayout';
 
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,
-                                             S extends TopologicGameState<P>,
+                                             S extends TopologicGameState<P, Direction>,
                                              P extends NonNullable<unknown>,
                                              C extends RulesConfig = EmptyRulesConfig,
                                              L = void>
@@ -43,37 +45,62 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
         return new Set(this.state().getCoordsAndContents());
     });
 
-    public computeViewBox(): ViewBox {
-        const globalViewBox: ViewBox = ViewBox.fromCoords(
-            this.state()
+    protected readonly topologicTranslationMap: Signal<MGPMap<Coord, string>> = computed(() => {
+        const map: MGPMap<Coord, string> = new MGPMap(
+            this.shape()
                 .getAllCoords()
-                .flatMap((abstractCoord: Coord) => {
-                    const polygonCoords: Coord[] = this.getLayout().getPolygonCoordsAt(abstractCoord);
-                    const translationCoord: Coord = this.getLayout().getTranslationCoordAt(abstractCoord);
-                    return polygonCoords.map((polygonCoord: Coord) => polygonCoord.getNext(translationCoord));
+                .map((coord: Coord) => {
+                    return {
+                        key: coord,
+                        value: this.layout().getTranslationAt(coord),
+                    };
                 }),
         );
-        return globalViewBox.expandAll(this.STROKE_WIDTH / 2);
-    }
+        map.makeImmutable();
+        return map;
+    });
 
-    protected getTopologicTranslationAt(coord: Coord): string {
-        const layout: Layout = this.getLayout();
-        return layout.getTranslationAt(coord);
-    }
+    protected readonly topologicPolygonMap: Signal<MGPMap<Coord, string>> = computed(() => {
+        const map: MGPMap<Coord, string> = new MGPMap(
+            this.shape()
+                .getAllCoords()
+                .map((coord: Coord) => {
+                    return {
+                        key: coord,
+                        value: this.layout().getPolygonAt(coord),
+                    };
+                }),
+        );
+        map.makeImmutable();
+        return map;
+    });
 
-    protected getTopologicPolygonAt(coord: Coord): string {
-        const layout: Layout = this.getLayout();
-        return layout.getPolygonAt(coord);
-    }
+    protected readonly topologicCellIdMap: Signal<MGPMap<Coord, string>> = computed(() => {
+        const map: MGPMap<Coord, string> = new MGPMap(
+            this.shape()
+                .getAllCoords()
+                .map((coord: Coord) => {
+                    return {
+                        key: coord,
+                        value: `${ coord.x }-${ coord.y }`,
+                    };
+                }),
+        );
+        map.makeImmutable();
+        return map;
+    });
 
-    protected getTopologicCellId(coord: Coord): string {
-        return `${ coord.x }-${ coord.y }`;
-    }
+    private readonly shape: Signal<Shape<Direction>> = computed(() => {
+        return this.state().getShape();
+    });
 
-    private getLayout(): Layout {
-        const state: TopologicGameState<P> = this.state();
-        const topology: Topology<Direction> = state.getTopology();
-        if (topology instanceof OrdinalSquareTopology ||
+    private readonly topology: Signal<Topology<Direction>> = computed(() => {
+        return this.state().getTopology();
+    });
+
+    private readonly layout: Signal<Layout> = computed(() => {
+        const topology: Topology<Direction> = this.topology();
+        if (topology instanceof EightDirectionSquareTopology ||
             topology instanceof OrthogonalSquareTopology
         ) {
             return this.squareLayout;
@@ -83,6 +110,19 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
             Utils.expectToBe(topology instanceof HexagonalTopology, true);
             return this.hexagonalLayout;
         }
+    });
+
+    protected computeViewBox(): ViewBox {
+        const globalViewBox: ViewBox = ViewBox.fromCoords(
+            this.state()
+                .getAllCoords()
+                .flatMap((abstractCoord: Coord) => {
+                    const polygonCoords: Coord[] = this.layout().getPolygonCoordsAt(abstractCoord);
+                    const translationCoord: Coord = this.layout().getTranslationCoordAt(abstractCoord);
+                    return polygonCoords.map((polygonCoord: Coord) => polygonCoord.getNext(translationCoord));
+                }),
+        );
+        return globalViewBox.expandAll(this.STROKE_WIDTH / 2);
     }
 
 }

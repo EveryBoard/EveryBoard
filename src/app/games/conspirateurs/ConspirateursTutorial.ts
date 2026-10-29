@@ -1,9 +1,14 @@
 
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '@everyboard/games';
-import { ConspirateursRules } from '@everyboard/games';
-import { ConspirateursState } from '@everyboard/games';
+import {
+    ConspirateursMove,
+    ConspirateursMoveDrop,
+    ConspirateursMoveJump,
+    ConspirateursMoveSimple,
+} from '@everyboard/games/conspirateurs';
+import { ConspirateursRules } from '@everyboard/games/conspirateurs';
+import { ConspirateursState } from '@everyboard/games/conspirateurs';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

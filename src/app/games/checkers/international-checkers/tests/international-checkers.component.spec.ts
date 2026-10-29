@@ -4,11 +4,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '@everyboard/games';
 import { DirectionFailure } from '@everyboard/games';
 import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
-import { CheckersConfig } from '@everyboard/games';
-import { CheckersMove } from '@everyboard/games';
-import { CheckersFailure } from '@everyboard/games';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games';
-import { InternationalCheckersRules } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games/international-checkers';
+import { CheckersMove } from '@everyboard/games/international-checkers';
+import { CheckersFailure } from '@everyboard/games/international-checkers';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '@everyboard/games/international-checkers';
+import { InternationalCheckersRules } from '@everyboard/games/international-checkers';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
@@ -424,7 +424,7 @@ describe('InternationalCheckersComponent', () => {
             testUtils.expectElementNotToExist('#square-6-5-piece-1');
         }));
 
-        it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
+        it('should cancel move when trying invalid direction move mid-capture', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
             const state: CheckersState = OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],

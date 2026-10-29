@@ -2,13 +2,13 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { QuartoConfig, QuartoRules } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { QuartoMove } from '@everyboard/games';
-import { QuartoPiece } from '@everyboard/games';
-import { QuartoState } from '@everyboard/games';
+import { QuartoConfig, QuartoRules } from '@everyboard/games/quarto';
+import { QuartoMove } from '@everyboard/games/quarto';
+import { QuartoPiece } from '@everyboard/games/quarto';
+import { QuartoState } from '@everyboard/games/quarto';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { QuartoComponent } from '../../../games/quarto/quarto.component';

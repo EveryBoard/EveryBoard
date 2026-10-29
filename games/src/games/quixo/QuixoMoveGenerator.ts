@@ -1,6 +1,6 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 
 import { QuixoMove } from './QuixoMove';
 import { QuixoNode, QuixoRules } from './QuixoRules';

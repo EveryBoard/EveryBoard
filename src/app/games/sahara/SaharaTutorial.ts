@@ -1,9 +1,9 @@
 
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
-import { SaharaMove } from '@everyboard/games';
-import { SaharaRules } from '@everyboard/games';
-import { SaharaState } from '@everyboard/games';
+import { SaharaMove } from '@everyboard/games/sahara';
+import { SaharaRules } from '@everyboard/games/sahara';
+import { SaharaState } from '@everyboard/games/sahara';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

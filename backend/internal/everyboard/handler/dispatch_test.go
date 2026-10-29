@@ -2,8 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -35,7 +37,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When calling unsubscribe
 		err := h.unsubscribe()
 		// Then it should not result in an error
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 
 	t.Run("HandleSubscribeGameDoesNotExist", func(t *testing.T) {
@@ -53,12 +55,12 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When we subscribe to the lobby
 		err := h.handleSubscribeLobby()
 		// Then it should succeed
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
 		h := newH()
-		store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1})
+		require.NoError(t, store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1}))
 		err := h.handleWithoutErrorSend("Create", map[string]json.RawMessage{"gameName": json.RawMessage(`"test"`)})
 		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 	})
@@ -86,6 +88,6 @@ func TestUnsubscribeDirect(t *testing.T) {
 	t.Run("Lobby", func(t *testing.T) {
 		subs.Subscribe(h.connection, user.ID, model.GameIDLobby, session.SubscriptionToLobby)
 		err := h.unsubscribe()
-		assert.Nil(t, err, "unexpected error")
+		assert.NoError(t, err, "unexpected error")
 	})
 }

@@ -1,21 +1,21 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { Direction } from '../../../jscaip/direction/Direction';
+import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { Topology } from '../../../jscaip/topology/Topology';
 
-export class ReversiState extends TopologicGameStateWithTable<FourStatePiece> {
+export class ReversiState<D extends Direction> extends TopologicGameStateWithTable<FourStatePiece, D> {
 
     public constructor(
-        topology: Topology<Direction>,
-        shape: TopologicShape<Direction>,
+        topology: Topology<D>,
+        shape: TopologicShape<D>,
         gameStateWithTable: SimpleGameStateWithTable<FourStatePiece>,
     ) {
         super(topology, shape, gameStateWithTable);

@@ -1,7 +1,7 @@
+import { FlatHexaOrientation } from '@everyboard/games';
+import { HexaOrientation } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
-
-import { Coord } from '../../../../../games/src/jscaip/Coord';
-import { FlatHexaOrientation, HexaOrientation } from '../../../../../games/src/jscaip/HexaOrientation';
 
 import { BaseLayout } from './Layout';
 

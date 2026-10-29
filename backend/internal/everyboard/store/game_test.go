@@ -41,8 +41,8 @@ func TestDBGameFlow(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
-			seen = seen + 1
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate game events")
@@ -67,6 +67,16 @@ func TestDBGameFlow(t *testing.T) {
 	require.NoError(t, err, "cannot retrieve game")
 	require.Equal(t, model.ResultAgreedDrawByOne, game.Result, "game result has not changed")
 
+}
+
+func TestGameHasAllDeclaredColumns(t *testing.T) {
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	for _, column := range model.GameRows {
+		assert.True(t, store.db.Migrator().HasColumn(&model.Game{}, column),
+			"missing game column %s", column)
+	}
 }
 
 func TestManyGameEvents(t *testing.T) {
@@ -102,8 +112,8 @@ func TestManyGameEvents(t *testing.T) {
 	// Retrieving the events
 	expectEvents := func(count int) {
 		seen := 0
-		err := store.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
-			seen = seen + 1
+		err := store.ApplyToGameEvents(game.GameID, func(_ *model.GameEvent) error {
+			seen++
 			return nil
 		})
 		require.NoError(t, err, "cannot iterate game events")
@@ -140,8 +150,8 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
@@ -172,8 +182,8 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
-	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
+	assert.Equal(t, opponent.ID, game.PlayerZero.User.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.User.ID, "invalid players in game")
 }
 
 func TestGameCreationWithoutOpponentFails(t *testing.T) {

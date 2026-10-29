@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RectangularShape } from '../../../jscaip/shape/rere';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { Direction } from '../../../jscaip/direction/Direction';
+import { RectangleShape } from '../../../jscaip/shape/RectangleShape';
+import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
-import { OrdinalSquareTopology } from '../../../jscaip/topology/OrdinalSquareTopology';
+import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-
 
 describe('ConnectNMoveGenerator', () => {
 
@@ -21,8 +20,8 @@ describe('ConnectNMoveGenerator', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
 
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const defaultTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-    const defaultShape: TopologicShape<Direction> = new RectangularShape(
+    const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+    const defaultShape: TopologicShape<Direction> = new RectangleShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
         defaultTopology,
@@ -35,7 +34,7 @@ describe('ConnectNMoveGenerator', () => {
         // Given the initial node
         const width: number = defaultConfig.boardSize;
         const height: number = defaultConfig.boardSize;
-        const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
+        const state: TopologicGameState<FourStatePiece, Direction> = ConnectNRules.get().getInitialState(defaultConfig);
         const node: ConnectNNode = new ConnectNNode(state);
 
         // When listing the moves
@@ -76,7 +75,7 @@ describe('ConnectNMoveGenerator', () => {
                 ],
                 3,
             );
-        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+        const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,

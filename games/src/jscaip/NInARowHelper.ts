@@ -2,8 +2,8 @@ import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
-import { Direction } from './Direction';
 import { Player, PlayerOrNone } from './Player';
+import { Direction } from './direction/Direction';
 import { GameStateWithCoords } from './state/GameStateWithCoords';
 
 export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Direction> {
@@ -98,7 +98,6 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         let alignedPlayers: number = 0; // the number of aligned players
         let allPlayersAreSideBySide: boolean = true;
         let coord: MGPOptional<Coord> = this.getNextCoord(i, dir);
-        // TODO: some place we'll check isPresnet and isOnBoard, it's double checking dude!
         let testedCoords: number = 1;
         const opponent: Player = player.getOpponent();
         while (coord.isPresent() && state.isOnBoard(coord.get()) && testedCoords < this.N) {

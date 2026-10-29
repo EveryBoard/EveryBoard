@@ -1,25 +1,25 @@
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
-import { TopologicShape } from '../shape/Shape';
+import { Direction } from '../direction/Direction';
+import { TopologicShape } from '../shape/TopologicShape';
 import { Topology } from '../topology/Topology';
 
 import { GameState } from './GameState';
 
-export abstract class TopologicGameState<P extends NonNullable<unknown>> extends GameState {
+export abstract class TopologicGameState<P extends NonNullable<unknown>, D extends Direction> extends GameState {
 
     public constructor(
         turn: number,
-        private readonly topology: Topology<Direction>,
-        private readonly shape: TopologicShape<Direction>,
+        private readonly topology: Topology<D>,
+        private readonly shape: TopologicShape<D>,
     ) {
         super(turn);
     }
 
-    public getTopology(): Topology<Direction> {
+    public getTopology(): Topology<D> {
         return this.topology;
     }
 
-    public getShape(): TopologicShape<Direction> {
+    public getShape(): TopologicShape<D> {
         return this.shape;
     }
 
@@ -35,7 +35,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public abstract isOnBoard(coord: Coord): boolean;
 
-    public abstract incrementTurn(): this;
+    public abstract incrementTurn(): TopologicGameState<P, D>;
 
     public abstract getCenters(): Coord[];
 

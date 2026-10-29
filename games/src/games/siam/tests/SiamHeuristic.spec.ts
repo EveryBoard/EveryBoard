@@ -3,9 +3,9 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';

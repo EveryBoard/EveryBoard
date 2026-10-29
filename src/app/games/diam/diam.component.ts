@@ -6,12 +6,12 @@ import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
-import { DiamFailure } from '@everyboard/games';
-import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '@everyboard/games';
-import { DiamMoveGenerator } from '@everyboard/games';
-import { DiamPiece } from '@everyboard/games';
-import { DiamRules } from '@everyboard/games';
-import { DiamState } from '@everyboard/games';
+import { DiamFailure } from '@everyboard/games/diam';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '@everyboard/games/diam';
+import { DiamMoveGenerator } from '@everyboard/games/diam';
+import { DiamPiece } from '@everyboard/games/diam';
+import { DiamRules } from '@everyboard/games/diam';
+import { DiamState } from '@everyboard/games/diam';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

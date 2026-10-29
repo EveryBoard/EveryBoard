@@ -5,9 +5,9 @@ import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
-import { SaharaMove } from '@everyboard/games';
-import { SaharaState } from '@everyboard/games';
-import { SaharaFailure } from '@everyboard/games';
+import { SaharaMove } from '@everyboard/games/sahara';
+import { SaharaState } from '@everyboard/games/sahara';
+import { SaharaFailure } from '@everyboard/games/sahara';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SaharaComponent } from '../sahara.component';

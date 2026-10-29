@@ -2,12 +2,11 @@
 import { fakeAsync } from '@angular/core/testing';
 
 
-import { FourStatePiece, Ordinal, Table } from '@everyboard/games';
-import { ReversiMove } from '@everyboard/games';
-import { ReversiState } from '@everyboard/games';
+import { Direction, EightDirection, EightDirectionSquareTopology, FourStatePiece, Table } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
-import { OrdinalSquareTopology } from '@everyboard/games';
 import { TorusShape } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games/toric-reversi';
+import { ReversiState } from '@everyboard/games/toric-reversi';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ToricReversiComponent } from '../toric-reversi.component';
@@ -20,8 +19,8 @@ fdescribe('ToricReversiComponent', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
-    const ordinalTopology: OrdinalSquareTopology = new OrdinalSquareTopology();
-    const torusShape: TorusShape<Ordinal> = new TorusShape(8, 8, ordinalTopology);
+    const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+    const torusShape: TorusShape<EightDirection> = new TorusShape(8, 8, ordinalTopology);
     // TODO: toric shape, not torus shape
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ToricReversiComponent>('ToricReversi');
@@ -40,7 +39,7 @@ fdescribe('ToricReversiComponent', () => {
             [_, _, O, _, _, _, _, _],
         ];
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 0);
-        const state: ReversiState = new ReversiState(ordinalTopology, torusShape, gameState);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, torusShape, gameState);
         await testUtils.setupState(state);
 
         // When doing that capturing move

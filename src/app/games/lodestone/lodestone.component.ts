@@ -2,19 +2,38 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { EmptyRulesConfig } from '@everyboard/games';
 import { TableUtils } from '@everyboard/games';
-import { LodestoneFailure } from '@everyboard/games';
-import { LodestoneCaptures, LodestoneMove } from '@everyboard/games';
-import { LodestoneMoveGenerator } from '@everyboard/games';
-import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from '@everyboard/games';
-import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from '@everyboard/games';
-import { LodestoneScoreHeuristic } from '@everyboard/games';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from '@everyboard/games';
 import { ScoreName } from '@everyboard/games';
+import { LodestoneFailure } from '@everyboard/games/lodestone';
+import { LodestoneCaptures, LodestoneMove } from '@everyboard/games/lodestone';
+import { LodestoneMoveGenerator } from '@everyboard/games/lodestone';
+import {
+    LodestoneOrientation,
+    LodestoneDirection,
+    LodestonePiece,
+    LodestonePieceNone,
+    LodestonePieceLodestone,
+    LodestoneDescription,
+} from '@everyboard/games/lodestone';
+import {
+    LodestoneInfos,
+    PressurePlatePositionInformation,
+    LodestoneRules,
+    PressurePlateViewPosition,
+} from '@everyboard/games/lodestone';
+import { LodestoneScoreHeuristic } from '@everyboard/games/lodestone';
+import {
+    LodestonePositions,
+    LodestonePressurePlate,
+    LodestonePressurePlateGroup,
+    LodestonePressurePlatePosition,
+    LodestonePressurePlates,
+    LodestoneState,
+} from '@everyboard/games/lodestone';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -82,7 +101,7 @@ export class LodestoneComponent
                 (8 - plateWidth) / 2,
                 - (plateIndex + 1) * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             ),
-            direction: Ordinal.RIGHT,
+            direction: EightDirection.RIGHT,
         },
         bottom: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
@@ -90,14 +109,14 @@ export class LodestoneComponent
                 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT +
                 plateIndex * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             ),
-            direction: Ordinal.RIGHT,
+            direction: EightDirection.RIGHT,
         },
         left: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
                 - (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT) * (1 + plateIndex),
                 (8 - plateWidth) / 2,
             ),
-            direction: Ordinal.DOWN,
+            direction: EightDirection.DOWN,
         },
         right: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
@@ -105,7 +124,7 @@ export class LodestoneComponent
                 plateIndex * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
                 (8 - plateWidth) / 2,
             ),
-            direction: Ordinal.DOWN,
+            direction: EightDirection.DOWN,
         },
     });
 

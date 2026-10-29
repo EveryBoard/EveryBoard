@@ -1,10 +1,10 @@
 
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
-import { DvonnMove } from '@everyboard/games';
-import { DvonnPieceStack } from '@everyboard/games';
-import { DvonnRules } from '@everyboard/games';
-import { DvonnState } from '@everyboard/games';
+import { DvonnMove } from '@everyboard/games/dvonn';
+import { DvonnPieceStack } from '@everyboard/games/dvonn';
+import { DvonnRules } from '@everyboard/games/dvonn';
+import { DvonnState } from '@everyboard/games/dvonn';
 import { MGPValidation, Utils } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

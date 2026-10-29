@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"net/http/httptest"
@@ -30,7 +31,7 @@ func (f FirebaseMock) Initialize() error {
 	return nil
 }
 
-func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
+func (f FirebaseMock) Fetch(_ context.Context, _ string, path string) (map[string]any, error) {
 	if f.Users != nil {
 		user, ok := f.Users[path]
 		if !ok {
@@ -43,28 +44,28 @@ func (f FirebaseMock) Fetch(context context.Context, collection string, path str
 	}, nil
 }
 
-func (f FirebaseMock) VerifyToken(context context.Context, token string) (string, error) {
+func (f FirebaseMock) VerifyToken(_ context.Context, token string) (string, error) {
 	// Extract the identity from token as is without checking anything except well-formedness
 	tokenParts := strings.Split(token, ".")
 	if len(tokenParts) != 3 {
-		return "", fmt.Errorf("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
+		return "", errors.New("invalid token format") // token must be 3 parts (header, payload, signature) separated by dots
 	}
 
 	// We only care here about the second part, which contains the payload
 	payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
 	if err != nil {
-		return "", fmt.Errorf("invalid payload encoding") // payload is not a b64 string
+		return "", errors.New("invalid payload encoding") // payload is not a b64 string
 	}
 
-	var claims map[string]interface{}
+	var claims map[string]any
 	err = json.Unmarshal(payloadBytes, &claims)
 	if err != nil {
-		return "", fmt.Errorf("invalid payload") // payload cannot be decoded as a map
+		return "", errors.New("invalid payload") // payload cannot be decoded as a map
 	}
 
 	sub, ok := claims["sub"].(string)
 	if !ok {
-		return "", fmt.Errorf("missing 'sub' part of token")
+		return "", errors.New("missing 'sub' part of token")
 	}
 
 	return sub, nil
@@ -91,7 +92,8 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *TestServer) {
 		Connections:   testServer.Connections,
 		Origin:        "*",
 	})
-	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	listenConfig := net.ListenConfig{}
+	listener, err := listenConfig.Listen(t.Context(), "tcp", "127.0.0.1:0")
 	require.NoError(t, err, "cannot listen on test server address")
 
 	httpServer := httptest.NewUnstartedServer(server.New("127.0.0.1:0", "*", websocketHandler, fakeStore).Handler)

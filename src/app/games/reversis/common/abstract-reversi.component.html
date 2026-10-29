@@ -4,13 +4,14 @@
      preserveAspectRatio="xMidYMid meet">
     <g id="pieces">
         @for (coordAndContent of coordsAndContents(); track $index) {
+            @let coord = coordAndContent.coord;
             @if (coordAndContent.content.isReachable()) {
-                <g [attr.transform]="getTopologicTranslationAt(coordAndContent.coord)">
-                    <polygon [attr.id]="'click-' + getTopologicCellId(coordAndContent.coord)"
-                             [attr.points]="getTopologicPolygonAt(coordAndContent.coord)"
-                             (click)="onClick(coordAndContent.coord)"
+                <g [attr.transform]="topologicTranslationMap()[coord.y][coord.x]">
+                    <polygon [attr.id]="'click-' + topologicCellIdMap()[coord.y][coord.x]"
+                             [attr.points]="topologicPolygonMap()[coord.y][coord.x]"
+                             (click)="onClick(coord)"
                              class="base"
-                             [ngClass]="getSpaceClass(coordAndContent.coord)"
+                             [ngClass]="getSpaceClass(coord)"
                     />
                 </g>
             }
@@ -19,7 +20,7 @@
     <!-- @for (lastMoved of lastMoveds(); track $index; let i = $index) {
         <polygon [attr.id]="'last-drop-' + lastMoved.x + '-' + lastMoved.y"
                  [attr.transform]="getTopologicTranslationAt(lastMoved)"
-                 [attr.points]="getTopologicPolygonAt(lastMoved)"
+                 [attr.points]="topologicPolygonMap()[lastMoved.y][lastMoved.x]"
                  class="base"
                  [ngClass]="getSpaceClass(lastMoved.x, lastMoved.y)"
                  class="base moved-stroke"

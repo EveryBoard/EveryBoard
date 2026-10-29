@@ -1,11 +1,11 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { HexaDirection } from '../HexaDirection';
+import { HexaDirection } from '../direction/HexaDirection';
 
 import { Topology } from './Topology';
 
-export class HexagonalTopology implements Topology<HexaDirection> {
+export class HexagonalTopology implements Topology<HexaDirection> { // TODO: Hexagon or Hexagonal ?
 
     private readonly directions: Set<HexaDirection> = new Set([
         HexaDirection.UP_RIGHT,
@@ -28,9 +28,6 @@ export class HexagonalTopology implements Topology<HexaDirection> {
         return new Set([
             ...this.getDirections().map(
                 (direction: HexaDirection) => this.getTopologyNextCoord(coord, direction),
-            ),
-            ...this.getDirections().map(
-                (direction: HexaDirection) => this.getTopologyNextCoord(coord, direction, -1),
             ),
         ]);
     }

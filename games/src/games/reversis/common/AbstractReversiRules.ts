@@ -3,19 +3,22 @@ import { MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Ordinal } from '../../../jscaip/Ordinal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
+import { Direction } from '../../../jscaip/direction/Direction';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
+import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
 import { HexagonShape } from '../../../jscaip/shape/HexagonShape';
-import { RectangularShape } from '../../../jscaip/shape/rere';
-import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { RectangleShape } from '../../../jscaip/shape/RectangleShape';
+import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
 import { TorusShape } from '../../../jscaip/shape/TorusShape';
 import { TriangleShape } from '../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
@@ -39,7 +42,7 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
+export class ReversiNode extends GameNode<ReversiMove, ReversiState<Direction>> {}
 
 export const ReversiTopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
@@ -64,16 +67,18 @@ export type ReversiConfig = RulesConfig & {
     shape: ReversiShapeEnum;
 
     boardSize: number;
+
 };
 
 @Debug.log
-export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMove,
-                                                                      ReversiState,
-                                                                      ReversiConfig,
-                                                                      ReversiLegalityInformation>
+export abstract class TopologicReversiRules
+    extends ConfigurableRules<ReversiMove,
+                              ReversiState<Direction>,
+                              ReversiConfig,
+                              ReversiLegalityInformation>
 {
 
-    public override getInitialState(config: ReversiConfig): ReversiState {
+    public override getInitialState(config: ReversiConfig): ReversiState<Direction> {
         const topology: Topology<Direction> = this.getTopology(config);
         const shape: TopologicShape<Direction> = this.getShape(config, topology);
         let maxX: number = 0;
@@ -99,27 +104,45 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         const centers: Coord[] = shape.getCenters();
         switch (config.topology) {
             case 'HEXAGON':
-                return this.getInitialHexagonalBoard(topology, shape, centers, board);
+                return this.getInitialHexagonalBoard(
+                    topology,
+                    shape,
+                    centers,
+                    board,
+                );
             case 'SQUARE (4)':
+                return this.getInitialSquareBoard(
+                    centers,
+                    shape as TopologicShape<Orthogonal>,
+                    board,
+                );
             case 'SQUARE (8)':
-                return this.getInitialSquareBoard(centers, shape, board);
+                return this.getInitialSquareBoard(
+                    centers,
+                    shape as TopologicShape<EightDirection>,
+                    board,
+                );
             default:
                 Utils.expectToBe(config.topology, 'TRIANGLE');
-                return this.getInitialTriangularBoard(shape, centers, board);
+                return this.getInitialTriangularBoard(
+                    shape as TopologicShape<TriangularDirection>,
+                    centers,
+                    board,
+                );
         }
     }
 
     private getInitialSquareBoard(
         centers: Coord[],
-        shape: TopologicShape<Direction>,
+        shape: TopologicShape<EightDirection | Orthogonal>,
         board: FourStatePiece[][],
     ): FourStatePiece[][] {
         const upLeft: Coord = centers[0];
         if (centers.length === 1) {
             centers.push(
-                shape.getNextCoord(upLeft, Ordinal.RIGHT, 1).get(),
-                shape.getNextCoord(upLeft, Ordinal.DOWN, 1).get(),
-                shape.getNextCoord(upLeft, Ordinal.DOWN_RIGHT, 1).get()
+                shape.getNextCoord(upLeft, EightDirection.RIGHT, 1).get(),
+                shape.getNextCoord(upLeft, EightDirection.DOWN, 1).get(),
+                shape.getNextCoord(upLeft, EightDirection.DOWN_RIGHT, 1).get(),
             );
         }
         for (const center of centers) {
@@ -131,8 +154,8 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
     }
 
     private getInitialHexagonalBoard(
-        topology: Topology<Direction>,
-        shape: TopologicShape<Direction>,
+        topology: Topology<HexaDirection>,
+        shape: TopologicShape<HexaDirection>,
         centers: Coord[],
         board: FourStatePiece[][],
     ): FourStatePiece[][] {
@@ -147,12 +170,12 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
     }
 
     private getInitialTriangularBoard(
-        shape: TopologicShape<Direction>,
+        shape: TopologicShape<TriangularDirection>,
         centers: Coord[],
         board: FourStatePiece[][],
     ): FourStatePiece[][] {
         const baseCenter: Coord = centers[0];
-        console.log(baseCenter.toString())
+        console.log(baseCenter.toString());
         console.table(board);
         if (centers.length === 1) {
             let mirror: Coord;
@@ -163,12 +186,12 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
             }
             centers.push(
                 mirror,
-                shape.getNextCoord(mirror, Ordinal.RIGHT, 1).get(),
-                shape.getNextCoord(mirror, Ordinal.LEFT, 1).get(),
-                shape.getNextCoord(baseCenter, Ordinal.RIGHT, 1).get(),
-                shape.getNextCoord(baseCenter, Ordinal.LEFT, 1).get(),
+                mirror.getNext(EightDirection.RIGHT, 1),
+                mirror.getNext(EightDirection.LEFT, 1),
+                baseCenter.getNext(EightDirection.RIGHT, 1),
+                baseCenter.getNext(EightDirection.LEFT, 1),
             );
-            console.log(centers)
+            console.log(centers);
         };
         for (const center of centers) {
             const isUpward: boolean = TriangularCheckerBoard.isSpaceDark(center);
@@ -182,10 +205,10 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return topologyMap.get(config.topology).get();
     }
 
-    private getShape(config: ReversiConfig, topology: Topology<Direction>): TopologicShape<Direction> {
+    private getShape<DIR extends Direction>(config: ReversiConfig, topology: Topology<DIR>): TopologicShape<DIR> {
         switch (config.shape) {
             case 'SQUARE': {
-                return new RectangularShape(config.boardSize, config.boardSize, topology);
+                return new RectangleShape(config.boardSize, config.boardSize, topology);
             } case 'HEXAGON': {
                 return new HexagonShape(config.boardSize, topology);
             } case 'TORUS': {
@@ -198,11 +221,10 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
     }
 
     public override applyLegalMove(move: ReversiMove,
-                                   state: ReversiState,
+                                   state: ReversiState<Direction>,
                                    _: ReversiConfig,
                                    info: ReversiLegalityInformation)
-    : ReversiState
-    {
+    : ReversiState<Direction> {
         const turn: number = state.turn;
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const board: FourStatePiece[][] = state.getCopiedBoard();
@@ -220,10 +242,10 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return new ReversiState(state.getTopology(), state.getShape(), resultingGameState);
     }
 
-    public getAllSwitchedCoords(
+    public getAllSwitchedCoords<DIR extends Direction>(
         move: ReversiMove,
         player: Player,
-        state: ReversiState,
+        state: ReversiState<DIR>,
     ): Set<Coord> {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
@@ -247,10 +269,11 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return new Set(switcheds);
     }
 
-    public getSandwicheds(capturer: Player,
-                          direction: Ordinal,
-                          start: Coord,
-                          state: ReversiState,
+    public getSandwicheds<DIR extends Direction>(
+        capturer: Player,
+        direction: DIR,
+        start: Coord,
+        state: ReversiState<DIR>,
     ) : Coord[] {
         /**
           * expected that 'start' is in range, and is captured
@@ -280,13 +303,13 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
 
-    public isGameEnded(state: ReversiState): boolean {
+    public isGameEnded<DIR extends Direction>(state: ReversiState<DIR>): boolean {
         return this.playerCanOnlyPass(state) &&
                this.nextPlayerCanOnlyPass(state);
     }
 
     public override getGameStatus(node: ReversiNode): GameStatus {
-        const state: ReversiState = node.gameState;
+        const state: ReversiState<Direction> = node.gameState;
         const gameIsEnded: boolean = this.isGameEnded(state);
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
@@ -302,17 +325,17 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return GameStatus.DRAW;
     }
 
-    public playerCanOnlyPass(state: ReversiState): boolean {
+    public playerCanOnlyPass(state: ReversiState<Direction>): boolean {
         const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(state);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.length === 1) &&
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
 
-    public nextPlayerCanOnlyPass(state: ReversiState): boolean {
+    public nextPlayerCanOnlyPass<DIR extends Direction>(state: ReversiState<DIR>): boolean {
         const nextBoard: FourStatePiece[][] = state.getCopiedBoard();
         const nextTurn: number = state.turn + 1;
-        const nextState: ReversiState = new ReversiState(
+        const nextState: ReversiState<DIR> = new ReversiState(
             state.getTopology(),
             state.getShape(),
             new SimpleGameStateWithTable(nextBoard, nextTurn),
@@ -320,7 +343,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return this.playerCanOnlyPass(nextState);
     }
 
-    public getListMoves(state: ReversiState): ReversiMoveWithSwitched[] {
+    public getListMoves<DIR extends Direction>(state: ReversiState<DIR>): ReversiMoveWithSwitched[] {
         const moves: ReversiMoveWithSwitched[] = [];
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
@@ -356,7 +379,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState)
+    public override isLegal(move: ReversiMove, state: ReversiState<Direction>)
     : MGPFallible<ReversiLegalityInformation>
     {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
@@ -380,7 +403,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<ReversiMov
         }
     }
 
-    public countUnsandwichableDirections(state: ReversiState, coord: Coord): number {
+    public countUnsandwichableDirections(state: ReversiState<Direction>, coord: Coord): number {
         let unsandwichableDirectionsCount: number = 0;
         for (const direction of state.getTopology().getDirections()) {
             const neighbor: MGPOptional<Coord> = state.getShape().getNextCoord(coord, direction, 1);

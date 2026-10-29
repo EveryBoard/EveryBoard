@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from './Coord';
-import { Direction } from './Direction';
 import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
-import { TopologicShape } from './shape/Shape';
+import { Direction } from './direction/Direction';
+import { TopologicShape } from './shape/TopologicShape';
 
 export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Direction>
     extends NInARowHelper<T, D>
@@ -20,6 +20,5 @@ export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Di
 
     protected override getNextCoord(coord: Coord, dir: D, distance: number = 1): MGPOptional<Coord> {
         return this.shape.getNextCoord(coord, dir, distance);
-        // TODO: Toric shape must only have EVEN triangular board
     }
 }

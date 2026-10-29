@@ -5,12 +5,12 @@ import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
-import { EncapsuleFailure } from '@everyboard/games';
-import { EncapsuleMove } from '@everyboard/games';
-import { EncapsuleMoveGenerator } from '@everyboard/games';
-import { EncapsulePiece } from '@everyboard/games';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '@everyboard/games';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '@everyboard/games';
+import { EncapsuleFailure } from '@everyboard/games/encapsule';
+import { EncapsuleMove } from '@everyboard/games/encapsule';
+import { EncapsuleMoveGenerator } from '@everyboard/games/encapsule';
+import { EncapsulePiece } from '@everyboard/games/encapsule';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '@everyboard/games/encapsule';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '@everyboard/games/encapsule';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

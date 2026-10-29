@@ -1,7 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Direction } from '../direction/Direction';
 
 export interface Topology<T extends Direction> {
 

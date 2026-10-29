@@ -1,0 +1,11 @@
+export { TaflConfig } from '../../games/tafl/TaflConfig';
+export { TaflEscapeThenPieceThenControlHeuristic } from '../../games/tafl/TaflEscapeThenPieceThenControlHeuristic';
+export { TaflFailure } from '../../games/tafl/TaflFailure';
+export { TaflMove } from '../../games/tafl/TaflMove';
+export { TaflMoveGenerator } from '../../games/tafl/TaflMoveGenerator';
+export { TaflPawn } from '../../games/tafl/TaflPawn';
+export { TaflPieceAndControlHeuristic } from '../../games/tafl/TaflPieceAndControlHeuristic';
+export { TaflPieceAndInfluenceHeuristic } from '../../games/tafl/TaflPieceAndInfluenceHeuristic';
+export { TaflPieceHeuristic } from '../../games/tafl/TaflPieceHeuristic';
+export { TaflRules } from '../../games/tafl/TaflRules';
+export { TaflState } from '../../games/tafl/TaflState';
