@@ -54,6 +54,7 @@ describe('CoerceoPiecesTilesFreedomHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
+
         // When comparing them
         // Then the one with more piece of Player.ONE should be deemed better for Player.ONE
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

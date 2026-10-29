@@ -319,6 +319,7 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+
             // When dropping only one piece
             const move: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
 

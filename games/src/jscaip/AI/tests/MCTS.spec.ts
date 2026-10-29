@@ -73,6 +73,7 @@ describe('MCTS', () => {
 
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);
+
         // Then it should not give the win to the opponent
         if (move.coord.equals(new Coord(3, 0))) {
             // MCTS blocked the opponent's only possible win
@@ -95,8 +96,10 @@ describe('MCTS', () => {
         ];
         const state: QuartoState = new QuartoState(board, 12, QuartoPiece.BBBB);
         const node: QuartoNode = new QuartoNode(state);
+
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);
+
         // Then it should choose the move that leads to the wins
         expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
     });
@@ -110,6 +113,7 @@ describe('MCTS', () => {
         const config: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
         const node: MancalaNode = AwaleRules.get().getInitialNode(config);
         const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions, config);
+
         // Then it should find one and not get stuck infinitely
         expect(move).toBeTruthy();
         // Add 10% to allow for iterations to finish
@@ -120,9 +124,11 @@ describe('MCTS', () => {
         // This test is there for coverage as well, to check that having unexplored moves does not break MCTS
         // Given 1ms allowed for MCTS
         const noTimeOptions: AITimeLimitOptions = { name: '1ms', maxSeconds: 0.001 };
+
         // When searching for a move
         const node: QuartoNode = QuartoRules.get().getInitialNode(defaultConfig);
         const move: QuartoMove = mcts.chooseNextMove(node, noTimeOptions, defaultConfig);
+
         // Then it should have selected a move
         expect(move).toBeTruthy();
     });

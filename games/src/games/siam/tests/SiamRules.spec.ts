@@ -79,8 +79,10 @@ describe('SiamRules', () => {
     it('should allow insertions', () => {
         // Given the initial board
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
+
         // When performing an insertion
         const move: SiamMove = SiamMove.of(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -103,8 +105,10 @@ describe('SiamRules', () => {
             [_, _, u, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When moving a piece forward
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -158,8 +162,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When pushing the opponent's piece with the player's piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -182,8 +188,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When performing a rotation
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -206,8 +214,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When performing a half-turn rotation
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -230,8 +240,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When rotating the piece and moving it forward at the same time
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -276,6 +288,7 @@ describe('SiamRules', () => {
 
         // When moving the piece in a different direction than its orientation
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -336,8 +349,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When pushing the one piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -436,8 +451,10 @@ describe('SiamRules', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When pushing two mountains
         const move: SiamMove = SiamMove.of(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
+
         // Then the move should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -549,8 +566,10 @@ describe('SiamRules', () => {
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 2);
+
         // When listing the moves between these coords
         const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+
         // Then there should be no moves
         expect(moves).toEqual([]);
     });
@@ -560,8 +579,10 @@ describe('SiamRules', () => {
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
+
         // When listing the moves between these coords
         const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
+
         // Then there should be no moves
         expect(moves).toEqual([]);
     });
@@ -578,8 +599,10 @@ describe('SiamRules', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
         // When computing the pusher for the winning move
         const pusher: PlayerOrNone = rules.getPusher(state, move);
+
         // Then it should identify the right player
         expect(pusher).toBe(Player.ZERO);
     });

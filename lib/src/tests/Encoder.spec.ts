@@ -99,6 +99,7 @@ describe('Encoder', () => {
             // Given a disjunction encoder over 2 variants
             // When decoding invalid data with an out-of-range type index
             const invalid: JSONValueWithoutArray = { type: 99, encoded: 42 };
+
             // Then it should throw a descriptive error
             expect(() => encoder.decode(invalid)).toThrowError('Assertion failure: Encoders.disjunction got invalid data: 99 is not an existing type');
         });

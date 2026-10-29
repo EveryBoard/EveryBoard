@@ -38,6 +38,7 @@ describe('QuebecCastlesComponent', () => {
         // Given any board in move phase
         // When clicking on a piece of current player
         await testUtils.expectClickSuccess('#click-7-7');
+
         // Then first coord should be selected
         testUtils.expectElementToHaveClass('#piece-7-7', 'selected-stroke');
     }));
@@ -92,6 +93,7 @@ describe('QuebecCastlesComponent', () => {
         // Given any board in move phase
         // When clicking on an opponent piece
         await testUtils.expectClickFailure('#click-2-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+
         // Then opponent piece should not be selected
         testUtils.expectElementNotToHaveClass('#piece-2-2', 'selected-stroke');
     }));
@@ -419,8 +421,10 @@ describe('QuebecCastlesComponent', () => {
                 };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-7');
+
                 // When dropping another one
                 await testUtils.expectClickSuccess('#click-6-6');
+
                 // Then the other piece should be dropped
                 testUtils.expectElementToHaveClasses('#piece-7-7', ['base', 'player0-fill', 'selected-stroke']);
                 testUtils.expectElementToHaveClasses('#piece-6-6', ['base', 'player0-fill', 'selected-stroke']);
