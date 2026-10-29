@@ -33,7 +33,7 @@
     "@everyboard/lib": "file:../lib"
   },
   "devDependencies": {
-    "@angular/localize": "^20.3.18",
+    "@angular/localize": "^22.2.3",
     "@types/jasmine": "^6.0.0",
     "cross-env": "^10.1.0",
     "jasmine": "^6.2.0",
