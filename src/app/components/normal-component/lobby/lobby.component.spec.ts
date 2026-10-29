@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks, ConfigRoomWithOpponent } from '../../../domain/ConfigRoomMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
