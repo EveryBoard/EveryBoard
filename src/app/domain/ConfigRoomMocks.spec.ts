@@ -1,8 +1,12 @@
-/* eslint-disable max-lines-per-function */
 import { RulesConfig } from '@everyboard/games';
 
 import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
+import { PlayerInfo } from './PlayerInfo';
 import { UserMocks } from './UserMocks.spec';
+
+export type ConfigRoomWithOpponent = ConfigRoom & {
+    readonly chosenOpponent: PlayerInfo;
+};
 
 export class ConfigRoomMocks {
 
@@ -52,7 +56,7 @@ export class ConfigRoomMocks {
         };
     }
 
-    public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoom {
+    public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoomWithOpponent {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },

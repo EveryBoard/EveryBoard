@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ConfigRoom } from '../../../domain/ConfigRoom';
-import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { ConfigRoomMocks, ConfigRoomWithOpponent } from '../../../domain/ConfigRoomMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
@@ -29,7 +28,7 @@ describe('LobbyComponent', () => {
     let router: Router;
     let currentGameService: CurrentGameService;
 
-    const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig({});
+    const configRoom: ConfigRoomWithOpponent = ConfigRoomMocks.withAcceptedConfig({});
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
@@ -274,7 +273,7 @@ describe('LobbyComponent', () => {
                 ...configRoom.creator,
                 botIdentifier: { displayName: 'Creator Bot', parameters: {} },
             },
-            chosenOpponent: configRoom.chosenOpponent == null ? null : {
+            chosenOpponent: {
                 ...configRoom.chosenOpponent,
                 botIdentifier: { displayName: 'Opponent Bot', parameters: {} },
             },
@@ -288,7 +287,7 @@ describe('LobbyComponent', () => {
         expect(game.nativeElement.innerText).toContain('Creator Bot');
         expect(game.nativeElement.innerText).toContain('Opponent Bot');
         expect(game.nativeElement.innerText).not.toContain(configRoom.creator.user.name);
-        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent?.user.name);
+        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent.user.name);
     }));
 
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
