@@ -74,23 +74,10 @@ export class ConnectNMoveGenerator
             .map((value: { coord: Coord; content: FourStatePiece }) => value.coord);
         for (const playerCoord of playerCoords) {
             usefulCoord = usefulCoord.union(
-                this.getNeighboringCoords(state, playerCoord),
+                this.getImmediateEmptyNeighbors(state, playerCoord),
             );
         }
         return usefulCoord.filter((c: Coord) => state.getPieceAt(c).equals(FourStatePiece.EMPTY));
-    }
-
-    /**
-     * mark the space neighboring coord as "space that have an occupied neighbor"
-     * @param coord the coord to add to this map
-     */
-    private getNeighboringCoords(
-        state: TopologicGameState<FourStatePiece, Direction>,
-        coord: Coord,
-    ): Set<Coord> {
-        return new Set([
-            ...this.getImmediateEmptyNeighbors(state, coord),
-        ]);
     }
 
     private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece, Direction>, coord: Coord): Set<Coord> {

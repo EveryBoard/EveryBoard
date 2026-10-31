@@ -149,7 +149,7 @@ describe('TableUtils', () => {
                 },
             );
 
-            // Then it should have taken into account thoses x and y coord
+            // Then it should have taken into account those x and y coord
             const expectedTable: Table<string> = [
                 ['0 0', '1 0', '2 0', '3 0'],
                 ['0 1', '1 1', '2 1', '3 1'],
