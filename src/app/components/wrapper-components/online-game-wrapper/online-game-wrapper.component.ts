@@ -294,12 +294,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
         let oldNode: AbstractNode = this.gameComponent.node();
+        this.gameComponent.node.set(oldNode.getParent());
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never moved to take back');
             // Take back a second time to make sure it end up on player's turn
             oldNode = this.gameComponent.node();
+            this.gameComponent.node.set(oldNode.getParent());
         }
-        this.gameComponent.node.set(oldNode.getParent());
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
         await this.showCurrentState(triggerAnimation);

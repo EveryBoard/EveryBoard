@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -22,10 +23,9 @@ describe('AbaloneMoveGenerator', () => {
     it('should propose all non-suicidal moved at first turn', () => {
         // Given initial node
         const initialState: AbaloneState = AbaloneRules.get().getInitialState();
-        const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
         // Then we should have 44 moves
-        expect(moveGenerator.getListMoves(initialNode, defaultConfig).length).toEqual(44);
+        expect(moveGenerator.getListMoves(GameNode.root(initialState), defaultConfig).length).toEqual(44);
     });
 
     it('should include pushing moves', () => {
@@ -42,10 +42,9 @@ describe('AbaloneMoveGenerator', () => {
             [_, _, _, _, _, N, N, N, N],
         ];
         const state: AbaloneState = new AbaloneState(board, 0);
-        const node: AbaloneNode = new AbaloneNode(state);
 
         // Then we should have 15 moves
-        expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(15);
+        expect(moveGenerator.getListMoves(GameNode.root(state), defaultConfig).length).toEqual(15);
     });
 
 });
