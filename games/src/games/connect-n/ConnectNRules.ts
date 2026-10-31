@@ -38,9 +38,9 @@ export const TopologyNames: Record<TopologyID, Localized> = {
     'TRIANGULAR': () => $localize`Triangular`,
 };
 
-export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORIC';
+export type ShapeID = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORIC';
 
-export const Shapes: Record<ShapeEnum, Localized> = {
+export const Shapes: Record<ShapeID, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
@@ -55,7 +55,7 @@ export type ConnectNConfig = {
 
     topology: TopologyID;
 
-    shape: ShapeEnum;
+    shape: ShapeID;
 
     boardSize: number;
 
