@@ -27,6 +27,7 @@ import { Debug } from '@everyboard/games';
 import { Localized } from '@everyboard/games';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { BotIdentifier, getUserDisplayName } from '../../../domain/BotIdentifier';
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
@@ -538,6 +539,26 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     protected getPlayerElo(player: Player): number {
         const game: Game = Utils.getNonNullable(this.game());
         return player === Player.ZERO ? game.playerZero.elo : game.playerOne.elo;
+    }
+
+    protected getPlayerDisplayName(player: Player): string {
+        const game: Game = Utils.getNonNullable(this.game());
+        if (player === Player.ZERO) {
+            return getUserDisplayName(game.playerZero.user, game.playerZero.botIdentifier);
+        } else {
+            return getUserDisplayName(game.playerOne.user, game.playerOne.botIdentifier);
+        }
+    }
+
+    protected getUserDisplayName(user: MinimalUser): string {
+        const game: Game = Utils.getNonNullable(this.game());
+        const isPlayerZero: boolean = user.id === game.playerZero.user.id;
+        const isPlayerOne: boolean = user.id === game.playerOne.user.id;
+        Utils.assert(isPlayerZero || isPlayerOne, 'User should be a participant in the game');
+        const botIdentifier: BotIdentifier | null = isPlayerZero ?
+            game.playerZero.botIdentifier :
+            game.playerOne.botIdentifier;
+        return getUserDisplayName(user, botIdentifier);
     }
 
     protected isHardDraw(): boolean {

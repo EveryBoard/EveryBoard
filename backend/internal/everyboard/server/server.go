@@ -7,7 +7,7 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 
-const Version = "1.0.6"
+const Version = "1.0.7"
 
 func cors(origin string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

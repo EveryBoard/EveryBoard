@@ -59,7 +59,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"user":{"id":"foo","name":"foo"},"elo":0},"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"user":{"id":"foo","name":"foo"},"elo":0,"botIdentifier":null},"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		ConfigRoomDeletedMessage{
@@ -71,7 +71,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		CandidateJoinedMessage{
 			Candidate: model.PlayerInfo{User: minimalUser, Elo: 42.0},
 		},
-		`{"candidate":{"user":{"id":"foo","name":"foo"},"elo":42}}`, "CandidateJoined")
+		`{"candidate":{"user":{"id":"foo","name":"foo"},"elo":42,"botIdentifier":null}}`, "CandidateJoined")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		CandidateLeftMessage{
@@ -83,7 +83,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		GameUpdateMessage{
 			Game: game,
 		},
-		`{"game":{"gameName":"Go","playerZero":{"user":{"id":"foo","name":"foo"},"elo":42},"playerOne":{"user":{"id":"bar","name":"bar"},"elo":100},"result":"InProgress","beginning":42}}`, "GameUpdate")
+		`{"game":{"gameName":"Go","playerZero":{"user":{"id":"foo","name":"foo"},"elo":42,"botIdentifier":null},"playerOne":{"user":{"id":"bar","name":"bar"},"elo":100,"botIdentifier":null},"result":"InProgress","beginning":42}}`, "GameUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		GameEventMessage{

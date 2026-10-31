@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -54,6 +55,48 @@ func TestSubscribeGameRollback(t *testing.T) {
 	time.Sleep(200 * time.Millisecond)
 
 	assert.False(t, config.Subscriptions.IsSubscribed(uid), "User should not be subscribed after failed SubscribeGame (rollback failed)")
+}
+
+func TestSubscribeGameReturnsPersistedBotIdentifiers(t *testing.T) {
+	// Given a persisted game between two bots
+	stopServer, fakeStore, _ := PrepareServer(t)
+	defer stopServer()
+	gameID := model.GameID(42)
+	playerID := "player-zero"
+	game := &model.Game{
+		GameID:   gameID,
+		GameName: "P4",
+		PlayerZero: model.PlayerInfo{
+			User: model.MinimalUser{ID: playerID, Name: playerID, IsBot: true},
+			Elo:  42,
+			BotIdentifier: &model.BotIdentifier{
+				DisplayName: "Player zero bot",
+				Parameters:  json.RawMessage(`{"version":1}`),
+			},
+		},
+		PlayerOne: model.PlayerInfo{
+			User: model.MinimalUser{ID: "player-one", Name: "player-one", IsBot: true},
+			Elo:  84,
+			BotIdentifier: &model.BotIdentifier{
+				DisplayName: "Player one bot",
+				Parameters:  json.RawMessage(`{"version":2}`),
+			},
+		},
+		Result:    model.ResultInProgress,
+		Beginning: 42,
+	}
+	fakeStore.SetGameForTest(gameID, game)
+	connection := EstablishWebSocketConnection(t, playerID)
+	defer func() {
+		require.NoError(t, connection.Close())
+	}()
+	encodedID := encodeID(t, gameID)
+
+	// When the bot reconnects and subscribes to the game
+	sendRawMessage(t, connection, fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID))
+
+	// Then the game update contains both identifiers persisted at game creation
+	expectMessage(t, connection, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, toJSON(t, game)))
 }
 
 func TestHandleAcceptEdgeCases(t *testing.T) {

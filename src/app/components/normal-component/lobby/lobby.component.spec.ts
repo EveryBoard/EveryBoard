@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
-import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { ConfigRoomMocks, ConfigRoomWithOpponent } from '../../../domain/ConfigRoomMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
@@ -29,7 +29,7 @@ describe('LobbyComponent', () => {
     let router: Router;
     let currentGameService: CurrentGameService;
 
-    const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig({});
+    const configRoom: ConfigRoomWithOpponent = ConfigRoomMocks.withAcceptedConfig({});
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
@@ -263,6 +263,32 @@ describe('LobbyComponent', () => {
         // Then it should show the creator elo as a whole number
         const creatorElo: DebugElement = testUtils.findElement('#part-of-creator');
         expect(creatorElo.nativeElement.innerText).toEqual('creator (13)');
+    }));
+
+    it('should display bot identifiers as player names', fakeAsync(async() => {
+        // Given a lobby with a game between two bots
+        testUtils.detectChanges();
+        setActiveConfigRooms(MGPMap.from({ gameId: {
+            ...configRoom,
+            creator: {
+                ...configRoom.creator,
+                botIdentifier: { displayName: 'Creator Bot', parameters: {} },
+            },
+            chosenOpponent: {
+                ...configRoom.chosenOpponent,
+                botIdentifier: { displayName: 'Opponent Bot', parameters: {} },
+            },
+        } }));
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the bot display names
+        const game: DebugElement = testUtils.findElement('#part-0');
+        expect(game.nativeElement.innerText).toContain('Creator Bot');
+        expect(game.nativeElement.innerText).toContain('Opponent Bot');
+        expect(game.nativeElement.innerText).not.toContain(configRoom.creator.user.name);
+        expect(game.nativeElement.innerText).not.toContain(configRoom.chosenOpponent.user.name);
     }));
 
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
