@@ -11,7 +11,6 @@ import { DvonnState } from './DvonnState';
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
     public override getListMoves(node: DvonnNode, _config: EmptyRulesConfig): DvonnMove[] {
-        const lastMove: MGPOptional<DvonnMove> = node.previousMove;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets
@@ -23,7 +22,7 @@ export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
             });
 
         });
-        if (moves.length === 0 && lastMove.equalsValue(DvonnMove.PASS) === false) {
+        if (moves.length === 0 && node.hasParent() && node.getPreviousMove().equals(DvonnMove.PASS) === false) {
             moves.push(DvonnMove.PASS);
         }
         return moves;
