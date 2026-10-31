@@ -37,30 +37,6 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-function selectAIPlayer<C extends AbstractGameComponent>(testUtils: ComponentTestUtils<C>, player: Player): void {
-    const playerIndex: number = player.getValue();
-    const selectAI: HTMLSelectElement = testUtils.findElement(`#player-select-${playerIndex}`).nativeElement;
-    selectAI.value = 'minimax';
-    selectAI.dispatchEvent(new Event('change'));
-    testUtils.detectChanges();
-    tick(0);
-
-    const profileElements: DebugElement[] = testUtils.findElements(`#ai-profile-select-${playerIndex}`);
-    if (profileElements.length === 1) {
-        const selectProfile: HTMLSelectElement = profileElements[0].nativeElement;
-        selectProfile.value = selectProfile.options[1].value;
-        selectProfile.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
-        tick(0);
-    }
-
-    const selectLevel: HTMLSelectElement = testUtils.findElement(`#ai-option-select-${playerIndex}`).nativeElement;
-    selectLevel.value = selectLevel.options[1].value;
-    selectLevel.dispatchEvent(new Event('change'));
-    testUtils.detectChanges();
-    tick(0);
-}
-
 describe('LocalGameWrapperComponent for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -104,7 +80,7 @@ describe('LocalGameWrapperComponent (game without config)', () => {
     it('should rotate an asymmetric board when selecting AI as player zero', fakeAsync(async() => {
         // Given an asymmetric board
         // When selecting an AI as player zero
-        selectAIPlayer(testUtils, Player.ZERO);
+        testUtils.selectAIPlayer(Player.ZERO);
 
         // Then the rendered board is rotated so that player one, the human, stays below
         expect(testUtils.findElement('.board').attributes.transform).toBe('rotate(180)');
@@ -113,7 +89,7 @@ describe('LocalGameWrapperComponent (game without config)', () => {
 
     it('should de-rotate an asymmetric board when selecting human as player zero again', fakeAsync(async() => {
         // Given an asymmetric board where player zero is controlled by an AI
-        selectAIPlayer(testUtils, Player.ZERO);
+        testUtils.selectAIPlayer(Player.ZERO);
         tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
         // When selecting a human as player zero again
@@ -437,9 +413,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When selecting a minimax
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
-            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
+            testUtils.selectAIPlayer(Player.ZERO);
 
             // Then it should have selected the corresponding minimax AI
             const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
@@ -453,9 +427,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(wrapper, 'proposeAIToPlay').and.resolveTo();
 
             // When selecting an iterative deepening minimax
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
-            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
+            testUtils.selectAIPlayer(Player.ZERO, 'iterative-deepening');
 
             // Then it should have selected the corresponding iterative deepening minimax AI
             const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
@@ -469,8 +441,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(wrapper, 'proposeAIToPlay').and.resolveTo();
 
             // When selecting a MCTS
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
-            chooseFirstAILevel(Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO, 'mcts');
 
             // Then it should have selected the corresponding MCTS
             const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
@@ -568,7 +539,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should not let a previously selected AI play after changing it to human', fakeAsync(async() => {
             // Given an AI whose move has been scheduled
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
 
             // When changing that player to human before the AI timeout expires
             chooseAIOrHuman(Player.ZERO, 'human');
@@ -581,7 +552,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
@@ -654,9 +625,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
-            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
+            testUtils.selectAIPlayer(Player.ZERO);
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
@@ -664,7 +633,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
 
             // When trying to click
             // Then it should fail
@@ -724,7 +693,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // When selecting AI, and AI then doing winning move
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'You lost' should be displayed
@@ -736,7 +705,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given a board where victory is imminent for human (against AI)
             const state: P4State = new P4State(preVictoryBoard, 39);
             await testUtils.setupState(state);
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
 
             // When user does the winning move
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
@@ -758,11 +727,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             ];
             const state: P4State = new P4State(board, 40);
             await testUtils.setupState(state);
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When AI zero does the winning move
-            selectAIPlayer(testUtils, Player.ONE);
+            testUtils.selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'AI (Player 0) won' should be displayed
@@ -822,7 +791,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given a game component on which you play against IA, at turn N+2, and it's human turn
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
-            selectAIPlayer(testUtils, Player.ONE);
+            testUtils.selectAIPlayer(Player.ONE);
             expectTurnToBe(2);
 
             // When user take back
@@ -834,7 +803,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should not allow to take back when only AI move has been made', fakeAsync(async() => {
             // Given a board with the first move made by AI
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             expectTurnToBe(1);
 
@@ -867,7 +836,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should not allow to take back when AI vs. AI', fakeAsync(async() => {
             // Given a board on which AI plays against AI
-            selectAIPlayer(testUtils, Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
             expect(testUtils.getGameComponent().state().turn).toBe(0);
             testUtils.expectElementNotToExist('#take-back');
             tick( LocalGameWrapperComponent.AI_TIMEOUT);
@@ -876,7 +845,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When searching for takeBack button
             // Then it should not be visible
-            selectAIPlayer(testUtils, Player.ONE);
+            testUtils.selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             expect(testUtils.getGameComponent().state().turn).toBe(2);
             testUtils.expectElementNotToExist('#take-back');
@@ -945,8 +914,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(window, 'open').and.returnValue(null);
             // Given the component with AI infos enabled and MCTS played
             localStorage.setItem('displayAIInfo', 'true');
-            chooseAIOrHuman(Player.ZERO, 'mcts');
-            chooseFirstAILevel(Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO, 'mcts');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When clicking on "view tree from current node"

@@ -656,29 +656,28 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
-    public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {
-        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
-        const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
+    public selectAIPlayer(player: Player, strategy: 'minimax' | 'iterative-deepening' | 'mcts' = 'minimax'): void {
+        const playerIndex: number = player.getValue();
+        const selectAI: HTMLSelectElement = this.findElement(`#player-select-${playerIndex}`).nativeElement;
+        selectAI.value = strategy;
         selectAI.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick(0);
-    }
 
-    public async choosingAILevel(player: Player): Promise<void> {
-        const profileDropDownName: string = player === Player.ZERO ? '#ai-profile-select-0' : '#ai-profile-select-1';
-        const profileSelect: HTMLSelectElement = this.findElement(profileDropDownName).nativeElement;
-        profileSelect.value = profileSelect.options[1].value;
-        profileSelect.dispatchEvent(new Event('change'));
+        const profileElements: DebugElement[] = this.findElements(`#ai-profile-select-${playerIndex}`);
+        if (profileElements.length === 1) {
+            const selectProfile: HTMLSelectElement = profileElements[0].nativeElement;
+            selectProfile.value = selectProfile.options[1].value;
+            selectProfile.dispatchEvent(new Event('change'));
+            this.detectChanges();
+            tick(0);
+        }
+
+        const selectLevel: HTMLSelectElement = this.findElement(`#ai-option-select-${playerIndex}`).nativeElement;
+        selectLevel.value = selectLevel.options[1].value;
+        selectLevel.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick(0);
-        const boundDropDownName: string = player === Player.ZERO ? '#ai-option-select-0' : '#ai-option-select-1';
-        const selectDepth: HTMLSelectElement = this.findElement(boundDropDownName).nativeElement;
-        selectDepth.value = selectDepth.options[1].value;
-        selectDepth.dispatchEvent(new Event('change'));
-        const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
-        expect(aiDepth).toBe('Level 1');
-        this.detectChanges();
     }
 
 }
