@@ -21,7 +21,7 @@ class ReversiMinimax extends Minimax<ReversiMove, ReversiState<Direction>, Rever
     }
 }
 
-fdescribe('ReversiMinimax', () => {
+describe('ReversiMinimax', () => {
 
     const defaultConfig: ReversiConfig = rules.getDefaultRulesConfig();
     const minimax: ReversiMinimax = new ReversiMinimax();

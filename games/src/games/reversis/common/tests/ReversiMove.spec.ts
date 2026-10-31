@@ -8,7 +8,7 @@ import { TopologicReversiRules } from '../AbstractReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
-fdescribe('ReversiMove', () => {
+describe('ReversiMove', () => {
 
     const rules: TopologicReversiRules[] = [
         ReversiRules.get(),

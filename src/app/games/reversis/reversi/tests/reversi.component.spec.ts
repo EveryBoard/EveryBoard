@@ -35,7 +35,7 @@ fdescribe('ReversiComponent', () => {
         testUtils.expectToBeCreated();
     });
 
-    it('should show last move and captures', fakeAsync(async() => {
+    fit('should show last move and captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [_, _, _, _, X, _, _, _],
             [_, _, _, X, _, _, _, _],

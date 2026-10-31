@@ -175,8 +175,8 @@ export abstract class TopologicReversiRules
         board: FourStatePiece[][],
     ): FourStatePiece[][] {
         const baseCenter: Coord = centers[0];
-        console.log(baseCenter.toString());
-        console.table(board);
+        // console.log(baseCenter.toString());
+        // console.table(board);
         if (centers.length === 1) {
             let mirror: Coord;
             if (TriangularCheckerBoard.isSpaceDark(baseCenter)) {
@@ -191,7 +191,7 @@ export abstract class TopologicReversiRules
                 baseCenter.getNext(EightDirection.RIGHT, 1),
                 baseCenter.getNext(EightDirection.LEFT, 1),
             );
-            console.log(centers);
+            // console.log(centers);
         };
         for (const center of centers) {
             const isUpward: boolean = TriangularCheckerBoard.isSpaceDark(center);
@@ -344,20 +344,29 @@ export abstract class TopologicReversiRules
     }
 
     public getListMoves<DIR extends Direction>(state: ReversiState<DIR>): ReversiMoveWithSwitched[] {
+        // console.log('0')
         const moves: ReversiMoveWithSwitched[] = [];
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
         for (const coordAndContent of state.getCoordsAndContents()) {
+            // if (coordAndContent.content.isReachable() === false) console.log(coordAndContent.coord.toString(), "ça va sucer des escargots d'bite!")
+            // else console.log(coordAndContent.coord.toString(), "is the shit")
+            // console.clear()
+            // console.log(coordAndContent.coord.toString(), "ça va sucer des escargots d'bite!")
             const coord: Coord = coordAndContent.coord;
             if (state.getPieceAt(coord).equals(FourStatePiece.EMPTY)) {
                 // For each empty spaces
+                // console.log(0)
                 const opponentNeighbors: Set<Coord> = state.getNeighboringPawnLike(opponent, coord);
-                console.log(coord.toString(), 'has', opponentNeighbors.map((c: Coord) => c.toString()));
+                // console.log(1)
+                // console.log(coord.toString(), 'has', opponentNeighbors.map((c: Coord) => c.toString()));
                 if (opponentNeighbors.size() > 0) {
                     // if one of the neighboring space is an opponent then, there could be a switch,
                     // and hence a legal move
                     const move: ReversiMove = new ReversiMove(coord.x, coord.y);
+                    // console.log(2)
                     const result: Set<Coord> = this.getAllSwitchedCoords(move, player, state);
+                    // console.log(3)
                     if (result.size() > 0) {
                         // there was switched piece and hence, a legal move
                         for (const switched of result) {

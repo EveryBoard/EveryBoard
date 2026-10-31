@@ -21,7 +21,7 @@ const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
 const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
-fdescribe('ReversiHeuristic', () => {
+describe('ReversiHeuristic', () => {
 
     let heuristic: ReversiHeuristic;
 

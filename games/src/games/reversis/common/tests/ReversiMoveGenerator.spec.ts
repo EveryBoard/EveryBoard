@@ -18,7 +18,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
 const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
 
-fdescribe('ReversiMoveGenerator', () => {
+describe('ReversiMoveGenerator', () => {
 
     let moveGenerator: ReversiMoveGenerator;
     let defaultConfig: ReversiConfig;

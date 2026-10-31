@@ -6,24 +6,25 @@
         @for (coordAndContent of coordsAndContents(); track $index) {
             @let coord = coordAndContent.coord;
             @if (coordAndContent.content.isReachable()) {
-                <g [attr.transform]="topologicTranslationMap()[coord.y][coord.x]">
-                    <polygon [attr.id]="'click-' + topologicCellIdMap()[coord.y][coord.x]"
-                             [attr.points]="topologicPolygonMap()[coord.y][coord.x]"
+                <g [attr.transform]="topologicTranslationMap().get(coord).get()">
+                    <polygon [attr.id]="'click-' + topologicCellIdMap().get(coord).get()"
+                             [attr.points]="topologicPolygonMap().get(coord).get()"
                              (click)="onClick(coord)"
                              class="base"
-                             [ngClass]="getSpaceClass(coord)"
+                             [ngClass]="spaceClassesMap().get(coord).get()"
                     />
                 </g>
             }
         }
     </g>
-    <!-- @for (lastMoved of lastMoveds(); track $index; let i = $index) {
-        <polygon [attr.id]="'last-drop-' + lastMoved.x + '-' + lastMoved.y"
-                 [attr.transform]="getTopologicTranslationAt(lastMoved)"
-                 [attr.points]="topologicPolygonMap()[lastMoved.y][lastMoved.x]"
+    @if (lastMove().isPresent()) {
+        @let coord = lastMove().get();
+        <polygon [attr.id]="'last-drop-' + coord.x + '-' + coord.y"
+                 [attr.transform]="topologicTranslationMap().get(coord).get()"
+                 [attr.points]="topologicPolygonMap().get(coord).get()"
                  class="base"
-                 [ngClass]="getSpaceClass(lastMoved.x, lastMoved.y)"
+                 [ngClass]="spaceClassesMap().get(coord).get()"
                  class="base moved-stroke"
         />
-    } -->
+    }
 </svg>

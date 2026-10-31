@@ -82,6 +82,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        console.log('updateBoard')
         const state: P4State = this.state();
 
         this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
@@ -89,12 +90,14 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
 
     protected override async showLastMove(move: P4Move): Promise<void> {
+        console.log('showLastMove')
         const state: P4State = this.state();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));
     }
 
     public override hideLastMove(): void {
+        console.log('hideLastMove')
         this.last = MGPOptional.empty();
     }
 

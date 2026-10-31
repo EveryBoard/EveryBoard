@@ -12,7 +12,7 @@ import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ToricReversiComponent } from '../toric-reversi.component';
 
 
-fdescribe('ToricReversiComponent', () => {
+describe('ToricReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ToricReversiComponent>;
 

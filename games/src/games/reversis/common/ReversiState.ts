@@ -25,7 +25,17 @@ export class ReversiState<D extends Direction> extends TopologicGameStateWithTab
         const result: Coord[] = [];
         for (const direction of this.getTopology().getDirections()) {
             const landingCoord: MGPOptional<Coord> = this.getShape().getNextCoord(center, direction, 1);
-            if (landingCoord.isPresent() && this.getPieceAt(landingCoord.get()).is(searchedValue)) {
+            // console.log('>>>>>', direction)
+            // console.log(landingCoord)
+            // console.log(landingCoord.isPresent() ? 'is present' : 'is absent')
+            // if (landingCoord.isPresent()) {
+                // console.log('is ', landingCoord.get(), ' on board ? ', this.isOnBoard(landingCoord.get()))
+                // console.log('actually containing', this.getPieceAt(landingCoord.get()))
+            // }
+            if (landingCoord.isPresent() &&
+                this.isOnBoard(landingCoord.get()) &&
+                this.getPieceAt(landingCoord.get()).is(searchedValue)
+            ) {
                 result.push(landingCoord.get());
             }
         }
