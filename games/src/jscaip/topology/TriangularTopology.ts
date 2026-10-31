@@ -1,8 +1,8 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { TriangularDirection } from '../direction/TriangularDirection';
 import { Vector } from '../Vector';
+import { TriangularDirection } from '../direction/TriangularDirection';
 
 import { Topology } from './Topology';
 

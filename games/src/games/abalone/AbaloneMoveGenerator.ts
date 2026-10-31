@@ -2,9 +2,9 @@ import { MGPFallible, Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';

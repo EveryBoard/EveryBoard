@@ -2,8 +2,8 @@ import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
-import { Direction } from './direction/Direction';
 import { Player, PlayerOrNone } from './Player';
+import { Direction } from './direction/Direction';
 import { GameStateWithCoords } from './state/GameStateWithCoords';
 
 export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Direction> {

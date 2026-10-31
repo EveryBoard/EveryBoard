@@ -4,11 +4,11 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Direction } from '../../../jscaip/direction/Direction';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
@@ -52,8 +52,8 @@ describe('ConnectNAlignmentMinimax', () => {
 
     it('should do winning move when one is possible', () => {
         // Given a board where there is place for a victory of first player
-        const gameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable<FourStatePiece>([
                 [O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -95,8 +95,8 @@ describe('ConnectNAlignmentMinimax', () => {
     SlowTest.it('should block double-open four at level two', () => {
         // Given a minimax at level two
         // And a board where current opponent could win if current player does not block them (..XXXXX..)
-        const gameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable<FourStatePiece>([
                 [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -151,8 +151,8 @@ describe('ConnectNAlignmentMinimax', () => {
     SlowTest.it('should block double-open five at level two', () => {
         // Given a minimax at level two
         // And a board where current opponent could win if current player does not block them (..XXXX..)
-        const gameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable<FourStatePiece>([
+        const gameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable<FourStatePiece>([
                 [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

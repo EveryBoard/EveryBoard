@@ -11,10 +11,6 @@ import { GoPiece } from './GoPiece';
 
 export class GoState extends GameStateWithTable<GoPiece> {
 
-    // public static of(oldState: GoState, newBoard: Table<GoPiece>): GoState {
-    //     return oldState.withBoard(newBoard);
-    // }
-
     public readonly koCoord: MGPOptional<Coord>;
 
     public readonly captured: PlayerNumberMap;

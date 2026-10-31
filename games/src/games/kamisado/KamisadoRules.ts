@@ -3,12 +3,12 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';

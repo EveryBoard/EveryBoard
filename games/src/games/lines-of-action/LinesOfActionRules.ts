@@ -4,13 +4,13 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';

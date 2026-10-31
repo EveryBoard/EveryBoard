@@ -3,13 +3,13 @@ import { MGPFallible, Utils } from '@everyboard/lib';
 import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
-import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { Debug } from '../../../utils/Debug';
 
 import { ReversiFailure } from './ReversiFailure';

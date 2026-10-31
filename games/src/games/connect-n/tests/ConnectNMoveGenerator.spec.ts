@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Direction } from '../../../jscaip/direction/Direction';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../jscaip/topology/EightDirectionSquareTopology';
@@ -50,8 +50,8 @@ describe('ConnectNMoveGenerator', () => {
     it('should count all possible moves including only neighboring-coord', () => {
         // Given a board with 36 possibles combinations of immediate neighbors
         // With the firsts being neighbors of a piece on board
-        const gameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable<FourStatePiece>(
+        const gameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable<FourStatePiece>(
                 [
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

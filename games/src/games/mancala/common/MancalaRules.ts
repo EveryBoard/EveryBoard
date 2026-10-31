@@ -3,11 +3,11 @@ import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils, Set } fr
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Localized } from '../../../utils/LocaleUtils';
 
 import { MancalaConfig } from './MancalaConfig';

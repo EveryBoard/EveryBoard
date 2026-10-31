@@ -7,12 +7,12 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { QuixoFailure } from './QuixoFailure';

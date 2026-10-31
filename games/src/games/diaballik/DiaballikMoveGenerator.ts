@@ -4,9 +4,9 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
+import { Player } from '../../jscaip/Player';
 import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Orthogonal } from '../../jscaip/direction/Orthogonal';
-import { Player } from '../../jscaip/Player';
 
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';

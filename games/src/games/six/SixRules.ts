@@ -7,12 +7,12 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Debug } from '../../utils/Debug';
 import { MGPValidators } from '../../utils/MGPValidator';
 

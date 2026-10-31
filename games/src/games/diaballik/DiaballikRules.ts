@@ -5,14 +5,14 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordFailure } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 
 import { DiaballikFailure } from './DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';

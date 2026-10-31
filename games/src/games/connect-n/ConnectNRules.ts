@@ -6,19 +6,19 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
+import { Direction } from '../../jscaip/direction/Direction';
 import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
 import { TopologicShape } from '../../jscaip/shape/TopologicShape';
 import { TorusShape } from '../../jscaip/shape/TorusShape';
 import { TriangularShape } from '../../jscaip/shape/TriangularShape';
-import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
 import { Topology } from '../../jscaip/topology/Topology';
@@ -61,12 +61,7 @@ export type ConnectNConfig = {
 
 }
 
-type HelperMapKey = {
-    n: number;
-    topology: TopologyID;
-};
-
-type HelperMap = MGPMap<HelperMapKey, TopologicNInARowHelper<FourStatePiece, Direction>>;
+type HelperMap = MGPMap<ConnectNConfig, TopologicNInARowHelper<FourStatePiece, Direction>>;
 
 export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                                                      TopologicGameState<FourStatePiece, Direction>,
@@ -109,8 +104,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public static getHelper(config: ConnectNConfig): TopologicNInARowHelper<FourStatePiece, Direction> {
-        const key: HelperMapKey = { n: config.n, topology: config.topology };
-        if (ConnectNRules.helpers.get(key).isAbsent()) {
+        if (ConnectNRules.helpers.get(config).isAbsent()) {
             const topology: Topology<Direction> = ConnectNRules.getTopology(config);
             const shape: TopologicShape<Direction> = ConnectNRules.getShape(config, topology);
             const helper: TopologicNInARowHelper<FourStatePiece, Direction> =
@@ -119,9 +113,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                     config.n,
                     shape,
                 );
-            ConnectNRules.helpers.put(key, helper);
+            ConnectNRules.helpers.put(config, helper);
         }
-        return ConnectNRules.helpers.get(key).get();
+        return ConnectNRules.helpers.get(config).get();
     }
 
     private static getTopology(config: ConnectNConfig): Topology<Direction> {
@@ -130,16 +124,15 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
 
     private static getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> {
         switch (config.shape) {
-            case 'SQUARE': {
+            case 'SQUARE':
                 return new RectangularShape(config.boardSize, config.boardSize, topology);
-            } case 'HEXAGONAL': {
+            case 'HEXAGONAL':
                 return new HexagonalShape(config.boardSize, topology);
-            } case 'TORIC': {
+            case 'TORIC':
                 return new TorusShape(config.boardSize, config.boardSize, topology);
-            } default: {
+            default:
                 Utils.expectToBe(config.shape, 'TRIANGULAR');
                 return new TriangularShape(config.boardSize, topology);
-            }
         }
     }
 
@@ -206,8 +199,8 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         for (const coord of shape.getAllCoords()) {
             board[coord.y][coord.x] = FourStatePiece.EMPTY;
         }
-        const gameStateWithTable: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable(board, 0);
+        const gameStateWithTable: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(board, 0);
         return new TopologicGameStateWithTable(topology, shape, gameStateWithTable);
     }
 

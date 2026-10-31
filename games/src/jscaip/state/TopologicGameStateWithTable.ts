@@ -4,7 +4,6 @@ import { TopologicShape } from '../shape/TopologicShape';
 import { Topology } from '../topology/Topology';
 
 import { GameStateWithTable } from './GameStateWithTable';
-import { SimpleGameStateWithTable } from './SimpleGameStateWithTable';
 import { TopologicGameState } from './TopologicGameState';
 
 export class TopologicGameStateWithTable<P extends NonNullable<unknown>, D extends Direction>
@@ -14,7 +13,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>, D exten
     public constructor(
         topology: Topology<D>,
         shape: TopologicShape<D>,
-        private readonly gameStateWithTable: SimpleGameStateWithTable<P>,
+        private readonly gameStateWithTable: GameStateWithTable<P>,
     ) {
         super(gameStateWithTable.turn, topology, shape);
     }
@@ -59,7 +58,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>, D exten
         return new TopologicGameStateWithTable(
             this.getTopology(),
             this.getShape(),
-            SimpleGameStateWithTable.withPieceAt(
+            GameStateWithTable.withPieceAt(
                 this.gameStateWithTable,
                 coord,
                 value,

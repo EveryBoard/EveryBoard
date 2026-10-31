@@ -1,9 +1,9 @@
 import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
+import { Vector } from '../../jscaip/Vector';
 import { Direction } from '../../jscaip/direction/Direction';
 import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 import { Orthogonal } from '../../jscaip/direction/Orthogonal';
-import { Vector } from '../../jscaip/Vector';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 
 import { GoGroupData } from './GoGroupsData';

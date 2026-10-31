@@ -9,7 +9,7 @@ import { HexagonalShape } from '@everyboard/games';
 import { RectangularShape } from '@everyboard/games';
 import { TopologicShape } from '@everyboard/games';
 import { TriangularShape } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
 import { TopologicGameStateWithTable } from '@everyboard/games';
 import { HexagonalTopology } from '@everyboard/games';
@@ -62,8 +62,8 @@ describe('ConnectNComponent', () => {
 
             it('should cancel move when clicking on occupied piece from previous turns', fakeAsync(async() => {
                 // Given a component with pieces on it, from previous turns
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -97,8 +97,8 @@ describe('ConnectNComponent', () => {
 
             it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
                 // Given a board with a last move
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -135,8 +135,8 @@ describe('ConnectNComponent', () => {
 
             it('should hide last move when doing first click', fakeAsync(async() => {
                 // Given a board with a last move
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -178,8 +178,8 @@ describe('ConnectNComponent', () => {
 
             it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given a component where player already dropped their first piece
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -217,8 +217,8 @@ describe('ConnectNComponent', () => {
 
             it('should do move when clicking on a second empty square', fakeAsync(async() => {
                 // Given a component where player already dropped their first piece
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -256,8 +256,8 @@ describe('ConnectNComponent', () => {
 
             it('should show last move again when cancelling move', fakeAsync(async() => {
                 // Given a component where player already dropped their first piece
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -299,8 +299,8 @@ describe('ConnectNComponent', () => {
 
             it('should show highlight when victory occurs', fakeAsync(async() => {
                 // Given a board where current player is about to win
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -344,8 +344,8 @@ describe('ConnectNComponent', () => {
 
             it('should show previous move (first move)', fakeAsync(async() => {
                 // Given a board with a last move
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -382,8 +382,8 @@ describe('ConnectNComponent', () => {
 
             it('should show previous move (next moves)', fakeAsync(async() => {
                 // Given a board with a last move
-                const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable<FourStatePiece>([
+                const gameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -439,8 +439,8 @@ describe('ConnectNComponent', () => {
                 shape: 'TRIANGULAR',
                 boardSize: 5,
             };
-            const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable<FourStatePiece>([
                     [N, N, N, N, _, N, N, N, N],
                     [N, N, N, _, _, _, N, N, N],
                     [N, N, X, _, _, _, _, N, N],
@@ -487,8 +487,8 @@ describe('ConnectNComponent', () => {
                 shape: 'HEXAGONAL',
                 boardSize: 5,
             };
-            const gameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable<FourStatePiece>([
+            const gameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable<FourStatePiece>([
                     [N, N, N, N, _, _, _, _, _],
                     [N, N, N, _, _, _, _, _, _],
                     [N, N, _, _, _, _, _, _, _],

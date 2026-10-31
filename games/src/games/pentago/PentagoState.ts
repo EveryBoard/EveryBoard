@@ -1,8 +1,8 @@
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
 
 import { PentagoMove } from './PentagoMove';

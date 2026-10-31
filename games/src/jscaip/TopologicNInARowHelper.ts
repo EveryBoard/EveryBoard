@@ -1,9 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from './Coord';
-import { Direction } from './direction/Direction';
 import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
+import { Direction } from './direction/Direction';
 import { TopologicShape } from './shape/TopologicShape';
 
 export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Direction>

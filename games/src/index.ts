@@ -67,7 +67,7 @@ export { GameState } from './jscaip/state/GameState';
 export { GameStateWithTable } from './jscaip/state/GameStateWithTable';
 export { TopologicGameState } from './jscaip/state/TopologicGameState';
 export { TopologicGameStateWithTable } from './jscaip/state/TopologicGameStateWithTable';
-export { SimpleGameStateWithTable } from './jscaip/state/SimpleGameStateWithTable';
+export { GameStateWithTable } from './jscaip/state/GameStateWithTable';
 export { TriangularCheckerBoard } from './jscaip/state/TriangularCheckerBoard';
 export { HexagonalTopology } from './jscaip/topology/HexagonalTopology';
 export { Topology } from './jscaip/topology/Topology';

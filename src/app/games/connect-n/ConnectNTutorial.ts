@@ -3,7 +3,7 @@ import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { RectangularShape } from '@everyboard/games';
 import { TopologicShape } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { TopologicGameStateWithTable } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
@@ -44,7 +44,7 @@ export class ConnectNTutorial extends Tutorial {
             new TopologicGameStateWithTable(
                 defaultTopology,
                 defaultShape,
-                new SimpleGameStateWithTable<FourStatePiece>([
+                new GameStateWithTable<FourStatePiece>([
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

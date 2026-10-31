@@ -2,8 +2,8 @@ import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';

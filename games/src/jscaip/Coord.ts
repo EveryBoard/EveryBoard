@@ -1,7 +1,7 @@
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
-import { EightDirection } from './direction/EightDirection';
 import { Vector } from './Vector';
+import { EightDirection } from './direction/EightDirection';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {

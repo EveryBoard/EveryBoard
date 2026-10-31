@@ -8,8 +8,6 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { DirectionFailure } from '../../jscaip/direction/Direction';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -17,6 +15,8 @@ import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { DirectionFailure } from '../../jscaip/direction/Direction';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 

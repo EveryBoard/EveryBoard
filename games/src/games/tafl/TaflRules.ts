@@ -2,13 +2,13 @@ import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
+import { Orthogonal } from '../../jscaip/direction/Orthogonal';
 import { Debug } from '../../utils/Debug';
 import { Localized } from '../../utils/LocaleUtils';
 

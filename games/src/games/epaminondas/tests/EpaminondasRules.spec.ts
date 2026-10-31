@@ -2,10 +2,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { EpaminondasMove } from '../EpaminondasMove';

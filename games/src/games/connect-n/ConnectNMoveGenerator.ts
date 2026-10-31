@@ -2,8 +2,8 @@ import { Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/direction/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Direction } from '../../jscaip/direction/Direction';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectNMove } from '../connect-n/ConnectNMove';
 

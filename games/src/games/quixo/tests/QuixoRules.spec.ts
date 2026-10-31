@@ -4,10 +4,10 @@ import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
-import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuixoFailure } from '../QuixoFailure';
 import { QuixoMove } from '../QuixoMove';

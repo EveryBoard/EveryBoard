@@ -5,7 +5,6 @@ import { RulesConfig } from '../../config/RulesConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
@@ -13,6 +12,7 @@ import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { AbaloneFailure } from './AbaloneFailure';
