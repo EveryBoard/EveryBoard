@@ -406,9 +406,9 @@ export class LodestoneComponent
                                                   this.selectedLodestone.get().orientation),
                 preCaptureState: this.state(),
             });
-        } else if (this.node().previousMove.isPresent()) {
+        } else if (this.node().hasParent()) {
             return MGPOptional.of({
-                preCaptureMove: this.node().previousMove.get(),
+                preCaptureMove: this.node().getPreviousMove(),
                 preCaptureState: this.getPreviousState(),
             });
         } else {
@@ -428,7 +428,7 @@ export class LodestoneComponent
                     const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
                     return MGPOptional.of(this.getLodestoneInfoFromLodestone(lodestone));
                 } else if (this.wasLastMoveLodestone(coord)) {
-                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node().previousMove.get()));
+                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node().getPreviousMove()));
                 } else if (this.isCrumbledLodestone(coord)) {
                     return MGPOptional.of(this.getCrumbledLodestoneInfo(coord));
                 }
@@ -450,7 +450,7 @@ export class LodestoneComponent
         const lodestone: LodestonePiece = this.getPreviousState().getPieceAt(coord);
         Utils.assert(lodestone.isLodestone(),
                      'getCrumbledLodestoneInfo should only be called with coord that contain crumbled lodestone!');
-        return this.getLodestoneInfoFromLodestone(lodestone as LodestonePieceLodestone);
+        return this.getLodestoneInfoFromLodestone(lodestone);
     }
 
     private getLodestoneInfoFromLodestone(lodestone: LodestonePieceLodestone): LodestoneInfo {
@@ -470,22 +470,21 @@ export class LodestoneComponent
     }
 
     private wasLastMoveLodestone(coord: Coord): boolean {
-        if (this.node().parent.isPresent()) {
-            return this.node().previousMove.get().coord.equals(coord);
+        if (this.node().hasParent()) {
+            return this.node().getPreviousMove().coord.equals(coord);
         } else {
             return false;
         }
     }
 
     private isCrumbledLodestone(coord: Coord): boolean {
-        if (this.node().parent.isPresent()) {
+        if (this.node().hasParent()) {
             if (this.selectedLodestone.isPresent()) {
                 return false;
             } else {
-                const state: LodestoneState = this.node().parent.get().gameState;
+                const state: LodestoneState = this.node().getPreviousState();
                 const piece: LodestonePiece = state.getPieceAt(coord);
-                return piece.isLodestone() &&
-                       piece.owner === state.getCurrentOpponent();
+                return piece.isLodestone() && piece.owner === state.getCurrentOpponent();
             }
         } else {
             return false;

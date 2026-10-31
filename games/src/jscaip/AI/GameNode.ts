@@ -70,6 +70,10 @@ export class GameNode<M extends Move, S extends GameState> {
         return this.parentAndPreviousMove.get().parent;
     }
 
+    public getPreviousState(): S {
+        return this.getParent().gameState;
+    }
+
     public getPreviousMove(): M {
         return this.parentAndPreviousMove.get().move;
     }

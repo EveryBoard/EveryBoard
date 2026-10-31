@@ -235,7 +235,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
-        if (this.gameComponent.node().previousMove.isPresent()) {
+        if (this.gameComponent.node().hasParent()) {
             await this.showNewMove(triggerAnimation);
         } else {
             // We have no previous move to animate

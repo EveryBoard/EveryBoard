@@ -75,13 +75,13 @@ export class DemoPageComponent {
                             name: string)
     : DemoNodeInfo
     {
-        const state: GameState = step.state;
+        const state: GameState = step.getState();
         const stepConfig: RulesConfig = step.config.getOrElse(defaultConfig);
         if (step.hasSolution()) {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
                 return {
-                    node: new GameNode(state),
+                    node: GameNode.root(state),
                     config: stepConfig,
                     click: MGPOptional.of(solution),
                     title: step.title,
@@ -91,11 +91,8 @@ export class DemoPageComponent {
                 const move: Move = solution;
                 const legalityStatus: MGPFallible<unknown> = rules.isLegal(move, state, stepConfig);
                 const resultingState: GameState = rules.applyLegalMove(move, state, stepConfig, legalityStatus.get());
-                const parent: AbstractNode = new GameNode(state);
-                const node: AbstractNode = new GameNode(resultingState,
-                                                        MGPOptional.of(parent),
-                                                        MGPOptional.of(move),
-                );
+                const parent: AbstractNode = GameNode.root(state);
+                const node: AbstractNode = GameNode.child(resultingState, parent, move);
                 return {
                     node,
                     config: stepConfig,
@@ -106,7 +103,7 @@ export class DemoPageComponent {
             }
         } else {
             return {
-                node: new GameNode(state),
+                node: GameNode.root(state),
                 config: stepConfig,
                 click: MGPOptional.empty(),
                 title: step.title,

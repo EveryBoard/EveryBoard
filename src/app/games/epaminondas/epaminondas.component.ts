@@ -14,12 +14,7 @@ import { EpaminondasMoveGenerator } from '@everyboard/games/epaminondas';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '@everyboard/games/epaminondas';
 import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '@everyboard/games/epaminondas';
 import { EpaminondasPositionalHeuristic } from '@everyboard/games/epaminondas';
-import {
-    EpaminondasConfig,
-    EpaminondasLegalityInformation,
-    EpaminondasNode,
-    EpaminondasRules,
-} from '@everyboard/games/epaminondas';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '@everyboard/games/epaminondas';
 import { EpaminondasState } from '@everyboard/games/epaminondas';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -130,9 +125,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const previousNode: EpaminondasNode = this.node().parent.get();
+        const previousState: EpaminondasState = this.node().getPreviousState();
         const previousOpponent: Player = this.state().getPreviousOpponent();
-        while (previousNode.gameState.hasPieceAt(moved, previousOpponent)) {
+        while (previousState.hasPieceAt(moved, previousOpponent)) {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
