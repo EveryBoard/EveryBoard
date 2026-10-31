@@ -311,7 +311,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const state: QuebecCastlesState = this.constructedState;
         const cx: number = (state.getWidth() / 2) * this.SPACE_SIZE;
         const cy: number = (state.getHeight() / 2) * this.SPACE_SIZE;
-        let angle: number = this.getPointOfView().getValue() * 180;
+        let angle: number = this.rotationAngle();
         if (this.config().isRhombic) {
             angle += 45;
         }

@@ -353,12 +353,11 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public getBoardRotation(): string {
-        const rotation: number = this.getPointOfView().getValue() * 180;
         const boardWidth: number = this.width() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const boardHeight: number = this.height() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
-        return `rotate(${rotation} ${centerX} ${centerY})`;
+        return `rotate(${this.rotationAngle()} ${centerX} ${centerY})`;
     }
 
     protected override computeViewBox(): ViewBox {

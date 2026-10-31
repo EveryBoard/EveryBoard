@@ -3,10 +3,12 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { GameNode } from '@everyboard/games';
-import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
 import { AbstractRules } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { Table, TableUtils } from '@everyboard/games';
+import { GipfRules } from '@everyboard/games/gipf';
+import { GipfState } from '@everyboard/games/gipf';
 import { LodestoneNode, LodestoneRules } from '@everyboard/games/lodestone';
 import { P4Config, P4Node, P4Rules } from '@everyboard/games/p4';
 import { P4Move } from '@everyboard/games/p4';
@@ -37,25 +39,32 @@ describe('DemoCardWrapperComponent', () => {
     }));
 
     it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
-        // Given a demo component
-        const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(defaultConfig).board; // dummy board
+        // Given a demo component showing an asymmetric game on player one's turn
+        const initialState: GipfState = GipfRules.get().getInitialState();
+        const playerOneState: GipfState = new GipfState(
+            initialState.board,
+            1,
+            initialState.sidePieces,
+            initialState.capturedPieces,
+        );
 
         // When displaying it for a given game
         await loadNode({
-            title: 'P4',
-            name: 'P4',
-            // Current player is player 1
-            node: new P4Node(new P4State(board, 1)),
+            title: 'Gipf',
+            name: 'Gipf',
+            node: new GameNode(playerOneState),
             click: MGPOptional.empty(),
-            config: defaultConfig,
+            config: GipfRules.get().getDefaultRulesConfig(),
         });
 
         // Then it should display the game
-        const game: DebugElement = testUtils.findElement('app-p4');
+        const game: DebugElement = testUtils.findElement('app-gipf');
         expect(game).withContext('game component should be displayed').toBeTruthy();
-        // from the point of view of the current player, with interactivity off
+        expect(testUtils.findElement('.board').attributes.transform)
+            .withContext('board should be displayed from the current player\'s point of view')
+            .toBe('rotate(180)');
+        // With interactivity on, but without allowing the observer to play
         const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
-        expect(gameComponent.getPointOfView()).toBe(Player.ZERO);
         expect(gameComponent.isPlayerTurn()).withContext('Player should not be a player but an observer').toBeFalse();
         expect(gameComponent.interactive()).withContext('Interactivity should still be turned on').toBeTrue();
     }));
