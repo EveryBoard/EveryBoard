@@ -76,7 +76,14 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public hasAsymmetricBoard: boolean = false;
 
     // Will contain, once the wrapper change the userRole, the valid orientation (180° when you play Player.ONE)
-    public rotation: string = '';
+    protected readonly rotationAngle: Signal<number> = computed(() => {
+        if (this.hasAsymmetricBoard) {
+            return this.pointOfView().getValue() * 180;
+        } else {
+            return 0;
+        }
+    });
+    protected readonly rotation: Signal<string> = computed(() => `rotate(${ this.rotationAngle() })`);
 
     public tutorial: TutorialStep[];
 
@@ -89,7 +96,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public cancelMoveOnWrapper: (reason?: string) => void;
 
     // This is where the player is seeing the board from.
-    private pointOfView: Player = Player.ZERO;
+    protected readonly pointOfView: WritableSignal<Player> = signal(Player.ZERO);
 
     // This is true when the view is interactive, e.g., to display clickable pieces
     public readonly interactive: WritableSignal<boolean> = signal(false);
@@ -153,16 +160,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.getScoreName().getString(this.getScore(player));
     }
 
-    public getPointOfView(): Player {
-        return this.pointOfView;
-    }
-
     public setPointOfView(pointOfView: Player): void {
-        this.pointOfView = pointOfView;
-        if (this.hasAsymmetricBoard) {
-            this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
-        }
-        this.cdr.markForCheck();
+        this.pointOfView.set(pointOfView);
     }
 
     /**

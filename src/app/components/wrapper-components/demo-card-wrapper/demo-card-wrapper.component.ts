@@ -54,6 +54,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             }
             this.gameComponentIsSetup = true;
             await this.setRole(PlayerOrNone.NONE);
+            this.gameComponent.setPointOfView(this.gameComponent.getCurrentPlayer());
         }, 1);
     }
 

@@ -365,10 +365,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return this.getSVGTranslation(cx, cy);
     }
 
-    public getPieceRotation(): string {
-        return 'rotate(' + this.getPointOfView().getValue() * 180 + ')';
-    }
-
     public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);
         const currentContent: number = this.constructedState.getPieceAtXY(x, y);

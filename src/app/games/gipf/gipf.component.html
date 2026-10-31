@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
      [attr.viewBox]="viewBoxString()"
-     [attr.transform]="rotation"
+     [attr.transform]="rotation()"
      preserveAspectRatio="xMidYMid meet">
 
     <defs>
@@ -87,6 +87,8 @@
             }
             <text [attr.x]="getRemainingPieceCx(player, getPlayerSidePieces(player).length - 1)"
                   [attr.y]="getRemainingPieceCy(player) + 9"
+                  style="transform-box: fill-box; transform-origin: center;"
+                  [attr.transform]="rotation()"
                   class="text-small text-center">{{ getPlayerSidePieces(player).length }}</text>
         </g>
     }
