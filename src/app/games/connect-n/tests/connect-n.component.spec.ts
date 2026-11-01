@@ -404,7 +404,7 @@ describe('ConnectNComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
-                const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
+                const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
                     squareTopology,
                     rectangularShape,
                     gameState,
