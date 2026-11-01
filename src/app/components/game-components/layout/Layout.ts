@@ -1,18 +1,7 @@
 import { Coord } from '@everyboard/games';
 
-export interface Layout {
 
-    getTranslationCoordAt(coord: Coord): Coord;
-
-    getTranslationAt(coord: Coord): string;
-
-    getPolygonCoordsAt(coord: Coord): Coord[];
-
-    getPolygonAt(coord: Coord): string;
-
-}
-
-export abstract class BaseLayout implements Layout {
+export abstract class Layout {
 
     public abstract getTranslationCoordAt(coord: Coord): Coord;
 

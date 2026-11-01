@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
 
-import { BaseLayout } from './Layout';
+import { Layout } from './Layout';
 
-export class TriangularLayout extends BaseLayout {
+export class TriangularLayout extends Layout {
 
     public constructor(
         public readonly size: number,
