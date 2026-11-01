@@ -133,7 +133,7 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 24);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -170,7 +170,7 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 25);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });

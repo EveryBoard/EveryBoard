@@ -6,6 +6,7 @@ import { Coord } from '../../../jscaip/Coord';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
@@ -48,7 +49,7 @@ describe('SiamHeuristic', () => {
             const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
             // When computing the value of the board
-            const node: SiamNode = new SiamNode(stateForPlayerZero, MGPOptional.empty(), MGPOptional.of(move));
+            const node: SiamNode = RulesUtils.nodeWithPreviousMove(stateForPlayerZero, move);
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
             // Then it should consider player zero as closer to victory
@@ -71,7 +72,7 @@ describe('SiamHeuristic', () => {
 
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
-            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
+            const node: SiamNode = RulesUtils.nodeWithPreviousMove(state, move);
             expect(heuristic.getBoardValue(node, defaultConfig).metrics)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
@@ -88,7 +89,7 @@ describe('SiamHeuristic', () => {
             ];
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
+            const node: SiamNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When computing the board value
             // Then player zero should have a higher score because it is their turn
@@ -106,11 +107,11 @@ describe('SiamHeuristic', () => {
             ];
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
+            const node: SiamNode = RulesUtils.nodeWithPreviousMove(state, move);
             const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
 
             const turnOneState: SiamState = new SiamState(board, 1);
-            const turnOneNode: SiamNode = new SiamNode(turnOneState, undefined, MGPOptional.of(move));
+            const turnOneNode: SiamNode = RulesUtils.nodeWithPreviousMove(turnOneState, move);
             const turnOneBoardValue: readonly number[] = heuristic.getBoardValue(turnOneNode, defaultConfig).metrics;
             expect(boardValue).withContext('Both board value should have same absolute value').toEqual([-1 * turnOneBoardValue[0]]);
             expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual([-1 * boardValue[0]]);

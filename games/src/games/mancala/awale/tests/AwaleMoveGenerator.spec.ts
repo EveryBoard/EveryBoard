@@ -25,7 +25,7 @@ describe('AwaleMoveGenerator', () => {
             [0, 0, 0, 0, 0, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -46,7 +46,7 @@ describe('AwaleMoveGenerator', () => {
             };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
-            const node: MancalaNode = new MancalaNode(state);
+            const node: MancalaNode = MancalaNode.root(state);
 
             // When listing the moves
             const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
@@ -71,7 +71,7 @@ describe('AwaleMoveGenerator', () => {
             };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
-            const node: MancalaNode = new MancalaNode(state);
+            const node: MancalaNode = MancalaNode.root(state);
 
             // When listing the moves
             const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);

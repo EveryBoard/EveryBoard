@@ -63,7 +63,7 @@ describe('MancalaScoreHeuristic', () => {
                 [1, 2, 3, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(7, 5));
-            const node: MancalaNode = new MancalaNode(state);
+            const node: MancalaNode = MancalaNode.root(state);
 
             // When computing the metrics
             const metrics: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);

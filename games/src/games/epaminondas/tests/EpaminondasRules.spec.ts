@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Ordinal } from '../../../jscaip/Ordinal';
@@ -370,7 +369,7 @@ describe('EpaminondasRules', () => {
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.DOWN);
-            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -395,7 +394,7 @@ describe('EpaminondasRules', () => {
             ];
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Ordinal.UP);
-            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -420,7 +419,7 @@ describe('EpaminondasRules', () => {
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.DOWN);
-            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -444,7 +443,7 @@ describe('EpaminondasRules', () => {
             ];
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
-            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -469,7 +468,7 @@ describe('EpaminondasRules', () => {
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
-            const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: EpaminondasNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

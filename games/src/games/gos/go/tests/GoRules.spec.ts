@@ -50,7 +50,7 @@ describe('GoRules', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
             const state: GoState = rules.getInitialState(config);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When evaluating it
             // Then it should be considered as ongoing
@@ -405,7 +405,7 @@ describe('GoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.COUNTING);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When evaluating it
             // Then it should be considered as ongoing
@@ -665,7 +665,7 @@ describe('GoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(6, 6), 4, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -683,7 +683,7 @@ describe('GoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(6, 5), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -701,7 +701,7 @@ describe('GoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(5, 6), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -720,7 +720,7 @@ describe('GoRules', () => {
             [_, O, O, O, b],
         ];
         const state: GoState = new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.FINISHED);
-        const node: GoNode = new GoNode(state);
+        const node: GoNode = GoNode.root(state);
 
         // When checking the game status
         // Then it should be a draw

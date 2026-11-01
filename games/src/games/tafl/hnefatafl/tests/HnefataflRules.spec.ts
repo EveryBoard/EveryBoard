@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
@@ -122,7 +121,7 @@ describe('HnefataflRules', () => {
         const move: HnefataflMove = HnefataflMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: HnefataflNode = new HnefataflNode(expectedState, undefined, MGPOptional.of(move));
+        const node: HnefataflNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -157,7 +156,7 @@ describe('HnefataflRules', () => {
         const move: HnefataflMove = HnefataflMove.from(new Coord(2, 1), new Coord(3, 1)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: HnefataflNode = new HnefataflNode(expectedState, undefined, MGPOptional.of(move));
+        const node: HnefataflNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -192,7 +191,7 @@ describe('HnefataflRules', () => {
         const move: HnefataflMove = HnefataflMove.from(new Coord(2, 1), new Coord(1, 1)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: HnefataflNode = new HnefataflNode(expectedState, undefined, MGPOptional.of(move));
+        const node: HnefataflNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
 
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -233,7 +232,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: HnefataflNode = new HnefataflNode(expectedState, undefined, MGPOptional.of(move));
+        const node: HnefataflNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
 
         // Then it should be considered as ongoing
@@ -275,7 +274,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 13);
-        const node: HnefataflNode = new HnefataflNode(expectedState, undefined, MGPOptional.of(move));
+        const node: HnefataflNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });

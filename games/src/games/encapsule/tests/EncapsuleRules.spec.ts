@@ -49,7 +49,7 @@ describe('EncapsuleRules', () => {
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 2, 2], [0, 1, 2]);
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-        const node: EncapsuleNode = new EncapsuleNode(state);
+        const node: EncapsuleNode = EncapsuleNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ZERO
@@ -65,7 +65,7 @@ describe('EncapsuleRules', () => {
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 1]);
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-        const node: EncapsuleNode = new EncapsuleNode(state);
+        const node: EncapsuleNode = EncapsuleNode.root(state);
 
         // When evaluating it
         // Then it should be considered as ongoing
@@ -81,7 +81,7 @@ describe('EncapsuleRules', () => {
             [___, ___, __X],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
-        const node: EncapsuleNode = new EncapsuleNode(expectedState);
+        const node: EncapsuleNode = EncapsuleNode.root(expectedState);
 
         // When checking the game status
         // Then it should be a victory for Player.ONE
@@ -279,7 +279,7 @@ describe('EncapsuleRules', () => {
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 2, 2]);
             const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-            const node: EncapsuleNode = new EncapsuleNode(state);
+            const node: EncapsuleNode = EncapsuleNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO

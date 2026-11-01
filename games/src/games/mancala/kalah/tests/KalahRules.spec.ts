@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Player } from '../../../../jscaip/Player';
@@ -209,7 +208,7 @@ describe('KalahRules', () => {
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(25, 23));
-            const node: MancalaNode = new MancalaNode(expectedState);
+            const node: MancalaNode = MancalaNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -228,7 +227,7 @@ describe('KalahRules', () => {
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(26, 22));
-            const node: MancalaNode = new MancalaNode(expectedState);
+            const node: MancalaNode = MancalaNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -248,9 +247,7 @@ describe('KalahRules', () => {
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(25, 23));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: MancalaNode = new MancalaNode(expectedState,
-                                                      MGPOptional.empty(),
-                                                      MGPOptional.of(move));
+            const node: MancalaNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

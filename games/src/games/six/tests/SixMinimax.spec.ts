@@ -43,7 +43,7 @@ describe('SixMinimax', () => {
             [_, X, _, _, _, _, _],
         ];
         const state: SixState = SixState.ofRepresentation(board, 40);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When asking the minimax the best choice
         const bestMove: SixMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);

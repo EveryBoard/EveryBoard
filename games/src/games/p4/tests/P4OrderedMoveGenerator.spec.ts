@@ -16,7 +16,7 @@ describe('P4OrderedMoveGenerator', () => {
     it('should put center first', () => {
         // Given a state that has a possible move on the center column
         const state: P4State = P4Rules.get().getInitialState(defaultConfig);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When listing the moves
         const moves: P4Move[] = moveGenerator.getListMoves(node, defaultConfig);

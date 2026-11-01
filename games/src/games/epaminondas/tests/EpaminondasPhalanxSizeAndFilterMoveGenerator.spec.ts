@@ -43,7 +43,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
 
         // When listing the moves
         const moves: EpaminondasMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -70,7 +70,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
         // When listing the moves
         const state: EpaminondasState = new EpaminondasState(board, 101);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
 
         // Then it should at least generate one move
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBeGreaterThan(0);

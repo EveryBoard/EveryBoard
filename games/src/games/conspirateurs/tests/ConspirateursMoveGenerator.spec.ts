@@ -22,7 +22,7 @@ describe('ConspirateursMoveGenerator', () => {
 
         it('should propose 45 moves at first turn', () => {
             // Given the initial state
-            const node: ConspirateursNode = new ConspirateursNode(ConspirateursRules.get().getInitialState());
+            const node: ConspirateursNode = ConspirateursNode.root(ConspirateursRules.get().getInitialState());
 
             // Then there should be 45 possible moves
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(45);
@@ -49,7 +49,7 @@ describe('ConspirateursMoveGenerator', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const node: ConspirateursNode = new ConspirateursNode(state);
+            const node: ConspirateursNode = ConspirateursNode.root(state);
 
             // Then there should be 44 possible moves
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(44);
@@ -80,7 +80,7 @@ describe('ConspirateursMoveGenerator', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
-            const node: ConspirateursNode = new ConspirateursNode(state);
+            const node: ConspirateursNode = ConspirateursNode.root(state);
 
             // Then there are 7 simple moves + 2 jump moves
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(9);

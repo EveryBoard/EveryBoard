@@ -42,7 +42,7 @@ describe('HexagonalGoRules', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
             const state: GoState = HexagonalGoRules.get().getInitialState(defaultConfig);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When evaluating it
             // Then it should be considered as ongoing
@@ -473,7 +473,7 @@ describe('HexagonalGoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.COUNTING);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When evaluating it
             // Then it should be considered as ongoing
@@ -854,7 +854,7 @@ describe('HexagonalGoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(4, 4), 4, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -880,7 +880,7 @@ describe('HexagonalGoRules', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(5, 4), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(state);
+            const node: GoNode = GoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO

@@ -226,7 +226,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, __],
                 [B1, __, __, __, B1, __, __, __],
             ], 3);
-            const node: DiamNode = new DiamNode(state);
+            const node: DiamNode = DiamNode.root(state);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -240,7 +240,7 @@ describe('DiamRules', () => {
                 [A1, A1, __, __, __, __, __, __],
                 [B1, B2, __, __, __, __, __, __],
             ], 4);
-            const node: DiamNode = new DiamNode(state);
+            const node: DiamNode = DiamNode.root(state);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -254,7 +254,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, A1, __, __, __],
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
-            const node: DiamNode = new DiamNode(state);
+            const node: DiamNode = DiamNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -269,7 +269,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, A1, __, __, __],
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
-            const node: DiamNode = new DiamNode(state);
+            const node: DiamNode = DiamNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE (who has the highest alignement)

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -75,7 +74,7 @@ describe('QuartoRules', () => {
             [AAAA, ABAB, BABB, BAAB],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
-        const node: QuartoNode = new QuartoNode(expectedState);
+        const node: QuartoNode = QuartoNode.root(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
@@ -169,7 +168,7 @@ describe('QuartoRules', () => {
                 [AAAA, ____, ____, ____],
             ];
             const expectedState: QuartoState = new QuartoState(expectedBoard, 5, AAAB);
-            const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: QuartoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -184,7 +183,7 @@ describe('QuartoRules', () => {
                 [____, ____, ____, AABA],
             ];
             const state: QuartoState = new QuartoState(board, 10, AABA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -200,7 +199,7 @@ describe('QuartoRules', () => {
                 [____, ____, ____, AAAB],
             ];
             const state: QuartoState = new QuartoState(board, 9, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When evaluating the board status
             // Then it should be considered as ongoing
@@ -224,7 +223,7 @@ describe('QuartoRules', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 4, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -244,7 +243,7 @@ describe('QuartoRules', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 4, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -264,7 +263,7 @@ describe('QuartoRules', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 5, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -284,7 +283,7 @@ describe('QuartoRules', () => {
                 [ABAB, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 7, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -304,7 +303,7 @@ describe('QuartoRules', () => {
                 [ABAB, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 5, BAAA);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO

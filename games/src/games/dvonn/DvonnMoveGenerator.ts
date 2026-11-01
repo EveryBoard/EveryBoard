@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -22,7 +20,8 @@ export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
             });
 
         });
-        if (moves.length === 0 && node.hasParent() && node.getPreviousMove().equals(DvonnMove.PASS) === false) {
+        const previousMoveWasPass: boolean = node.hasParent() && node.getPreviousMove().equals(DvonnMove.PASS);
+        if (moves.length === 0 && previousMoveWasPass === false) {
             moves.push(DvonnMove.PASS);
         }
         return moves;

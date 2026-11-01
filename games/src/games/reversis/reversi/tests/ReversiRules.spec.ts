@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { Player, PlayerOrNone } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
@@ -51,7 +50,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const expectedState: ReversiState = new ReversiState(expectedBoard, 1);
-        const node: ReversiNode = new ReversiNode(expectedState);
+        const node: ReversiNode = ReversiNode.root(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         expect(node.gameState.countScore()).toEqual(PlayerNumberMap.of(4, 1));
     });
@@ -141,7 +140,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            const node: ReversiNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -170,7 +169,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            const node: ReversiNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -199,7 +198,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            const node: ReversiNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

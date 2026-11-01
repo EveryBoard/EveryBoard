@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosHeuristic } from '../PylosHeuristic';
 import { PylosMove } from '../PylosMove';
@@ -43,7 +43,7 @@ describe('PylosHeuristic', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
-        const node: PylosNode = new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: PylosNode = RulesUtils.nodeWithPreviousMove(state, move);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([0]);
     });

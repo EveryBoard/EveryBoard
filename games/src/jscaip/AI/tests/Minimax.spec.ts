@@ -48,7 +48,7 @@ describe('Minimax', () => {
 
         // When computing the same information with alpha-beta pruning enabled
         minimax['prune'] = true;
-        node = new P4Node(P4Rules.get().getInitialState(defaultConfig));
+        node = P4Node.root(P4Rules.get().getInitialState(defaultConfig));
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
         const callsToGetListMovesWithPruning: number = getListMovesSpy.calls.count();
@@ -209,7 +209,7 @@ describe('Minimax', () => {
                 [_, _, _, X, _, _, _],
                 [_, _, _, O, _, _, _],
             ], 6);
-            const node: P4Node = new P4Node(symetricState);
+            const node: P4Node = P4Node.root(symetricState);
             const possibleMoves: Set<P4Move> = new Set([P4Move.of(0), P4Move.of(6)]);
             const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
 

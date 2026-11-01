@@ -181,7 +181,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new TrexoNode(expectedState);
+        const node: TrexoNode = TrexoNode.root(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
@@ -219,7 +219,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 4);
-        const node: TrexoNode = new TrexoNode(expectedState);
+        const node: TrexoNode = TrexoNode.root(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -255,7 +255,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new TrexoNode(expectedState);
+        const node: TrexoNode = TrexoNode.root(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);

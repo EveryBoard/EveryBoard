@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
@@ -138,7 +137,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -161,7 +160,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -184,7 +183,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -207,7 +206,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

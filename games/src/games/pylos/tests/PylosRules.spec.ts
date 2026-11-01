@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -372,7 +372,7 @@ describe('PylosRules', () => {
 
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: PylosNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -416,7 +416,7 @@ describe('PylosRules', () => {
         ];
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: PylosNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

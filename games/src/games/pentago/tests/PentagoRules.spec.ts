@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -118,7 +117,7 @@ describe('PentagoRules', () => {
         const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: PentagoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
 
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -145,7 +144,7 @@ describe('PentagoRules', () => {
         const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: PentagoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -172,7 +171,7 @@ describe('PentagoRules', () => {
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: PentagoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -197,7 +196,7 @@ describe('PentagoRules', () => {
             const move: PentagoMove = PentagoMove.withRotation(4, 5, 3, false);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: PentagoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -222,7 +221,7 @@ describe('PentagoRules', () => {
             const move: PentagoMove = PentagoMove.withRotation(5, 5, 0, true);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: PentagoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
