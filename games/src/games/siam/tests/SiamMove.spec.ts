@@ -4,7 +4,6 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamPiece } from '../SiamPiece';
@@ -26,10 +25,9 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const move: SiamMove = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
         const node: SiamNode =
-            RulesUtils.nodeWithPreviousMove(state, move);
+            SiamNode.root(state);
         const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
         const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const firstMove of moves) {

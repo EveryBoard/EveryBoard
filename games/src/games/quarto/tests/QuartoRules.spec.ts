@@ -168,7 +168,7 @@ describe('QuartoRules', () => {
                 [AAAA, ____, ____, ____],
             ];
             const expectedState: QuartoState = new QuartoState(expectedBoard, 5, AAAB);
-            const node: QuartoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+            const node: QuartoNode = QuartoNode.root(expectedState);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);

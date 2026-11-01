@@ -1,11 +1,8 @@
 /* eslint-disable max-lines-per-function */
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuixoHeuristic } from '../QuixoHeuristic';
-import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 
@@ -30,8 +27,7 @@ describe('QuixoHeuristic', () => {
             [X, _, _, _, O],
         ];
         const state: QuixoState = new QuixoState(board, 0);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(state, move);
+        const node: QuixoNode = QuixoNode.root(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([-1]);
     });

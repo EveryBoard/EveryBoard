@@ -3,7 +3,7 @@ import { GameNode } from '../../../jscaip/AI/GameNode';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
+import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -23,9 +23,10 @@ describe('AbaloneMoveGenerator', () => {
     it('should propose all non-suicidal moved at first turn', () => {
         // Given initial node
         const initialState: AbaloneState = AbaloneRules.get().getInitialState();
+        const initialNode: AbaloneNode = AbaloneNode.root(initialState);
 
         // Then we should have 44 moves
-        expect(moveGenerator.getListMoves(GameNode.root(initialState), defaultConfig).length).toEqual(44);
+        expect(moveGenerator.getListMoves(initialNode, defaultConfig).length).toEqual(44);
     });
 
     it('should include pushing moves', () => {

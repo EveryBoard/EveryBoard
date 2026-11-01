@@ -4,7 +4,6 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
@@ -24,9 +23,8 @@ describe('QuixoMove', () => {
             [X, _, _, _, _],
             [_, _, _, X, _],
         ];
-        const previousMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(state, previousMove);
+        const node: QuixoNode = QuixoNode.root(state);
         const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator();
         const moves: QuixoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {

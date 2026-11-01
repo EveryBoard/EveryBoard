@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
-import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -146,8 +145,7 @@ describe('DvonnMoveGenerator', () => {
             [_, OS6, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
-        const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 4)).get();
-        const node: DvonnNode = RulesUtils.nodeWithPreviousMove(state, move);
+        const node: DvonnNode = DvonnNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(1);
     });
 

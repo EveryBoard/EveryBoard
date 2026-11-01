@@ -338,7 +338,7 @@ describe('LinesOfActionRules', () => {
         ];
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: LinesOfActionNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+        const node: LinesOfActionNode = LinesOfActionNode.root(expectedState);
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));
     });

@@ -140,7 +140,7 @@ describe('AwaleRules', () => {
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(25, 23));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: MancalaNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+            const node: MancalaNode = MancalaNode.root(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -156,7 +156,7 @@ describe('AwaleRules', () => {
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 43, PlayerNumberMap.of(24, 24));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: MancalaNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+            const node: MancalaNode = MancalaNode.root(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

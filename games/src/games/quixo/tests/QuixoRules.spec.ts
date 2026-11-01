@@ -137,7 +137,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+        const node: QuixoNode = QuixoNode.root(expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -160,7 +160,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+        const node: QuixoNode = QuixoNode.root(expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -183,7 +183,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+        const node: QuixoNode = QuixoNode.root(expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -206,7 +206,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: QuixoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+        const node: QuixoNode = QuixoNode.root(expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

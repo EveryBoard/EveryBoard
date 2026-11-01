@@ -206,7 +206,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = RulesUtils.nodeWithPreviousMove(expectedState, move);
+            const node: TeekoNode = TeekoNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
