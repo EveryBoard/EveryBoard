@@ -22,7 +22,7 @@ import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
 import { Topology } from '../../jscaip/topology/Topology';
-import { TopologyID, topologyMap } from '../../jscaip/topology/topologyMap';
+import { TopologyID, TopologyMapper } from '../../jscaip/topology/TopologyMapper';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
@@ -119,7 +119,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     private static getTopology(config: ConnectNConfig): Topology<Direction> {
-        return topologyMap.get(config.topology).get();
+        return TopologyMapper.topologyMap.get(config.topology).get();
     }
 
     private static getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> {
@@ -168,6 +168,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                             state: TopologicGameState<FourStatePiece, Direction>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
+        // TODO: check move with exactly zero move, they will work but should not !
         if (state.turn === 0 && move.coords.size() > 1) {
             return MGPFallible.failure(ConnectNFailure.YOU_MUST_DROP_ONE_AT_FIRST_TURN());
         }

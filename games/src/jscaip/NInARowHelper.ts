@@ -84,6 +84,7 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         return score;
     }
 
+    // TODO: ne pas laisser cette fonction authoriser une ligne de 3 complète de compter comme une liste infinie en torique!
     public getNumberOfFreeSpacesAndPlayers(state: GameStateWithCoords<T>,
                                            i: Coord,
                                            dir: D,

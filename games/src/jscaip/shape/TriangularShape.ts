@@ -9,7 +9,7 @@ import { TopologicShape } from './TopologicShape';
 export class TriangularShape<D extends Direction> extends TopologicShape<D> {
 
     public constructor(
-        public readonly side: number,
+        private readonly side: number,
         topology: Topology<D>,
     ) {
         super(topology);

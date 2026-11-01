@@ -38,7 +38,7 @@ describe('ConnectSixMove', () => {
             });
 
             it('should be different when one coord is different', () => {
-                // Given two move with different coords
+                // Given two moves with different coords
                 const first: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
                 const second: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(2, 2));
 
