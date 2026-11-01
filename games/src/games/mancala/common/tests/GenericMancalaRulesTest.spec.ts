@@ -48,6 +48,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 [4, 0, 4, 4, 4, 0],
             ];
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
+
             // When attempting to distribute empty space
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
@@ -169,6 +170,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 0, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
+
                         // When checking the game status
                         // Then it should be a victory for Player.ZERO
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, config);

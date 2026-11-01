@@ -53,6 +53,7 @@ describe('LobbyComponent', () => {
                 TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
             testUtils.detectChanges();
             tick(0);
+
             // When it receives an already-subscribed error from the backend
             // Then it should toast and redirect to /
             await testUtils.expectToDisplayCriticalMessage(
@@ -69,6 +70,7 @@ describe('LobbyComponent', () => {
                 TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
             testUtils.detectChanges();
             tick(0);
+
             // When it receives an error from the backend
             // Then it should toast and redirect to /
             await testUtils.expectToDisplayCriticalMessage(

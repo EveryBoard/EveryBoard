@@ -124,6 +124,7 @@ describe('TrexoComponent', () => {
                         // Given any board
                         // When clicking on a possible first coord (whose neighbor are empty spaces)
                         await testUtils.expectClickSuccess('#space-5-5');
+
                         // Then the possible next click should be highlighted
                         testUtils.expectElementToHaveClass('#space-4-5', 'darker');
                         testUtils.expectElementToHaveClass('#space-6-5', 'darker');

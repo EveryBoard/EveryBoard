@@ -419,6 +419,7 @@ describe('InternationalCheckersComponent', () => {
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-5', move);
+
             // Then the stack of captured pieces should not exist
             testUtils.expectElementToExist('#square-6-5-piece-0');
             testUtils.expectElementNotToExist('#square-6-5-piece-1');
@@ -458,6 +459,7 @@ describe('InternationalCheckersComponent', () => {
             // Given a state
             // When it is interactive
             testUtils.getGameComponent().interactive.set(true);
+
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-1-6', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-3-6', 'clickable-stroke');

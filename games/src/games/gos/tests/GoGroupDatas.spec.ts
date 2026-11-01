@@ -84,6 +84,7 @@ describe('GoGroupData', () => {
                                                        [coord],
                                                        [coord],
                                                        []);
+
             // When asking for neighbors entry points
             const neighborsEntryPoint: Coord[] = group.getNeighborsEntryPoints();
 

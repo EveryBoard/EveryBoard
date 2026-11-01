@@ -130,6 +130,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
         function expectCoordsToBeTheOnlyClickable(state: CheckersState, coords: Coord[]): void {
             state.forEachCoord((coord: Coord) => {
                 const id: string = `#clickable-highlight-${ coord.x }-${ coord.y }`;
+
                 // Then only some pieces should be highlighted
                 if (coords.some((c: Coord) => c.equals(coord))) {
                     testUtils.expectElementToHaveClass(id, 'clickable-stroke');

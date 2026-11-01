@@ -316,6 +316,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+
             // When dropping only one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
 
@@ -378,6 +379,7 @@ describe('ConnectSixRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
             ], 180);
+
             // When playing the last 181st turn
             const move: ConnectSixMove =
                 ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18));
