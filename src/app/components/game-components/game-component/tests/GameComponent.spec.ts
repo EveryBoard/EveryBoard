@@ -55,7 +55,7 @@ describe('GameComponent', () => {
 
         // Then should fail and call logError
         const errorMessage: string = 'pass() called on a game that does not redefine it';
-        const errorData: JSONValue = { gameName: 'AbaloneComponent' };
+        const errorData: JSONValue = { gameName: component.constructor.name };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(Utils.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);

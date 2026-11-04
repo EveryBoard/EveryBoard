@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -12,6 +12,7 @@ import { GameInfo } from '../pick-game/GameInfo';
 
 @Component({
     selector: 'app-online-game-creation',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
 export class OnlineGameCreationComponent implements OnInit {

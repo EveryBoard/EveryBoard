@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -9,6 +9,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, AutofocusDirective, FormsModule],
 })
 export class ResetPasswordComponent {

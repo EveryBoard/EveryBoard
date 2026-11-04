@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,7 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
 @Component({
     selector: 'app-verify-account',
     templateUrl: './verify-account.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, RouterLink],
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {

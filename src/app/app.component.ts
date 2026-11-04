@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faDiscord, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
@@ -10,6 +10,7 @@ import { ThemeService } from './services/ThemeService';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         HeaderComponent,
         RouterOutlet,

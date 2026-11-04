@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject, input, InputSignal, output, OutputEmitterRef, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
@@ -55,6 +55,7 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, EloComponent,
         HumanDurationPipe],
 })

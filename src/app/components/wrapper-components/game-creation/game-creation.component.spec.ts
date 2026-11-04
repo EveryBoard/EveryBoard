@@ -51,7 +51,7 @@ describe('GameCreationComponent', () => {
     async function awaitComponentInitialization(): Promise<void> {
         testUtils.detectChanges();
         await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(defaultConfig));
-        tick(0);
+        await testUtils.waitForStability();
     }
 
     async function proposeConfig(): Promise<void> {
@@ -426,9 +426,9 @@ describe('GameCreationComponent', () => {
                 await chooseOpponent();
                 testUtils.chooseConfig('__custom__');
                 testUtils.fillInput('#width_number_config_input', '8');
-                tick(1);
+                await testUtils.waitForStability();
                 testUtils.fillInput('#width_number_config_input', defaultConfig.width.toString());
-                tick(1);
+                await testUtils.waitForStability();
 
                 // The config should still be named custom while it is being edited
                 testUtils.expectDropdownOptionToBeSelected('#ruleSelect', '__custom__');
@@ -441,7 +441,7 @@ describe('GameCreationComponent', () => {
                     status: Status.CONFIG_PROPOSED,
                 });
                 testUtils.detectChanges();
-                tick(0);
+                await testUtils.waitForStability();
 
                 // Then the creator should see the standard config name
                 const standardConfigName: string = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().name();

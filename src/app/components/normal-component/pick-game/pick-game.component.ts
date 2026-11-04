@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { Component, OutputEmitterRef, inject, output } from '@angular/core';
+import { Component, OutputEmitterRef, inject, output, ChangeDetectionStrategy } from '@angular/core';
 import Fuse, { FuseResult } from 'fuse.js';
 
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
@@ -10,6 +10,7 @@ import { GameInfo } from './GameInfo';
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AutofocusDirective],
 })
 export class PickGameComponent {

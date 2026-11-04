@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy, inject, viewChild, Signal } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy, inject, viewChild, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,7 @@ import { ChatService } from '../../../services/ChatService';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, FormsModule, FaIconComponent],
 })
 @Debug.log

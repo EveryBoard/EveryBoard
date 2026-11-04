@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { PickGameComponent } from '../pick-game/pick-game.component';
@@ -6,6 +6,7 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-tutorial-game-creation',
     templateUrl: './tutorial-game-creation.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PickGameComponent],
 })
 export class TutorialGameCreationComponent {

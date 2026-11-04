@@ -1,5 +1,6 @@
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withXhr } from '@angular/common/http';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     DebugElement,
@@ -51,6 +52,7 @@ import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceM
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '',
 })
 export class BlankComponent {}
@@ -192,18 +194,30 @@ export class SimpleComponentTestUtils<T> {
         return result;
     }
 
-    public async clickElement(elementName: string, waitInMs?: number): Promise<void> {
+    public async clickElement(elementName: string): Promise<void> {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.detectChanges();
+    }
+
+    public clickElementAndAdvanceTime(elementName: string, elapsedMs: number = 0): void {
         const element: DebugElement = this.findElement(elementName);
         element.triggerEventHandler('click', null);
         tick(0);
-        if (waitInMs !== undefined) {
-            tick(waitInMs);
+        if (elapsedMs > 0) {
+            tick(elapsedMs);
         }
         this.detectChanges();
     }
 
     public forceChangeDetection(): void {
         this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
+
+    public async waitForStability(): Promise<void> {
+        await this.fixture.whenStable();
         this.detectChanges();
     }
 
@@ -472,7 +486,6 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             );
             await wrapper.setConfigFromParams();
             this.gameComponent.config.set(config);
-            tick(0);
         }
         const node: AbstractNode = new GameNode(
             state,
@@ -530,11 +543,21 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName, context);
     }
 
-    public async expectInterfaceClickSuccess(elementName: string, context?: string, waitInMs?: number): Promise<void> {
+    public expectClickSuccessAfter(elementName: string, action: () => void, context?: string): void {
+        const actualContext: string = context ?? 'expectClickSuccessAfter(' + elementName + ')';
+        action();
+        expect(this.cancelMoveSpy).withContext(actualContext).not.toHaveBeenCalledWith();
+        expect(this.chooseMoveSpy).withContext(actualContext).not.toHaveBeenCalledWith();
+        expect(this.onLegalUserMoveSpy).withContext(actualContext).not.toHaveBeenCalledWith();
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+    }
+
+    public async expectInterfaceClickSuccess(elementName: string, context?: string): Promise<void> {
         if (context == null) {
             context = 'expectInterfaceClickSuccess(' + elementName + ')';
         }
-        await this.clickElement(elementName, waitInMs);
+        await this.clickElement(elementName);
 
         expect(this.cancelMoveSpy).withContext(context).not.toHaveBeenCalledWith();
         expect(this.chooseMoveSpy).withContext(context).not.toHaveBeenCalledWith();
@@ -601,6 +624,16 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }
 
+    public expectMoveSuccessAfter(elementName: string, move: Move, action: () => void): void {
+        action();
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.chooseMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.onLegalUserMoveSpy.calls.reset();
+    }
+
     public async expectMoveSuccessWithAsymmetricNaming(nameInHtml: string,
                                                        nameInFunction: string,
                                                        move: Move,
@@ -608,11 +641,6 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     : Promise<void>
     {
         await this.clickElement(nameInHtml);
-        if (clickAnimationDuration === undefined) {
-            tick(0);
-        } else {
-            tick(clickAnimationDuration);
-        }
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
@@ -639,7 +667,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async expectPassSuccess(move: Move): Promise<void> {
-        await this.clickElement('#pass-button', 0);
+        await this.clickElement('#pass-button');
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
@@ -739,7 +767,7 @@ export async function setupEmulators(): Promise<unknown> {
     await FireAuth.setPersistence(FireAuth.getAuth(), FireAuth.inMemoryPersistence);
     await TestBed.configureTestingModule({
         providers: [
-            provideHttpClient(),
+            provideHttpClient(withXhr()),
             ConnectedUserService,
         ],
     }).compileComponents();

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -26,6 +26,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, OnlineGameSelectionComponent, ChatComponent, EloComponent],
 })
 @Debug.log

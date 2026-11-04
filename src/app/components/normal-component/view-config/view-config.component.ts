@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,6 +10,7 @@ import { RulesConfigurationComponent } from '../../wrapper-components/rules-conf
 @Component({
     selector: 'app-view-config',
     templateUrl: './view-config.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RulesConfigurationComponent, FaIconComponent],
 })
 export class ViewConfigComponent {

@@ -1335,8 +1335,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resign', undefined, 0);
-            await testUtils.expectInterfaceClickSuccess('#confirmResign', undefined, 0);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            await testUtils.expectInterfaceClickSuccess('#confirmResign');
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');
