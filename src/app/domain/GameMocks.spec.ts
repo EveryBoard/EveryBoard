@@ -6,17 +6,17 @@ export class GameMocks {
 
     public static readonly STARTED: Game = {
         gameName: 'Quarto',
-        playerZero: { user: UserMocks.CREATOR_MINIMAL_USER, elo: 0 },
+        playerZero: { user: UserMocks.CREATOR_MINIMAL_USER, elo: 0, botIdentifier: null },
         result: GameResult.IN_PROGRESS,
-        playerOne: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0 },
+        playerOne: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         beginning: 0,
     };
 
     public static readonly OTHER_STARTED: Game = {
         gameName: 'Quarto',
-        playerZero: { user: UserMocks.OTHER_CREATOR_MINIMAL_USER, elo: 0 },
+        playerZero: { user: UserMocks.OTHER_CREATOR_MINIMAL_USER, elo: 0, botIdentifier: null },
         result: GameResult.IN_PROGRESS,
-        playerOne: { user: UserMocks.OTHER_OPPONENT_MINIMAL_USER, elo: 0 },
+        playerOne: { user: UserMocks.OTHER_OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         beginning: 0,
     };
 }

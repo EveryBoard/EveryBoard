@@ -13,6 +13,7 @@ linters:
         - dupword
         - errorlint
         - exhaustive
+        - exhaustruct_v5
         - fatcontext
         - gocritic
         - gosec
@@ -33,6 +34,11 @@ linters:
         - unconvert
         - usestdlibvars
     settings:
+        exhaustruct_v5:
+            explicit-mode: true
+            allow-empty: true
+            enforce-patterns:
+                - '^github\.com/EveryBoard/EveryBoard/internal/everyboard/model\.CurrentGame$'
         gocritic:
             disabled-checks:
                 - ifElseChain
@@ -45,6 +51,11 @@ linters:
                   disabled: true
                 - name: var-naming
                   disabled: true
+    exclusions:
+        rules:
+            - path: '_test\.go$'
+              linters:
+                  - exhaustruct_v5
 
 formatters:
     enable:

@@ -46,10 +46,10 @@
                         (click)="joinGame(configRoom)">
                         <td class="td data-game-name">{{ getGameName(configRoom) }}</td>
                         <td class="td"
-                            id="part-of-{{ configRoom.creator.user.name}}">{{ configRoom.creator.user.name }} (<app-elo [elo]="configRoom.creator.elo"/>)</td>
+                            id="part-of-{{ configRoom.creator.user.name}}">{{ getDisplayName(configRoom.creator) }} (<app-elo [elo]="configRoom.creator.elo"/>)</td>
                         <td class="td">
                             @if (configRoom.chosenOpponent) {
-                                {{ configRoom.chosenOpponent.user.name }}
+                                {{ getDisplayName(configRoom.chosenOpponent) }}
                             } @else {
                                 <ng-container i18n>Waiting for opponent</ng-container>
                             }
