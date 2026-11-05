@@ -64,7 +64,7 @@
     "@angular/compiler": "^21.2.22",
     "@angular/compiler-cli": "^21.2.22",
     "@angular/localize": "^21.2.22",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/jasmine": "^6.0.0",
     "@types/node": "^24.13.3",
