@@ -205,7 +205,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 0);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =
@@ -226,7 +226,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 0);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =
@@ -247,7 +247,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 0);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =
@@ -268,7 +268,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 0);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =
@@ -289,7 +289,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 1);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =
@@ -318,7 +318,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 1);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
 
@@ -343,7 +343,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                     [_, _, _, _, _, _, _, _, _],
                 ];
                 const state: TaflState = new TaflState(board, 0);
-                const node: TablutNode = new TablutNode(state);
+                const node: TablutNode = TablutNode.root(state);
                 const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
                 const threatMap: MGPMap<Coord, Set<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
                 const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> =

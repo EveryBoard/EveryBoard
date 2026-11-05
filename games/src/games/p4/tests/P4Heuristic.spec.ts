@@ -61,7 +61,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, _, _, O],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -81,7 +81,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, _, O, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -101,7 +101,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, O, _, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -121,7 +121,7 @@ describe('P4Heuristic', () => {
             [_, _, _, O, _, _, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;

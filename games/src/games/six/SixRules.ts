@@ -189,8 +189,8 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
     public override getGameStatus(node: SixNode, config: SixConfig): GameStatus {
         const state: SixState = node.gameState;
         const previousPlayer: Player = state.getPreviousPlayer();
-        if (node.previousMove.isPresent()) {
-            const shapeVictory: Coord[] = this.getShapeVictory(node.previousMove.get(), state);
+        if (node.hasParent()) {
+            const shapeVictory: Coord[] = this.getShapeVictory(node.getPreviousMove(), state);
             if (shapeVictory.length === 6) {
                 return GameStatus.getVictory(previousPlayer);
             }

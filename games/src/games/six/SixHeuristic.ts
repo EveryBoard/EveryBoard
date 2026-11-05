@@ -18,7 +18,6 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
     public currentVictorySource: SixVictorySource;
 
     public getBoardValue(node: SixNode, config: SixConfig): BoardValue {
-        const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const previousPlayer: Player = state.getPreviousPlayer();
         const victoryValue: number = BoardValue.getVictoryValueOf(previousPlayer);
@@ -28,8 +27,8 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             preVictory: MGPOptional.empty(),
             sum: 0,
         };
-        if (move.isPresent()) {
-            shapeInfo = this.calculateBoardValue(move.get(), state);
+        if (node.hasParent()) {
+            shapeInfo = this.calculateBoardValue(node.getPreviousMove(), state);
         }
         if (shapeInfo.status === AlignmentStatus.VICTORY) {
             return BoardValue.of(victoryValue);

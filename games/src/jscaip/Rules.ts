@@ -44,9 +44,7 @@ export abstract class SuperRules<M extends Move,
             return MGPFallible.success(choice.get());
         }
         const resultingState: S = this.applyLegalMove(move, node.gameState, config, legality.get());
-        const child: GameNode<M, S> = new GameNode(resultingState,
-                                                   MGPOptional.of(node),
-                                                   MGPOptional.of(move));
+        const child: GameNode<M, S> = GameNode.child(resultingState, node, move);
         return MGPFallible.success(child);
     }
 
@@ -65,7 +63,7 @@ export abstract class SuperRules<M extends Move,
 
     public getInitialNode(config: C): GameNode<M, S> {
         const initialState: S = this.getInitialState(config);
-        return new GameNode(initialState);
+        return GameNode.root(initialState);
     }
 
     public abstract getRulesConfigDescription(): RulesConfigDescription<C>;

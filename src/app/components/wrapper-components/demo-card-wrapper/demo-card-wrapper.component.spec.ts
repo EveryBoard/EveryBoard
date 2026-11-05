@@ -45,7 +45,7 @@ describe('DemoCardWrapperComponent', () => {
             title: 'P4',
             name: 'P4',
             // Current player is player 1
-            node: new P4Node(new P4State(board, 1)),
+            node: P4Node.root(new P4State(board, 1)),
             click: MGPOptional.empty(),
             config: defaultConfig,
         });
@@ -66,7 +66,7 @@ describe('DemoCardWrapperComponent', () => {
         await loadNode({
             title: 'Lodestone',
             name: 'Lodestone',
-            node: new LodestoneNode(LodestoneRules.get().getInitialState()),
+            node: LodestoneNode.root(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
             config: LodestoneRules.get().getDefaultRulesConfig(),
         });
@@ -80,7 +80,7 @@ describe('DemoCardWrapperComponent', () => {
         await loadNode({
             title: 'P4',
             name: 'P4',
-            node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
+            node: GameNode.root(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
             config: defaultConfig,
         });
@@ -113,7 +113,7 @@ describe('DemoCardWrapperComponent', () => {
         await loadNode({
             title: 'P4',
             name: 'P4',
-            node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
+            node: GameNode.root(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
             config: defaultConfig,
         });
@@ -125,7 +125,7 @@ describe('DemoCardWrapperComponent', () => {
         await loadNode({
             title: 'P4',
             name: 'P4',
-            node: new GameNode(stateWithPieces),
+            node: GameNode.root(stateWithPieces),
             click: MGPOptional.empty(),
             config: defaultConfig,
         });
@@ -154,7 +154,7 @@ describe('DemoCardWrapperComponent', () => {
             await loadNode({
                 title: 'P4',
                 name: 'P4',
-                node: new P4Node(P4Rules.get().getInitialState(demoConfig)),
+                node: P4Node.root(P4Rules.get().getInitialState(demoConfig)),
                 click: MGPOptional.empty(),
                 config: demoConfig,
             });
@@ -171,7 +171,7 @@ describe('DemoCardWrapperComponent', () => {
             await loadNode({
                 title: 'P4',
                 name: 'P4',
-                node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
+                node: P4Node.root(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),
                 config: defaultConfig,
             });
@@ -181,7 +181,7 @@ describe('DemoCardWrapperComponent', () => {
             await loadNode({
                 title: 'P4',
                 name: 'P4',
-                node: new P4Node(P4Rules.get().getInitialState(selectedConfig)),
+                node: P4Node.root(P4Rules.get().getInitialState(selectedConfig)),
                 click: MGPOptional.empty(),
                 config: selectedConfig,
             });

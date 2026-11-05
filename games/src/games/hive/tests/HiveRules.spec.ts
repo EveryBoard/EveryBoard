@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, Set, Utils } from '@everyboard/lib';
+import { Set, Utils } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
@@ -990,7 +990,7 @@ describe('HiveRules', () => {
                 [[s], [A], []],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
-            const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
+            const node: HiveNode = HiveNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -1005,7 +1005,7 @@ describe('HiveRules', () => {
                 [[s], [A], []],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
-            const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
+            const node: HiveNode = HiveNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -1020,7 +1020,7 @@ describe('HiveRules', () => {
                 [[s], [A], [a], [B]],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
-            const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
+            const node: HiveNode = HiveNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -1033,7 +1033,7 @@ describe('HiveRules', () => {
                 [[q], [Q]],
             ];
             const state: HiveState = HiveState.fromRepresentation(board, 4);
-            const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
+            const node: HiveNode = HiveNode.root(state);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);

@@ -42,7 +42,7 @@ describe('HexodiaRules', () => {
         const heuristic: HexodiaAlignmentHeuristic = new HexodiaAlignmentHeuristic();
 
         // When evaluating it
-        const value: BoardValue = heuristic.getBoardValue(new HexodiaNode(state), defaultConfig);
+        const value: BoardValue = heuristic.getBoardValue(HexodiaNode.root(state), defaultConfig);
 
         // Then the heuristic should inspect occupied squares
         expect(value.metrics.length).toBe(1);
@@ -352,7 +352,7 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
-            const node: HexodiaNode = new HexodiaNode(state);
+            const node: HexodiaNode = HexodiaNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -382,7 +382,7 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
             ], 91);
-            const node: HexodiaNode = new HexodiaNode(state);
+            const node: HexodiaNode = HexodiaNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -413,7 +413,7 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const node: HexodiaNode = new HexodiaNode(state);
+            const node: HexodiaNode = HexodiaNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -448,7 +448,7 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const node: HexodiaNode = new HexodiaNode(state);
+            const node: HexodiaNode = HexodiaNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -477,7 +477,7 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X],
                 [X, X, X, X, X],
             ], 25);
-            const node: HexodiaNode = new HexodiaNode(state);
+            const node: HexodiaNode = HexodiaNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -496,7 +496,7 @@ describe('HexodiaRules', () => {
                     state = state.setPieceAt(center.getNext(dir, distance), FourStatePiece.ONE);
                 }
                 state = state.incrementTurn();
-                const node: HexodiaNode = new HexodiaNode(state);
+                const node: HexodiaNode = HexodiaNode.root(state);
 
                 // When checking the game status
                 // Then it should be a victory for Player.ONE

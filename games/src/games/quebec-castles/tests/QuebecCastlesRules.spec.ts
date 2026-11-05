@@ -518,7 +518,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, X],
             ], 10, defaultCastles);
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -538,7 +538,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -558,7 +558,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -578,7 +578,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -591,7 +591,7 @@ describe('QuebecCastlesRules', () => {
 
             // When checking the game status
             // Then it should be a victory
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
 
@@ -616,7 +616,7 @@ describe('QuebecCastlesRules', () => {
 
             // When checking the game status
             // Then it should be a victory
-            const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+            const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
             RulesUtils.expectToBeOngoing(rules, node, customConfig);
         });
 

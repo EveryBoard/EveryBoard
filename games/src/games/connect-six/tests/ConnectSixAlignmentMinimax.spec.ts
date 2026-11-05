@@ -56,7 +56,7 @@ describe('ConnectSixAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: ConnectSixState = new ConnectSixState(board, 2);
-        const node: ConnectSixNode = new ConnectSixNode(state);
+        const node: ConnectSixNode = ConnectSixNode.root(state);
 
         // When asking what is the best move
         const bestMove: ConnectSixMove = minimax.chooseNextMove(node, level1, defaultConfig);
@@ -90,7 +90,7 @@ describe('ConnectSixAlignmentMinimax', () => {
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: ConnectSixState = new ConnectSixState(board, 3);
-        const node: ConnectSixNode = new ConnectSixNode(state);
+        const node: ConnectSixNode = ConnectSixNode.root(state);
 
         // When asking what is the best move
         const bestMove: ConnectSixMove = minimax.chooseNextMove(node, level2, defaultConfig);
@@ -124,7 +124,7 @@ describe('ConnectSixAlignmentMinimax', () => {
             [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: ConnectSixState = new ConnectSixState(board, 3);
-        const node: ConnectSixNode = new ConnectSixNode(state);
+        const node: ConnectSixNode = ConnectSixNode.root(state);
 
         // When asking what is the best move
         const bestMove: ConnectSixMove = minimax.chooseNextMove(node, level2, defaultConfig);

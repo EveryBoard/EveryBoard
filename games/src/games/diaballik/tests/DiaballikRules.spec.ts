@@ -378,7 +378,7 @@ describe('DiaballikRules', () => {
                 [_, O, _, X, _, _, _],
                 [_, _, O, Ȯ, O, O, O],
             ], 0);
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE (who is blocked)
@@ -396,7 +396,7 @@ describe('DiaballikRules', () => {
                 [_, O, _, X, _, _, _],
                 [_, _, O, Ȯ, O, _, O],
             ], 0);
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO (who is blocked)
@@ -414,7 +414,7 @@ describe('DiaballikRules', () => {
                 [_, O, _, X, _, _, _],
                 [_, _, O, Ȯ, O, O, O],
             ], 0);
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -432,7 +432,7 @@ describe('DiaballikRules', () => {
                 [_, _, _, _, _, _, _],
                 [O, O, O, _, _, O, O],
             ], 0);
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -450,7 +450,7 @@ describe('DiaballikRules', () => {
                 [_, _, _, _, _, _, _],
                 [O, O, O, Ẋ, _, O, O],
             ], 0);
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -460,7 +460,7 @@ describe('DiaballikRules', () => {
         it('should detect non victories as ongoing', () => {
             // Given a state without victory
             const state: DiaballikState = DiaballikRules.get().getInitialState();
-            const node: DiaballikNode = new DiaballikNode(state);
+            const node: DiaballikNode = DiaballikNode.root(state);
 
             // When checking its status
             // Then it should be ongoing

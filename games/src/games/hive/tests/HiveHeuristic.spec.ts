@@ -25,7 +25,7 @@ describe('HiveHeuristic', () => {
     it('should assign a 0 value if the queen is not on the board', () => {
         // Given a state without the queen
         const state: HiveState = HiveRules.get().getInitialState();
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When computing its value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;

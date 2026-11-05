@@ -34,7 +34,7 @@ describe('DvonnScoreHeuristic', () => {
             [__, __, __, __, __, __, __, __, __, _N, _N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
 
         // When computing the board value
         const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;

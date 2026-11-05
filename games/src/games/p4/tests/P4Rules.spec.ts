@@ -72,7 +72,7 @@ describe('P4Rules', () => {
             ];
             const expectedState: P4State = new P4State(expectedBoard, 7);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: P4Node = new P4Node(expectedState);
+            const node: P4Node = P4Node.root(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -102,7 +102,7 @@ describe('P4Rules', () => {
             ];
             const expectedState: P4State = new P4State(expectedBoard, 8);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: P4Node = new P4Node(expectedState);
+            const node: P4Node = P4Node.root(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -132,7 +132,7 @@ describe('P4Rules', () => {
             ];
             const expectedState: P4State = new P4State(expectedBoard, 42);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: P4Node = new P4Node(expectedState);
+            const node: P4Node = P4Node.root(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -153,7 +153,7 @@ describe('P4Rules', () => {
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: P4Node = new P4Node(expectedState);
+            const node: P4Node = P4Node.root(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -174,7 +174,7 @@ describe('P4Rules', () => {
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: P4Node = new P4Node(expectedState);
+            const node: P4Node = P4Node.root(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

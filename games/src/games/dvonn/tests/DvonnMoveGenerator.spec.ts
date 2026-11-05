@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
-import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
@@ -52,7 +51,7 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
@@ -68,7 +67,7 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
@@ -84,7 +83,7 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(move.getDistance()).toEqual(state.getPieceAt(move.getStart()).getSize());
@@ -100,7 +99,7 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
@@ -118,7 +117,7 @@ describe('DvonnMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const node: DvonnNode = new DvonnNode(state);
+        const node: DvonnNode = DvonnNode.root(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         expect(moves.length).toEqual(1);
         expect(moves[0]).toEqual(DvonnMove.PASS);
@@ -133,7 +132,7 @@ describe('DvonnMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
-        const node: DvonnNode = new DvonnNode(state, MGPOptional.empty(), MGPOptional.of(DvonnMove.PASS));
+        const node: DvonnNode = RulesUtils.nodeWithPreviousMove(state, DvonnMove.PASS);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(0);
     });
 
@@ -146,10 +145,7 @@ describe('DvonnMoveGenerator', () => {
             [_, OS6, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
-        const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 4)).get();
-        const node: DvonnNode = new DvonnNode(state,
-                                              MGPOptional.empty(),
-                                              MGPOptional.of(move));
+        const node: DvonnNode = DvonnNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(1);
     });
 

@@ -34,7 +34,7 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: RulesConfig) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const node: AbstractNode = new GameNode(stateProvider.get()(config));
+            const node: AbstractNode = GameNode.root(stateProvider.get()(config));
             this.configDemo = {
                 title: this.getGameName().get(),
                 click: MGPOptional.empty(),

@@ -20,7 +20,7 @@ describe('LinesOfActionMoveGenerator', () => {
 
     it('should have 36 moves on the initial state', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        const node: LinesOfActionNode = LinesOfActionNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(6 * 3 * 2);
     });
 
@@ -36,7 +36,7 @@ describe('LinesOfActionMoveGenerator', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        const node: LinesOfActionNode = LinesOfActionNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
     });
 
@@ -52,7 +52,7 @@ describe('LinesOfActionMoveGenerator', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        const node: LinesOfActionNode = LinesOfActionNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
     });
 

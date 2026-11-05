@@ -25,7 +25,7 @@ describe('HiveMoveGenerator', () => {
     it('should propose 5 moves at first turn', () => {
         // Given the initial state
         const state: HiveState = HiveRules.get().getInitialState();
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -39,7 +39,7 @@ describe('HiveMoveGenerator', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q]],
         ], 1);
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -53,7 +53,7 @@ describe('HiveMoveGenerator', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q], [B, b, q]],
         ], 5);
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -68,7 +68,7 @@ describe('HiveMoveGenerator', () => {
             [[B], [B], [S], [b]],
             [[], [q], [b], []],
         ], 6);
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node, defaultConfig);

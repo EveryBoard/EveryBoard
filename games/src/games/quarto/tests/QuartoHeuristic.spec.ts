@@ -39,7 +39,7 @@ describe('QuartoHeuristic', () => {
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
 
         // Then the heuristic should assign 0 as board value
-        const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state), defaultConfig);
+        const boardValue: BoardValue = heuristic.getBoardValue(QuartoNode.root(state), defaultConfig);
         expect(boardValue.metrics).toEqual([0]);
     });
 
