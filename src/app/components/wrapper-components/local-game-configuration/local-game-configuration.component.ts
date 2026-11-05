@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AbstractNode, GameNode } from '@everyboard/games';
@@ -19,6 +19,7 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 @Component({
     selector: 'app-local-game-configuration',
     templateUrl: './local-game-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RulesConfigurationComponent, DemoCardWrapperComponent],
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
@@ -15,6 +15,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgClass, RouterLink],
 })
 export class RegisterComponent {

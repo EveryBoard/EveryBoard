@@ -29,13 +29,15 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                        public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
     }
 
-    public async expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
+    public expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): void {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
-        await this.testUtils.expectMoveSuccess(click, move, moveDuration);
+        this.testUtils.expectMoveSuccessAfter(click, move, () => {
+            this.testUtils.clickElementAndAdvanceTime(click, moveDuration);
+        });
     }
 
     private showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): number {
@@ -57,10 +59,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
             while (seedDropResult.seedsInHand > 0) {
                 ({ seedDropResult, awaitedTime } =
-                    this.showSeedDrop(seedDropResult,
-                                      config,
-                                      initial,
-                                      awaitedTime)
+                    this.showSeedDrop(seedDropResult, config, initial, awaitedTime)
                 );
             }
             if (seedDropResult.currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
@@ -114,7 +113,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         return { seedDropResult: nextSeedDropResult, awaitedTime };
     }
 
-    public async expectClickSuccess(click: string): Promise<void> {
+    public expectClickSuccess(click: string): void {
         // This function requires a string and has the same name as the one in TestUtils, to optimize greppability
         const matches: RegExpMatchArray | null = click.match(/#click-([0-9]+)-([0-9]+)/);
         Utils.assert(matches !== null, 'MancalaTestUtils.expectClickSuccess should be called with a coord string, but was called with' + click);
@@ -122,7 +121,9 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                                        Number(Utils.getNonNullable(matches)[2]));
         const pieceInHouse: number = this.testUtils.getGameComponent().constructedState.getPieceAt(coord);
         const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
-        await this.testUtils.expectClickSuccess(click);
+        this.testUtils.expectClickSuccessAfter(click, () => {
+            this.testUtils.clickElementAndAdvanceTime(click);
+        });
         tick(timeToWait);
     }
 

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { RulesConfig } from '@everyboard/games';
@@ -27,7 +27,7 @@ import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
-    it('should redirect to /notFound', fakeAsync(async() => {
+    it('should redirect to /notFound', async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser> =
             await ComponentTestUtils.basic('invalid-game');
@@ -39,14 +39,12 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
         // When loading the component
         testUtils.detectChanges();
-        tick(0);
 
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
         await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
 
-        discardPeriodicTasks();
-    }));
+    });
 
 });
 

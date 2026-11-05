@@ -69,7 +69,6 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             spyOn(TestBed.inject(ConnectedUserService), 'disconnect').and.callThrough();
             await testUtils.clickElement('#logout');
-            tick(0);
             expect(TestBed.inject(ConnectedUserService).disconnect).toHaveBeenCalledTimes(1);
         }));
 

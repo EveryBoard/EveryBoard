@@ -19,7 +19,7 @@ import { BlankGobanComponent } from '../../components/game-components/goban-game
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-new-game',
+    selector: 'app-pente',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [BlankGobanComponent, NgClass],

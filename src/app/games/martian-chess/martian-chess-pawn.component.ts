@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 
@@ -10,6 +10,7 @@ import { MartianChessFace } from './martian-chess.component';
     selector: '[app-martian-chess-pawn]',
     templateUrl: './martian-chess-pawn.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class MartianChessPawnComponent {

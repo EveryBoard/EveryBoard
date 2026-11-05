@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
 import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
@@ -11,6 +11,7 @@ import { ToggleVisibilityDirective } from '../toggle-visibility.directive';
 <p id="toggle" class="clickable-icon" toggleVisibility>show</p>
 </span>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ToggleVisibilityDirective],
 })
 class ToggleVisibilityTestComponent {}
