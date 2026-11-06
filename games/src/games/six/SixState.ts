@@ -115,8 +115,10 @@ export class SixState extends OpenHexagonalGameState<Player> {
     public countPiecesToDrop(config: SixConfig): PlayerNumberMap {
         const total: number = config.piecesPerPlayer + 1;
         const piecesOnBoard: PlayerNumberMap = this.countPiecesOnBoard();
-        return PlayerNumberMap.of(total - piecesOnBoard.get(Player.ZERO),
-                                  total - piecesOnBoard.get(Player.ONE));
+        return PlayerNumberMap.of(
+            total - piecesOnBoard.get(Player.ZERO),
+            total - piecesOnBoard.get(Player.ONE),
+        );
     }
 
     public switchPiece(coord: Coord): SixState {

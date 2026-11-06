@@ -38,10 +38,14 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
     public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
 
     public static of(start: Coord, end: Coord): KamisadoPieceMove {
-        Utils.assert(KamisadoState.isOnBoard(start),
-                     'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
-        Utils.assert(KamisadoState.isOnBoard(end),
-                     'End coord of KamisadoMove must be on the board, not at ' + end.toString());
+        Utils.assert(
+            KamisadoState.isOnBoard(start),
+            'Starting coord of KamisadoMove must be on the board, not at ' + start.toString(),
+        );
+        Utils.assert(
+            KamisadoState.isOnBoard(end),
+            'End coord of KamisadoMove must be on the board, not at ' + end.toString(),
+        );
         return new KamisadoPieceMove(start, end);
     }
 
@@ -83,6 +87,8 @@ export namespace KamisadoMove {
     }
 
     export const encoder: Encoder<KamisadoMove> =
-        Encoder.disjunction([KamisadoMove.isPiece, isPass],
-                            [KamisadoPieceMove.encoder, KamisadoPassMove.encoder]);
+        Encoder.disjunction(
+            [KamisadoMove.isPiece, isPass],
+            [KamisadoPieceMove.encoder, KamisadoPassMove.encoder],
+        );
 }

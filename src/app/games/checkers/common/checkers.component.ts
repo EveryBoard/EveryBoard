@@ -21,11 +21,10 @@ import { ParallelogramGameComponent } from '../../../components/game-components/
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,
-                                       CheckersMove,
-                                       CheckersState,
-                                       CheckersStack,
-                                       CheckersConfig>
-{
+        CheckersMove,
+        CheckersState,
+        CheckersStack,
+        CheckersConfig> {
     public readonly THICKNESS: number = 40;
     public readonly mode: Signal<ModeConfig> = signal({
         horizontalWidthRatio: 1.2,
@@ -43,12 +42,10 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     });
 
     public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().x * this.mode().parallelogramHeight,
-    );
+        this.boardSize().x * this.mode().parallelogramHeight);
 
     public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().y * this.mode().parallelogramHeight,
-    );
+        this.boardSize().y * this.mode().parallelogramHeight);
 
     private currentMoveClicks: Coord[] = [];
     private lastCaptures: Coord[] = [];
@@ -261,7 +258,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
         const stateWithoutStarting: CheckersState = this.state().remove(this.currentMoveClicks[0]);
         const validation: MGPValidation = this.rules.getSubMoveValidity(
-            stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.config(),
+            stack,
+            isSimpleJump,
+            lastSegmentStart,
+            clicked,
+            stateWithoutStarting,
+            this.config(),
         );
         if (validation.isFailure()) {
             return validation.getReason();

@@ -16,16 +16,18 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-class EpaminondasMinimax extends Minimax<EpaminondasMove,
-                                         EpaminondasState,
-                                         EpaminondasConfig,
-                                         EpaminondasLegalityInformation>
-{
+class EpaminondasMinimax extends Minimax<
+    EpaminondasMove,
+    EpaminondasState,
+    EpaminondasConfig,
+    EpaminondasLegalityInformation
+> {
     public constructor() {
-        super('Piece > Row Domination > Alignment > Row Presence',
-              EpaminondasRules.get(),
-              new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        super(
+            'Piece > Row Domination > Alignment > Row Presence',
+            EpaminondasRules.get(),
+            new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic(),
+            new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
         );
     }
 }

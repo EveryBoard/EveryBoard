@@ -32,8 +32,7 @@ export type SeedDropResult = {
 };
 
 export abstract class MancalaComponent<R extends MancalaRules>
-    extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
-{
+    extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig> {
     public static readonly TIMEOUT_BETWEEN_SEEDS: number = 100;
 
     // The awaited time between two laps or distributions
@@ -238,8 +237,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean)
-    : Promise<MancalaDistributionResult>
-    {
+    : Promise<MancalaDistributionResult> {
         const state: MancalaState = this.constructedState;
         const coord: Coord = new Coord(distribution.x, distribution.y);
         this.lastDistributedHouses.push(coord);
@@ -272,9 +270,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
             this.changeVisibleState(seedDropResult.resultingState);
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             while (seedDropResult.seedsInHand > 0) {
-                seedDropResult = await this.showSeedDrop(seedDropResult,
-                                                         config,
-                                                         initial);
+                seedDropResult = await this.showSeedDrop(
+                    seedDropResult,
+                    config,
+                    initial,
+                );
             }
             if (seedDropResult.currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
                 mustDoOneMoreLap = false;
@@ -289,16 +289,18 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    private async showSeedDrop(seedDropResult: SeedDropResult,
-                               config: MancalaConfig,
-                               initial: Coord)
-    : Promise<SeedDropResult>
-    {
+    private async showSeedDrop(
+        seedDropResult: SeedDropResult,
+        config: MancalaConfig,
+        initial: Coord,
+    ): Promise<SeedDropResult> {
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();
-        const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(seedDropResult.houseToDistribute,
-                                                                      seedDropResult.currentDropIsStore,
-                                                                      seedDropResult.resultingState,
-                                                                      config);
+        const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(
+            seedDropResult.houseToDistribute,
+            seedDropResult.currentDropIsStore,
+            seedDropResult.resultingState,
+            config,
+        );
         const currentDropIsStore: boolean = nextCoord.isAbsent();
         let seedsInHand: number = seedDropResult.seedsInHand;
         let resultingState: MancalaState = seedDropResult.resultingState;
@@ -428,8 +430,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     protected createAIConfig(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
-    : AIConfig<MancalaMove, MancalaState, MancalaConfig>
-    {
+    : AIConfig<MancalaMove, MancalaState, MancalaConfig> {
         return {
             minimax: [{
                 id: 'score',

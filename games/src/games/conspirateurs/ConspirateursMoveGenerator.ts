@@ -79,8 +79,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
     }
 
     private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump)
-    : Set<ConspirateursMoveJump>
-    {
+    : Set<ConspirateursMoveJump> {
         const nextJumps: ConspirateursMoveJump[] = ConspirateursRules.get().nextJumps(jump, state);
         let jumps: Set<ConspirateursMoveJump> = new Set(nextJumps);
         for (const nextJump of nextJumps) {

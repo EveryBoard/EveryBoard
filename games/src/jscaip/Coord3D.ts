@@ -5,8 +5,7 @@ import { Coord } from './Coord';
 export class Coord3D extends Coord {
 
     public static getCoord3DEncoder<T extends Coord3D>(generate: (x: number, y: number, z: number) => T)
-    : Encoder<T>
-    {
+    : Encoder<T> {
         return Encoder.tuple(
             [Encoder.identity<number>(), Encoder.identity<number>(), Encoder.identity<number>()],
             (coord: T): [number, number, number] => [coord.x, coord.y, coord.z],

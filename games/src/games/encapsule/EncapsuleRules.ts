@@ -40,11 +40,12 @@ export type EncapsuleLegalityInformation = EncapsuleSpace;
 export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
-export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
-                                                      EncapsuleState,
-                                                      EncapsuleConfig,
-                                                      EncapsuleLegalityInformation>
-{
+export class EncapsuleRules extends ConfigurableRules<
+    EncapsuleMove,
+    EncapsuleState,
+    EncapsuleConfig,
+    EncapsuleLegalityInformation
+> {
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EncapsuleConfig> =
@@ -158,12 +159,12 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return MGPFallible.failure(EncapsuleFailure.INVALID_PLACEMENT());
     }
 
-    public override applyLegalMove(move: EncapsuleMove,
-                                   state: EncapsuleState,
-                                   _config: EncapsuleConfig,
-                                   newLandingSpace: EncapsuleLegalityInformation)
-    : EncapsuleState
-    {
+    public override applyLegalMove(
+        move: EncapsuleMove,
+        state: EncapsuleState,
+        _config: EncapsuleConfig,
+        newLandingSpace: EncapsuleLegalityInformation,
+    ): EncapsuleState {
         const newBoard: EncapsuleSpace[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         const newRemainingPiecesMap: EncapsuleRemainingPieces = state.getRemainingPiecesCopy();

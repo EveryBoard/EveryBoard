@@ -37,10 +37,10 @@ import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './Clic
  */
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    C extends RulesConfig = EmptyRulesConfig,
-                                    L = void>
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void>
     extends BaseGameComponent
 {
 

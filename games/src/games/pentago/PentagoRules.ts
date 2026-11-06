@@ -29,9 +29,11 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
     }
 
     public override getInitialState(): PentagoState {
-        const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
-                                                                    PentagoState.SIZE,
-                                                                    PlayerOrNone.NONE);
+        const initialBoard: Table<PlayerOrNone> = TableUtils.create(
+            PentagoState.SIZE,
+            PentagoState.SIZE,
+            PlayerOrNone.NONE,
+        );
         return new PentagoState(initialBoard, 0);
     }
 

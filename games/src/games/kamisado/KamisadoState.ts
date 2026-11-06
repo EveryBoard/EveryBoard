@@ -14,15 +14,16 @@ export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
         return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
     }
 
-    public constructor(turn: number,
-                       // The color that needs to be played next
-                       public readonly colorToPlay: KamisadoColor,
-                       // The next coord that has to be played
-                       public readonly coordToPlay: MGPOptional<Coord>,
-                       // Did a PASS move have been performed on the last turn?
-                       public readonly alreadyPassed: boolean,
-                       board: Table<KamisadoPiece>)
-    {
+    public constructor(
+        turn: number,
+        // The color that needs to be played next
+        public readonly colorToPlay: KamisadoColor,
+        // The next coord that has to be played
+        public readonly coordToPlay: MGPOptional<Coord>,
+        // Did a PASS move have been performed on the last turn?
+        public readonly alreadyPassed: boolean,
+        board: Table<KamisadoPiece>,
+    ) {
         super(TableUtils.copy(board), turn);
     }
 

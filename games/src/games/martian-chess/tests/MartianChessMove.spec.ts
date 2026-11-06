@@ -25,7 +25,8 @@ describe('MartianChessMove', () => {
         const move: MGPFallible<MartianChessMove> =
             MartianChessMove.from(
                 new Coord(0, 0),
-                new Coord(MartianChessState.WIDTH, MartianChessState.HEIGHT));
+                new Coord(MartianChessState.WIDTH, MartianChessState.HEIGHT),
+            );
         const expectedResult: string = MartianChessMoveFailure.END_COORD_OUT_OF_RANGE();
         expect(move.getReasonOr('')).toBe(expectedResult);
     });

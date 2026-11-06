@@ -12,9 +12,10 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 
     private readonly defaultConfig: NamedRulesConfig<R>;
 
-    public constructor(public readonly defaultConfigDescription: DefaultConfigDescription<R>,
-                       public readonly nonDefaultStandardConfigs: NamedRulesConfig<R>[] = [])
-    {
+    public constructor(
+        public readonly defaultConfigDescription: DefaultConfigDescription<R>,
+        public readonly nonDefaultStandardConfigs: NamedRulesConfig<R>[] = [],
+    ) {
         const config: R = {} as R;
         for (const field of this.getFields()) {
             config[field as keyof R] = defaultConfigDescription.config[field].defaultValue as R[keyof R];

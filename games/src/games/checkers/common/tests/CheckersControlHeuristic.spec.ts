@@ -52,13 +52,15 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with mobile stacks should be considered better
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   immobilizedState,
-                                                                   MGPOptional.empty(),
-                                                                   mobileState,
-                                                                   MGPOptional.empty(),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                immobilizedState,
+                MGPOptional.empty(),
+                mobileState,
+                MGPOptional.empty(),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
         it('should count the potential mobility as primary board value', () => {

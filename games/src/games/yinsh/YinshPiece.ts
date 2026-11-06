@@ -9,7 +9,8 @@ export class YinshPiece implements ComparableObject {
         Encoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
             [PlayerOrNone.encoder, Encoder.identity<boolean>()],
             (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
-            (fields: [PlayerOrNone, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
+            (fields: [PlayerOrNone, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]),
+        );
 
     public static UNREACHABLE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
     public static EMPTY: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);

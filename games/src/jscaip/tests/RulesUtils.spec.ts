@@ -12,16 +12,16 @@ import { GameState } from '../state/GameState';
 export class RulesUtils {
 
     public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    L,
-                                    C extends RulesConfig>(rules: R,
-                                                           state: S,
-                                                           move: M,
-                                                           expectedState: S,
-                                                           config: C)
-    : void
-    {
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig>(
+        rules: R,
+        state: S,
+        move: M,
+        expectedState: S,
+        config: C,
+    ): void {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());
@@ -43,61 +43,57 @@ export class RulesUtils {
     }
 
     public static expectMoveFailure<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    L,
-                                    C extends RulesConfig = EmptyRulesConfig>(
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         state: S,
         move: M,
         reason: string,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
 
     public static expectToBeVictoryFor<R extends SuperRules<M, S, C, L>,
-                                       M extends Move,
-                                       S extends GameState,
-                                       L,
-                                       C extends RulesConfig = EmptyRulesConfig>(
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
         player: Player,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         expect(rules.getGameStatus(node, config))
             .withContext('Rules should consider gameStatus a victory for ' + player.toString())
             .toEqual(GameStatus.getVictory(player));
     }
 
     public static expectToBeOngoing<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    L,
-                                    C extends RulesConfig = EmptyRulesConfig>(
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
 
     public static expectToBeDraw<R extends SuperRules<M, S, C, L>,
-                                 M extends Move,
-                                 S extends GameState,
-                                 L,
-                                 C extends RulesConfig = EmptyRulesConfig>(
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         expect(rules.getGameStatus(node, config)).toBe(GameStatus.DRAW);
     }
 

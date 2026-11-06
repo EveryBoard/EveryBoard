@@ -27,9 +27,11 @@ describe('OnlineGameWrapperComponent (games)', () => {
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable methods in here to test them.');
             }
-            testUtils = (await prepareStartedGameFor<AbstractGameComponent>(UserMocks.CREATOR_AUTH_USER,
-                                                                            gameInfo.urlName,
-                                                                            PreparationOptions.dontWait)).testUtils;
+            testUtils = (await prepareStartedGameFor<AbstractGameComponent>(
+                UserMocks.CREATOR_AUTH_USER,
+                gameInfo.urlName,
+                PreparationOptions.dontWait,
+            )).testUtils;
             tick(2);
             testUtils.detectChanges();
 

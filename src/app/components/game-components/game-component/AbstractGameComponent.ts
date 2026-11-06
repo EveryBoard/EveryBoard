@@ -7,12 +7,11 @@ import { GameComponent } from './GameComponent';
 
 export abstract class AbstractGameComponent
     extends GameComponent<SuperRules<Move,
-                                     GameState,
-                                     RulesConfig,
-                                     unknown>,
-                          Move,
-                          GameState,
-                          RulesConfig,
-                          unknown>
-{
+        GameState,
+        RulesConfig,
+        unknown>,
+    Move,
+    GameState,
+    RulesConfig,
+    unknown> {
 }

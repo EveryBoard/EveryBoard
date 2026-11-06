@@ -31,11 +31,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     public override getInitialState(): KamisadoState {
-        return new KamisadoState(0,
-                                 KamisadoColor.ANY,
-                                 MGPOptional.empty(),
-                                 false,
-                                 KamisadoBoard.INITIAL);
+        return new KamisadoState(
+            0,
+            KamisadoColor.ANY,
+            MGPOptional.empty(),
+            false,
+            KamisadoBoard.INITIAL,
+        );
     }
 
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {

@@ -275,8 +275,10 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-0-0');
             await mancalaTestUtils.expectClickSuccess('#click-4-0');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0),
-                                                     [MancalaDistribution.of(4, 0), MancalaDistribution.of(1, 0)]);
+            const move: MancalaMove = MancalaMove.of(
+                MancalaDistribution.of(0, 0),
+                [MancalaDistribution.of(4, 0), MancalaDistribution.of(1, 0)],
+            );
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-1-0', move, defaultConfig);
@@ -293,8 +295,10 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-4-1');
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1),
-                                                     [MancalaDistribution.of(0, 1), MancalaDistribution.of(5, 1)]);
+            const move: MancalaMove = MancalaMove.of(
+                MancalaDistribution.of(4, 1),
+                [MancalaDistribution.of(0, 1), MancalaDistribution.of(5, 1)],
+            );
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
@@ -313,8 +317,10 @@ describe('KalahComponent', () => {
             ];
             const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
             const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 0));
-            await mancalaTestUtils.testUtils.setupState(state,
-                                                        { previousState, previousMove, config: defaultConfig });
+            await mancalaTestUtils.testUtils.setupState(
+                state,
+                { previousState, previousMove, config: defaultConfig },
+            );
 
             // When starting a multiple-capture move
             await mancalaTestUtils.expectClickSuccess('#click-2-0');

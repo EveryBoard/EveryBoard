@@ -35,12 +35,11 @@ export type SearchResult<M> = {
  * This implements the minimax algorithm with alpha-beta pruning.
  */
 export abstract class AbstractMinimax<M extends Move,
-                                      S extends GameState,
-                                      O extends AIOptions,
-                                      C extends RulesConfig = EmptyRulesConfig,
-                                      L = void>
-implements AI<M, S, O, C>
-{
+    S extends GameState,
+    O extends AIOptions,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void>
+implements AI<M, S, O, C> {
 
     // States whether the minimax takes random moves from the list of best moves.
     protected useRandomness: boolean = false;
@@ -58,12 +57,13 @@ implements AI<M, S, O, C>
 
     private readonly transpositionTable: Map<string, TTEntry<M>> = new Map<string, TTEntry<M>>();
 
-    public constructor(public readonly name: string,
-                       protected readonly rules: SuperRules<M, S, C, L>,
-                       protected readonly heuristic: Heuristic<M, S, BoardValue, C>,
-                       protected readonly moveGenerator: MoveGenerator<M, S, C>,
-                       private readonly hashOverride?: MinimaxHashFunction<S>)
-    {
+    public constructor(
+        public readonly name: string,
+        protected readonly rules: SuperRules<M, S, C, L>,
+        protected readonly heuristic: Heuristic<M, S, BoardValue, C>,
+        protected readonly moveGenerator: MoveGenerator<M, S, C>,
+        private readonly hashOverride?: MinimaxHashFunction<S>,
+    ) {
     }
     public toString(): string {
         return this.name;
@@ -113,13 +113,13 @@ implements AI<M, S, O, C>
 
     // Performs an alpha-beta search to find the best move from the given node
     // @return empty when there is no best move (because the game or search has finished)
-    protected alphaBeta(node: GameNode<M, S>,
-                        depth: number,
-                        alpha: BoardValue,
-                        beta: BoardValue,
-                        config: C)
-    : MGPOptional<SearchResult<M>>
-    {
+    protected alphaBeta(
+        node: GameNode<M, S>,
+        depth: number,
+        alpha: BoardValue,
+        beta: BoardValue,
+        config: C,
+    ): MGPOptional<SearchResult<M>> {
         if (depth < 1) {
             return MGPOptional.empty(); // this is the end of our search as we attained the required depth
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
@@ -159,8 +159,10 @@ implements AI<M, S, O, C>
 
         if (this.useTranspositionTables && ttEntry?.bestMove) {
             // reorder possible moves for more pruning: best move goes first
-            Utils.assert(possibleMoves.contains(ttEntry.bestMove),
-                         'TT bestMove ' + ttEntry.bestMove.toString() + ' is not in possible moves for state ' + this.hash(node.gameState));
+            Utils.assert(
+                possibleMoves.contains(ttEntry.bestMove),
+                'TT bestMove ' + ttEntry.bestMove.toString() + ' is not in possible moves for state ' + this.hash(node.gameState),
+            );
             possibleMoves.removeElement(ttEntry.bestMove);
             possibleMoves = new Set([ttEntry.bestMove, ...possibleMoves]);
         }
@@ -207,14 +209,14 @@ implements AI<M, S, O, C>
         }
     }
 
-    private getBestMoves(node: GameNode<M, S>,
-                         possibleMoves: Set<M>,
-                         depth: number,
-                         alpha: BoardValue,
-                         beta: BoardValue,
-                         config: C)
-    : { bestMoves: SearchResult<M>[]; complete: boolean }
-    {
+    private getBestMoves(
+        node: GameNode<M, S>,
+        possibleMoves: Set<M>,
+        depth: number,
+        alpha: BoardValue,
+        beta: BoardValue,
+        config: C,
+    ): { bestMoves: SearchResult<M>[]; complete: boolean } {
         let bestMoves: SearchResult<M>[] = [];
         let complete: boolean = true;
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
@@ -288,9 +290,11 @@ implements AI<M, S, O, C>
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move at turn ' + node.gameState.turn + ' (' + moveString + '), ' +
                                                'refusal reason: "' + legality.getReasonOr('') + '", this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
-            const newChild: GameNode<M, S> = new GameNode(state,
-                                                          MGPOptional.of(node),
-                                                          MGPOptional.of(move));
+            const newChild: GameNode<M, S> = new GameNode(
+                state,
+                MGPOptional.of(node),
+                MGPOptional.of(move),
+            );
             node.addChild(newChild);
             this.setScore(newChild, this.computeBoardValue(newChild, config));
             return newChild;

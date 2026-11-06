@@ -81,10 +81,12 @@ class HiveStateUpdate {
     public static of(state: HiveState): HiveStateUpdate {
         return new HiveStateUpdate(state.pieces, state.remainingPieces, state.queenBees, state.turn);
     }
-    private constructor(public readonly pieces: ReversibleMap<Coord, HivePieceStack>,
-                        public readonly remainingPieces: HiveRemainingPieces,
-                        public readonly queenBees: MGPMap<Player, Coord>,
-                        public readonly turn: number) {}
+    private constructor(
+        public readonly pieces: ReversibleMap<Coord, HivePieceStack>,
+        public readonly remainingPieces: HiveRemainingPieces,
+        public readonly queenBees: MGPMap<Player, Coord>,
+        public readonly turn: number,
+    ) {}
 
     public setAt(coord: Coord, stack: HivePieceStack): HiveStateUpdate {
         const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
@@ -143,11 +145,12 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         return new HiveState(pieces, remainingPieces, queenBees, turn);
     }
 
-    public constructor(pieces: ReversibleMap<Coord, HivePieceStack>,
-                       public readonly remainingPieces: HiveRemainingPieces,
-                       public readonly queenBees: MGPMap<Player, Coord>,
-                       turn: number)
-    {
+    public constructor(
+        pieces: ReversibleMap<Coord, HivePieceStack>,
+        public readonly remainingPieces: HiveRemainingPieces,
+        public readonly queenBees: MGPMap<Player, Coord>,
+        turn: number,
+    ) {
         super(pieces, turn);
         this.queenBees = queenBees.getCopy();
         for (const player of queenBees.getKeyList()) {

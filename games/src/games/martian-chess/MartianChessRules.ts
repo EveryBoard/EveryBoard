@@ -53,12 +53,12 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         return new MartianChessState(board, 0, MGPOptional.empty());
     }
 
-    public override applyLegalMove(move: MartianChessMove,
-                                   state: MartianChessState,
-                                   _config: EmptyRulesConfig,
-                                   info: MartianChessMoveResult)
-    : MartianChessState
-    {
+    public override applyLegalMove(
+        move: MartianChessMove,
+        state: MartianChessState,
+        _config: EmptyRulesConfig,
+        info: MartianChessMoveResult,
+    ): MartianChessState {
         const newBoard: MartianChessPiece[][] = state.getCopiedBoard();
         newBoard[move.getStart().y][move.getStart().x] = MartianChessPiece.EMPTY;
         const landingPiece: MartianChessPiece = info.finalPiece;
@@ -120,10 +120,10 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const moveEndsOnPiece: boolean = state.getPieceAt(move.getEnd()) !== MartianChessPiece.EMPTY;
         return moveEndsInPlayerTerritory && moveEndsOnPiece;
     }
-    private isLegalFieldPromotion(move: MartianChessMove,
-                                  state: MartianChessState)
-    : MGPFallible<MartianChessMoveResult>
-    {
+    private isLegalFieldPromotion(
+        move: MartianChessMove,
+        state: MartianChessState,
+    ): MGPFallible<MartianChessMoveResult> {
         const optCreatedPiece: MGPOptional<MartianChessPiece> = this.getPromotedPiece(move, state);
         if (optCreatedPiece.isAbsent()) {
             return MGPFallible.failure(MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT());

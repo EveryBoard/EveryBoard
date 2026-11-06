@@ -58,11 +58,15 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape should be better for defender
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
         it('should be better when king is one step away from winning than two', () => {
@@ -90,11 +94,15 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape in one move should be better for defender
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
     }

@@ -67,7 +67,8 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         const groupsData: GoGroupData[] =
             groupDataFactory.getGroupsDataWhere(
                 correctBoard,
-                (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
+                (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE,
+            );
 
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
@@ -110,8 +111,9 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         return newBoard;
     }
 
-    public setAliveUniqueWrapper(allDeadState: GoState,
-                                 monoWrappedEmptyGroups: GoGroupData[],
+    public setAliveUniqueWrapper(
+        allDeadState: GoState,
+        monoWrappedEmptyGroups: GoGroupData[],
     ): GoState {
         let resultingState: GoState = allDeadState;
         let aliveCoords: Coord[];

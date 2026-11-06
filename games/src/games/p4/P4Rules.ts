@@ -61,9 +61,11 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
     }
 
     public override getInitialState(config: P4Config): P4State {
-        const board: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                          config.height,
-                                                          PlayerOrNone.NONE);
+        const board: PlayerOrNone[][] = TableUtils.create(
+            config.width,
+            config.height,
+            PlayerOrNone.NONE,
+        );
         return new P4State(board, 0);
     }
 

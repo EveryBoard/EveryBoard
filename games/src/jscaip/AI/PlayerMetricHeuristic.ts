@@ -9,10 +9,9 @@ import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
 
 export abstract class PlayerMetricHeuristic<M extends Move,
-                                            S extends GameState,
-                                            C extends RulesConfig = EmptyRulesConfig>
-    extends Heuristic<M, S, BoardValue, C>
-{
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig>
+    extends Heuristic<M, S, BoardValue, C> {
     public abstract getMetrics(node: GameNode<M, S>, config: C): PlayerNumberTable;
 
     public getBoardValue(node: GameNode<M, S>, config: C): BoardValue {

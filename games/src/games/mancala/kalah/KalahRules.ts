@@ -42,8 +42,9 @@ export class KalahRules extends MancalaRules {
         return KalahRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyCapture(distributionResult: MancalaDistributionResult,
-                        config: MancalaConfig,
+    public applyCapture(
+        distributionResult: MancalaDistributionResult,
+        config: MancalaConfig,
     ): MancalaCaptureResult {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {

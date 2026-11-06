@@ -59,10 +59,10 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return elementWithReplacement as V;
     }
-    private updateFieldValueWith<N extends object>(element: N,
-                                                   replacement: FirestoreJSONValue)
-    : UpdateData<N>
-    {
+    private updateFieldValueWith<N extends object>(
+        element: N,
+        replacement: FirestoreJSONValue,
+    ): UpdateData<N> {
         const update: object = {};
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
@@ -150,11 +150,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return true;
     }
-    public async findWhere(conditions: FirestoreCondition[],
-                           order?: string,
-                           limit?: number)
-    : Promise<FirestoreDocument<T>[]>
-    {
+    public async findWhere(
+        conditions: FirestoreCondition[],
+        order?: string,
+        limit?: number,
+    ): Promise<FirestoreDocument<T>[]> {
         const matchingDocs: FirestoreDocument<T>[] = [];
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         for (const value of db.getValueList()) {

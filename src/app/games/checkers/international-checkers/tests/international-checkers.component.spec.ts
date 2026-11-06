@@ -24,7 +24,7 @@ const V: CheckersStack = new CheckersStack([one]);
 const _: CheckersStack = CheckersStack.EMPTY;
 
 type InternationalCheckersComponentTestEntries = CheckersComponentTestEntries<InternationalCheckersComponent,
-                                                                              InternationalCheckersRules>;
+    InternationalCheckersRules>;
 
 const internationalCheckersEntries: InternationalCheckersComponentTestEntries = {
     gameName: 'InternationalCheckers',

@@ -94,10 +94,12 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, X, _, _, _],
             ];
             const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
-            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                                  'push',
-                                                                  'orthogonal',
-                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const previousMove: LodestoneMove = new LodestoneMove(
+                new Coord(4, 4),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             const board: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -142,10 +144,12 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, X, _, _, _],
             ];
             const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
-            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                                  'push',
-                                                                  'orthogonal',
-                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const previousMove: LodestoneMove = new LodestoneMove(
+                new Coord(4, 4),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             const board: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -276,10 +280,12 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, X, _, _, _],
             ];
             const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
-            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                                  'push',
-                                                                  'orthogonal',
-                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const previousMove: LodestoneMove = new LodestoneMove(
+                new Coord(4, 4),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             const board: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -325,10 +331,12 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, X, _, _, _],
             ];
             const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
-            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                                  'push',
-                                                                  'orthogonal',
-                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const previousMove: LodestoneMove = new LodestoneMove(
+                new Coord(4, 4),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             const board: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -375,10 +383,12 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#plate-top-0-0');
 
             // Then the move should be performed
-            const move: LodestoneMove = new LodestoneMove(new Coord(3, 3),
-                                                          'push',
-                                                          'orthogonal',
-                                                          { top: 2, bottom: 0, left: 0, right: 0 });
+            const move: LodestoneMove = new LodestoneMove(
+                new Coord(3, 3),
+                'push',
+                'orthogonal',
+                { top: 2, bottom: 0, left: 0, right: 0 },
+            );
             await testUtils.expectMoveSuccess('#plate-top-0-1', move);
 
             // And the captures should be shown
@@ -436,10 +446,12 @@ describe('LodestoneComponent', () => {
             // When filling the pressure plate
             await testUtils.expectClickSuccess('#square-7-7');
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ZERO');
-            const move: LodestoneMove = new LodestoneMove(new Coord(7, 7),
-                                                          'push',
-                                                          'orthogonal',
-                                                          { top: 0, bottom: 0, left: 0, right: 1 });
+            const move: LodestoneMove = new LodestoneMove(
+                new Coord(7, 7),
+                'push',
+                'orthogonal',
+                { top: 0, bottom: 0, left: 0, right: 1 },
+            );
             await testUtils.expectMoveSuccess('#plate-right-0-4', move);
 
             // Then removed squares should be hidden
@@ -518,10 +530,12 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ZERO');
 
             // Then removed squares should not be shown, and this pressure plate should not be shown anymore
-            const move: LodestoneMove = new LodestoneMove(new Coord(0, 1),
-                                                          'push',
-                                                          'orthogonal',
-                                                          { top: 1, bottom: 0, left: 0, right: 0 });
+            const move: LodestoneMove = new LodestoneMove(
+                new Coord(0, 1),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             await testUtils.expectMoveSuccess('#plate-top-0-2', move);
             testUtils.expectElementNotToExist('#square-0-1 > rect');
         }));
@@ -592,10 +606,12 @@ describe('LodestoneComponent', () => {
             // When performing a move that crumbles the pressure plate, taking the lodestone with it
             await testUtils.expectClickSuccess('#square-1-0');
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ZERO');
-            const move: LodestoneMove = new LodestoneMove(new Coord(1, 0),
-                                                          'push',
-                                                          'orthogonal',
-                                                          { top: 1, bottom: 0, left: 0, right: 0 });
+            const move: LodestoneMove = new LodestoneMove(
+                new Coord(1, 0),
+                'push',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 0 },
+            );
             await testUtils.expectMoveSuccess('#plate-top-0-0', move);
 
             // Then on the next turn, the player should be able to select any lodestone position
@@ -669,20 +685,24 @@ describe('LodestoneComponent', () => {
         it('should not display removed lodestone that were on crumbled square', fakeAsync(async() => {
             // Given initial state
             // + we add 'the problematic' lodestone
-            const move0: LodestoneMove = new LodestoneMove(new Coord(1, 0),
-                                                           'pull',
-                                                           'orthogonal',
-                                                           { top: 3, bottom: 0, left: 0, right: 0 });
+            const move0: LodestoneMove = new LodestoneMove(
+                new Coord(1, 0),
+                'pull',
+                'orthogonal',
+                { top: 3, bottom: 0, left: 0, right: 0 },
+            );
             await testUtils.expectClickSuccess('#lodestone-pull-orthogonal-PLAYER_ZERO');
             await testUtils.expectClickSuccess('#square-1-0');
             await testUtils.expectClickSuccess('#plate-top-0-0');
             await testUtils.expectClickSuccess('#plate-top-0-1');
             await testUtils.expectMoveSuccess('#plate-top-0-2', move0);
             // + we capture some more
-            const move1: LodestoneMove = new LodestoneMove(new Coord(6, 0),
-                                                           'pull',
-                                                           'orthogonal',
-                                                           { top: 1, bottom: 0, left: 0, right: 1 });
+            const move1: LodestoneMove = new LodestoneMove(
+                new Coord(6, 0),
+                'pull',
+                'orthogonal',
+                { top: 1, bottom: 0, left: 0, right: 1 },
+            );
             await testUtils.expectClickSuccess('#lodestone-pull-orthogonal-PLAYER_ONE');
             await testUtils.expectClickSuccess('#square-6-0');
             await testUtils.expectClickSuccess('#plate-top-0-3');
@@ -702,10 +722,12 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementNotToExist('#piece-1-0');
 
             // Then we do the second and third capture and finish the move
-            const move2: LodestoneMove = new LodestoneMove(new Coord(6, 3),
-                                                           'push',
-                                                           'diagonal',
-                                                           { top: 3, bottom: 0, left: 0, right: 0 });
+            const move2: LodestoneMove = new LodestoneMove(
+                new Coord(6, 3),
+                'push',
+                'diagonal',
+                { top: 3, bottom: 0, left: 0, right: 0 },
+            );
             await testUtils.expectClickSuccess('#plate-top-1-0');
             await testUtils.expectMoveSuccess('#plate-top-1-1', move2);
 

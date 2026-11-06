@@ -13,9 +13,10 @@ export class DiaballikPiece implements ComparableObject {
     public static readonly ONE: DiaballikPiece = new DiaballikPiece(Player.ONE, false);
     public static readonly ONE_WITH_BALL: DiaballikPiece = new DiaballikPiece(Player.ONE, true);
 
-    private constructor(public readonly owner: PlayerOrNone,
-                        public readonly holdsBall: boolean)
-    {
+    private constructor(
+        public readonly owner: PlayerOrNone,
+        public readonly holdsBall: boolean,
+    ) {
     }
 
     public equals(other: DiaballikPiece): boolean {
