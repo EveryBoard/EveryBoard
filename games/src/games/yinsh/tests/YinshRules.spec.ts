@@ -342,12 +342,16 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a capture but not taking a ring
-            const move: YinshMove = new YinshMove([],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 7)),
-                                                  [YinshCapture.of(new Coord(3, 2),
-                                                                   new Coord(3, 6),
-                                                                   MGPOptional.of(new Coord(6, 3)))]);
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 7)),
+                [YinshCapture.of(
+                    new Coord(3, 2),
+                    new Coord(3, 6),
+                    MGPOptional.of(new Coord(6, 3)),
+                )],
+            );
 
             // Then the move should be illegal
             const reason: string = YinshFailure.CAPTURE_SHOULD_TAKE_RING();
@@ -373,12 +377,16 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a capture
-            const move: YinshMove = new YinshMove([],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 7)),
-                                                  [YinshCapture.of(new Coord(3, 2),
-                                                                   new Coord(3, 6),
-                                                                   MGPOptional.of(new Coord(5, 3)))]);
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 7)),
+                [YinshCapture.of(
+                    new Coord(3, 2),
+                    new Coord(3, 6),
+                    MGPOptional.of(new Coord(5, 3)),
+                )],
+            );
 
             // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
@@ -417,12 +425,15 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing multiple captures in one move
-            const move: YinshMove = new YinshMove([
-                YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(6, 2))),
-                YinshCapture.of(new Coord(4, 2), new Coord(4, 6), MGPOptional.of(new Coord(7, 2))),
-            ],
-                                                  new Coord(5, 2), MGPOptional.of(new Coord(5, 3)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [
+                    YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(6, 2))),
+                    YinshCapture.of(new Coord(4, 2), new Coord(4, 6), MGPOptional.of(new Coord(7, 2))),
+                ],
+                new Coord(5, 2),
+                MGPOptional.of(new Coord(5, 3)),
+                [],
+            );
 
             // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
@@ -511,12 +522,16 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When aligning 5 of the opponent's markers and trying to capture them
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
-                                                                   new Coord(3, 7),
-                                                                   MGPOptional.of(new Coord(4, 2)))],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 3)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(
+                    new Coord(3, 3),
+                    new Coord(3, 7),
+                    MGPOptional.of(new Coord(4, 2)),
+                )],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 3)),
+                [],
+            );
 
             // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();
@@ -541,12 +556,16 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a move that cannot capture anything, and yet trying to capture something
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
-                                                                   new Coord(3, 7),
-                                                                   MGPOptional.of(new Coord(4, 2)))],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(4, 2)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(
+                    new Coord(3, 3),
+                    new Coord(3, 7),
+                    MGPOptional.of(new Coord(4, 2)),
+                )],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(4, 2)),
+                [],
+            );
 
             // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();

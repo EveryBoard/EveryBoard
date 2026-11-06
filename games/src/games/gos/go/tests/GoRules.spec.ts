@@ -80,11 +80,13 @@ describe('GoRules', () => {
                 [X, _, _, _, _],
                 [_, X, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 1),
-                                                       2,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 1),
+                2,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
         });
 
@@ -111,11 +113,13 @@ describe('GoRules', () => {
                 [_, _, X, _, X],
                 [_, _, _, X, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 3),
-                                                       2,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 3),
+                2,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
         });
@@ -236,11 +240,13 @@ describe('GoRules', () => {
             const move: GoMove = GoMove.PASS;
 
             // Then we should be in passed phase
-            const expectedState: GoState = new GoState(state.board,
-                                                       noCaptures,
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PASSED);
+            const expectedState: GoState = new GoState(
+                state.board,
+                noCaptures,
+                1,
+                MGPOptional.empty(),
+                GoPhase.PASSED,
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
         });
 

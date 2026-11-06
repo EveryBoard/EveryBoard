@@ -33,8 +33,10 @@ export class GipfCapture {
         let previous: MGPOptional<Coord> = MGPOptional.empty();
         // Captured coords must be consecutive
         for (const coord of this.capturedSpaces) {
-            Utils.assert(previous.isAbsent() || previous.get().getLinearDistanceToward(coord) === 1,
-                         'Cannot create a GipfCapture with non-consecutive coords');
+            Utils.assert(
+                previous.isAbsent() || previous.get().getLinearDistanceToward(coord) === 1,
+                'Cannot create a GipfCapture with non-consecutive coords',
+            );
             previous = MGPOptional.of(coord);
         }
     }
@@ -96,8 +98,7 @@ export class GipfCapture {
 export class GipfProjectHelper {
 
     public static getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures: GipfCapture[])
-    : Table<GipfCapture>
-    {
+    : Table<GipfCapture> {
         const intersections: number[][] = GipfProjectHelper.computeIntersections(possibleCaptures);
         let captureCombinations: number[][] = [[]];
         possibleCaptures.forEach((_capture: GipfCapture, index: number) => {

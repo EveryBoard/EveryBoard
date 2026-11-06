@@ -14,12 +14,11 @@ import { RectangularGameComponent } from '../../../components/game-components/re
 
 export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     extends RectangularGameComponent<R,
-                                     ReversiMove,
-                                     ReversiState,
-                                     PlayerOrNone,
-                                     ReversiConfig,
-                                     ReversiLegalityInformation>
-{
+        ReversiMove,
+        ReversiState,
+        PlayerOrNone,
+        ReversiConfig,
+        ReversiLegalityInformation> {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private captured: Coord[] = [];

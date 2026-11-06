@@ -284,11 +284,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return this.getExpectedDropsThisTurn(state, config) > 0;
     }
 
-    public override isLegal(move: QuebecCastlesMove,
-                            state: QuebecCastlesState,
-                            config: QuebecCastlesConfig)
-    : MGPValidation
-    {
+    public override isLegal(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): MGPValidation {
         if (this.isDropPhase(state, config)) {
             return this.isLegalDrop(move, state, config);
         } else {
@@ -584,11 +584,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: QuebecCastlesMove,
-                                   state: QuebecCastlesState,
-                                   config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    public override applyLegalMove(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         if (this.isDropPhase(state, config)) {
             return this.applyLegalDrop(move as QuebecCastlesDrop, state, config);
         } else {
@@ -596,11 +596,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private applyLegalDrop(move: QuebecCastlesDrop,
-                           state: QuebecCastlesState,
-                           config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    private applyLegalDrop(
+        move: QuebecCastlesDrop,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.mustPlaceCastle(state, config)) {
             const castles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
@@ -631,11 +631,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private placeCastlesAndMovePiece(state: QuebecCastlesState,
-                                     castles: PlayerMap<MGPOptional<Coord>>,
-                                     config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    private placeCastlesAndMovePiece(
+        state: QuebecCastlesState,
+        castles: PlayerMap<MGPOptional<Coord>>,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         const initialState: QuebecCastlesState = this.getInitialState(config);
         let newState: QuebecCastlesState = this.doCastlePlacement(initialState, castles, Player.ZERO);
         if (state.getCurrentPlayer() === Player.ZERO) {

@@ -6,10 +6,11 @@ import { QuebecCastlesDrop, QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
 
-export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
-                                                              QuebecCastlesState,
-                                                              QuebecCastlesConfig>
-{
+export class QuebecCastlesMoveGenerator extends MoveGenerator<
+    QuebecCastlesMove,
+    QuebecCastlesState,
+    QuebecCastlesConfig
+> {
 
     public override getListMoves(node: QuebecCastlesNode, config: QuebecCastlesConfig)
     : QuebecCastlesMove[]

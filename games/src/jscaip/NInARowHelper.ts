@@ -11,10 +11,11 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
 
     private readonly doubleDirections: Set<D>;
 
-    public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
-                       private readonly N: number,
-                       private readonly directions: ReadonlyArray<D>)
-    {
+    public constructor(
+        private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+        private readonly N: number,
+        private readonly directions: ReadonlyArray<D>,
+    ) {
         // The aim of this loop is to count down and up as only one "double direction"
         const doubleDirections: D[] = [];
         for (const direction of directions) {
@@ -61,10 +62,10 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         return score * ally.getScoreModifier();
     }
 
-    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<D, number>,
-                                                    freeSpaceByDirs: MGPMap<D, number>)
-    : number
-    {
+    public getScoreFromDirectionAlliesAndFreeSpaces(
+        alliesByDirs: MGPMap<D, number>,
+        freeSpaceByDirs: MGPMap<D, number>,
+    ): number {
         let score: number = 0;
         for (const dir of this.doubleDirections) {
             // for each pair of opposite directions
@@ -84,12 +85,12 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         return score;
     }
 
-    public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
-                                          i: Coord,
-                                          dir: D,
-                                          ally: Player)
-    : [number, number]
-    {
+    public getNumberOfFreeSpacesAndAllies(
+        state: GameStateWithTable<T>,
+        i: Coord,
+        dir: D,
+        ally: Player,
+    ): [number, number] {
         /**
          * for a square at the coord i, containing an ally
          * we go through the board from this coord in the direction dir
@@ -141,8 +142,10 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
 
 export class NInARowHelper<T extends NonNullable<unknown>> extends AbstractNInARowHelper<T> {
 
-    public constructor(getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
-                       N: number) {
+    public constructor(
+        getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+        N: number,
+    ) {
         super(getOwner, N, Ordinal.ORDINALS);
     }
 

@@ -16,10 +16,11 @@ import { TablutNode, TablutRules } from '../tablut/TablutRules';
 
 class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
     public constructor(rules: TaflRules<M>) {
-        super('Pieces > Influence',
-              rules,
-              new TaflPieceAndInfluenceHeuristic(rules),
-              new TaflMoveGenerator(rules),
+        super(
+            'Pieces > Influence',
+            rules,
+            new TaflPieceAndInfluenceHeuristic(rules),
+            new TaflMoveGenerator(rules),
         );
     }
 }

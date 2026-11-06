@@ -36,12 +36,12 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return HiveState.fromRepresentation(board, 0);
     }
 
-    public override applyLegalMove(move: HiveMove,
-                                   state: HiveState,
-                                   _config: EmptyRulesConfig,
-                                   _info: void)
-    : HiveState
-    {
+    public override applyLegalMove(
+        move: HiveMove,
+        state: HiveState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): HiveState {
         if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {

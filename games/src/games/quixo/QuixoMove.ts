@@ -9,7 +9,8 @@ export class QuixoMove extends MoveCoord {
     public static encoder: Encoder<QuixoMove> = Encoder.tuple(
         [Coord.encoder, Orthogonal.encoder],
         (m: QuixoMove): [Coord, Orthogonal] => [m.coord, m.direction],
-        (fields: [Coord, Orthogonal]): QuixoMove => new QuixoMove(fields[0].x, fields[0].y, fields[1]));
+        (fields: [Coord, Orthogonal]): QuixoMove => new QuixoMove(fields[0].x, fields[0].y, fields[1]),
+    );
 
     public constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);

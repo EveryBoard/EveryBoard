@@ -22,12 +22,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     imports: [NgClass],
 })
 
-export class TeekoComponent extends RectangularGameComponent<TeekoRules,
-                                                             TeekoMove,
-                                                             TeekoState,
-                                                             PlayerOrNone,
-                                                             TeekoConfig>
-{
+export class TeekoComponent extends RectangularGameComponent<
+    TeekoRules,
+    TeekoMove,
+    TeekoState,
+    PlayerOrNone,
+    TeekoConfig
+> {
     public selected: MGPOptional<Coord> = MGPOptional.empty();
     public last: MGPOptional<Coord> = MGPOptional.empty();
     public moved: Coord[] = [];

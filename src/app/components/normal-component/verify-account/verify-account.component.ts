@@ -58,7 +58,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                         await this.router.navigate(['/lobby']);
                     }
                 }
-            });
+            },
+        );
     }
     public async pickUsername(formContent: { username: string }): Promise<void> {
         const result: MGPValidation = await this.connectedUserService.setUsername(formContent.username);

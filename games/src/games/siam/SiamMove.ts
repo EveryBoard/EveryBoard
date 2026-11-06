@@ -15,21 +15,23 @@ export class SiamMove extends MoveCoord {
             Orthogonal.encoder, // orientation
         ],
         (m: SiamMove): SiamMoveFields => [m.coord.x, m.coord.y, m.direction, m.landingOrientation],
-        (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]));
+        (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]),
+    );
 
-    private constructor(x: number,
-                        y: number,
-                        public readonly direction: MGPOptional<Orthogonal>,
-                        public readonly landingOrientation: Orthogonal)
-    {
+    private constructor(
+        x: number,
+        y: number,
+        public readonly direction: MGPOptional<Orthogonal>,
+        public readonly landingOrientation: Orthogonal,
+    ) {
         super(x, y);
     }
-    public static of(x: number,
-                     y: number,
-                     direction: MGPOptional<Orthogonal>,
-                     landingOrientation: Orthogonal)
-    : SiamMove
-    {
+    public static of(
+        x: number,
+        y: number,
+        direction: MGPOptional<Orthogonal>,
+        landingOrientation: Orthogonal,
+    ): SiamMove {
         return new SiamMove(x, y, direction, landingOrientation);
     }
     public isRotation(): boolean {

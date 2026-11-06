@@ -56,8 +56,7 @@ export class ConnectedUserServiceMock {
         }
     }
     public async doRegister(_username: string, _email: string, _password: string)
-    : Promise<MGPFallible<FireAuth.User>>
-    {
+    : Promise<MGPFallible<FireAuth.User>> {
         throw new Error('ConnectedUserServiceMock.doRegister not implemented');
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
@@ -132,16 +131,20 @@ export async function createDisconnectedUser(email: string, username: string): P
 
 export async function reconnectUser(email: string): Promise<void> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
-    await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                        FireAuth.GoogleAuthProvider.credential(token));
+    await FireAuth.signInWithCredential(
+        FireAuth.getAuth(),
+        FireAuth.GoogleAuthProvider.credential(token),
+    );
 }
 
 export async function createUnverifiedUser(email: string, username: string): Promise<MinimalUser> {
     const userDAO: UserDAO = TestBed.inject(UserDAO);
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
     const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                            FireAuth.GoogleAuthProvider.credential(token));
+        await FireAuth.signInWithCredential(
+            FireAuth.getAuth(),
+            FireAuth.GoogleAuthProvider.credential(token),
+        );
     await userDAO.set(credential.user.uid, { verified: false });
     await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
@@ -409,8 +412,10 @@ describe('ConnectedUserService', () => {
             spyOn(connectedUserService, 'createUser').and.callThrough();
             const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                                    FireAuth.GoogleAuthProvider.credential(token));
+                await FireAuth.signInWithCredential(
+                    FireAuth.getAuth(),
+                    FireAuth.GoogleAuthProvider.credential(token),
+                );
             const user: FireAuth.User = credential.user;
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 

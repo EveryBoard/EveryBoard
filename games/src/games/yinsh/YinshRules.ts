@@ -251,8 +251,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     private getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player)
-    : ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}>
-    {
+    : ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}> {
         const linePortions: { start: Coord; end: Coord; dir: HexaDirection}[] = [];
         state.allLines().forEach((line: HexaLine) => {
             const linePortion: MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}> =
@@ -265,8 +264,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     private getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player, line: HexaLine)
-    : MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}>
-    {
+    : MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}> {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();

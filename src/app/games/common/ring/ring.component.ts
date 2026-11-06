@@ -21,27 +21,21 @@ export class RingComponent {
     public readonly midRingClasses: InputSignal<string | string[]> = input.required();
 
     private readonly outsideStrokeInsideRadius: Signal<number> = computed(() =>
-        this.outsideRadius() - this.strokeWidth(),
-    );
+        this.outsideRadius() - this.strokeWidth());
 
     protected readonly outsideStrokeRadius: Signal<number> = computed(() =>
-        this.outsideStrokeInsideRadius() + (this.strokeWidth() / 2),
-    );
+        this.outsideStrokeInsideRadius() + (this.strokeWidth() / 2));
 
     private readonly midRingInsideRadius: Signal<number> = computed(() =>
-        this.outsideStrokeInsideRadius() - this.width(),
-    );
+        this.outsideStrokeInsideRadius() - this.width());
 
     protected readonly midRingRadius: Signal<number> = computed(() =>
-        this.midRingInsideRadius() + (this.width() / 2),
-    );
+        this.midRingInsideRadius() + (this.width() / 2));
 
     private readonly insideStrokeInsideRadius: Signal<number> = computed(() =>
-        this.midRingInsideRadius() - this.strokeWidth(),
-    );
+        this.midRingInsideRadius() - this.strokeWidth());
 
     protected readonly insideStrokeRadius: Signal<number> = computed(() =>
-        this.insideStrokeInsideRadius() + (this.strokeWidth() / 2),
-    );
+        this.insideStrokeInsideRadius() + (this.strokeWidth() / 2));
 
 }

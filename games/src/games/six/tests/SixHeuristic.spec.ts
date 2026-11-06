@@ -83,11 +83,15 @@ describe('SixHeuristic', () => {
                 [X, X, X, X, _],
                 [O, O, _, _, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakerState, MGPOptional.of(move),
-                                                                   strongerState, MGPOptional.of(move),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakerState,
+                MGPOptional.of(move),
+                strongerState,
+                MGPOptional.of(move),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
         it('should be true with triangle', () => {
@@ -104,11 +108,15 @@ describe('SixHeuristic', () => {
                 [X, _, O],
                 [X, O, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakerState, MGPOptional.of(move),
-                                                                   strongerState, MGPOptional.of(move),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakerState,
+                MGPOptional.of(move),
+                strongerState,
+                MGPOptional.of(move),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
         it('should be true with circle', () => {
@@ -123,11 +131,15 @@ describe('SixHeuristic', () => {
                 [_, O, X],
                 [_, X, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakerState, MGPOptional.of(move),
-                                                                   strongerState, MGPOptional.of(move),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakerState,
+                MGPOptional.of(move),
+                strongerState,
+                MGPOptional.of(move),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
     });
@@ -146,11 +158,15 @@ describe('SixHeuristic', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakerState, MGPOptional.of(move),
-                                                                   strongerState, MGPOptional.of(move),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakerState,
+                MGPOptional.of(move),
+                strongerState,
+                MGPOptional.of(move),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
     });

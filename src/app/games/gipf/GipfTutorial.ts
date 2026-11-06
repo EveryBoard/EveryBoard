@@ -136,29 +136,31 @@ export class GipfTutorial extends Tutorial {
                 [O, O, O, X, X, N, N],
                 [_, _, _, O, N, N, N],
             ], 42, PlayerNumberMap.of(3, 4), PlayerNumberMap.of(2, 3)),
-            new GipfMove(new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
-                         [new GipfCapture([
-                             new Coord(6, 0),
-                             new Coord(6, 1),
-                             new Coord(6, 2),
-                             new Coord(6, 3),
-                         ])],
-                         [
-                             new GipfCapture([
-                                 new Coord(0, 5),
-                                 new Coord(1, 5),
-                                 new Coord(2, 5),
-                                 new Coord(3, 5),
-                                 new Coord(4, 5),
-                             ]),
-                             new GipfCapture([
-                                 new Coord(1, 2),
-                                 new Coord(2, 2),
-                                 new Coord(3, 2),
-                                 new Coord(4, 2),
-                                 new Coord(5, 2),
-                             ]),
-                         ]),
+            new GipfMove(
+                new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
+                [new GipfCapture([
+                    new Coord(6, 0),
+                    new Coord(6, 1),
+                    new Coord(6, 2),
+                    new Coord(6, 3),
+                ])],
+                [
+                    new GipfCapture([
+                        new Coord(0, 5),
+                        new Coord(1, 5),
+                        new Coord(2, 5),
+                        new Coord(3, 5),
+                        new Coord(4, 5),
+                    ]),
+                    new GipfCapture([
+                        new Coord(1, 2),
+                        new Coord(2, 2),
+                        new Coord(3, 2),
+                        new Coord(4, 2),
+                        new Coord(5, 2),
+                    ]),
+                ],
+            ),
             (move: GipfMove, _previous: GipfState, _result: GipfState) => {
                 if (move.finalCaptures.length === 2) {
                     return MGPValidation.SUCCESS;

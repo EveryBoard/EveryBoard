@@ -47,11 +47,12 @@ export class CoerceoState extends FourStatePieceTriangularGameState {
         ].filter((c: Coord) => this.isOnBoard(c));
     }
 
-    public constructor(board: Table<FourStatePiece>,
-                       turn: number,
-                       public readonly tiles: PlayerNumberMap,
-                       public readonly captures: PlayerNumberMap)
-    {
+    public constructor(
+        board: Table<FourStatePiece>,
+        turn: number,
+        public readonly tiles: PlayerNumberMap,
+        public readonly captures: PlayerNumberMap,
+    ) {
         super(board, turn);
         tiles.makeImmutable();
         captures.makeImmutable();
@@ -128,8 +129,10 @@ export class CoerceoState extends FourStatePieceTriangularGameState {
     }
 
     public isTileEmpty(tileUpperLeft: Coord): boolean {
-        Utils.assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
-                     'Should not call isTileEmpty on removed tile');
+        Utils.assert(
+            this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
+            'Should not call isTileEmpty on removed tile',
+        );
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);

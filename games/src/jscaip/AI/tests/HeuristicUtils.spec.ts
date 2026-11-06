@@ -11,17 +11,16 @@ import { Heuristic } from '../Heuristic';
 export class HeuristicUtils {
 
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
-                                                          S extends GameState,
-                                                          C extends RulesConfig = EmptyRulesConfig>(
+        S extends GameState,
+        C extends RulesConfig = EmptyRulesConfig>(
         heuristic: Heuristic<M, S, BoardValue, C>,
         weakState: S,
         weakMove: MGPOptional<M>,
         strongState: S,
         strongMove: MGPOptional<M>,
         player: Player,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         const weakNode: GameNode<M, S> = new GameNode(weakState, undefined, weakMove);
         const weakValue: readonly number[] = heuristic.getBoardValue(weakNode, config).metrics;
         const strongNode: GameNode<M, S> = new GameNode(strongState, undefined, strongMove);
@@ -42,9 +41,8 @@ export class HeuristicUtils {
         previousMove: M,
         player: Player,
         heuristics: Heuristic<M, S, BoardValue, C>[],
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
             for (const boardSubValue of heuristic.getBoardValue(node, config).metrics) {
@@ -59,8 +57,8 @@ export class HeuristicUtils {
         heuristic: Heuristic<M, S, BoardValue, C>,
         leftState: S,
         rightState: S,
-        config: C)
-    : void {
+        config: C,
+    ): void {
         const leftNode: GameNode<M, S> = new GameNode(leftState);
         const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).metrics;
         const rightNode: GameNode<M, S> = new GameNode(rightState);

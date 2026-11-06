@@ -51,7 +51,8 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
 
         // When a new config room is added
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
@@ -71,13 +72,15 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         subscription.unsubscribe();
         // We need another subscription to avoid an error of callback not being registered
         const otherSubscription: Subscription = activeConfigRoomsService.subscribe(
             (_rooms: MGPMap<string, ConfigRoom>): void => {
                 /* ignore it */
-            });
+            },
+        );
 
         // When a new part is added
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
@@ -95,7 +98,8 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
@@ -114,7 +118,8 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
         createConfigRoom('otherGameId', configRoom);
@@ -134,7 +139,8 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
@@ -153,7 +159,8 @@ describe('ActiveConfigRoomsService', () => {
         const subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         const configRoomToBeModified: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoomToBeModified);
         const configRoomThatWontChange: ConfigRoom = ConfigRoomMocks.withChosenOpponent({});
@@ -176,13 +183,15 @@ describe('ActiveConfigRoomsService', () => {
         let subscription: Subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
         subscription.unsubscribe();
 
         subscription = activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
-            });
+            },
+        );
 
         // When a config room appears
         const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});

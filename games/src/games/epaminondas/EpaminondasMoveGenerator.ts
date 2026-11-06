@@ -46,11 +46,11 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
         }
         return moves;
     }
-    public addMove(moves: EpaminondasMove[],
-                   move: EpaminondasMove,
-                   state: EpaminondasState)
-    : EpaminondasMove[]
-    {
+    public addMove(
+        moves: EpaminondasMove[],
+        move: EpaminondasMove,
+        state: EpaminondasState,
+    ): EpaminondasMove[] {
         const legality: MGPFallible<EpaminondasLegalityInformation> = EpaminondasRules.isLegal(move, state);
         if (legality.isSuccess()) {
             moves.push(move);

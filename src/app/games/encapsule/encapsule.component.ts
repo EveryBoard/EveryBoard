@@ -36,13 +36,14 @@ type PieceData = {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass, RingComponent],
 })
-export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
-                                                                 EncapsuleMove,
-                                                                 EncapsuleState,
-                                                                 EncapsuleSpace,
-                                                                 EncapsuleConfig,
-                                                                 EncapsuleLegalityInformation>
-{
+export class EncapsuleComponent extends RectangularGameComponent<
+    EncapsuleRules,
+    EncapsuleMove,
+    EncapsuleState,
+    EncapsuleSpace,
+    EncapsuleConfig,
+    EncapsuleLegalityInformation
+> {
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     protected ringStrokeWidth: number = this.STROKE_WIDTH;

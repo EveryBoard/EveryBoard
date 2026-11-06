@@ -13,11 +13,11 @@ export type Candidate = PlayerInfo;
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
-                         configRoomUpdate: (configRoom: ConfigRoom) => void,
-                         configRoomDeleted: () => void,
-                         candidateJoined: (candidate: Candidate) => void,
-                         candidateLeft: (user: MinimalUser) => void,
-                         error: (reason: string) => void)
+        configRoomUpdate: (configRoom: ConfigRoom) => void,
+        configRoomDeleted: () => void,
+        candidateJoined: (candidate: Candidate) => void,
+        candidateLeft: (user: MinimalUser) => void,
+        error: (reason: string) => void)
     : Promise<Subscription>;
 
     public abstract proposeConfig(proposal: ConfigProposal): Promise<void>;
@@ -37,14 +37,14 @@ export class ConfigRoomService extends AbstractConfigRoomService {
 
     private readonly backendService: BackendService = inject(BackendService);
 
-    public override async join(gameId: string,
-                               configRoomUpdate: (configRoom: ConfigRoom) => void,
-                               configRoomDeleted: () => void,
-                               candidateJoined: (candidate: Candidate) => void,
-                               candidateLeft: (user: MinimalUser) => void,
-                               error: (reason: string) => void)
-    : Promise<Subscription>
-    {
+    public override async join(
+        gameId: string,
+        configRoomUpdate: (configRoom: ConfigRoom) => void,
+        configRoomDeleted: () => void,
+        candidateJoined: (candidate: Candidate) => void,
+        candidateLeft: (user: MinimalUser) => void,
+        error: (reason: string) => void,
+    ): Promise<Subscription> {
         const gameSubscription: Subscription = await this.backendService.subscribeToConfigRoom(gameId);
         const configRoomSubscription: Subscription =
             this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {

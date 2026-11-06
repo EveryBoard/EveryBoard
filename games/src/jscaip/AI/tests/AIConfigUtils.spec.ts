@@ -70,8 +70,7 @@ describe('AIConfigUtils', () => {
         // And when accessing a different minimax (iterative deepening)
         const iterativeDeepening: IterativeDeepeningMinimax<P4Move, P4State, P4Config> =
             registry.getOrCreate(config, 'iterative-deepening', () =>
-                createIterativeDeepeningMinimaxFromConfig(rules, config),
-            );
+                createIterativeDeepeningMinimaxFromConfig(rules, config));
 
         // Then it should be different from the previous one
         expect<unknown>(iterativeDeepening).not.toBe(minimax);

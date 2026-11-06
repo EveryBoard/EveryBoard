@@ -21,10 +21,11 @@ export class DiaballikMoveInConstruction implements ComparableObject {
         return m.finalize();
     }
 
-    public constructor(public readonly subMoves: DiaballikSubMove[],
-                       public readonly stateBefore: DiaballikState,
-                       public readonly stateAfterSubMoves: DiaballikState)
-    {
+    public constructor(
+        public readonly subMoves: DiaballikSubMove[],
+        public readonly stateBefore: DiaballikState,
+        public readonly stateAfterSubMoves: DiaballikState,
+    ) {
         Utils.assert(this.subMoves.length <= 3, 'DiaballikMoveInConstruction can have at most 3 submoves');
         let hasPass: boolean = false;
         let translations: number = 0;
@@ -155,8 +156,10 @@ export class DiaballikMoveInConstruction implements ComparableObject {
             third = MGPOptional.of(this.subMoves[2]);
         }
         const move: DiaballikMove = new DiaballikMove(first, second, third);
-        Utils.assert(DiaballikRules.get().isLegal(move, this.stateBefore).isSuccess(),
-                     'DiaballikMoveGenerator should only generate legal moves');
+        Utils.assert(
+            DiaballikRules.get().isLegal(move, this.stateBefore).isSuccess(),
+            'DiaballikMoveGenerator should only generate legal moves',
+        );
         return move;
     }
 }

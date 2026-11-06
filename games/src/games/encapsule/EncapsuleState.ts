@@ -18,8 +18,8 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         board: Table<EncapsuleSpace>,
         turn: number,
         public readonly remainingPieces: EncapsuleRemainingPieces,
-        public readonly nbOfPieceSize: number)
-    {
+        public readonly nbOfPieceSize: number,
+    ) {
         super(board, turn);
         this.remainingPieces.get(Player.ZERO).makeImmutable();
         this.remainingPieces.get(Player.ONE).makeImmutable();

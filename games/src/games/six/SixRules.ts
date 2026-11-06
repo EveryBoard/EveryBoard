@@ -72,12 +72,12 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         return state.turn < totalDroppablePieces;
     }
 
-    public override applyLegalMove(move: SixMove,
-                                   state: SixState,
-                                   config: SixConfig,
-                                   kept: SixLegalityInformation)
-    : SixState
-    {
+    public override applyLegalMove(
+        move: SixMove,
+        state: SixState,
+        config: SixConfig,
+        kept: SixLegalityInformation,
+    ): SixState {
         if (this.isInDropPhase(state, config)) {
             return state.applyLegalDrop(move.landing);
         } else {
@@ -86,8 +86,7 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
     }
 
     public override isLegal(move: SixMove, state: SixState, config: SixConfig)
-    : MGPFallible<SixLegalityInformation>
-    {
+    : MGPFallible<SixLegalityInformation> {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
             return landingLegality.toOtherFallible();
@@ -166,11 +165,11 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         return biggerGroups;
     }
 
-    public moveKeepBiggerGroup(keep: MGPOptional<Coord>,
-                               biggerGroups: Set<CoordSet>,
-                               state: SixState)
-    : MGPFallible<SixLegalityInformation>
-    {
+    public moveKeepBiggerGroup(
+        keep: MGPOptional<Coord>,
+        biggerGroups: Set<CoordSet>,
+        state: SixState,
+    ): MGPFallible<SixLegalityInformation> {
         if (keep.isAbsent()) {
             return MGPFallible.failure(SixFailure.MUST_CUT());
         }

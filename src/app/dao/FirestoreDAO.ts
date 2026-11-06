@@ -90,15 +90,16 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
     }
 
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
-        return new Subscription(Firestore.onSnapshot(Firestore.doc(this.collection, id),
-                                                     (doc: Firestore.DocumentSnapshot<T>) => {
-                                                         callback(MGPOptional.ofNullable(doc.data()));
-                                                     }));
+        return new Subscription(Firestore.onSnapshot(
+            Firestore.doc(this.collection, id),
+            (doc: Firestore.DocumentSnapshot<T>) => {
+                callback(MGPOptional.ofNullable(doc.data()));
+            },
+        ));
     }
 
     public async findWhere(conditions: FirestoreCondition[])
-    : Promise<FirestoreDocument<T>[]>
-    {
+    : Promise<FirestoreDocument<T>[]> {
         const query: Firestore.Query<T> = this.constructQuery(conditions);
         const snapshot: Firestore.QuerySnapshot<T> = await Firestore.getDocs(query);
         return snapshot.docs.map((doc: Firestore.QueryDocumentSnapshot<T>) => {

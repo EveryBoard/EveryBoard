@@ -44,13 +44,14 @@ export type PossibleMove = {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass, DirArrowComponent],
 })
-export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
-                                                                   EpaminondasMove,
-                                                                   EpaminondasState,
-                                                                   PlayerOrNone,
-                                                                   EpaminondasConfig,
-                                                                   EpaminondasLegalityInformation>
-{
+export class EpaminondasComponent extends RectangularGameComponent<
+    EpaminondasRules,
+    EpaminondasMove,
+    EpaminondasState,
+    PlayerOrNone,
+    EpaminondasConfig,
+    EpaminondasLegalityInformation
+> {
 
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
@@ -240,11 +241,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (stepSize > phalanxSize) {
             return this.cancelMove(EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(stepSize, phalanxSize));
         }
-        const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
-                                                          this.firstPiece.get().y,
-                                                          phalanxSize,
-                                                          stepSize,
-                                                          direction);
+        const move: EpaminondasMove = new EpaminondasMove(
+            this.firstPiece.get().x,
+            this.firstPiece.get().y,
+            phalanxSize,
+            stepSize,
+            direction,
+        );
         return this.chooseMove(move);
     }
 

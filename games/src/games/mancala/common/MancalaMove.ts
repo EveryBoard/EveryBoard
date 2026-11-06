@@ -49,8 +49,10 @@ export class MancalaMove extends Move {
     }
 
     public add(move: MancalaDistribution): MancalaMove {
-        return MancalaMove.of(this.distributions[0],
-                              this.distributions.slice(1).concat(move));
+        return MancalaMove.of(
+            this.distributions[0],
+            this.distributions.slice(1).concat(move),
+        );
     }
 
     public override toString(): string {

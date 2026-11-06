@@ -16,13 +16,14 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
         error: (reason: string) => void;
     }> = MGPOptional.empty();
 
-    public override async join(gameId: string,
-                               configRoomUpdate: (configRoom: ConfigRoom) => void,
-                               configRoomDeleted: () => void,
-                               candidateJoined: (candidate: Candidate) => void,
-                               candidateLeft: (candidate: MinimalUser) => void,
-                               error: (reason: string) => void)
-    : Promise<Subscription> {
+    public override async join(
+        gameId: string,
+        configRoomUpdate: (configRoom: ConfigRoom) => void,
+        configRoomDeleted: () => void,
+        candidateJoined: (candidate: Candidate) => void,
+        candidateLeft: (candidate: MinimalUser) => void,
+        error: (reason: string) => void,
+    ): Promise<Subscription> {
         this.subscribedCallback = MGPOptional.of({
             configRoomUpdate,
             configRoomDeleted,

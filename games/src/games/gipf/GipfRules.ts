@@ -50,16 +50,18 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         return new GipfState(board, 0, PlayerNumberMap.of(12, 12), PlayerNumberMap.of(0, 0));
     }
 
-    public override applyLegalMove(_move: GipfMove,
-                                   _state: GipfState,
-                                   _config: EmptyRulesConfig,
-                                   computedState: GipfLegalityInformation)
-    : GipfState
-    {
-        return new GipfState(computedState.board,
-                             computedState.turn + 1,
-                             computedState.sidePieces,
-                             computedState.capturedPieces);
+    public override applyLegalMove(
+        _move: GipfMove,
+        _state: GipfState,
+        _config: EmptyRulesConfig,
+        computedState: GipfLegalityInformation,
+    ): GipfState {
+        return new GipfState(
+            computedState.board,
+            computedState.turn + 1,
+            computedState.sidePieces,
+            computedState.capturedPieces,
+        );
     }
 
     public static applyCaptures(captures: ReadonlyArray<GipfCapture>, state: GipfState)
@@ -143,9 +145,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         return new GipfState(newState.board, state.turn, sidePieces, state.capturedPieces);
     }
 
-    public getPiecesMoved(state: GipfState,
-                          initialCaptures: ReadonlyArray<GipfCapture>,
-                          placement: GipfPlacement): Coord[] {
+    public getPiecesMoved(
+        state: GipfState,
+        initialCaptures: ReadonlyArray<GipfCapture>,
+        placement: GipfPlacement,
+    ): Coord[] {
         const stateAfterCapture: GipfState = GipfRules.applyCaptures(initialCaptures, state);
         if (placement.direction.isAbsent()) {
             return [placement.coord];
@@ -158,8 +162,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            Utils.assert(stateAfterCapture.hasPieceAt(cur, FourStatePiece.EMPTY),
-                         'getPiecesMoved called with an invalid placement performed on a full line');
+            Utils.assert(
+                stateAfterCapture.hasPieceAt(cur, FourStatePiece.EMPTY),
+                'getPiecesMoved called with an invalid placement performed on a full line',
+            );
             // This is the space filled by the last pushed piece
             moved.push(cur);
             return moved;
@@ -279,8 +285,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     }
 
     public static getLinePortionWithFourPiecesOfPlayer(state: GipfState, player: Player, line: HexaLine)
-    : MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}>
-    {
+    : MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}> {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();
@@ -342,10 +347,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
     }
 
-    public static getCapturable(state: GipfState,
-                                linePortion: { 0: Coord; 1: Coord; 2: HexaDirection})
-    : GipfCapture
-    {
+    public static getCapturable(
+        state: GipfState,
+        linePortion: { 0: Coord; 1: Coord; 2: HexaDirection},
+    ): GipfCapture {
         // Go into each direction and continue until there are pieces
         const capturable: Coord[] = [];
         const start: Coord = linePortion[0];

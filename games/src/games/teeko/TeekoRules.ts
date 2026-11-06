@@ -36,18 +36,17 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     }
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TeekoConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Standard Teeko`,
-                config: {
-                    teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
-                },
-            }, [{
-                name: (): string => $localize`Teleport Teeko`,
-                config: {
-                    teleport: true,
-                },
-            }]);
+        new RulesConfigDescription({
+            name: (): string => $localize`Standard Teeko`,
+            config: {
+                teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
+            },
+        }, [{
+            name: (): string => $localize`Teleport Teeko`,
+            config: {
+                teleport: true,
+            },
+        }]);
 
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 4);
@@ -57,9 +56,11 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     }
 
     public override getInitialState(): TeekoState {
-        const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH,
-                                                             TeekoState.WIDTH,
-                                                             PlayerOrNone.NONE);
+        const board: Table<PlayerOrNone> = TableUtils.create(
+            TeekoState.WIDTH,
+            TeekoState.WIDTH,
+            PlayerOrNone.NONE,
+        );
         return new TeekoState(board, 0);
     }
 

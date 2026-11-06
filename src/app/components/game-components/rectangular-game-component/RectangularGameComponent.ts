@@ -10,13 +10,12 @@ import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
 
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
-                                               M extends Move,
-                                               S extends GameStateWithTable<P>,
-                                               P extends NonNullable<unknown>,
-                                               C extends RulesConfig = EmptyRulesConfig,
-                                               L = void>
-    extends GameComponent<R, M, S, C, L>
-{
+    M extends Move,
+    S extends GameStateWithTable<P>,
+    P extends NonNullable<unknown>,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void>
+    extends GameComponent<R, M, S, C, L> {
 
     public constructor(urlName: string) {
         super(urlName);

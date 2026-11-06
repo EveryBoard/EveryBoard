@@ -84,14 +84,20 @@ describe('YinshMove', () => {
         });
 
         it('should have a bijective encoder for move with captures', () => {
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(2, 3),
-                                                                   new Coord(6, 3),
-                                                                   MGPOptional.of(new Coord(4, 5)))],
-                                                  new Coord(2, 3),
-                                                  MGPOptional.of(new Coord(5, 3)),
-                                                  [YinshCapture.of(new Coord(3, 4),
-                                                                   new Coord(7, 4),
-                                                                   MGPOptional.of(new Coord(5, 5)))]);
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(
+                    new Coord(2, 3),
+                    new Coord(6, 3),
+                    MGPOptional.of(new Coord(4, 5)),
+                )],
+                new Coord(2, 3),
+                MGPOptional.of(new Coord(5, 3)),
+                [YinshCapture.of(
+                    new Coord(3, 4),
+                    new Coord(7, 4),
+                    MGPOptional.of(new Coord(5, 5)),
+                )],
+            );
             EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
 

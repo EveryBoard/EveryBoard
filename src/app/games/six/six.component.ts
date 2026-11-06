@@ -35,8 +35,7 @@ type CoordAndClass = {
     imports: [NgClass],
 })
 export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation>
-{
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation> {
 
     public pieces: Coord[];
     public disconnectedCoords: CoordAndClass[] = [];
@@ -68,9 +67,11 @@ export class SixComponent
         };
         this.encoder = SixMove.encoder;
         this.SPACE_SIZE = 30;
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
-                                         new Coord(this.SPACE_SIZE * 2, 0),
-                                         FlatHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE * 1.50,
+            new Coord(this.SPACE_SIZE * 2, 0),
+            FlatHexaOrientation.INSTANCE,
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -198,9 +199,11 @@ export class SixComponent
                 return MGPValidation.SUCCESS;
             }
         } else {
-            const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
-                                                       this.chosenLanding.get(),
-                                                       piece);
+            const cuttingMove: SixMove = SixMove.ofCut(
+                this.selectedPiece.get(),
+                this.chosenLanding.get(),
+                piece,
+            );
             return this.chooseMove(cuttingMove);
         }
     }

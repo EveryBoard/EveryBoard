@@ -31,9 +31,9 @@ export type TaflTestEntries<C extends TaflComponent<R, M>, R extends TaflRules<M
 }
 
 export function DoTaflTests<C extends TaflComponent<R, M>,
-                            R extends TaflRules<M>,
-                            M extends TaflMove>(entries: TaflTestEntries<C, R, M>)
-    : void
+    R extends TaflRules<M>,
+    M extends TaflMove>(entries: TaflTestEntries<C, R, M>)
+: void
 {
 
     let testUtils: ComponentTestUtils<C>;

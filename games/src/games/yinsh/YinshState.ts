@@ -10,10 +10,11 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
 
     public static SIZE: number = 11;
 
-    public constructor(board: Table<YinshPiece>,
-                       public readonly sideRings: PlayerNumberMap,
-                       turn: number)
-    {
+    public constructor(
+        board: Table<YinshPiece>,
+        public readonly sideRings: PlayerNumberMap,
+        turn: number,
+    ) {
         super(turn, board, YinshState.SIZE, YinshState.SIZE, [6, 4, 3, 2, 1], YinshPiece.EMPTY);
     }
 

@@ -15,8 +15,7 @@ import { UserService } from './UserService';
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
     public static createUserWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
-    : Promise<FireAuth.UserCredential>
-    {
+    : Promise<FireAuth.UserCredential> {
         return FireAuth.createUserWithEmailAndPassword(auth, email, password);
     }
     public static sendEmailVerification(user: FireAuth.User): Promise<void> {
@@ -26,8 +25,7 @@ export class Auth {
         return FireAuth.sendPasswordResetEmail(auth, email);
     }
     public static async signInWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
-    : Promise<FireAuth.User>
-    {
+    : Promise<FireAuth.User> {
         const credential: FireAuth.UserCredential = await FireAuth.signInWithEmailAndPassword(auth, email, password);
         return credential.user;
     }
@@ -36,8 +34,7 @@ export class Auth {
         return credential.user;
     }
     public static updateProfile(user: FireAuth.User, profile: { displayName?: string; photoURL?: string })
-    : Promise<void>
-    {
+    : Promise<void> {
         return FireAuth.updateProfile(user, profile);
     }
 }
@@ -56,11 +53,12 @@ export class AuthUser {
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    public constructor(public id: string,
-                       public email: MGPOptional<string>,
-                       public username: MGPOptional<string>,
-                       public verified: boolean)
-    {
+    public constructor(
+        public id: string,
+        public email: MGPOptional<string>,
+        public username: MGPOptional<string>,
+        public verified: boolean,
+    ) {
     }
     public isConnected(): boolean {
         // Only a user that is connected has its email set
@@ -129,10 +127,12 @@ export class ConnectedUserService implements OnDestroy {
                                     // So we mark it, and we'll get notified when the user is marked.
                                     return this.userService.markAsVerified(user.uid);
                                 }
-                                const authUser: AuthUser = new AuthUser(user.uid,
-                                                                        MGPOptional.ofNullable(user.email),
-                                                                        MGPOptional.ofNullable(username),
-                                                                        userHasFinalizedVerification);
+                                const authUser: AuthUser = new AuthUser(
+                                    user.uid,
+                                    MGPOptional.ofNullable(user.email),
+                                    MGPOptional.ofNullable(username),
+                                    userHasFinalizedVerification,
+                                );
                                 if (this.user.equalsValue(authUser) === false) {
                                     this.user = MGPOptional.of(authUser);
                                     this.userRS.next(authUser);
@@ -166,8 +166,7 @@ export class ConnectedUserService implements OnDestroy {
         }
     }
     private async registerAfterUsernameCheck(username: string, email: string, password: string)
-    : Promise<MGPFallible<FireAuth.User>>
-    {
+    : Promise<MGPFallible<FireAuth.User>> {
         try {
             const userCredential: FireAuth.UserCredential =
                 await Auth.createUserWithEmailAndPassword(this.auth, email, password);

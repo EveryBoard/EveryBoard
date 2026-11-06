@@ -24,12 +24,13 @@ import { BlankGobanComponent } from '../../components/game-components/goban-game
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [BlankGobanComponent, NgClass],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules,
-                                                       PenteMove,
-                                                       PenteState,
-                                                       PlayerOrNone,
-                                                       PenteConfig>
-{
+export class PenteComponent extends GobanGameComponent<
+    PenteRules,
+    PenteMove,
+    PenteState,
+    PlayerOrNone,
+    PenteConfig
+> {
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];

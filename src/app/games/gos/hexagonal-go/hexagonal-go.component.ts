@@ -30,13 +30,14 @@ import { HexagonalGameComponent } from '../../../components/game-components/game
     imports: [NgClass],
 })
 @Debug.log
-export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRules,
-                                                                 GoMove,
-                                                                 GoState,
-                                                                 GoPiece,
-                                                                 HexagonalGoConfig,
-                                                                 GoLegalityInformation>
-{
+export class HexagonalGoComponent extends HexagonalGameComponent<
+    HexagonalGoRules,
+    GoMove,
+    GoState,
+    GoPiece,
+    HexagonalGoConfig,
+    GoLegalityInformation
+> {
 
     public boardInfo: GroupData<GoPiece>;
 
@@ -76,9 +77,11 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
             (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
         const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
         const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
-                                         hexaLayoutStartingCoord,
-                                         PointyHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE,
+            hexaLayoutStartingCoord,
+            PointyHexaOrientation.INSTANCE,
+        );
     }
 
     protected override async showLastMove(move: GoMove): Promise<void> {
@@ -145,8 +148,10 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase.isCounting() || phase.isAccept(),
-                     'HexagonalGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(
+            phase.isCounting() || phase.isAccept(),
+            'HexagonalGoComponent: pass() must be called only in playing, passed, counting, or accept phases',
+        );
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
