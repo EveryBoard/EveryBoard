@@ -3,14 +3,14 @@
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
     <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (boardWidth() / 2) + ' ' + (boardHeight() / 2) + ')'">
-        @for (remainingPieceOneCx of remainingPieceOneCxList(); track $index) {
-            <circle [attr.cx]="remainingPieceOneCx"
+        @for (remainingPieceOneCenter of remainingPieceOneCenters(); track $index) {
+            <circle [attr.cx]="remainingPieceOneCenter"
                     [attr.cy]="pieceRadius()"
                     [attr.r]="pieceRadius() - 5"
                     class="base mid-stroke player1-fill"/>
         }
-        @for (remainingPieceZeroCx of remainingPieceZeroCxList(); track $index) {
-            <circle [attr.cx]="remainingPieceZeroCx"
+        @for (remainingPieceZeroCenter of remainingPieceZeroCenters(); track $index) {
+            <circle [attr.cx]="remainingPieceZeroCenter"
                     [attr.cy]="boardHeight() - pieceRadius()"
                     [attr.r]="pieceRadius() - 5"
                     class="base mid-stroke player0-fill"/>
@@ -26,7 +26,7 @@
                              [ngClass]="squareInfo.arrowClasses.get(Player.ZERO)"
                              (click)="onArrowClick(x, PlayerOrNone.ZERO)"
                              [attr.points]="ARROW_COORD"
-                             [attr.transform]="svgTransformZero"/>
+                             [attr.transform]="svgTransformPlayerZero"/>
                 }
                 @if (squareInfo.canDisplayArrow.get(Player.ONE)) {
                     <polygon id="drop-arrow-one-{{ x }}"
@@ -34,7 +34,7 @@
                              [ngClass]="squareInfo.arrowClasses.get(Player.ONE)"
                              (click)="onArrowClick(x, PlayerOrNone.ONE)"
                              [attr.points]="ARROW_COORD"
-                             [attr.transform]="svgTransformOne"/>
+                             [attr.transform]="svgTransformPlayerOne"/>
                 }
                 <rect id="square-{{ x }}"
                       (click)="onSquareClick(x)"

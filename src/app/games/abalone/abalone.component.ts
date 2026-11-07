@@ -157,16 +157,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         } else {
             const fallenPieceCoord: Coord = moved.getPrevious(move.dir);
             const fallenPlayer: FourStatePiece = previousState.getPieceAt(fallenPieceCoord);
-            this.captureds.set(
-                new Set(
-                    [{
-                        coord: moved,
-                        pieceClasses: new Set(
-                            [this.getPlayerClass(fallenPlayer.getPlayer())],
-                        ),
-                    }],
-                ),
-            );
+            const pieceClasses: Set<string> = new Set([
+                this.getPlayerClass(fallenPlayer.getPlayer()),
+            ]);
+            const captureds: ReadonlyArray<CapturedInfo> = [{ coord: moved, pieceClasses }];
+            this.captureds.set(new Set(captureds));
         }
         this.moveds.set(new Set(moveds));
     }
