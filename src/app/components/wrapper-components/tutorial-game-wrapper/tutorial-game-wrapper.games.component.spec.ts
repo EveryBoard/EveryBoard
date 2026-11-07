@@ -5,7 +5,7 @@ import { Coord } from '@everyboard/games';
 import { GipfCapture } from '@everyboard/games';
 import { HexaDirection } from '@everyboard/games';
 import { Move } from '@everyboard/games';
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { AbstractRules, SuperRules } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
@@ -189,12 +189,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[3],
-                    new EpaminondasMove(0, 11, 2, 1, Ordinal.UP),
+                    new EpaminondasMove(0, 11, 2, 1, EightDirection.UP),
                     MGPValidation.failure(`Congratulations, you are in advance. But this is not the exercise here, try again.`),
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[4],
-                    new EpaminondasMove(0, 10, 1, 1, Ordinal.UP),
+                    new EpaminondasMove(0, 10, 1, 1, EightDirection.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
                 ], [
                     GipfRules.get(),

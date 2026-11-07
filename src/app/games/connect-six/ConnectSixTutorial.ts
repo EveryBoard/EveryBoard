@@ -1,18 +1,28 @@
 import { Coord } from '@everyboard/games';
-import { GobanConfig } from '@everyboard/games';
-import { PlayerOrNone } from '@everyboard/games';
-import { ConnectSixDrops, ConnectSixFirstMove } from '@everyboard/games/connect-six';
-import { ConnectSixRules } from '@everyboard/games/connect-six';
-import { ConnectSixState } from '@everyboard/games/connect-six';
+import { Direction } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { RectangularShape } from '@everyboard/games';
+import { TopologicShape } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+import { TopologicGameStateWithTable } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
+import { Topology } from '@everyboard/games';
+import { ConnectSixMove } from '@everyboard/games/connect-six';
+import { ConnectSixConfig, ConnectSixRules } from '@everyboard/games/connect-six';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
-const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: PlayerOrNone = PlayerOrNone.ZERO;
-const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
-
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
+const defaultConfig: ConnectSixConfig = ConnectSixRules.get().getDefaultRulesConfig();
+const defaultTopology: Topology<Direction> = new EightDirectionSquareTopology();
+const defaultShape: TopologicShape<Direction> = new RectangularShape(
+    defaultConfig.boardSize,
+    defaultConfig.boardSize,
+    defaultTopology,
+);
 export class ConnectSixTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
@@ -25,34 +35,40 @@ export class ConnectSixTutorial extends Tutorial {
             $localize`First turn`,
             $localize`At the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
-            ConnectSixFirstMove.of(new Coord(9, 9)),
+            ConnectSixMove.of([new Coord(9, 9)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Next turns`,
             $localize`On all following turns, the players play two pieces, until a victory or a draw is reached.<br/><br/>You're playing Light, do the winning move.`,
-            new ConnectSixState([
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, O, _, X, O, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, O, O, _, _, X, O, _, _, _, _, _],
-                [_, _, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _],
-                [_, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, X, _, X, O, X, X, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, O, X, O, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, X, _, X, _, O, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, X, X, _, X, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 21),
-            [ConnectSixDrops.of(new Coord(7, 12), new Coord(8, 11))],
+            new TopologicGameStateWithTable(
+                defaultTopology,
+                defaultShape,
+                new GameStateWithTable<FourStatePiece>([
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, _, X, O, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O, O, _, _, X, O, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, X, _, X, O, X, X, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O, X, O, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, X, _, X, _, O, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, X, X, _, X, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                ], 21),
+            ),
+            [
+                ConnectSixMove.of([new Coord(7, 12), new Coord(8, 11)]),
+            ],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),

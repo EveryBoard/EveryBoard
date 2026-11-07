@@ -3,10 +3,10 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { DirectionFailure } from '../../../jscaip/direction/Direction';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
@@ -855,7 +855,7 @@ describe('QuebecCastlesRules', () => {
                     const coord: Coord = new Coord(7, 7);
                     const state: QuebecCastlesState = rules
                         .getInitialState(customConfig)
-                        .setPieceAt(coord, Player.ZERO);
+                        .withPieceAt(coord, Player.ZERO);
 
                     // When dropping on the same coord again
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop([coord]);

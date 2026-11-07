@@ -7,12 +7,12 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { AbaloneFailure } from './AbaloneFailure';
@@ -178,7 +178,7 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
 
     private isLegalSideStep(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         let last: Coord = move.lastPiece.get();
-        const alignment: Ordinal = move.coord.getDirectionToward(last).get();
+        const alignment: EightDirection = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignment); // to include lastPiece as well
         let tested: Coord = move.coord;
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());

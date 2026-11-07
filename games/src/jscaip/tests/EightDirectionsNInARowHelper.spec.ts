@@ -1,8 +1,8 @@
 import { Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../AI/BoardValue';
+import { EightDirectionNInARowHelper } from '../EightDirectionNInARowHelper';
 import { GameStatus } from '../GameStatus';
-import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
@@ -13,13 +13,11 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 
 class AbstractState extends PlayerOrNoneGameStateWithTable {}
 
-describe('N In A Row Helper', () => {
+describe('EightDirection N In A Row Helper', () => {
 
     it('should count exactly one victory', () => {
-        // Given a helper
-        const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(Utils.identity, 4);
-
-        // When asking it the board value of a board with a victory
+        // Given a board with a victory
+        const helper: EightDirectionNInARowHelper<PlayerOrNone> = new EightDirectionNInARowHelper(Utils.identity, 4);
         const board: Table<PlayerOrNone> = [
             [_, O, _, _],
             [_, _, _, _],
@@ -27,6 +25,8 @@ describe('N In A Row Helper', () => {
             [X, X, X, X],
         ];
         const state: AbstractState = new AbstractState(board, 0);
+
+        // When calling getBoardValue
         const boardValue: BoardValue = helper.getBoardValue(state);
 
         // Then the value should be victory for player 1

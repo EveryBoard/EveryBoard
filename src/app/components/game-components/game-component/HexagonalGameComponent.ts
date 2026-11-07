@@ -5,7 +5,7 @@ import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
 
-import { HexaLayout } from '../../../components/game-components/HexaLayout';
+import { HexaLayout } from '../layout/HexaLayout';
 
 import { GameComponent } from './GameComponent';
 

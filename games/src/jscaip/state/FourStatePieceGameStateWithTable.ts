@@ -37,7 +37,7 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public coordIsOccupiedSquare(coord: Coord): boolean {
+    public coordIsOccupied(coord: Coord): boolean {
         const optional: MGPOptional<FourStatePiece> = this.getOptionalPieceAt(coord);
         if (optional.isPresent()) {
             return optional.get().isPlayer();
@@ -54,23 +54,21 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public static of(
-        oldState: FourStatePieceGameStateWithTable,
-        newBoard: Table<FourStatePiece>,
-    ): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(newBoard, oldState.turn);
-    }
-
-    public incrementTurn(): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(this.getCopiedBoard(), this.turn + 1);
-    }
-
-    public setPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
-        return GameStateWithTable.setPieceAt(
+    public withPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,
-            FourStatePieceGameStateWithTable.of,
+            (oldState: FourStatePieceGameStateWithTable, newBoard: Table<FourStatePiece>) => {
+                return new FourStatePieceGameStateWithTable(newBoard, oldState.turn);
+            },
+        );
+    }
+
+    public incrementTurn(): FourStatePieceGameStateWithTable {
+        return new FourStatePieceGameStateWithTable(
+            this.getCopiedBoard(),
+            this.turn + 1,
         );
     }
 

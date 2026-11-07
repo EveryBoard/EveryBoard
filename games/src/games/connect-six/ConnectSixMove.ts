@@ -1,63 +1,31 @@
-import { Encoder, Utils } from '@everyboard/lib';
+import { ArrayUtils, Encoder, Set } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { Move } from '../../jscaip/Move';
 
-export class ConnectSixFirstMove extends MoveCoord {
+export class ConnectSixMove extends Move {
 
-    public static of(coord: Coord): ConnectSixFirstMove {
-        return new ConnectSixFirstMove(coord.x, coord.y);
-    }
+    public static encoder: Encoder<ConnectSixMove> = Encoder.tuple(
+        [Encoder.list<Coord>(Coord.encoder)],
+        (move: ConnectSixMove): [Coord[]] => [ArrayUtils.copy(move.coords.toList())],
+        (fields: [Coord[]]): ConnectSixMove => ConnectSixMove.of(fields[0]),
+    );
 
-    public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.of);
-
-    private constructor(x: number, y: number) {
-        super(x, y);
-    }
-
-    public toString(): string {
-        return 'ConnectSixFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
-    }
-}
-export class ConnectSixDrops extends MoveWithTwoCoords {
-
-    public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.of);
-
-    public static of(first: Coord, second: Coord): ConnectSixDrops {
-        Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
-        return new ConnectSixDrops(first, second);
-    }
-    public toString(): string {
-        return 'ConnectSixDrops(' + this.getFirst().toString() + ', ' + this.getSecond().toString() + ')';
-    }
-    public equals(other: ConnectSixDrops): boolean {
-        const thisFirst: Coord = this.getFirst();
-        const otherFirst: Coord = other.getFirst();
-        const thisSecond: Coord = this.getSecond();
-        const otherSecond: Coord = other.getSecond();
-        if (thisFirst.equals(otherFirst) && thisSecond.equals(otherSecond)) {
-            return true;
-        } else if (thisFirst.equals(otherSecond) && thisSecond.equals(otherFirst)) {
-            return true;
-        } else {
-            return false;
+    public static of(coords: Coord[]): ConnectSixMove {
+        if (coords.length === 0) {
+            throw new Error(`Should not create move with zero drops`);
         }
+        return new ConnectSixMove(new Set(coords));
     }
-}
 
-export type ConnectSixMove = ConnectSixFirstMove | ConnectSixDrops;
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export namespace ConnectSixMove {
-
-    export function isFirstMove(move: ConnectSixMove): move is ConnectSixFirstMove {
-        return move instanceof ConnectSixFirstMove;
+    public constructor(public readonly coords: Set<Coord>) {
+        super();
     }
-    export function isDrop(move: ConnectSixMove): move is ConnectSixDrops {
-        return move instanceof ConnectSixDrops;
+
+    public toString(): string {
+        return 'ConnectSixMove(' + this.coords.toString() + ')';
     }
-    export const encoder: Encoder<ConnectSixMove> =
-        Encoder.disjunction([ConnectSixMove.isFirstMove, ConnectSixMove.isDrop],
-                            [ConnectSixFirstMove.encoder, ConnectSixDrops.encoder]);
+    public equals(other: ConnectSixMove): boolean {
+        return this.coords.equals(other.coords);
+    }
 }

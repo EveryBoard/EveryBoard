@@ -5,8 +5,8 @@ import { RulesConfig } from '../../config/RulesConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -49,8 +49,8 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
                 },
             }]);
 
-    public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 4);
+    public static readonly TEEKO_HELPER: EightDirectionNInARowHelper<PlayerOrNone> =
+        new EightDirectionNInARowHelper(Utils.identity, 4);
 
     public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
         return TeekoRules.RULES_CONFIG_DESCRIPTION;

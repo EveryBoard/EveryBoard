@@ -16,8 +16,14 @@ export class TableUtils {
         return table;
     }
 
-    public static map<T, U>(table: Table<T>, fun: (t: T) => U): U[][] {
-        return table.map((row: T[]): U[] => row.map(fun));
+    public static map<T, U>(table: Table<T>, fun: (t: T, x?: number, y?: number) => U): U[][] {
+        return table.map(
+            (row: T[], y: number) => {
+                return row.map((value: T, x: number) => {
+                    return fun(value, x, y);
+                });
+            },
+        );
     }
 
     public static copy<T>(table: Table<T>): T[][] {

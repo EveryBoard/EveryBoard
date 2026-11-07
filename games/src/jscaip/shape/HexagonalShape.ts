@@ -1,0 +1,78 @@
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../Coord';
+import { Direction } from '../direction/Direction';
+import { Topology } from '../topology/Topology';
+
+import { TopologicShape } from './TopologicShape';
+
+export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
+
+    public constructor(
+        private readonly side: number,
+        topology: Topology<D>,
+    ) {
+        super(topology);
+    }
+
+    public getCenters(): Coord[] {
+        return [
+            new Coord(this.side - 1, this.side - 1),
+        ];
+    }
+
+    public getAllCoords(): Coord[] {
+        const coords: Coord[] = [];
+        const maxIndex: number = (this.side - 1) * 2;
+        for (let x: number = 0; x <= maxIndex; x++) {
+            for (let y: number = 0; y <= maxIndex; y++) {
+                const coord: Coord = new Coord(x, y);
+                if (this.isOnBoard(coord)) {
+                    coords.push(coord);
+                }
+            }
+        }
+        return coords;
+    }
+
+    public isOnBoard(coord: Coord): boolean {
+        // const x: number = coord.x;
+        // const y: number = coord.y;
+        // const minyx: number = this.side - 1;
+        // const maxyx: number = 3 * minyx;
+        // return 0 <= x &&
+        //        0 <= y &&
+        //        minyx <= x + y &&
+        //        x + y <= maxyx;
+
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const minyx: number = this.side - 1;
+        const maxXOrY: number = minyx * 2;
+        const maxyx: number = 3 * minyx;
+        return 0 <= x && x <= maxXOrY &&
+               0 <= y && y <= maxXOrY &&
+               minyx <= x + y && x + y <= maxyx;
+    }
+
+    public isNotOnBoard(coord: Coord): boolean {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const minyx: number = this.side - 1;
+        const maxXOrY: number = minyx * 2;
+        const maxyx: number = 3 * minyx;
+        return maxXOrY < x || x < 0 ||
+               maxXOrY < y || y < 0 ||
+               maxyx < x + y || x + y < minyx;
+    }
+
+    public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
+        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
+        if (this.isOnBoard(next)) {
+            return MGPOptional.of(next);
+        } else {
+            return MGPOptional.empty();
+        }
+    }
+
+}

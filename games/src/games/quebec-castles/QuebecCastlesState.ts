@@ -9,10 +9,6 @@ import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneG
 
 export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
 
-    public static of(oldState: QuebecCastlesState, newBoard: Table<PlayerOrNone>): QuebecCastlesState {
-        return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
-    }
-
     public constructor(board: Table<PlayerOrNone>,
                        turn: number,
                        public readonly castles: PlayerMap<MGPOptional<Coord>>)
@@ -22,14 +18,22 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
     }
 
     public incrementTurn(): QuebecCastlesState {
-        return new QuebecCastlesState(this.getCopiedBoard(), this.turn + 1, this.castles);
+        return new QuebecCastlesState(
+            this.getCopiedBoard(),
+            this.turn + 1,
+            this.castles,
+        );
     }
 
-    public setPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             QuebecCastlesState.of);
+    public withPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
+        return GameStateWithTable.withPieceAt(
+            this,
+            coord,
+            value,
+            (oldState: QuebecCastlesState, newBoard: Table<PlayerOrNone>) => {
+                return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
+            },
+        );
     }
 
     public isCastleAt(coord: Coord): boolean {

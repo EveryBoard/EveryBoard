@@ -87,7 +87,7 @@ const gameRulesByURL: MGPMap<string, AbstractRules> = new MGPMap<string, Abstrac
     { key: 'Hive',                  value: HiveRules.get()                  },
     { key: 'Trexo',                 value: TrexoRules.get()                 },
     { key: 'Lasca',                 value: LascaRules.get()                 },
-    { key: 'ConnectSix',            value: ConnectSixRules.get()            },
+    { key: 'ConnectSix',              value: ConnectSixRules.get()              },
     { key: 'Pente',                 value: PenteRules.get()                 },
     { key: 'Teeko',                 value: TeekoRules.get()                 },
     { key: 'Kalah',                 value: KalahRules.get()                 },

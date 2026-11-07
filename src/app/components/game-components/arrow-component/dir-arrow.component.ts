@@ -1,6 +1,6 @@
 import { Component, input, InputSignal } from '@angular/core';
 
-import { Ordinal } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
 
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
@@ -13,6 +13,6 @@ import { Arrow } from './Arrow';
 })
 export class DirArrowComponent extends BaseGameComponent {
 
-    public readonly arrow: InputSignal<Arrow<Ordinal>> = input.required<Arrow<Ordinal>>();
+    public readonly arrow: InputSignal<Arrow<EightDirection>> = input.required<Arrow<EightDirection>>();
 
 }

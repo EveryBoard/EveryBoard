@@ -1,38 +1,41 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
-import { Coord } from '@everyboard/games';
+
+import { Coord, Table, TableUtils } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
+import { TopologicGameState } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
 import { ConnectSixAlignmentHeuristic } from '@everyboard/games/connect-six';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games/connect-six';
+import { ConnectSixMove } from '@everyboard/games/connect-six';
 import { ConnectSixMoveGenerator } from '@everyboard/games/connect-six';
-import { ConnectSixRules } from '@everyboard/games/connect-six';
-import { ConnectSixState } from '@everyboard/games/connect-six';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { ConnectSixConfig, ConnectSixRules } from '@everyboard/games/connect-six';
+import { MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
-import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgClass],
+    imports: [NgClass],
 })
-export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
-                                                            ConnectSixMove,
-                                                            ConnectSixState,
-                                                            PlayerOrNone>
+export class ConnectSixComponent extends TopologicGameComponent<ConnectSixRules,
+                                                              ConnectSixMove,
+                                                              TopologicGameState<FourStatePiece, Direction>,
+                                                              FourStatePiece,
+                                                              ConnectSixConfig>
 {
+    protected coordsAndContents: WritableSignal<{ coord: Coord; content: FourStatePiece }[]> = signal([]);
 
-    public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
+    protected readonly droppedCoords: WritableSignal<Set<Coord>> = signal(new Set());
 
-    public lastMoved: Coord[] = [];
+    protected readonly lastMoveds: WritableSignal<Set<Coord>> = signal(new Set());
 
-    public victoryCoords: Coord[] = [];
+    protected readonly victoryCoords: WritableSignal<Set<Coord>> = signal(new Set());
 
     public constructor() {
         super('ConnectSix');
@@ -53,67 +56,81 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ConnectSixState = this.state();
-        this.board = state.getCopiedBoard();
-        this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
-        this.createHoshis();
+        const state: TopologicGameState<FourStatePiece, Direction> = this.state();
+        this.coordsAndContents.set(state.getCoordsAndContents());
+        this.victoryCoords.set(new Set(
+            ConnectSixRules.getVictoriousCoords(state, this.config()),
+        ));
     }
 
-    protected override async showLastMove(move: ConnectSixMove): Promise<void> {
-        if (move instanceof ConnectSixFirstMove) {
-            this.lastMoved = [move.coord];
-        } else {
-            this.lastMoved = [move.getFirst(), move.getSecond()];
-        }
+    public override async showLastMove(move: ConnectSixMove): Promise<void> {
+        this.lastMoveds.set(move.coords);
     }
 
     public override hideLastMove(): void {
-        this.lastMoved = [];
+        this.lastMoveds.set(new Set());
     }
 
-    @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        if (this.state().turn === 0) {
-            const move: ConnectSixMove = ConnectSixFirstMove.of(coord);
+        const config: ConnectSixConfig = this.config();
+        const awaitedClicks: number = this.state().turn === 0 ? 1 : config.dropAfterFirstTurn;
+        if (this.state().getPieceAt(coord).isPlayer()) {
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        }
+        if (this.droppedCoords().contains(coord)) {
+            return this.cancelMove();
+        }
+        this.droppedCoords.set(this.droppedCoords().addElement(coord));
+        if (this.droppedCoords().size() === awaitedClicks) {
+            const move: ConnectSixMove = new ConnectSixMove(this.droppedCoords());
             return this.chooseMove(move);
         } else {
-            if (this.state().getPieceAt(coord).isPlayer()) {
-                return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoord.isPresent()) {
-                if (this.droppedCoord.equalsValue(coord)) {
-                    return this.cancelMove();
-                } else {
-                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), coord);
-                    return this.chooseMove(move);
-                }
-            } else {
-                this.droppedCoord = MGPOptional.of(coord);
-                return MGPValidation.SUCCESS;
-            }
+            return MGPValidation.SUCCESS;
         }
     }
 
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
-        const owner: PlayerOrNone = this.state().getPieceAt(coord);
-        const classes: string[] = [];
-        if (this.droppedCoord.equalsValue(coord)) {
-            classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
-            classes.push('highlighted-stroke');
-        } else {
-            classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
-                classes.push('victory-stroke');
+    protected readonly ownerMap: Signal<Table<PlayerOrNone>> = computed(() => {
+        const owners: PlayerOrNone[][] = [];
+        for (const coordAndContent of this.state().getCoordsAndContents()) {
+            const y: number = coordAndContent.coord.y;
+            while (owners.length <= y) {
+                owners.push([]);
             }
-            if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
-                classes.push('last-move-stroke');
+            const x: number = coordAndContent.coord.x;
+            while (owners[y].length <= x) {
+                owners[y].push(PlayerOrNone.NONE);
             }
+            owners[y][x] = coordAndContent.content.getPlayer();
         }
-        return classes;
-    }
+        return owners;
+    });
+
+    protected readonly spaceClasses: Signal<Table<ReadonlyArray<string>>> = computed(() => {
+        return TableUtils.map(
+            this.ownerMap(),
+            (owner: PlayerOrNone, x: number, y: number) => {
+                const coord: Coord = new Coord(x, y);
+                const classes: string[] = [];
+                if (this.droppedCoords().contains(coord)) {
+                    classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
+                    classes.push('highlighted-stroke');
+                } else {
+                    classes.push(this.getPlayerClass(owner));
+                    if (this.victoryCoords().contains(coord)) {
+                        classes.push('victory-stroke');
+                    }
+                    if (this.lastMoveds().contains(coord)) {
+                        classes.push('last-move-stroke');
+                    }
+                }
+                return classes;
+            },
+        );
+    });
 
     public override cancelMoveAttempt(): void {
-        this.droppedCoord = MGPOptional.empty();
+        this.droppedCoords.set(new Set());
     }
 
 }

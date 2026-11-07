@@ -54,7 +54,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should allow not to give a piece on last turn, and consider the game a draw if no one win', () => {
+    it('should allow not to give a piece on last turn, and consider the game a draw if no one wins', () => {
         // Given a board on last turn
         const board: Table<QuartoPiece> = [
             [AABB, AAAB, ABBA, BBAA],

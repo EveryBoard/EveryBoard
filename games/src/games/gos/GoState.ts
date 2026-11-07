@@ -11,10 +11,6 @@ import { GoPiece } from './GoPiece';
 
 export class GoState extends GameStateWithTable<GoPiece> {
 
-    public static of(oldState: GoState, newBoard: Table<GoPiece>): GoState {
-        return oldState.withBoard(newBoard);
-    }
-
     public readonly koCoord: MGPOptional<Coord>;
 
     public readonly captured: PlayerNumberMap;
@@ -107,10 +103,13 @@ export class GoState extends GameStateWithTable<GoPiece> {
     }
 
     public withPieceAt(coord: Coord, value: GoPiece): GoState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             GoState.of,
+        return GameStateWithTable.withPieceAt(
+            this,
+            coord,
+            value,
+            (oldState: GoState, newBoard: Table<GoPiece>) => {
+                return oldState.withBoard(newBoard);
+            },
         );
     }
 
