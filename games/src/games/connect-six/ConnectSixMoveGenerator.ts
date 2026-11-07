@@ -2,97 +2,89 @@ import { Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { GobanConfig } from '../../jscaip/GobanConfig';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { TableUtils } from '../../jscaip/TableUtils';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Direction } from '../../jscaip/direction/Direction';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 
 import { ConnectSixMove } from './ConnectSixMove';
-import { ConnectSixFirstMove } from './ConnectSixMove';
-import { ConnectSixDrops } from './ConnectSixMove';
-import { ConnectSixNode } from './ConnectSixRules';
-import { ConnectSixState } from './ConnectSixState';
+import { ConnectSixConfig, ConnectSixNode } from './ConnectSixRules';
 
-export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState, GobanConfig> {
+export class ConnectSixMoveGenerator
+    extends MoveGenerator<ConnectSixMove, TopologicGameState<FourStatePiece, Direction>, ConnectSixConfig>
+{
 
-    public override getListMoves(node: ConnectSixNode, _config: GobanConfig): ConnectSixMove[] {
+    public override getListMoves(node: ConnectSixNode, config: ConnectSixConfig): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {
-            return this.getListDrops(node);
+            return this.getListDrops(node, config);
         }
     }
 
-    private getFirstMove(state: ConnectSixState): ConnectSixFirstMove[] {
-        const width: number = state.getWidth();
-        const height: number = state.getHeight();
-        const cx: number = Math.floor(width / 2);
-        const cy: number = Math.floor(height / 2);
-        const center: Coord = new Coord(cx, cy);
+    private getFirstMove(state: TopologicGameState<FourStatePiece, Direction>): ConnectSixMove[] {
+        const centers: Coord[] = state.getCenters();
+        const center: Coord = centers[0];
         return [
-            ConnectSixFirstMove.of(center),
+            ConnectSixMove.of([center]),
         ];
     }
 
-    private getListDrops(node: ConnectSixNode): ConnectSixMove[] {
-        const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
-        const moves: ConnectSixDrops[] = [];
-        for (const firstCoord of availableFirstCoords) {
-            const board: PlayerOrNone[][] = node.gameState.getCopiedBoard();
-            board[firstCoord.y][firstCoord.x] = node.gameState.getCurrentPlayer();
-            const stateAfterFirstDrops: ConnectSixState = new ConnectSixState(board, node.gameState.turn);
-            const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
-            for (const secondCoord of availableSecondCoords) {
-                const newMove: ConnectSixDrops = ConnectSixDrops.of(firstCoord, secondCoord);
-                moves.push(newMove);
-            }
+    private getListDrops(node: ConnectSixNode, config: ConnectSixConfig): ConnectSixMove[] {
+        const availableFirstCoords: Set<Coord> = this.getUsefulCoordsMap(node.gameState);
+        let moves: Set<Set<Coord>> = availableFirstCoords.map(
+            (coord: Coord) => new Set([coord]),
+        );
+        let remainingDrops: number = config.dropAfterFirstTurn - 1;
+        while (remainingDrops > 0) {
+            moves = moves.flatMap(
+                (ongoingMove: Set<Coord>) => this.getBiggerMove(node.gameState, ongoingMove, availableFirstCoords),
+            );
+            remainingDrops--;
         }
-        return new Set(moves).toList(); // Removes duplicates
+        return moves.map(
+            (coords: Set<Coord>) => new ConnectSixMove(coords),
+        ).toList();
     }
 
-    private getAvailableCoords(state: ConnectSixState): Coord[] {
-        const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
-        const availableCoords: Coord[] = [];
-        for (const coordAndContent of state.getCoordsAndContents()) {
-            const coord: Coord = coordAndContent.coord;
-            if (usefulCoord[coord.y][coord.x] && coordAndContent.content.isNone()) {
-                availableCoords.push(coord);
-            }
-        }
-        return availableCoords;
-    }
-
-    /**
-     * This function returns a table on which table[y][x] is true only if:
-     *     (x, y) is empty but has occupied neighbors
-     */
-    private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {
-        const width: number = state.getWidth();
-        const height: number = state.getHeight();
-        const usefulCoord: boolean[][] = TableUtils.create(width, height, false);
-        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
-            this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
-        }
-        return usefulCoord;
+    private getBiggerMove(
+        state: TopologicGameState<FourStatePiece, Direction>,
+        ongoingMove: Set<Coord>,
+        initialCoords: Set<Coord>,
+    ): Set<Set<Coord>> {
+        const ongoingMoveNeighbors: Set<Coord> = ongoingMove.flatMap(
+            (coord: Coord) => this.getImmediateEmptyNeighbors(state, coord),
+        );
+        const possiblesNextDrops: Set<Coord> = initialCoords
+            .union(ongoingMoveNeighbors)
+            .filter((coord: Coord) => ongoingMove.contains(coord) === false);
+        return possiblesNextDrops.map(
+            (coord: Coord) => ongoingMove.union(new Set([coord])),
+        );
     }
 
     /**
-     * mark the space neighboring coord as "space that have an occupied neighbor"
-     * @param usefulCoordTable a table of the board which each space mapped to true if it has an occupied neighbor
-     * @param coord the coord to add to this map
+     * This function returns the set of coords that are empty but have occupied neighbors
      */
-    private addNeighboringCoord(usefulCoordTable: boolean[][], coord: Coord): void {
-        const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
-        const width: number = usefulCoordTable[0].length;
-        const height: number = usefulCoordTable.length;
-        const minX: number = Math.max(0, coord.x - usefulDistance);
-        const minY: number = Math.max(0, coord.y - usefulDistance);
-        const maxX: number = Math.min(width - 1, coord.x + usefulDistance);
-        const maxY: number = Math.min(height - 1, coord.y + usefulDistance);
-        for (let y: number = minY; y <= maxY; y++) {
-            for (let x: number = minX; x <= maxX; x++) {
-                usefulCoordTable[y][x] = true;
-            }
+    private getUsefulCoordsMap(state: TopologicGameState<FourStatePiece, Direction>): Set<Coord> {
+        let usefulCoord: Set<Coord> = new Set();
+        const coordsAndContents: { coord: Coord; content: FourStatePiece }[] = state.getCoordsAndContents();
+        const playerCoordsAndContents: { coord: Coord; content: FourStatePiece }[] = coordsAndContents
+            .filter((value: { coord: Coord; content: FourStatePiece }) => value.content.isPlayer());
+        const playerCoords: Coord[] = playerCoordsAndContents
+            .map((value: { coord: Coord; content: FourStatePiece }) => value.coord);
+        for (const playerCoord of playerCoords) {
+            usefulCoord = usefulCoord.union(
+                this.getImmediateEmptyNeighbors(state, playerCoord),
+            );
         }
+        return usefulCoord.filter((c: Coord) => state.getPieceAt(c).equals(FourStatePiece.EMPTY));
+    }
+
+    private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece, Direction>, coord: Coord): Set<Coord> {
+        return state.getTopology()
+            .getNeighbors(coord)
+            .filter((c: Coord) => state.isOnBoard(c))
+            .filter((c: Coord) => state.getPieceAt(c).equals(FourStatePiece.EMPTY));
     }
 
 }

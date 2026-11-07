@@ -49,14 +49,14 @@ describe('TriangularTopology', () => {
             { start: new Coord(7, 8), distance: 2, direction: TriangularDirection.DOWN_RIGHT, expectedDestination: new Coord(8, 9) },
         ];
         for (const testCase of testCases) {
-            it(`${ testCase.start.toString() } + ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
+            it(`${ testCase.start.toString() } + ${ testCase.distance } * ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
                 // Given callResult.start as our coord
                 //       callResult.direction as our direction
                 // and triangular topology
                 const topology: TriangularTopology = new TriangularTopology();
 
                 // When evaluating next coord
-                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction);
+                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction, testCase.distance);
 
                 // Then the result should be correct
                 expect(result).toEqual(testCase.expectedDestination);

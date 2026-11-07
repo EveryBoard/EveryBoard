@@ -120,17 +120,18 @@ describe('TriangularShape', () => {
 
     });
 
-    describe('isOnBoard / isNotOnBoard', () => {
+    describe('isOnBoard / isNotOnBoard / getAllCoords', () => {
 
-        it('should include the good coords', () => {
+        it('should include the good coords (size = 2)', () => {
             // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
             // and whose value are wether or not that coord should count as on board on a side=2 triangle
             const shape: TriangularShape<TriangularDirection> = new TriangularShape(2, topology);
+            const allCoords: Coord[] = shape.getAllCoords();
             const matrix: boolean[][] = [
-                [false, false, false, false, false],
-                [false, false, true, false, false],
-                [false, true, true, true, false],
-                [false, false, false, false, false],
+                [false, false, false, false, false, false],
+                [false, false, false, true, false, false],
+                [false, false, true, true, true, false],
+                [false, false, false, false, false, false],
             ];
 
             // When checking each coord if they're on board
@@ -139,8 +140,53 @@ describe('TriangularShape', () => {
                 for (let x: number = 0; x < matrix[y].length; x++) {
                     const expected: boolean = matrix[y][x];
                     const coord: Coord = new Coord(x - 1, y - 1);
+                    const coordIsAmongstAllCoord: boolean = allCoords.some((c: Coord) => c.equals(coord));
                     const isOnBoard: boolean = shape.isOnBoard(coord);
                     const isNotOnBoard: boolean = shape.isNotOnBoard(coord);
+                    const message: string = expected ?
+                        `${ coord.toString() } should be part of ${ JSON.stringify(allCoords) } but is not` :
+                        `${ coord.toString() } should not be part of ${ JSON.stringify(allCoords) } but is`;
+                    expect(coordIsAmongstAllCoord)
+                        .withContext(message)
+                        .toBe(expected);
+                    expect(isOnBoard)
+                        .withContext(`isOnBoard(${ coord.toString() }) should be ${ expected }`)
+                        .toBe(expected);
+                    expect(isNotOnBoard)
+                        .withContext(`isNotOnBoard(${ coord.toString() }) should be ${ !expected }`)
+                        .toBe(!expected);
+                }
+            }
+        });
+
+        it('should include the good coords (size = 3)', () => {
+            // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
+            // and whose value are wether or not that coord should count as on board on a side=3 triangle
+            const shape: TriangularShape<TriangularDirection> = new TriangularShape(3, topology);
+            const allCoords: Coord[] = shape.getAllCoords();
+            const matrix: boolean[][] = [
+                [false, false, false, false, false, false, false],
+                [false, false, false, true, false, false, false],
+                [false, false, true, true, true, false, false],
+                [false, true, true, true, true, true, false],
+                [false, false, false, false, false, false, false],
+            ];
+
+            // When checking each coord if they're on board
+            // Then reality should map this map
+            for (let y: number = 0; y < matrix.length; y++) {
+                for (let x: number = 0; x < matrix[y].length; x++) {
+                    const expected: boolean = matrix[y][x];
+                    const coord: Coord = new Coord(x - 1, y - 1);
+                    const coordIsAmongstAllCoord: boolean = allCoords.some((c: Coord) => c.equals(coord));
+                    const isOnBoard: boolean = shape.isOnBoard(coord);
+                    const isNotOnBoard: boolean = shape.isNotOnBoard(coord);
+                    const message: string = expected ?
+                        `${ coord.toString() } should be part of ${ JSON.stringify(allCoords) } but is not` :
+                        `${ coord.toString() } should not be part of ${ JSON.stringify(allCoords) } but is`;
+                    expect(coordIsAmongstAllCoord)
+                        .withContext(message)
+                        .toBe(expected);
                     expect(isOnBoard)
                         .withContext(`isOnBoard(${ coord.toString() }) should be ${ expected }`)
                         .toBe(expected);

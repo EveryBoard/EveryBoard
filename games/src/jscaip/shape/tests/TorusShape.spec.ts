@@ -125,7 +125,7 @@ describe('TorusShape (with Triangular Topology)', () => {
             const coord: Coord = new Coord(3, 3);
 
             // When getting getNextCoord(RIGHT)
-            const nextCoord: MGPOptional<Coord> = shape.getNextCoord(coord, EightDirection.RIGHT);
+            const nextCoord: MGPOptional<Coord> = shape.getNextCoord(coord, TriangularDirection.RIGHT);
 
             // Then it should reach the left edge
             expect(nextCoord).toEqual(MGPOptional.of(new Coord(0, 3)));

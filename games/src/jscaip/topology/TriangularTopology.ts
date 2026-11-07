@@ -22,6 +22,17 @@ export class TriangularTopology implements Topology<TriangularDirection> {
     }
 
     public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
+        if (distance === 0) {
+            return coord;
+        } else {
+            const distanceSign: 1 | -1 = distance <= 0 ? -1 : +1;
+            const nextCoord: Coord = this.getNextImmediateNeighborCoord(coord, direction, distanceSign);
+            const nextDistance: number = distance - distanceSign;
+            return this.getNextCoord(nextCoord, direction, nextDistance);
+        }
+    }
+
+    private getNextImmediateNeighborCoord(coord: Coord, direction: TriangularDirection, distance: 1 | -1): Coord {
         if (direction.y === 0) {
             return coord.getNext(direction, distance);
         }

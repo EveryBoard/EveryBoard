@@ -2,7 +2,6 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { Direction } from '../../direction/Direction';
 import { EightDirection } from '../../direction/EightDirection';
 import { EightDirectionSquareTopology } from '../EightDirectionSquareTopology';
 
@@ -14,7 +13,7 @@ describe('EightDirectionSquareTopology', () => {
             // Given a topology, a coord, and a direction
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.UP;
+            const direction: EightDirection = EightDirection.UP;
 
             // When evaluating next coord
             const result: Coord = topology.getNextCoord(coord, direction);
@@ -27,7 +26,7 @@ describe('EightDirectionSquareTopology', () => {
             // Given eight direction topology and negative distance
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.RIGHT;
+            const direction: EightDirection = EightDirection.RIGHT;
             const distance: number = 3;
 
             // When evaluating next coord
@@ -41,7 +40,7 @@ describe('EightDirectionSquareTopology', () => {
             // Given eight direction topology and negative distance
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.UP;
+            const direction: EightDirection = EightDirection.UP;
             const distance: number = -2;
 
             // When evaluating next coord

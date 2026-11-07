@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
@@ -48,35 +48,41 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         const player: Player = this.getOwner(piece, state) as Player;
         Utils.assert(player.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
-        const freeSpaceByDirs: MGPMap<D, number> = new MGPMap();
-        const alliesByDirs: MGPMap<D, number> = new MGPMap();
+        const freeSpaceByDirs: MGPMap<D, Coord[]> = new MGPMap();
+        const alliesByDirs: MGPMap<D, Coord[]> = new MGPMap();
 
         for (const dir of this.directions) {
-            const freeSpaceAndAllies: [number, number] =
+            const freeSpaceAndAllies: { freeSpaces: Coord[]; alignedPlayers: Coord[] } =
                 this.getNumberOfFreeSpacesAndPlayers(state, coord, dir, player);
-            freeSpaceByDirs.set(dir, freeSpaceAndAllies[0]);
-            alliesByDirs.set(dir, freeSpaceAndAllies[1]);
+            freeSpaceByDirs.set(dir, freeSpaceAndAllies.freeSpaces);
+            alliesByDirs.set(dir, freeSpaceAndAllies.alignedPlayers);
         }
         const score: number = this.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs, freeSpaceByDirs);
         return score * player.getScoreModifier();
     }
 
-    public getScoreFromDirectionAlliesAndFreeSpaces(
-        alliesByDirs: MGPMap<D, number>,
-        freeSpaceByDirs: MGPMap<D, number>,
+    private getScoreFromDirectionAlliesAndFreeSpaces(
+        alliesByDirs: MGPMap<D, Coord[]>,
+        freeSpaceByDirs: MGPMap<D, Coord[]>,
     ): number {
         let score: number = 0;
         for (const axis of this.axes) {
             // for each pair of opposite directions
-            const directionAllies: number = alliesByDirs.get(axis).get();
-            const oppositeDirectionAllies: number = alliesByDirs.get(axis.getOpposite()).get();
-            const lineAllies: number = directionAllies + oppositeDirectionAllies;
+            const directionAllies: Coord[] = alliesByDirs.get(axis).get();
+            const oppositeDirectionAllies: Coord[] = alliesByDirs.get(axis.getOpposite()).get();
+            const lineAllies: number = new Set([
+                ...directionAllies,
+                ...oppositeDirectionAllies,
+            ]).size();
             if (this.N <= lineAllies + 1) {
                 return Number.POSITIVE_INFINITY;
             }
-            const directionFreeSpaces: number = freeSpaceByDirs.get(axis).get();
-            const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(axis.getOpposite()).get();
-            const lineFreeSpaces: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
+            const directionFreeSpaces: Coord[] = freeSpaceByDirs.get(axis).get();
+            const oppositeDirectionFreeSpaces: Coord[] = freeSpaceByDirs.get(axis.getOpposite()).get();
+            const lineFreeSpaces: number = new Set([
+                ...directionFreeSpaces,
+                ...oppositeDirectionFreeSpaces,
+            ]).size();
             if (this.N <= lineFreeSpaces + 1) {
                 score += 2 + lineFreeSpaces - this.N;
             }
@@ -84,43 +90,47 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         return score;
     }
 
-    // TODO: ne pas laisser cette fonction authoriser une ligne de 3 complète de compter comme une liste infinie en torique!
-    public getNumberOfFreeSpacesAndPlayers(state: GameStateWithCoords<T>,
-                                           i: Coord,
-                                           dir: D,
-                                           player: Player,
-    ) : [number, number] {
+    private getNumberOfFreeSpacesAndPlayers(state: GameStateWithCoords<T>,
+                                            i: Coord,
+                                            dir: D,
+                                            player: Player,
+    ) : { freeSpaces: Coord[]; alignedPlayers: Coord[] } {
         /**
          * for a square at the coord i, containing 'player'
          * we go through the board from this coord in the direction dir
          * and until a maximal distance of N cases
          */
-        let freeSpaces: number = 0; // the number of aligned free square
-        let alignedPlayers: number = 0; // the number of aligned players
+        const freeSpaces: Coord[] = []; // the number of aligned free square
+        const alignedPlayers: Coord[] = []; // the number of aligned players
         let allPlayersAreSideBySide: boolean = true;
         let coord: MGPOptional<Coord> = this.getNextCoord(i, dir);
         let testedCoords: number = 1;
         const opponent: Player = player.getOpponent();
-        while (coord.isPresent() && state.isOnBoard(coord.get()) && testedCoords < this.N) {
+        while (
+            coord.isPresent() &&
+            state.isOnBoard(coord.get()) &&
+            testedCoords < this.N &&
+            coord.equalsValue(i) === false
+        ) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord.get());
             const currentOwner: PlayerOrNone = this.getOwner(currentSpace, state);
             if (currentOwner === opponent) {
-                return [freeSpaces, alignedPlayers];
+                return { freeSpaces, alignedPlayers };
             }
             if (currentOwner === player && allPlayersAreSideBySide) {
-                alignedPlayers++;
+                alignedPlayers.push(coord.get());
             } else {
                 allPlayersAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a free space
             if (currentOwner !== opponent && currentOwner !== player) {
-                freeSpaces++;
+                freeSpaces.push(coord.get());
             }
             coord = this.getNextCoord(coord.get(), dir);
             testedCoords++;
         }
-        return [freeSpaces, alignedPlayers];
+        return { freeSpaces, alignedPlayers };
     }
 
     protected getNextCoord(coord: Coord, dir: Direction, distance: number = 1): MGPOptional<Coord> {

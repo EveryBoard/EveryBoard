@@ -1,26 +1,32 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
+import { ConnectSixMove } from '../ConnectSixMove';
+
 
 describe('ConnectSixMove', () => {
 
-    describe('ConnectSixDrops', () => {
+    describe('ConnectSixMove with one coord', () => {
 
         describe('of', () => {
 
-            it('should not create move where first coord and second coord are the same', () => {
-                function tryingIdenticalCoords(): void {
-                    ConnectSixDrops.of(new Coord(0, 0), new Coord(0, 0));
-                }
-                TestUtils.expectToThrowAndLog(tryingIdenticalCoords, 'COORDS_SHOULD_BE_DIFFERENT');
+            it('should create move with single coord when providing list of coord with duplicates', () => {
+                const move: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(0, 0)]);
+                const equivalentMove: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0)]);
+                expect(move.equals(equivalentMove)).toBeTrue();
             });
 
             it('should create move when inputs are valid', () => {
                 expect(() => {
-                    ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
+                    ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]);
                 }).not.toThrow();
+            });
+
+            it('should throw move when there is not coords', () => {
+                expect(() => {
+                    ConnectSixMove.of([]);
+                }).toThrow();
             });
 
         });
@@ -29,8 +35,8 @@ describe('ConnectSixMove', () => {
 
             it('should be equal when coords are equal', () => {
                 // Given two moves with equal coords
-                const first: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
-                const second: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
+                const first: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]);
+                const second: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]);
 
                 // When comparing them
                 // Then they should be considered equal
@@ -39,18 +45,18 @@ describe('ConnectSixMove', () => {
 
             it('should be different when one coord is different', () => {
                 // Given two moves with different coords
-                const first: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
-                const second: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(2, 2));
+                const first: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]);
+                const second: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(2, 2)]);
 
                 // When comparing them
                 // Then they should be considered different
                 expect(first.equals(second)).toBeFalse();
             });
 
-            it('should be equal when reversed, hence (a, b) == (b, a)', () => {
+            it('should consider equals two move with equals coords but different order', () => {
                 // Given two moves with equal coords but switched
-                const first: ConnectSixDrops = ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
-                const second: ConnectSixDrops = ConnectSixDrops.of(new Coord(1, 1), new Coord(0, 0));
+                const first: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]);
+                const second: ConnectSixMove = ConnectSixMove.of([new Coord(1, 1), new Coord(0, 0)]);
 
                 // When comparing them
                 // Then they should be considered equal
@@ -61,14 +67,14 @@ describe('ConnectSixMove', () => {
 
     });
 
-    describe('ConnectSixFirstMove', () => {
+    describe('ConnectSixMove with several coords', () => {
 
         describe('equals', () => {
 
             it('should be equal when coords are equal', () => {
                 // Given two moves with equal coords
-                const first: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));
-                const second: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));
+                const first: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0)]);
+                const second: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0)]);
 
                 // When comparing them
                 // Then they should be considered equal
@@ -77,8 +83,8 @@ describe('ConnectSixMove', () => {
 
             it('should be different when coords are different', () => {
                 // Given two moves with different coords
-                const first: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));
-                const second: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(1, 1));
+                const first: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0)]);
+                const second: ConnectSixMove = ConnectSixMove.of([new Coord(1, 1)]);
 
                 // When comparing them
                 // Then they should be considered different
@@ -93,8 +99,8 @@ describe('ConnectSixMove', () => {
 
         it('should be bijective', () => {
             const moves: ConnectSixMove[] = [
-                ConnectSixFirstMove.of(new Coord(0, 0)),
-                ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1)),
+                ConnectSixMove.of([new Coord(0, 0)]),
+                ConnectSixMove.of([new Coord(0, 0), new Coord(1, 1)]),
             ];
             for (const move of moves) {
                 EncoderTestUtils.expectToBeBijective(ConnectSixMove.encoder, move);

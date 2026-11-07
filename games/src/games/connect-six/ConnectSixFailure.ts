@@ -1,6 +1,6 @@
 import { Localized } from '../../utils/LocaleUtils';
 
-export class ConnectNFailure {
+export class ConnectSixFailure {
 
     public static YOU_MUST_DROP_ONE_AT_FIRST_TURN: Localized = () => $localize`At your first turn, you must drop exactly one piece`;
 

@@ -47,11 +47,13 @@ export class TriangularShape<D extends Direction> extends TopologicShape<D> {
     public getAllCoords(): Coord[] {
         const evenOffset: number = this.side % 2 === 0 ? 1 : 0;
         const coords: Coord[] = [];
-        const maxIndex: number = (this.side - 1) * 2;
-        for (let x: number = 0; x <= maxIndex; x++) {
-            for (let y: number = 0; y < this.side; y++) {
+        const minyx: number = this.side - 1; // TODO: not naming in minyx
+        for (let y: number = 0; y <= minyx; y++) {
+            const minX: number = minyx + evenOffset - y;
+            const maxX: number = minX + (2 * y);
+            for (let x: number = minX; x <= maxX; x++) {
                 if (this.isOnBoard(new Coord(x, y))) {
-                    coords.push(new Coord(evenOffset + x, y));
+                    coords.push(new Coord(x, y));
                 }
             }
         }
@@ -59,13 +61,21 @@ export class TriangularShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public isOnBoard(coord: Coord): boolean {
-        const minyx: number = this.side - 1;
-        return minyx <= coord.x + coord.y && coord.x - coord.y < this.side;
+        const evenOffset: number = this.side % 2 === 0 ? 1 : 0;
+        const minyx: number = this.side - 1; // TODO: not naming in minyx
+        const minX: number = minyx + evenOffset - coord.y;
+        const maxX: number = minX + (2 * coord.y);
+        return minX <= coord.x && coord.x <= maxX &&
+               0 <= coord.y && coord.y <= minyx;
     }
 
     public isNotOnBoard(coord: Coord): boolean {
-        const minyx: number = this.side - 1;
-        return coord.x + coord.y < minyx || this.side <= coord.x - coord.y;
+        const evenOffset: number = this.side % 2 === 0 ? 1 : 0;
+        const minyx: number = this.side - 1; // TODO: not naming in minyx
+        const minX: number = - coord.y + minyx + evenOffset;
+        const maxX: number = minX + (2 * coord.y);
+        return maxX < coord.x || coord.x < minX ||
+               minyx < coord.y || coord.y < 0;
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {

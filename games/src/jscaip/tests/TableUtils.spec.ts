@@ -138,7 +138,7 @@ describe('TableUtils', () => {
             const table: Table<string> = [
                 ['it', 'has', 'no', 'importance'],
                 ['really', 'none', 'I swear'],
-                ['this', 'could', 'not matter', 'less'],
+                ['this', 'could', 'not', 'matter', 'less'],
             ];
 
             // When mapping it and caring only about that second param
@@ -152,8 +152,8 @@ describe('TableUtils', () => {
             // Then it should have taken into account those x and y coord
             const expectedTable: Table<string> = [
                 ['0 0', '1 0', '2 0', '3 0'],
-                ['0 1', '1 1', '2 1', '3 1'],
-                ['0 2', '1 2', '2 2', '3 2'],
+                ['0 1', '1 1', '2 1'],
+                ['0 2', '1 2', '2 2', '3 2', '4 2'],
             ];
             expect(mappedTable).toEqual(expectedTable);
         });
