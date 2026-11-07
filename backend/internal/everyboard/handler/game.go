@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/rating"
@@ -141,7 +141,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 			loser = game.PlayerOne.User
 			draw = true
 		} else {
-			return fmt.Errorf("doEndGame: game result is not finished")
+			return errors.New("doEndGame: game result is not finished")
 		}
 
 		if extraEvent != nil {
@@ -210,7 +210,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 }
 
 func (h *Handler) handleResign() error {
-	return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
+	return h.doEndGame(func(playerZero *model.MinimalUser, _ *model.MinimalUser) model.Result {
 		if h.user.ID == playerZero.ID {
 			return model.ResultResignOfZero
 		}
@@ -219,7 +219,7 @@ func (h *Handler) handleResign() error {
 }
 
 func (h *Handler) handleNotifyTimeout(timeoutedPlayer model.Player) error {
-	return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
+	return h.doEndGame(func(_ *model.MinimalUser, _ *model.MinimalUser) model.Result {
 		if timeoutedPlayer == model.PlayerZero {
 			return model.ResultTimeoutOfZero
 		}
@@ -228,12 +228,14 @@ func (h *Handler) handleNotifyTimeout(timeoutedPlayer model.Player) error {
 }
 
 func (h *Handler) handleGameEnd(winner model.PlayerOrNone) error {
-	return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
+	return h.doEndGame(func(_ *model.MinimalUser, _ *model.MinimalUser) model.Result {
 		switch winner {
 		case model.PlayerOrNoneZero:
 			return model.ResultVictoryOfZero
 		case model.PlayerOrNoneOne:
 			return model.ResultVictoryOfOne
+		case model.PlayerOrNoneNone:
+			return model.ResultHardDraw
 		default:
 			return model.ResultHardDraw
 		}
@@ -307,7 +309,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 
 	case model.PropositionDraw:
 		extraEvent := model.EventDataReplyAccept(proposition, nil)
-		return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
+		return h.doEndGame(func(playerZero *model.MinimalUser, _ *model.MinimalUser) model.Result {
 			if h.user.ID == playerZero.ID {
 				return model.ResultAgreedDrawByZero
 			}
@@ -433,7 +435,7 @@ func (h *Handler) handleAccept(proposition model.Proposition) error {
 		return nil
 	}
 
-	return fmt.Errorf("accept: unknown proposition, should never happen")
+	return errors.New("accept: unknown proposition, should never happen")
 }
 
 func (h *Handler) handleAddTime(kind model.AddTimeKind) error {

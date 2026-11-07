@@ -43,6 +43,7 @@ describe('HiveHeuristic', () => {
         const weakState: HiveState = HiveState.fromRepresentation([
             [[B], [Q], [G]],
         ], 4);
+
         // When computing their value
         // Then it should prefer having more pieces (i.e., a higher score)
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

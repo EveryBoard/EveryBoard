@@ -1,10 +1,11 @@
 package rating
 
 import (
+	"testing"
+
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestEloComputationFirstGame(t *testing.T) {
@@ -174,17 +175,17 @@ func TestNewEloValue(t *testing.T) {
 
 	for _, tt := range tests {
 		got := newEloValue(tt.oldElo, tt.difference)
-		assert.Equal(t, tt.expected, got, "newEloValue(%f, %f)", tt.oldElo, tt.difference)
+		assert.InDelta(t, tt.expected, got, 0.000001, "newEloValue(%f, %f)", tt.oldElo, tt.difference)
 	}
 }
 
 func TestWinWeight(t *testing.T) {
-	assert.Equal(t, 1.0, w(Victory), "unexpected victory weight")
-	assert.Equal(t, 0.5, w(Draw), "unexpected draw weight")
-	assert.Equal(t, 0.0, w(Loss), "unexpected loss weight")
+	assert.InDelta(t, 1.0, w(Victory), 0.000001, "unexpected victory weight")
+	assert.InDelta(t, 0.5, w(Draw), 0.000001, "unexpected draw weight")
+	assert.InDelta(t, 0.0, w(Loss), 0.000001, "unexpected loss weight")
 }
 
 func TestWinProbability(t *testing.T) {
 	p := winProbability(1000, 1000)
-	assert.Equal(t, 0.5, p, "unexpected win probability")
+	assert.InDelta(t, 0.5, p, 0.000001, "unexpected win probability")
 }

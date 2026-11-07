@@ -37,6 +37,6 @@ func TestChatMessageFlow(t *testing.T) {
 		return nil
 	})
 	require.NoError(t, err, "cannot iterate chat messages")
-	require.Equal(t, 2, len(seenMessages), "there are missing or too many chat messages")
+	require.Len(t, seenMessages, 2, "there are missing or too many chat messages")
 	require.Less(t, seenMessages[0].Timestamp, seenMessages[1].Timestamp, "chat messages should be ordered by timestamp")
 }

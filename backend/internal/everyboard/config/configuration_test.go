@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -55,7 +56,7 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 	t.Setenv("USE_EMULATOR", "yes")
 	t.Setenv("PROJECT_ID", "my-project")
 	t.Setenv("DATABASE_TYPE", "postgres")
-	dsn := "postgresql://postgres:secret@localhost:5432/testdb?sslmode=disable"
+	dsn := "postgresql://postgres:secret@localhost:5432/testdb?sslmode=disable" //nolint:gosec // Test-only DSN.
 	t.Setenv("DATABASE_DSN", dsn)
 	t.Setenv("ALLOW_ORIGIN", "*")
 

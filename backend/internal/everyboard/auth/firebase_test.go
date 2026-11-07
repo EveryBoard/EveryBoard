@@ -2,8 +2,9 @@ package auth
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestFirebaseInitializeFailures(t *testing.T) {

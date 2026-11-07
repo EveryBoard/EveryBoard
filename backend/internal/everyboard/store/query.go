@@ -14,13 +14,13 @@ func applyToQueryResult[T any](db *gorm.DB, result *gorm.DB, action func(T) erro
 		var element T
 		err := db.ScanRows(rows, &element)
 		if err != nil {
-			rows.Close()
+			_ = rows.Close()
 			return err
 		}
 		elements = append(elements, element)
 	}
 	if err := rows.Err(); err != nil {
-		rows.Close()
+		_ = rows.Close()
 		return err
 	}
 	if err := rows.Close(); err != nil {

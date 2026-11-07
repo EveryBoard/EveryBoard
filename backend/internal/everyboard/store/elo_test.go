@@ -25,8 +25,8 @@ func TestUpdateElosSuccess(t *testing.T) {
 	// GetElos should retrieve them
 	ew, el, err := store.GetElos("test", winner, loser)
 	require.NoError(t, err, "error when getting elo")
-	assert.Equal(t, 100.0, ew.CurrentElo, "expected 100 and 50")
-	assert.Equal(t, 50.0, el.CurrentElo, "expected 100 and 50")
+	assert.InDelta(t, 100.0, ew.CurrentElo, 0.000001, "expected 100 and 50")
+	assert.InDelta(t, 50.0, el.CurrentElo, 0.000001, "expected 100 and 50")
 }
 
 func TestGetElosMissingUser(t *testing.T) {
@@ -37,8 +37,8 @@ func TestGetElosMissingUser(t *testing.T) {
 	// Should work even if users don't exist (returns 0.0 elo)
 	ew, el, err := store.GetElos("test", u1, u2)
 	require.NoError(t, err, "error when getting elo")
-	assert.Equal(t, 0.0, ew.CurrentElo, "expected 0.0 elos")
-	assert.Equal(t, 0.0, el.CurrentElo, "expected 0.0 elos")
+	assert.InDelta(t, 0.0, ew.CurrentElo, 0.000001, "expected 0.0 elos")
+	assert.InDelta(t, 0.0, el.CurrentElo, 0.000001, "expected 0.0 elos")
 }
 
 func TestGetEloEmptyDB(t *testing.T) {
@@ -69,7 +69,7 @@ func TestGetEloConcurrentFirstCreate(t *testing.T) {
 	wg.Add(numGoroutines)
 	errs := make(chan error, numGoroutines)
 	start := make(chan struct{})
-	for i := 0; i < numGoroutines; i++ {
+	for range numGoroutines {
 		go func() {
 			defer wg.Done()
 			<-start
@@ -131,10 +131,10 @@ func TestUpdateElos(t *testing.T) {
 
 	assert.Equal(t, winner.ID, eloWinner.UserID, "incorrect elo in db after update")
 	assert.Equal(t, gameName, eloWinner.GameName, "incorrect elo in db after update")
-	assert.Equal(t, 20.0, eloWinner.CurrentElo, "incorrect elo in db after update")
+	assert.InDelta(t, 20.0, eloWinner.CurrentElo, 0.000001, "incorrect elo in db after update")
 	assert.Equal(t, uint(1), eloWinner.GamesPlayed, "incorrect elo in db after update")
 	assert.Equal(t, loser.ID, eloLoser.UserID, "incorrect elo in db after update")
 	assert.Equal(t, gameName, eloLoser.GameName, "incorrect elo in db after update")
-	assert.Equal(t, 1.0, eloLoser.CurrentElo, "incorrect elo in db after update")
+	assert.InDelta(t, 1.0, eloLoser.CurrentElo, 0.000001, "incorrect elo in db after update")
 	assert.Equal(t, uint(1), eloLoser.GamesPlayed, "incorrect elo in db after update")
 }

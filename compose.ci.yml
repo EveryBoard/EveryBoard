@@ -28,6 +28,20 @@ services:
       target: frontend
     command: npm run check
 
+  backend-lint:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.backend-ci
+      target: ci
+    command: sh -c "cd backend && make lint && make vet"
+
+  backend-vuln:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.backend-ci
+      target: ci
+    command: sh -c "cd backend && make vulncheck"
+
   translations:
     build:
       context: .
@@ -53,7 +67,9 @@ services:
       sh -c "cd backend && make build && make test &&
       POSTGRES_TEST_DSN='postgresql://everyboard:everyboard@postgres:5432/everyboard_test?sslmode=disable'
       make test-postgres &&
-      make check-coverage && make check-fmt"
+      make check-coverage"
+    environment:
+      GO_TEST_FLAGS: -race
     depends_on:
       postgres:
         condition: service_healthy

@@ -47,6 +47,7 @@ describe('AbaloneScoreHeuristic', () => {
             [O, O, O, O, O, O, N, N, N],
             [O, O, O, O, O, N, N, N, N],
         ];
+
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

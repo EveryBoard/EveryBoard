@@ -38,8 +38,10 @@ describe('DiamRules', () => {
         it('should allow a simple drop on the empty board', () => {
             // Given the initial state
             const state: DiamState = DiamRules.get().getInitialState();
+
             // When dropping a Player.ZERO piece in a valid space
             const move: DiamMove = drop(0, A1);
+
             // Then the piece goes to the bottom of that space
             // and there is one less piece of that type
             const expectedState: DiamState = DiamState.ofRepresentation([
@@ -109,8 +111,10 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, B2],
                 [A1, __, __, __, __, __, __, A2],
             ], 4);
+
             // When moving the stack starting at A2 clockwise
             const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
+
             // Then the move suceeds and the stack is moved on top of the other one
             const expectedState: DiamState = DiamState.ofRepresentation([
                 [B2, __, __, __, __, __, __, __],
@@ -223,6 +227,7 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B1, __, __, __],
             ], 3);
             const node: DiamNode = new DiamNode(state);
+
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
@@ -236,6 +241,7 @@ describe('DiamRules', () => {
                 [B1, B2, __, __, __, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
+
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });

@@ -32,13 +32,13 @@ func NewDependencies() Dependencies {
 
 func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server, error) {
 	if err := cfg.Firebase.Initialize(); err != nil {
-		return nil, fmt.Errorf("error initializing firebase: %v", err)
+		return nil, fmt.Errorf("error initializing firebase: %w", err)
 	}
 	if dependencies.Store == nil {
 		logger.Info.Printf("Initializing DB")
 		initializedStore, err := store.InitDatabase(cfg.Database)
 		if err != nil {
-			return nil, fmt.Errorf("error initializing database: %v", err)
+			return nil, fmt.Errorf("error initializing database: %w", err)
 		}
 		dependencies.Store = initializedStore
 	}
@@ -57,7 +57,7 @@ func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server
 		} else {
 			notifier, err := notification.NewWebhook(cfg.WebhookURL, cfg.FrontendURL)
 			if err != nil {
-				return nil, fmt.Errorf("error initializing webhook: %v", err)
+				return nil, fmt.Errorf("error initializing webhook: %w", err)
 			}
 			dependencies.Notifier = notifier
 		}

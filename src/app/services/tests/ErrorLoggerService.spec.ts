@@ -42,6 +42,7 @@ describe('ErrorLoggerService', () => {
         // Given a non-initialized error logger service
         // eslint-disable-next-line dot-notation
         ErrorLoggerService['singleton'] = MGPOptional.empty();
+
         // When logging an error
         // Then it throws instead
         expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
@@ -129,6 +130,7 @@ describe('ErrorLoggerService', () => {
             // Given no matching error
             // When looking for matching errors
             const errors: FirestoreDocument<MGPError>[] = await errorLoggerService.findErrors('test', '', 'dummy message');
+
             // Then no matching error should be found
             expect(errors.length).toBe(0);
         });
@@ -144,9 +146,11 @@ describe('ErrorLoggerService', () => {
                 occurences: 1,
             };
             const errorId: string = await errorDAO.create(error);
+
             // When looking for matching errors
             const errors: FirestoreDocument<MGPError>[] =
                 await errorLoggerService.findErrors(error.component, error.route, error.message, error.data);
+
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toBe(errorId);
@@ -162,9 +166,11 @@ describe('ErrorLoggerService', () => {
                 occurences: 1,
             };
             const errorId: string = await errorDAO.create(error);
+
             // When looking for matching errors (without data)
             const errors: FirestoreDocument<MGPError>[] =
                 await errorLoggerService.findErrors(error.component, error.route, error.message);
+
             // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toEqual(errorId);

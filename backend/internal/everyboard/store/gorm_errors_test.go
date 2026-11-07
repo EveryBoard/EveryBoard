@@ -1,10 +1,11 @@
 package store
 
 import (
-	"fmt"
+	"errors"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"gorm.io/driver/sqlite"
@@ -15,8 +16,8 @@ type FailingDialector struct {
 	gorm.Dialector
 }
 
-func (d FailingDialector) Initialize(db *gorm.DB) error {
-	return fmt.Errorf("forced dialector failure")
+func (d FailingDialector) Initialize(_ *gorm.DB) error {
+	return errors.New("forced dialector failure")
 }
 
 func TestInitDatabaseFailure(t *testing.T) {
@@ -29,15 +30,15 @@ func TestGetEloDoesNotExist(t *testing.T) {
 	user := model.MinimalUser{ID: "non-existent", Name: "non-existent"}
 	elo, err := store.GetElo("some-game", user)
 	require.NoError(t, err, "error when getting elo")
-	assert.Equal(t, 0.0, elo.CurrentElo, "expected 0.0 elo")
+	assert.InDelta(t, 0.0, elo.CurrentElo, 0.000001, "expected 0.0 elo")
 }
 
 func TestUpdateElosTransaction(t *testing.T) {
 	store, _ := InitDatabase(sqlite.Open(":memory:"))
 
 	// Transaction that returns an error
-	err := store.Transaction(func(s Store) error {
-		return fmt.Errorf("forced transaction failure")
+	err := store.Transaction(func(_ Store) error {
+		return errors.New("forced transaction failure")
 	})
 	require.Error(t, err, "expected transaction callback error to be returned")
 }
@@ -47,7 +48,7 @@ func TestGORMStoreErrorPaths(t *testing.T) {
 	// Close the underlying DB to force errors
 	db := store.DB()
 	sqlDB, _ := db.DB()
-	sqlDB.Close()
+	require.NoError(t, sqlDB.Close())
 
 	user := model.MinimalUser{ID: "u", Name: "u"}
 
