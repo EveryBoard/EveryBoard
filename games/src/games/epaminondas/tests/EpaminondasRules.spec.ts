@@ -287,8 +287,10 @@ describe('EpaminondasRules', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When performing a legal move
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
+
         // Then the move should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -325,8 +327,10 @@ describe('EpaminondasRules', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When performing the capture
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
+
         // Then the move should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -417,6 +421,7 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
+
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
