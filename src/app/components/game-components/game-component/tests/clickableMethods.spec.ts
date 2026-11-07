@@ -27,8 +27,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onPyramidClick: [new Coord(0, 0)],
         onSpaceClick: [new Coord(0, 0)],
     },
-    ConnectSix: { onClick: [0, 0] },
-    ConnectN: { onClick: [new Coord(0, 0)] },
+    ConnectSix: { onClick: [new Coord(0, 0)] },
     Conspirateurs: { onClick: [new Coord(0, 0)] },
     Diaballik: {
         onClick: [0, 0],
