@@ -28,7 +28,9 @@ function findEntryPoints(): ReadonlyMap<string, string> {
     const gameEntryPoints: string[] = ts.sys.readDirectory(publicRoot, ['.ts']);
     for (const entryPoint of gameEntryPoints) {
         const relativePath: string = path.relative(publicRoot, entryPoint);
-        const gamePath: string = relativePath.slice(0, -path.extname(relativePath).length).replaceAll(path.sep, '/');
+        const gamePath: string = relativePath
+            .slice(0, -path.extname(relativePath).length)
+            .replaceAll(path.sep, '/');
         const pathParts: string[] = gamePath.split('/');
         if (pathParts.includes('common')) {
             throw new Error(`Public games entry point must not be named common: ${relativePath}`);

@@ -12,7 +12,7 @@ export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMov
         return this.orderMovesByPhalanxSizeAndFilter(moves, node.gameState);
     }
 
-    private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasState): EpaminondasMove[] {
+    private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], _state: EpaminondasState): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
             return move.phalanxSize;
         });
