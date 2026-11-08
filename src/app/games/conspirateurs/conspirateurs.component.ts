@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
-import { Coord, Table } from '@everyboard/games';
+import { Coord, Table, TableUtils } from '@everyboard/games';
 import { GameStatus } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -25,12 +25,12 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 
 interface SquareInfo {
-    coord: Coord;
-    squareClasses: string[];
-    shelterClasses: string[];
-    hasPieceToDraw: boolean;
-    isShelter: boolean;
-    isOccupiedShelter: boolean;
+    readonly coord: Coord;
+    readonly squareClasses: string[];
+    readonly shelterClasses: string[];
+    readonly hasPieceToDraw: boolean;
+    readonly isShelter: boolean;
+    readonly isOccupiedShelter: boolean;
 }
 
 @Component({
@@ -133,9 +133,25 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jump: ConspirateursMoveJump = this.jumpInConstruction().get();
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
-                const boardInfo: Table<SquareInfo> = this.boardInfo();
-                boardInfo[jumpStart.y][jumpStart.x].hasPieceToDraw = false;
-                boardInfo[jumpCurrent.y][jumpCurrent.x].hasPieceToDraw = true;
+                const boardInfo: Table<SquareInfo> = TableUtils.map(
+                    this.boardInfo(),
+                    (squareInfo: SquareInfo, x: number, y: number) => {
+                        const coord: Coord = new Coord(x, y);
+                        if (jumpStart.equals(coord)) {
+                            return {
+                                ...squareInfo,
+                                hasPieceToDraw: false,
+                            };
+                        } else if (jumpCurrent.equals(coord)) {
+                            return {
+                                ...squareInfo,
+                                hasPieceToDraw: true,
+                            };
+                        } else {
+                            return squareInfo;
+                        }
+                    },
+                );
                 for (const coord of jump.coords) {
                     boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }
