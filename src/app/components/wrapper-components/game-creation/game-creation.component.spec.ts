@@ -106,6 +106,7 @@ describe('GameCreationComponent', () => {
     it('should initialize properly', fakeAsync(async() => {
         // Given a component
         expect(component).toBeTruthy();
+
         // When it is loaded
         // Then it should not trigger any error
         await awaitComponentInitialization();
@@ -210,6 +211,7 @@ describe('GameCreationComponent', () => {
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     await clickElement('#play-against-ai');
                 });
+
                 // Then it should navigate to local game
                 await expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
             }));
@@ -297,6 +299,7 @@ describe('GameCreationComponent', () => {
                 expect(findElement('#proposeConfig').nativeElement.disabled).withContext(contextBefore).toBeTruthy();
 
                 spyOn(configRoomService, 'selectOpponent');
+
                 // When choosing the opponent
                 await chooseOpponent();
                 testUtils.detectChanges();

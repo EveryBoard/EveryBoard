@@ -322,8 +322,8 @@ describe('EncapsuleComponent', () => {
                 [___, _X_, ___],
                 [___, ___, _X_],
             ];
-            // When displaying it
 
+            // When displaying it
             await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
 
             // Then the victory coords should be highlighted

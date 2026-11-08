@@ -222,15 +222,19 @@ describe('HexagonalGameState', () => {
             const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             // Given a line
             const line: HexaLine = HexaLine.constantS(4);
+
             // When computing the entrance
             const entrance: Coord = state.getEntranceOnLine(line);
+
             // Then it should provide the expected entrance
             expect(entrance.equals(new Coord(4, 0))).toBeTrue();
 
             // Given another line
             const otherLine: HexaLine = HexaLine.constantS(8);
+
             // When computing the entrance
             const otherEntrance: Coord = state.getEntranceOnLine(otherLine);
+
             // Then it should provide the expected entrance
             expect(otherEntrance.equals(new Coord(6, 2))).toBeTrue();
         });

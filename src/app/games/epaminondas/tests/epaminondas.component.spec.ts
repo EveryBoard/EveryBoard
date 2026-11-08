@@ -120,6 +120,7 @@ describe('EpaminondasComponent', () => {
         it('should cancel move when clicking on non-aligned space', fakeAsync(async() => {
             // Given a board where a first piece is selected
             await testUtils.expectClickSuccess('#click-0-11');
+
             // When clicking on a non-aligned space
             // Then it should fail
             await testUtils.expectClickFailure('#click-5-9', EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
@@ -128,6 +129,7 @@ describe('EpaminondasComponent', () => {
         it('should move piece one step when clicking on an empty square next to it', fakeAsync(async() => {
             // Given a board with a piece selected
             await testUtils.expectClickSuccess('#click-0-10');
+
             // When clicking next to the piece on an empty square
             // Then it should succeed as a move
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
@@ -137,6 +139,7 @@ describe('EpaminondasComponent', () => {
         it('should not move single piece two step', fakeAsync(async() => {
             // Given a board with a piece selected
             await testUtils.expectClickSuccess('#click-0-10');
+
             // When trying to move the piece by more than one step
             // Then it should fail
             await testUtils.expectClickFailure('#click-0-8', EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(2, 1));

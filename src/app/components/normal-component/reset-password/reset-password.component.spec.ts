@@ -53,8 +53,10 @@ describe('ResetPasswordComponent', () => {
         // Given a user with an email that will fail password reset
         spyOn(connectedUserService, 'sendPasswordResetEmail').and.resolveTo(MGPValidation.failure('error'));
         fillInEmail();
+
         // When asking for password reset
         await testUtils.clickElement('#resetPasswordButton');
+
         // Then it has called sendPasswordResetEmail and shows the success message
         expect(connectedUserService.sendPasswordResetEmail).toHaveBeenCalledWith(email);
         expect(getShownError()).toEqual('error');
