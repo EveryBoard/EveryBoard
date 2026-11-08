@@ -49,6 +49,7 @@ describe('PenteComponent', () => {
         // When doing a move
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
         await testUtils.expectMoveSuccess('.space-4-2', move);
+
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#piece-4-2', 'last-move-stroke');
     }));
@@ -112,8 +113,10 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(0, 0), 6);
+
         // When displaying it
         await testUtils.setupState(state);
+
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece-9-9', 'victory-stroke');
         testUtils.expectElementToHaveClass('#piece-10-9', 'victory-stroke');

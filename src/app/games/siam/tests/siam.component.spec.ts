@@ -56,6 +56,7 @@ describe('SiamComponent', () => {
         await testUtils.expectClickSuccess('#remaining-pieces-PLAYER_ZERO');
         await testUtils.expectClickSuccess('#square-2-0');
         const move: SiamMove = SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
+
         // Then it should succeed
         await testUtils.expectMoveSuccess('#orientation-DOWN', move);
     }));
@@ -71,6 +72,7 @@ describe('SiamComponent', () => {
         // Given a component
         // When the player clicks on a piece for insertion
         await testUtils.expectClickSuccess('#remaining-pieces-PLAYER_ZERO');
+
         // Then it should be selected
         testUtils.expectElementToHaveClass('#remaining-pieces-PLAYER_ZERO-4', 'selected-stroke');
     }));
@@ -193,6 +195,7 @@ describe('SiamComponent', () => {
         // and must select an orientation arrow
         await testUtils.expectClickSuccess('#remaining-pieces-PLAYER_ZERO');
         await testUtils.expectClickSuccess('#square-0-0');
+
         // When clicking somewhere else on the board
         // Then it should fail
         await testUtils.expectClickFailure('#square-2-2', SiamFailure.MUST_SELECT_ORIENTATION());
@@ -202,6 +205,7 @@ describe('SiamComponent', () => {
         // Given a component on which the player has selected a piece for insertion,
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remaining-pieces-PLAYER_ZERO');
+
         // When the player clicks on an empty target which would result in an impossible move
         // Then it should fail
         await testUtils.expectClickFailure('#square-1-1', SiamFailure.MUST_SELECT_VALID_DESTINATION());
@@ -211,6 +215,7 @@ describe('SiamComponent', () => {
         // Given a component on which the player has selected a piece for insertion,
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remaining-pieces-PLAYER_ZERO');
+
         // When the player clicks on an invalid target which would result in an impossible move
         // Then it should fail
         await testUtils.expectClickFailure('#square-2-2', SiamFailure.MUST_SELECT_VALID_DESTINATION());

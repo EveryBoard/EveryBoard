@@ -328,6 +328,7 @@ describe('MartianChessRules', () => {
                                                                MGPOptional.empty(),
                                                                MGPOptional.empty(),
                                                                capturedBefore);
+
         // When doing this capture
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
 
@@ -607,6 +608,7 @@ describe('MartianChessRules', () => {
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
+
                 // When checking the game status
                 // Then it should be a victory for Player.ONE
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);

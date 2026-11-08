@@ -49,8 +49,10 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
+
             // When performing a distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+
             // Then the distribution should be performed as expected, and leave 0 seeds in the starting space
             const expectedBoard: Table<number> = [
                 [3, 1, 2, 0, 2, 0],
