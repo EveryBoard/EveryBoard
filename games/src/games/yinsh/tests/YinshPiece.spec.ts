@@ -31,6 +31,7 @@ describe('YinshPiece', () => {
         spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a non-player piece
         const piece: YinshPiece = YinshPiece.EMPTY;
+
         // When trying to flip it
         // Then it should fail
         const message: string = 'cannot flip a non-player piece';

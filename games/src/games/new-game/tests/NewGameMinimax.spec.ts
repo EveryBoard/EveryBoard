@@ -41,6 +41,7 @@ describe('NewGameMinimax', () => {
 
         // When selecting the best move
         const bestMove: NewGameMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);
+
         // Then it should be the move I want it to be
         expect(bestMove).toBeTruthy();
     });
