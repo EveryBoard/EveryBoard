@@ -30,6 +30,7 @@ describe('ThemeService', () => {
             // When the page loads
             testUtils.detectChanges();
             tick(1000);
+
             // Then the CSS is set to an existing theme
             expect(getThemeElement().href).toMatch('/(light|dark).css$');
         }));
@@ -49,9 +50,11 @@ describe('ThemeService', () => {
         // Given that the dark theme is the stored setting
         localStorage.setItem('theme', 'dark');
         spyOn(localStorage, 'getItem').and.callThrough();
+
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
+
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
         localStorage.clear();
@@ -65,9 +68,11 @@ describe('ThemeService', () => {
             const result: MediaQueryList = realMatchMedia(query);
             return { ...result, matches: false };
         });
+
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
+
         // Then the (default) dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
         localStorage.clear();
@@ -80,9 +85,11 @@ describe('ThemeService', () => {
             return { ...result, matches: query === '(prefers-color-scheme: dark)' };
 
         });
+
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
+
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
     }));
@@ -94,9 +101,11 @@ describe('ThemeService', () => {
             return { ...result, matches: query === '(prefers-color-scheme: light)' };
 
         });
+
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
+
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/light.css$');
     }));
@@ -107,9 +116,11 @@ describe('ThemeService', () => {
             const result: MediaQueryList = realMatchMedia(query);
             return { ...result, matches: false };
         });
+
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
+
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
     }));

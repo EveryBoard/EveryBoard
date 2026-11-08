@@ -55,6 +55,7 @@ describe('VerifyAccountComponent', () => {
         }));
         it('should show error if setting the username fails', fakeAsync(async() => {
             const failure: string = 'Invalid username';
+
             // When an invalid username is picked
             spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
             testUtils.fillInput('#username', 'jeanjiji');
@@ -104,6 +105,7 @@ describe('VerifyAccountComponent', () => {
         }));
         it('should not finalize verification if the user did not verify its email', fakeAsync(async() => {
             spyOn(window, 'open').and.returnValue(null);
+
             // When the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 

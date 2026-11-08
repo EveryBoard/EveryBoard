@@ -975,6 +975,7 @@ describe('HiveRules', () => {
 
         // When computing the possible moves for the spider
         const moves: Set<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
+
         // Then we should have exactly 4 moves
         expect(moves.size()).toBe(4);
     });

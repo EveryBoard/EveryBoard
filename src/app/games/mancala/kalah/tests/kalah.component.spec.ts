@@ -164,6 +164,7 @@ describe('KalahComponent', () => {
 
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
                 tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
@@ -173,6 +174,7 @@ describe('KalahComponent', () => {
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+
                 // Then 5 * TIMEOUT_BETWEEN_SEED ms to sow the final 5 seeds
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             }));
@@ -232,8 +234,10 @@ describe('KalahComponent', () => {
         it('should allow double distribution move', fakeAsync(async() => {
             // Given any board where first distribution has been done
             await mancalaTestUtils.expectClickSuccess('#click-3-1');
+
             // When doing double distribution move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(0, 1)]);
+
             // Then it should be a success
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
         }));

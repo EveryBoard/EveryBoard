@@ -39,11 +39,13 @@ describe('OnlineGameWrapperComponent (games)', () => {
             for (const methodName of Object.keys(game)) {
                 const context: string = `click method ${methodName} should be defined for game ${gameInfo.name}`;
                 expect(wrapper.gameComponent[methodName]).withContext(context).toBeDefined();
+
                 // When performing any kind of click possible in the component
                 const clickResult: MGPValidation =
                     await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
                         return wrapper.gameComponent[methodName](...game[methodName]);
                     });
+
                 // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }

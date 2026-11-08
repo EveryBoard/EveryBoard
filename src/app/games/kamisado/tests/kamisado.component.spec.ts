@@ -36,6 +36,16 @@ describe('KamisadoComponent', () => {
         testUtils.expectToBeCreated();
     });
 
+    it('should remove chosen coord when calling updateBoard without move', fakeAsync(async() => {
+        // Given the game component
+        // When calling updateBoard
+        await testUtils.getGameComponent().updateBoard(false);
+
+        // Then the chosen piece should be absent, and nothing should be highlighted
+        expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
+        testUtils.expectElementNotToExist('.highlight');
+    }));
+
     it('should not allow to pass initially', fakeAsync(async() => {
         // Given the initial state
         // When displaying the board

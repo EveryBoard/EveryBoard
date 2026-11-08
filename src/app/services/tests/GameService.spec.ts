@@ -61,9 +61,11 @@ describe('GameService', () => {
                                               },
                                               ignore,
                                               ignore);
+
             // When there is a game update
             const updatedGame: Game = GameMocks.STARTED;
             receiveGameUpdate(updatedGame);
+
             // Then we are notified about it
             expect(game.isPresent()).toBeTrue();
             expect(game.get()).toEqual(updatedGame);
@@ -82,6 +84,7 @@ describe('GameService', () => {
                                                   serverTime = MGPOptional.of(time);
                                               },
                                               ignore);
+
             // When there is a game event
             const receivedEvent: GameEvent = {
                 timestamp: 42,
@@ -91,6 +94,7 @@ describe('GameService', () => {
             };
             const receivedServerTime: number = 1234;
             receiveGameEvent(receivedEvent, receivedServerTime);
+
             // Then we are notified about it
             expect(event.isPresent()).toBeTrue();
             expect(event.get()).toEqual(receivedEvent);
@@ -109,9 +113,11 @@ describe('GameService', () => {
                                               (reason: string): void => {
                                                   error = MGPOptional.of(reason);
                                               });
+
             // When there is a game update
             const receivedError: string = 'unknown-message';
             receiveError(receivedError);
+
             // Then we are notified about it
             expect(error.isPresent()).toBeTrue();
             expect(error.get()).toEqual(receivedError);
@@ -133,6 +139,7 @@ describe('GameService', () => {
                                                   observedSomething = true;
                                               });
             subscription.unsubscribe();
+
             // When there is any update
             receiveGameUpdate(GameMocks.STARTED);
             receiveGameEvent({
@@ -142,6 +149,7 @@ describe('GameService', () => {
                 move: { x: 42 },
             }, 1234);
             receiveError('unknown-message');
+
             // Then we are not notified about any update
             expect(observedSomething).toBeFalse();
         }));
@@ -151,6 +159,7 @@ describe('GameService', () => {
         it('should delegate to backend and retrieve the created game id', fakeAsync(async() => {
             // Given a game service
             const gameIdFromBackend: string = '1234';
+
             // When creating a game
             spyOn(backendService, 'sendAndWaitForReply').and.callFake(
                 async(_message: JSONValue, _replyTag: string): Promise<MGPFallible<BackendMessage>> => {
@@ -158,6 +167,7 @@ describe('GameService', () => {
                     return MGPFallible.success(new BackendMessage('GameCreated', { gameId: gameIdFromBackend }));
                 });
             const gameId: MGPFallible<string> = await gameService.createGame('P4');
+
             // Then it should return the created game
             expect(gameId.isSuccess()).toBeTrue();
             expect(gameId.get()).toBe(gameIdFromBackend);
@@ -172,6 +182,7 @@ describe('GameService', () => {
                     return MGPFallible.failure('some-reason');
                 });
             const gameId: MGPFallible<string> = await gameService.createGame('P4');
+
             // Then it should return the error
             expect(gameId.isFailure()).toBeTrue();
             expect(gameId.getReason()).toBe('some-reason');
@@ -183,8 +194,10 @@ describe('GameService', () => {
             it('should send the expected message for ' + name, fakeAsync(async() => {
                 // Given a game service
                 spyOn(backendService, 'send').and.callThrough();
+
                 // When performing the action
                 await action();
+
                 // Then it should have sent the expected message to the backend
                 expect(backendService.send).toHaveBeenCalledOnceWith(expectedMessage);
             }));

@@ -14,6 +14,7 @@ describe('ApagosMove', () => {
     it('should refuse creating static sliding', () => {
         // Given a move whose landing coord is lower than starting
         const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(0, 0);
+
         // Then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
@@ -21,6 +22,7 @@ describe('ApagosMove', () => {
     it('should refuse creating "climbing" slide', () => {
         // Given a move whose landing coord is lower than starting
         const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(1, 2);
+
         // Then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
