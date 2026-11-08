@@ -53,8 +53,10 @@ describe('HeaderComponent', () => {
     it('should bring to account settings when clicking on the account button', fakeAsync(async() => {
         // Given a connected user
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+
         // When displaying the component
         testUtils.detectChanges();
+
         // Then the account link should point to the account component
         const button: DebugElement = testUtils.findElement('#account');
         await expectValidRoutingLink(button, '/account', AccountComponent);

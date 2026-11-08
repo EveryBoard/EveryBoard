@@ -60,6 +60,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
+
             // When clicking on them
             // Then it should fail
             await testUtils.expectClickFailure('.space-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());

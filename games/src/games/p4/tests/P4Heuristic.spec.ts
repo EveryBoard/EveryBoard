@@ -134,6 +134,7 @@ describe('P4Heuristic', () => {
         // Given the default config
         // When computing the bounds
         const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+
         // Then it should 2 * the number of squares
         const expectedHeuristicValue: number = 2 * defaultConfig.width * defaultConfig.height;
         const expectedBounds: HeuristicBounds<BoardValue> = {

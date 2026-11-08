@@ -34,6 +34,7 @@ describe('UserDAO', () => {
 
             // When trying to read another user
             const otherUserRead: MGPOptional<User> = await userDAO.read(other.uid);
+
             // Then it should succeed
             expect(otherUserRead.isPresent()).toBeTrue();
             expect(otherUserRead.get().username).toBe('other-user');
@@ -45,6 +46,7 @@ describe('UserDAO', () => {
 
             // When trying to read a user
             const userRead: MGPOptional<User> = await userDAO.read(other.uid);
+
             // Then it should succeed
             expect(userRead.isPresent()).toBeTrue();
             expect(userRead.get().username).toBe('other-user');
@@ -56,8 +58,10 @@ describe('UserDAO', () => {
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
+
             // When setting the user in DB
             const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false });
+
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -65,8 +69,10 @@ describe('UserDAO', () => {
         it('should forbid to create a user with a different id than our own', async() => {
             // Given an existing, logged in user
             await createConnectedGoogleUser('foo@bar.com', 'user');
+
             // When trying to set another user in the DB
             const result: Promise<void> = userDAO.set('some-other-uid', { verified: false });
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -74,8 +80,10 @@ describe('UserDAO', () => {
         it('should authorize updating its username when not set', async() => {
             // Given an existing, logged in user, without username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com');
+
             // When trying to set the username
             const result: Promise<void> = userService.setUsername(user.uid, 'user');
+
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -83,8 +91,10 @@ describe('UserDAO', () => {
         it('should forbid updating its username if it is already set', async() => {
             // Given an existing, logged in user, with a username
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
+
             // When trying to set the username
             const result: Promise<void> = userService.setUsername(user.uid, 'user!');
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -99,6 +109,7 @@ describe('UserDAO', () => {
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
+
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -113,6 +124,7 @@ describe('UserDAO', () => {
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -127,6 +139,7 @@ describe('UserDAO', () => {
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -135,8 +148,10 @@ describe('UserDAO', () => {
             // Given an existing user and a logged in user
             const other: FireAuth.User = await createDisconnectedGoogleUser('bar@bar.com', 'other-user');
             await createConnectedGoogleUser('foo@bar.com', 'user');
+
             // When trying to change a field of another user
             const result: Promise<void> = userDAO.update(other.uid, { username: 'jean? jaja!' });
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -144,8 +159,10 @@ describe('UserDAO', () => {
         it('should forbid to delete its own user', async() => {
             // Given a logged in user
             const user: FireAuth.User = await createConnectedGoogleUser('foo@bar.com', 'user');
+
             // When trying to delete it
             const result: Promise<void> = userDAO.delete(user.uid);
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -154,8 +171,10 @@ describe('UserDAO', () => {
             // Given an existing user and a logged in user
             const other: FireAuth.User = await createDisconnectedGoogleUser('bar@bar.com', 'other-user');
             await createConnectedGoogleUser('foo@bar.com', 'user');
+
             // When trying to delete the other user
             const result: Promise<void> = userDAO.delete(other.uid);
+
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });

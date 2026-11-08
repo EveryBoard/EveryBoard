@@ -40,6 +40,7 @@ describe('KamisadoComponent', () => {
         // Given the game component
         // When calling updateBoard
         await testUtils.getGameComponent().updateBoard(false);
+
         // Then the chosen piece should be absent, and nothing should be highlighted
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');
@@ -55,8 +56,10 @@ describe('KamisadoComponent', () => {
     it('should allow changing initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click-0-7');
+
         // When clicking on a different piece from the same player
         await testUtils.expectClickSuccess('#click-1-7');
+
         // Then it should change the selected piece
         expect(testUtils.getGameComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
     }));

@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build in the CI container
         run: make ci-build
 
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Run test suites in the CI container
         run: make ci-frontend
 
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Run backend checks in the CI container
         run: make ci-backend
 
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Run E2E checks in the CI container
         run: make ci-e2e
 
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Run linter in the CI container
         run: make ci-lint
 
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Run Go vulnerability check in the CI container
         run: make ci-vuln
 
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Check game images in the CI container
         run: make ci-images
 
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Check translations in the CI container
         run: make ci-translations
 
@@ -87,9 +87,9 @@ jobs:
           ', github.ref)
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -109,7 +109,7 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_DEV }}" > src/app/firebaseConfig.ts
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Install OS dependencies
@@ -193,9 +193,9 @@ jobs:
     environment: netlify
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -211,7 +211,7 @@ jobs:
         run: |
           cp src/app/firebaseConfig.test.ts src/app/firebaseConfig.ts
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Install OS dependencies
