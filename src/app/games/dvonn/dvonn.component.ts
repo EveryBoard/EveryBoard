@@ -10,7 +10,7 @@ import { DvonnPieceStack } from '@everyboard/games/dvonn';
 import { DvonnRules } from '@everyboard/games/dvonn';
 import { DvonnScoreHeuristic } from '@everyboard/games/dvonn';
 import { DvonnState } from '@everyboard/games/dvonn';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexaLayout } from '../../components/game-components/HexaLayout';
@@ -33,7 +33,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     protected readonly lastMove: WritableSignal<MGPOptional<DvonnMove>> = signal(MGPOptional.empty());
     protected readonly chosen: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
-    protected readonly disconnectedSpaces: WritableSignal<CoordAndContent[]> = signal([]);
+    protected readonly disconnectedSpaces: WritableSignal<ReadonlyArray<CoordAndContent>> = signal([]);
 
     public constructor() {
         super('Dvonn');
@@ -94,7 +94,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.lastMove.set(MGPOptional.of(move));
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.state();
-        const disconnectedSpaces: CoordAndContent[] = this.disconnectedSpaces();
+        const disconnectedSpaces: CoordAndContent[] = ArrayUtils.copy(this.disconnectedSpaces());
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);

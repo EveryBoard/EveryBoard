@@ -37,8 +37,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public stateInConstruction: DiaballikState;
 
-    public WIDTH: number;
-    public HEIGHT: number;
     protected readonly INDICATOR_SIZE: number = 20;
 
     private readonly victoryCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
