@@ -79,7 +79,7 @@
     "eslint-plugin-jasmine": "^4.2.2",
     "firebase-tools": "^15.28.2",
     "globals": "^17.11.0",
-    "jasmine-core": "^6.3.0",
+    "jasmine-core": "^7.0.2",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
