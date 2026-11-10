@@ -707,8 +707,7 @@ export class ConfigureTestingModuleUtils {
         }).compileComponents();
     }
 
-    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub)
-    : Promise<void> {
+    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [],
             providers: [

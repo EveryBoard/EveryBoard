@@ -10,12 +10,14 @@ import { GameEvent, Game } from '../domain/Game';
 import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractGameService {
+
     /** Subscribe to the game, giving callbacks that will be called upon certain events */
-    public abstract subscribeTo(gameId: string,
+    public abstract subscribeTo(
+        gameId: string,
         gameUpdate: (game: Game) => Promise<void>,
         gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-        error: (reason: string) => void)
-    : Promise<Subscription>;
+        error: (reason: string) => void,
+    ): Promise<Subscription>;
 
     /** Create a game. Return the id of the created game, or an error. */
     public abstract createGame(gameName: string): Promise<MGPFallible<string>>;

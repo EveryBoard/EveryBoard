@@ -236,8 +236,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return this.getSimpleDistributionResult(distribution, true);
     }
 
-    private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean)
-    : Promise<MancalaDistributionResult> {
+    private async getSimpleDistributionResult(
+        distribution: MancalaDistribution,
+        showSeedBySeed: boolean,
+    ): Promise<MancalaDistributionResult> {
         const state: MancalaState = this.constructedState;
         const coord: Coord = new Coord(distribution.x, distribution.y);
         this.lastDistributedHouses.push(coord);
@@ -429,8 +431,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.cdr.detectChanges();
     }
 
-    protected createAIConfig(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
-    : AIConfig<MancalaMove, MancalaState, MancalaConfig> {
+    protected createAIConfig(
+        moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>,
+    ): AIConfig<MancalaMove, MancalaState, MancalaConfig> {
         return {
             minimax: [{
                 id: 'score',

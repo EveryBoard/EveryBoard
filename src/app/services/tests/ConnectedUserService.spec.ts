@@ -55,8 +55,11 @@ export class ConnectedUserServiceMock {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
     }
-    public async doRegister(_username: string, _email: string, _password: string)
-    : Promise<MGPFallible<FireAuth.User>> {
+    public async doRegister(
+        _username: string,
+        _email: string,
+        _password: string,
+    ): Promise<MGPFallible<FireAuth.User>> {
         throw new Error('ConnectedUserServiceMock.doRegister not implemented');
     }
     public async sendEmailVerification(): Promise<MGPValidation> {

@@ -21,6 +21,8 @@ export type YinshLegalityInformation = YinshState;
 
 export class YinshNode extends GameNode<YinshMove, YinshState> {}
 
+type HexaTrajectory = { start: Coord; end: Coord; dir: HexaDirection};
+
 export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 
     private static singleton: MGPOptional<YinshRules> = MGPOptional.empty();
@@ -51,9 +53,12 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return new YinshState(board, PlayerNumberMap.of(5, 5), 0);
     }
 
-    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: EmptyRulesConfig, info: YinshState)
-    : YinshState
-    {
+    public override applyLegalMove(
+        _move: YinshMove,
+        _state: YinshState,
+        _config: EmptyRulesConfig,
+        info: YinshState,
+    ): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);
     }
@@ -209,9 +214,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return MGPValidation.SUCCESS;
     }
 
-    private capturesValidity(state: YinshState, captures: ReadonlyArray<YinshCapture>)
-    : MGPValidation
-    {
+    private capturesValidity(state: YinshState, captures: ReadonlyArray<YinshCapture>): MGPValidation {
         let updatedState: YinshState = state;
         for (const capture of captures) {
             const validity: MGPValidation = this.captureValidity(updatedState, capture);
@@ -241,7 +244,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
     private noMoreCapturesValidity(state: YinshState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
-        const linePortions: ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}> =
+        const linePortions: ReadonlyArray<HexaTrajectory> =
             this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player);
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
@@ -250,11 +253,13 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         }
     }
 
-    private getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player)
-    : ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}> {
-        const linePortions: { start: Coord; end: Coord; dir: HexaDirection}[] = [];
+    private getLinePortionsWithAtLeastFivePiecesOfPlayer(
+        state: YinshState,
+        player: Player,
+    ): ReadonlyArray<HexaTrajectory> {
+        const linePortions: HexaTrajectory[] = [];
         state.allLines().forEach((line: HexaLine) => {
-            const linePortion: MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}> =
+            const linePortion: MGPOptional<HexaTrajectory> =
                 this.getLinePortionWithAtLeastFivePiecesOfPlayer(state, player, line);
             if (linePortion.isPresent()) {
                 linePortions.push(linePortion.get());
@@ -263,8 +268,11 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return linePortions;
     }
 
-    private getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player, line: HexaLine)
-    : MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}> {
+    private getLinePortionWithAtLeastFivePiecesOfPlayer(
+        state: YinshState,
+        player: Player,
+        line: HexaLine,
+    ): MGPOptional<HexaTrajectory> {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();
@@ -295,7 +303,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         const player: Player = state.getCurrentPlayer();
         const captures: YinshCapture[] = [];
         this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player)
-            .forEach((linePortion: { start: Coord; end: Coord; dir: HexaDirection}) => {
+            .forEach((linePortion: HexaTrajectory) => {
                 for (let cur: Coord = linePortion.start;
                     5 <= cur.getLinearDistanceToward(linePortion.end);
                     cur = cur.getNext(linePortion.dir)) {

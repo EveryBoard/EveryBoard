@@ -125,8 +125,11 @@ export class AbaloneRules extends ConfigurableRules<
         return new AbaloneState(newBoard, state.turn + 1);
     }
 
-    public override isLegal(move: AbaloneMove, state: AbaloneState, config: AbaloneConfig)
-    : MGPFallible<AbaloneLegalityInformation> {
+    public override isLegal(
+        move: AbaloneMove,
+        state: AbaloneState,
+        config: AbaloneConfig,
+    ): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
             return firstPieceValidity.toOtherFallible();
@@ -149,8 +152,11 @@ export class AbaloneRules extends ConfigurableRules<
         }
     }
 
-    private isLegalPush(move: AbaloneMove, state: AbaloneState, config: AbaloneConfig)
-    : MGPFallible<AbaloneLegalityInformation> {
+    private isLegalPush(
+        move: AbaloneMove,
+        state: AbaloneState,
+        config: AbaloneConfig,
+    ): MGPFallible<AbaloneLegalityInformation> {
         let pieces: number = 1;
         let tested: Coord = move.coord.getNext(move.dir);
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());

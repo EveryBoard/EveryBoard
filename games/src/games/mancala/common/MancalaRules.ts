@@ -108,9 +108,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         super();
     }
 
-    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
         let canStillPlay: boolean = true;
         for (const distribution of move) {
             Utils.assert(canStillPlay, 'Cannot play after non kalah move');
@@ -147,8 +145,11 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * If the distribution is illegal, returns a failure including the failure reason
      * If the distribution is legal, return a MGPFallible of a boolean that is true if user can still play
      */
-    private isLegalDistribution(distribution: MancalaDistribution, state: MancalaState, config: MancalaConfig)
-    : MGPFallible<boolean> {
+    private isLegalDistribution(
+        distribution: MancalaDistribution,
+        state: MancalaState,
+        config: MancalaConfig,
+    ): MGPFallible<boolean> {
         if (state.getPieceAtXY(distribution.x, distribution.y) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
@@ -228,8 +229,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * Should capture if there is context for it, and not capture otherwise
      * Should NOT increment the turn of the state
      */
-    public abstract applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig)
-    : MancalaCaptureResult;
+    public abstract applyCapture(
+        distributionResult: MancalaDistributionResult,
+        config: MancalaConfig,
+    ): MancalaCaptureResult;
 
     public mustMonsoon(postCaptureState: MancalaState, config: MancalaConfig): Player[] {
         const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
@@ -272,9 +275,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return GameStatus.ONGOING;
     }
 
-    public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MancalaConfig, _: void)
-    : MancalaState
-    {
+    public override applyLegalMove(
+        move: MancalaMove,
+        state: MancalaState,
+        config: MancalaConfig,
+        _: void,
+    ): MancalaState {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config);
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config);
         let resultingState: MancalaState = captureResult.resultingState;
@@ -358,9 +364,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * @param coord the coord to feed
      * @returns the result of the drop (updated)
      */
-    public getDropResult(_seedsInHand: number, state: MancalaState, coord: Coord)
-    : MancalaDropResult
-    {
+    public getDropResult(_seedsInHand: number, state: MancalaState, coord: Coord): MancalaDropResult {
         return {
             capturedSum: 0,
             captureMap: TableUtils.create(

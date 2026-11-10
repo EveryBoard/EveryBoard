@@ -5,8 +5,9 @@ import { Utils } from './Utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
-    public static from<Key extends string | number, Value extends NonNullable<unknown>>(record: Record<Key, Value>)
-    : MGPMap<Key, Value> {
+    public static from<Key extends string | number, Value extends NonNullable<unknown>>(
+        record: Record<Key, Value>,
+    ): MGPMap<Key, Value> {
         const keys: Key[] = Object.keys(record) as Key[];
         const map: MGPMap<Key, Value> = new MGPMap();
         for (const key of keys) {

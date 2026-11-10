@@ -62,9 +62,12 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
 
-    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: EmptyRulesConfig, _info: void)
-    : PentagoState
-    {
+    public override applyLegalMove(
+        move: PentagoMove,
+        state: PentagoState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): PentagoState {
         return state.applyLegalMove(move);
     }
 

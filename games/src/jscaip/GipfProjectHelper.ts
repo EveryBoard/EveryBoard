@@ -97,8 +97,9 @@ export class GipfCapture {
 
 export class GipfProjectHelper {
 
-    public static getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures: GipfCapture[])
-    : Table<GipfCapture> {
+    public static getPossibleCaptureCombinationsFromPossibleCaptures(
+        possibleCaptures: GipfCapture[],
+    ): Table<GipfCapture> {
         const intersections: number[][] = GipfProjectHelper.computeIntersections(possibleCaptures);
         let captureCombinations: number[][] = [[]];
         possibleCaptures.forEach((_capture: GipfCapture, index: number) => {

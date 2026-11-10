@@ -193,9 +193,12 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         );
     }
 
-    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: QuixoConfig, _info: void)
-    : QuixoState
-    {
+    public override applyLegalMove(
+        move: QuixoMove,
+        state: QuixoState,
+        _config: QuixoConfig,
+        _info: void,
+    ): QuixoState {
         return state.applyLegalMove(move);
     }
 

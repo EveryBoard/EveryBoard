@@ -187,9 +187,11 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: EmptyRulesConfig)
-    : DiaballikMove[]
-    {
+    private removeDuplicates(
+        state: DiaballikState,
+        moves: Set<DiaballikMove>,
+        config: EmptyRulesConfig,
+    ): DiaballikMove[] {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }

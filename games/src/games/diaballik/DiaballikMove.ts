@@ -87,9 +87,10 @@ export class DiaballikMove extends Move {
         },
     );
 
-    private static countPassesAndTranslations(subMove: DiaballikSubMove, passesAndTranslations: PassesAndTranslations)
-    : void
-    {
+    private static countPassesAndTranslations(
+        subMove: DiaballikSubMove,
+        passesAndTranslations: PassesAndTranslations,
+    ): void {
         if (subMove instanceof DiaballikBallPass) {
             passesAndTranslations.passes++;
         } else {

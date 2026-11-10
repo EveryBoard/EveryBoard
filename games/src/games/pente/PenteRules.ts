@@ -74,9 +74,12 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, config: PenteConfig, _info: void)
-    : PenteState
-    {
+    public override applyLegalMove(
+        move: PenteMove,
+        state: PenteState,
+        config: PenteConfig,
+        _info: void,
+    ): PenteState {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;

@@ -88,10 +88,9 @@ implements AI<M, S, O, C> {
 
     public abstract doChooseNextMove(node: GameNode<M, S>, options: O, config: C): M;
 
-    public configureFromConfig(config: Pick<MinimaxConfig<M, S, C>,
-                                            'useRandomness' | 'prune' | 'useTranspositionTables'>)
-    : void
-    {
+    public configureFromConfig(
+        config: Pick<MinimaxConfig<M, S, C>, 'useRandomness' | 'prune' | 'useTranspositionTables'>,
+    ): void {
         this.useRandomness = config.useRandomness ?? this.useRandomness;
         this.prune = config.prune ?? this.prune;
         this.useTranspositionTables = config.useTranspositionTables ?? this.useTranspositionTables;

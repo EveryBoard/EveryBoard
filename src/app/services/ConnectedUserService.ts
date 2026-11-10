@@ -14,32 +14,48 @@ import { UserService } from './UserService';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
-    public static createUserWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
-    : Promise<FireAuth.UserCredential> {
+
+    public static createUserWithEmailAndPassword(
+        auth: FireAuth.Auth,
+        email: string,
+        password: string,
+    ): Promise<FireAuth.UserCredential> {
         return FireAuth.createUserWithEmailAndPassword(auth, email, password);
     }
+
     public static sendEmailVerification(user: FireAuth.User): Promise<void> {
         return FireAuth.sendEmailVerification(user);
     }
+
     public static sendPasswordResetEmail(auth: FireAuth.Auth, email: string): Promise<void> {
         return FireAuth.sendPasswordResetEmail(auth, email);
     }
-    public static async signInWithEmailAndPassword(auth: FireAuth.Auth, email: string, password: string)
-    : Promise<FireAuth.User> {
+
+    public static async signInWithEmailAndPassword(
+        auth: FireAuth.Auth,
+        email: string,
+        password: string,
+    ): Promise<FireAuth.User> {
         const credential: FireAuth.UserCredential = await FireAuth.signInWithEmailAndPassword(auth, email, password);
         return credential.user;
     }
+
     public static async signInWithPopup(auth: FireAuth.Auth, provider: FireAuth.AuthProvider): Promise<FireAuth.User> {
         const credential: FireAuth.UserCredential = await FireAuth.signInWithPopup(auth, provider);
         return credential.user;
     }
-    public static updateProfile(user: FireAuth.User, profile: { displayName?: string; photoURL?: string })
-    : Promise<void> {
+
+    public static updateProfile(
+        user: FireAuth.User,
+        profile: { displayName?: string; photoURL?: string },
+    ): Promise<void> {
         return FireAuth.updateProfile(user, profile);
     }
+
 }
 
 export class AuthUser {
+
     /**
      * Represents the fact the user is not connected
      */
@@ -60,22 +76,26 @@ export class AuthUser {
         public verified: boolean,
     ) {
     }
+
     public isConnected(): boolean {
         // Only a user that is connected has its email set
         return this.email.isPresent();
     }
+
     public toMinimalUser(): MinimalUser {
         return {
             id: this.id,
             name: this.username.get(),
         };
     }
+
     public equals(other: AuthUser): boolean {
         return this.id === other.id &&
                this.email.equals(other.email) &&
                this.username.equals(other.username) &&
                this.verified === other.verified;
     }
+
 }
 
 @Injectable({
@@ -85,6 +105,7 @@ export class AuthUser {
 export class ConnectedUserService implements OnDestroy {
 
     private readonly userDAO: UserDAO = inject(UserDAO);
+
     private readonly userService: UserService = inject(UserService);
 
     private readonly authSubscription: Subscription;
@@ -95,9 +116,13 @@ export class ConnectedUserService implements OnDestroy {
      * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
      */
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
+
     private readonly userRS: ReplaySubject<AuthUser>;
+
     private readonly userObs: Observable<AuthUser>;
+
     private userSubscription: Subscription = new Subscription();
+
     public readonly auth: FireAuth.Auth;
 
     public constructor()
@@ -142,10 +167,12 @@ export class ConnectedUserService implements OnDestroy {
                 }
             }));
     }
+
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
         return user.emailVerified;
     }
+
     public async sendPasswordResetEmail(email: string): Promise<MGPValidation> {
         try {
             await Auth.sendPasswordResetEmail(this.auth, email);
@@ -154,6 +181,7 @@ export class ConnectedUserService implements OnDestroy {
             return this.catchFirebaseError(e);
         }
     }
+
     /**
      * Registers an user given its username, email, and password.
      * Returns the firebase user upon success, or a failure otherwise.
@@ -165,8 +193,12 @@ export class ConnectedUserService implements OnDestroy {
             return MGPFallible.failure($localize`This username is already in use.`);
         }
     }
-    private async registerAfterUsernameCheck(username: string, email: string, password: string)
-    : Promise<MGPFallible<FireAuth.User>> {
+
+    private async registerAfterUsernameCheck(
+        username: string,
+        email: string,
+        password: string,
+    ): Promise<MGPFallible<FireAuth.User>> {
         try {
             const userCredential: FireAuth.UserCredential =
                 await Auth.createUserWithEmailAndPassword(this.auth, email, password);
@@ -188,6 +220,7 @@ export class ConnectedUserService implements OnDestroy {
             throw e;
         }
     }
+
     public mapFirebaseError(error: FirebaseError): string {
         switch (error.code) {
             case 'auth/email-already-in-use':
@@ -213,6 +246,7 @@ export class ConnectedUserService implements OnDestroy {
                 return error.message;
         }
     }
+
     public async sendEmailVerification(): Promise<MGPValidation> {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
@@ -231,6 +265,7 @@ export class ConnectedUserService implements OnDestroy {
             return Utils.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
         }
     }
+
     /**
      * Logs in using an email and a password. Returns a validation to indicate
      * either success, or failure with a specific error.
@@ -244,6 +279,7 @@ export class ConnectedUserService implements OnDestroy {
             return this.catchFirebaseError(e);
         }
     }
+
     /**
      * Create the user doc in firestore. Google accounts initially have no username.
      */
@@ -254,10 +290,12 @@ export class ConnectedUserService implements OnDestroy {
             await this.userDAO.set(uid, { username, verified: false });
         }
     }
+
     public async doGoogleLogin(): Promise<MGPValidation> {
 
         return MGPValidation.ofFallible(await this.registerOrLoginWithGoogle());
     }
+
     private async registerOrLoginWithGoogle(): Promise<MGPFallible<FireAuth.User>> {
         try {
             const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
@@ -273,6 +311,7 @@ export class ConnectedUserService implements OnDestroy {
         }
 
     }
+
     public async disconnect(): Promise<MGPValidation> {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
@@ -282,9 +321,11 @@ export class ConnectedUserService implements OnDestroy {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
     }
+
     public subscribeToUser(callback: (user: AuthUser) => void): Subscription {
         return this.userObs.subscribe(callback);
     }
+
     public async setUsername(username: string): Promise<MGPValidation> {
         if (username === '') {
             return MGPValidation.failure($localize`Your username may not be empty.`);
@@ -306,6 +347,7 @@ export class ConnectedUserService implements OnDestroy {
             return this.catchFirebaseError(e);
         }
     }
+
     public async setPicture(url: string): Promise<MGPValidation> {
         try {
             const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
@@ -315,17 +357,21 @@ export class ConnectedUserService implements OnDestroy {
             return this.catchFirebaseError(e);
         }
     }
+
     public async reloadUser(): Promise<void> {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
+
     public getIdToken(): Promise<string> {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         return currentUser.getIdToken();
     }
+
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
         this.authSubscription.unsubscribe();
     }
+
 }

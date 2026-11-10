@@ -130,9 +130,10 @@ export class LodestonePieceLodestone {
     ) {
     }
 
-    public static of(player: Player, description: LodestoneDescription)
-    : LodestonePieceLodestone
-    {
+    public static of(
+        player: Player,
+        description: LodestoneDescription,
+    ): LodestonePieceLodestone {
         return LodestonePieceLodestone.LODESTONES[player.getValue()][description.direction][description.orientation];
     }
 

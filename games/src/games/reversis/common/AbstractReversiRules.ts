@@ -236,8 +236,11 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState, config: ReversiConfig)
-    : MGPFallible<ReversiLegalityInformation> {
+    public override isLegal(
+        move: ReversiMove,
+        state: ReversiState,
+        config: ReversiConfig,
+    ): MGPFallible<ReversiLegalityInformation> {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!

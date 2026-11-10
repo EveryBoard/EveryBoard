@@ -12,9 +12,7 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<
     QuebecCastlesConfig
 > {
 
-    public override getListMoves(node: QuebecCastlesNode, config: QuebecCastlesConfig)
-    : QuebecCastlesMove[]
-    {
+    public override getListMoves(node: QuebecCastlesNode, config: QuebecCastlesConfig): QuebecCastlesMove[] {
         const state: QuebecCastlesState = node.gameState;
         if (QuebecCastlesRules.get().isDropPhase(state, config)) {
             return this.getDropMoves(state, config);

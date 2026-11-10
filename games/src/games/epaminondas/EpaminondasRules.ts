@@ -107,8 +107,10 @@ export class EpaminondasRules extends ConfigurableRules<
         return MGPValidation.SUCCESS;
     }
 
-    private static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
-    : MGPFallible<EpaminondasLegalityInformation> {
+    private static getLandingStatus(
+        state: EpaminondasState,
+        move: EpaminondasMove,
+    ): MGPFallible<EpaminondasLegalityInformation> {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         let emptied: Coord = move.coord;
@@ -175,8 +177,10 @@ export class EpaminondasRules extends ConfigurableRules<
         return EpaminondasRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override isLegal(move: EpaminondasMove, state: EpaminondasState)
-    : MGPFallible<EpaminondasLegalityInformation> {
+    public override isLegal(
+        move: EpaminondasMove,
+        state: EpaminondasState,
+    ): MGPFallible<EpaminondasLegalityInformation> {
         return EpaminondasRules.isLegal(move, state);
     }
 

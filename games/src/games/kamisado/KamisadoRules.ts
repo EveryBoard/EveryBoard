@@ -179,9 +179,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     // Apply the move by only relying on tryMove
-    public override applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: EmptyRulesConfig, _info: void)
-    : KamisadoState
-    {
+    public override applyLegalMove(
+        move: KamisadoMove,
+        state: KamisadoState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): KamisadoState {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();

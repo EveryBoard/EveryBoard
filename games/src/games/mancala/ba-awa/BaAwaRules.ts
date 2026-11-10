@@ -57,9 +57,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         return BaAwaRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override applyCapture(distributionResult: MancalaDistributionResult)
-    : MancalaCaptureResult
-    {
+    public override applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
         const captureMap: number[][] = TableUtils.copy(distributionResult.captureMap);
         const lastDrop: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
         if (distributionResult.endsUpInStore === false) {
@@ -79,9 +77,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         };
     }
 
-    public override getDropResult(seedsInHand: number, state: MancalaState, coord: Coord)
-    : MancalaDropResult
-    {
+    public override getDropResult(seedsInHand: number, state: MancalaState, coord: Coord): MancalaDropResult {
         let resultingState: MancalaState = state.feed(coord);
         const previousValue: number = resultingState.getPieceAt(coord);
         const captureMap: number[][] = TableUtils.create(state.getWidth(), state.getHeight(), 0);

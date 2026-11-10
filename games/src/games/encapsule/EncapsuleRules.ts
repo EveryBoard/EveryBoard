@@ -89,9 +89,10 @@ export class EncapsuleRules extends ConfigurableRules<
         return this.getEncapsulePieceMapFrom(playerZeroPiecesNumber, playerOnePiecesNumber);
     }
 
-    public getEncapsulePieceMapFrom(playerZeroPiecesNumber: number[], playerOnePiecesNumber: number[])
-    : EncapsuleRemainingPieces
-    {
+    public getEncapsulePieceMapFrom(
+        playerZeroPiecesNumber: number[],
+        playerOnePiecesNumber: number[],
+    ): EncapsuleRemainingPieces {
         const playerZero: EncapsuleSizeToNumberMap = this.getSizeToNumberMap(playerZeroPiecesNumber);
         const playerOne: EncapsuleSizeToNumberMap = this.getSizeToNumberMap(playerOnePiecesNumber);
         return PlayerMap.ofValues(playerZero, playerOne);

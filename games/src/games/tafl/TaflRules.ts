@@ -20,6 +20,16 @@ import { TaflState } from './TaflState';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
 
+interface SurroundingInfos {
+    backCoord: Coord;
+    back: RelativePlayer;
+    backInRange: boolean;
+    leftCoord: Coord;
+    left: RelativePlayer;
+    rightCoord: Coord;
+    right: RelativePlayer;
+}
+
 export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M, TaflState, TaflConfig> {
 
     public static readonly CAN_RETURN_TO_CASTLE: Localized = () => $localize`Central throne is left for good`;
@@ -33,9 +43,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         super();
     }
 
-    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {
@@ -85,8 +93,13 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         }
     }
 
-    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
-    : MGPOptional<Coord> {
+    public tryCapture(
+        player: Player,
+        landingPawn: Coord,
+        d: Orthogonal,
+        state: TaflState,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -109,8 +122,13 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return this.capturePawn(player, landingPawn, d, state);
     }
 
-    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
-    : MGPOptional<Coord> {
+    private captureKing(
+        player: Player,
+        landingPiece: Coord,
+        d: Orthogonal,
+        state: TaflState,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -131,11 +149,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return MGPOptional.empty();
     }
 
-    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState)
-    : { backCoord: Coord; back: RelativePlayer; backInRange: boolean;
-        leftCoord: Coord; left: RelativePlayer;
-        rightCoord: Coord; right: RelativePlayer; }
-    {
+    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState): SurroundingInfos {
         // the piece that just moved came from the front direction (by definition)
         const backCoord: Coord = c.getNext(d);
         const backInRange: boolean = state.isOnBoard(backCoord);

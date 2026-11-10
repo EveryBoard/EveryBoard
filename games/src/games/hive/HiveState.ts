@@ -120,9 +120,11 @@ class HiveStateUpdate {
 
 export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements ComparableObject {
 
-    public static fromRepresentation(board: Table<HivePiece[]>, turn: number, vector: Vector = new Vector(0, 0))
-    : HiveState
-    {
+    public static fromRepresentation(
+        board: Table<HivePiece[]>,
+        turn: number,
+        vector: Vector = new Vector(0, 0),
+    ): HiveState {
         const pieces: ReversibleMap<Coord, HivePieceStack> = new ReversibleMap<Coord, HivePieceStack>();
         let remainingPieces: HiveRemainingPieces = HiveRemainingPieces.getInitial();
         const queenBees: MGPMap<Player, Coord> = new MGPMap();

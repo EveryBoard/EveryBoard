@@ -64,9 +64,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return new TeekoState(board, 0);
     }
 
-    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig): MGPValidation {
         if (state.isInDropPhase()) {
             Utils.assert(move instanceof TeekoDropMove, 'Cannot translate in dropping phase !');
             return this.isLegalDrop(move as TeekoDropMove, state);
@@ -110,9 +108,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void)
-    : TeekoState
-    {
+    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void): TeekoState {
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {

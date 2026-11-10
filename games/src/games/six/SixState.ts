@@ -23,9 +23,11 @@ export class SixState extends OpenHexagonalGameState<Player> {
       * (useful if the upper left coord is in (-5, -9) or (512, 129))
       * @returns the state created from that board
      */
-    public static ofRepresentation(board: Table<PlayerOrNone>, turn: number, origin: Vector = new Vector(0, 0))
-    : SixState
-    {
+    public static ofRepresentation(
+        board: Table<PlayerOrNone>,
+        turn: number,
+        origin: Vector = new Vector(0, 0),
+    ): SixState {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {

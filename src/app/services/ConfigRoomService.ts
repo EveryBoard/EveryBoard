@@ -12,13 +12,15 @@ import { BackendService, BackendMessage } from './BackendService';
 export type Candidate = PlayerInfo;
 
 export abstract class AbstractConfigRoomService {
-    public abstract join(gameId: string,
+
+    public abstract join(
+        gameId: string,
         configRoomUpdate: (configRoom: ConfigRoom) => void,
         configRoomDeleted: () => void,
         candidateJoined: (candidate: Candidate) => void,
         candidateLeft: (user: MinimalUser) => void,
-        error: (reason: string) => void)
-    : Promise<Subscription>;
+        error: (reason: string) => void,
+    ): Promise<Subscription>;
 
     public abstract proposeConfig(proposal: ConfigProposal): Promise<void>;
 

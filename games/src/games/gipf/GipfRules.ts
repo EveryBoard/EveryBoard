@@ -64,9 +64,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         );
     }
 
-    public static applyCaptures(captures: ReadonlyArray<GipfCapture>, state: GipfState)
-    : GipfState
-    {
+    public static applyCaptures(
+        captures: ReadonlyArray<GipfCapture>,
+        state: GipfState,
+    ): GipfState {
         let computedState: GipfState = state;
         captures.forEach((capture: GipfCapture) => {
             computedState = GipfRules.applyCapture(capture, computedState);
@@ -239,9 +240,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         return MGPFallible.success(stateAfterFinalCaptures);
     }
 
-    private capturesValidity(state: GipfState, captures: ReadonlyArray<GipfCapture>)
-    : MGPValidation
-    {
+    private capturesValidity(
+        state: GipfState,
+        captures: ReadonlyArray<GipfCapture>,
+    ): MGPValidation {
         let updatedState: GipfState = state;
         for (const capture of captures) {
             const validity: MGPValidation = this.captureValidity(updatedState, capture);
@@ -284,8 +286,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         return linePortions;
     }
 
-    public static getLinePortionWithFourPiecesOfPlayer(state: GipfState, player: Player, line: HexaLine)
-    : MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}> {
+    public static getLinePortionWithFourPiecesOfPlayer(
+        state: GipfState,
+        player: Player,
+        line: HexaLine,
+    ): MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}> {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();

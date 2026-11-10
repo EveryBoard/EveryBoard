@@ -85,8 +85,7 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         }
     }
 
-    public override isLegal(move: SixMove, state: SixState, config: SixConfig)
-    : MGPFallible<SixLegalityInformation> {
+    public override isLegal(move: SixMove, state: SixState, config: SixConfig): MGPFallible<SixLegalityInformation> {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
             return landingLegality.toOtherFallible();

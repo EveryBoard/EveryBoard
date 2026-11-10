@@ -145,8 +145,11 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                move.coord.y === state.getHeight();
     }
 
-    public override isLegal(move: SiamMove, state: SiamState, config: SiamConfig)
-    : MGPFallible<SiamLegalityInformation> {
+    public override isLegal(
+        move: SiamMove,
+        state: SiamState,
+        config: SiamConfig,
+    ): MGPFallible<SiamLegalityInformation> {
         const moveValidity: MGPValidation = this.getMoveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity.toOtherFallible();
@@ -177,9 +180,11 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         }
     }
 
-    private isLegalInsertion(coord: Coord, state: SiamState, config: SiamConfig)
-    : {insertedPiece: SiamPiece; legal: MGPValidation}
-    {
+    private isLegalInsertion(
+        coord: Coord,
+        state: SiamState,
+        config: SiamConfig,
+    ): {insertedPiece: SiamPiece; legal: MGPValidation} {
         const numberOnBoard: number = state.countCurrentPlayerPawn();
         const currentPlayer: Player = state.getCurrentPlayer();
         const legal: MGPValidation = (numberOnBoard < config.numberOfPiece) ?
@@ -196,8 +201,11 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         return SiamPiece.of(Orthogonal.UP, player);
     }
 
-    private isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
-    : MGPFallible<SiamLegalityInformation> {
+    private isLegalForwarding(
+        move: SiamMove,
+        state: SiamState,
+        firstPiece: SiamPiece,
+    ): MGPFallible<SiamLegalityInformation> {
         Utils.assert(firstPiece !== SiamPiece.MOUNTAIN && firstPiece !== SiamPiece.EMPTY, 'forwarding must be done with player piece');
 
         const movedPieces: Coord[] = [];
@@ -292,9 +300,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         }
     }
 
-    public getMountainsRowsAndColumns(state: SiamState)
-    : { rows: number[]; columns: number[]; nbMountain: number }
-    {
+    public getMountainsRowsAndColumns(state: SiamState): { rows: number[]; columns: number[]; nbMountain: number } {
         const rows: number[] = [];
         const columns: number[] = [];
         let nbMountain: number = 0;
@@ -435,8 +441,12 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         };
     }
 
-    public getLineClosestPusher(state: SiamState, fallingCoord: Coord, direction: Orthogonal, config: SiamConfig)
-    : MGPOptional<ClosestPusher> {
+    public getLineClosestPusher(
+        state: SiamState,
+        fallingCoord: Coord,
+        direction: Orthogonal,
+        config: SiamConfig,
+    ): MGPOptional<ClosestPusher> {
         let lineInfo: InitialLineInfo = this.getInitialLineInfo(state, fallingCoord, direction);
         while (state.isOnBoard(lineInfo.closestPusher.coord) && lineInfo.pusherFound === false) {
             lineInfo = this.updateLineInfo(state, lineInfo, direction);

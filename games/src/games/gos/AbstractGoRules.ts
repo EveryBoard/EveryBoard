@@ -170,8 +170,11 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalDrop(move: GoMove, state: GoState, config: C)
-    : MGPFallible<GoLegalityInformation> {
+    private isLegalDrop(
+        move: GoMove,
+        state: GoState,
+        config: C,
+    ): MGPFallible<GoLegalityInformation> {
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
         }

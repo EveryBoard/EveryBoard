@@ -113,8 +113,9 @@ export class LocalGameWrapperComponent extends GameWrapper<
         }, 1);
     }
 
-    protected override async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>)
-    : Promise<void> {
+    protected override async createGameComponentAndSetConfig(
+        componentType: Type<AbstractGameComponent>,
+    ): Promise<void> {
         await this.setConfigFromParams();
         await super.createGameComponentAndSetConfig(componentType);
     }
@@ -172,9 +173,10 @@ export class LocalGameWrapperComponent extends GameWrapper<
         }
     }
 
-    private areGlobalValidatorsValid(rulesConfigDescription: RulesConfigDescription<RulesConfig>, config: RulesConfig)
-    : boolean
-    {
+    private areGlobalValidatorsValid(
+        rulesConfigDescription: RulesConfigDescription<RulesConfig>,
+        config: RulesConfig,
+    ): boolean {
         const validators: ((config: RulesConfig) => MGPValidation)[] =
             rulesConfigDescription.defaultConfigDescription.validators ?? [];
         for (const validator of validators) {
@@ -427,15 +429,17 @@ export class LocalGameWrapperComponent extends GameWrapper<
         return this.gameComponent.aiConfig.minimax;
     }
 
-    private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
-    : Minimax<Move, GameState, RulesConfig, unknown> {
+    private createMinimax(
+        config: MinimaxConfig<Move, GameState, RulesConfig>,
+    ): Minimax<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(config, 'minimax', (): Minimax<Move, GameState, RulesConfig, unknown> => {
             return createMinimaxFromConfig(this.gameComponent.rules, config);
         });
     }
 
-    private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
-    : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> {
+    private createIterativeMinimax(
+        config: MinimaxConfig<Move, GameState, RulesConfig>,
+    ): IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(
             config,
             'iterative-deepening',
@@ -449,8 +453,7 @@ export class LocalGameWrapperComponent extends GameWrapper<
         return this.gameComponent.aiConfig.mcts;
     }
 
-    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)
-    : MCTS<Move, GameState, RulesConfig, unknown> {
+    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>): MCTS<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(config, 'mcts', (): MCTS<Move, GameState, RulesConfig, unknown> => {
             return createMCTSFromConfig(this.gameComponent.rules, config);
         });

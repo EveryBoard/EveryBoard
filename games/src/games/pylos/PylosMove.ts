@@ -20,6 +20,7 @@ export class PylosMove extends Move {
             [move.startingCoord, move.landingCoord, move.firstCapture, move.secondCapture],
         (fields: PylosFields): PylosMove => PylosMove.of(fields[0], fields[1], fields[2], fields[3]),
     );
+
     public static ofClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
@@ -35,9 +36,10 @@ export class PylosMove extends Move {
         Utils.assert(landingCoord.isHigherThan(startingCoord), PylosFailure.MUST_MOVE_UPWARD());
         return newMove;
     }
-    public static checkCaptures(captures: PylosCoord[])
-    : { firstCapture: MGPOptional<PylosCoord>; secondCapture: MGPOptional<PylosCoord> }
-    {
+
+    public static checkCaptures(
+        captures: PylosCoord[],
+    ): { firstCapture: MGPOptional<PylosCoord>; secondCapture: MGPOptional<PylosCoord> } {
         let firstCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         let secondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         if (captures.length > 0) {
@@ -58,6 +60,7 @@ export class PylosMove extends Move {
         }
         return { firstCapture, secondCapture };
     }
+
     public static ofDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
         const capturesOptionals: {
@@ -71,6 +74,7 @@ export class PylosMove extends Move {
             capturesOptionals.secondCapture,
         );
     }
+
     public static changeCapture(move: PylosMove, captures: PylosCoord[]): PylosMove {
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>;
@@ -83,6 +87,7 @@ export class PylosMove extends Move {
             capturesOptionals.secondCapture,
         );
     }
+
     private static of(
         startingCoord: MGPOptional<PylosCoord>,
         landingCoord: PylosCoord,
@@ -91,6 +96,7 @@ export class PylosMove extends Move {
     ): PylosMove {
         return new PylosMove(startingCoord, landingCoord, firstCapture, secondCapture);
     }
+
     private constructor(
         public readonly startingCoord: MGPOptional<PylosCoord>,
         public readonly landingCoord: PylosCoord,
@@ -99,9 +105,11 @@ export class PylosMove extends Move {
     ) {
         super();
     }
+
     public isClimb(): boolean {
         return this.startingCoord.isPresent();
     }
+
     public override toString(): string {
         const startingCoord: string = this.startingCoord.isAbsent() ? '-' : this.startingCoord.get().toShortString();
         const firstCapture: string = this.firstCapture.isAbsent() ? '-' : this.firstCapture.get().toShortString();
@@ -113,6 +121,7 @@ export class PylosMove extends Move {
                secondCapture +
                ')';
     }
+
     public equals(other: PylosMove): boolean {
         if (other === this) return true;
         if (this.startingCoord.equals(other.startingCoord) === false) return false;
@@ -121,4 +130,5 @@ export class PylosMove extends Move {
         if (this.secondCapture.equals(other.secondCapture) === false) return false;
         return true;
     }
+
 }
