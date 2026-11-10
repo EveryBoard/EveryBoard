@@ -287,4 +287,62 @@ describe('Set', () => {
 
     });
 
+    describe('slice', () => {
+
+        it('should slice a set from a given start index', () => {
+            // Given a set of elements
+            const set: Set<number> = new Set([1, 2, 3, 4, 5]);
+
+            // When slicing from index 1
+            const result: Set<number> = set.slice(1);
+
+            // Then the elements from index 1 onwards should be returned
+            expect(result.toList()).toEqual([2, 3, 4, 5]);
+        });
+
+        it('should slice a set between two given indexes', () => {
+            // Given a set of elements
+            const set: Set<number> = new Set([1, 2, 3, 4, 5]);
+
+            // When slicing between indexes 1 and 3
+            const result: Set<number> = set.slice(1, 3);
+
+            // Then only the elements between these indexes should be returned
+            expect(result.toList()).toEqual([2, 3]);
+        });
+
+        it('should slice a set using a negative start index', () => {
+            // Given a set of elements
+            const set: Set<number> = new Set([1, 2, 3, 4, 5]);
+
+            // When slicing from the second-to-last element
+            const result: Set<number> = set.slice(-2);
+
+            // Then the last two elements should be returned
+            expect(result.toList()).toEqual([4, 5]);
+        });
+
+        it('should return a copy of the set when slicing without indexes', () => {
+            // Given a set of elements
+            const set: Set<number> = new Set([1, 2, 3]);
+
+            // When slicing without specifying indexes
+            const result: Set<number> = set.slice();
+
+            // Then all elements should be returned
+            expect(result.toList()).toEqual([1, 2, 3]);
+        });
+
+        it('should return an empty set when slicing beyond the set size', () => {
+            // Given a set of elements
+            const set: Set<number> = new Set([1, 2, 3]);
+
+            // When slicing from an index beyond the set size
+            const result: Set<number> = set.slice(5);
+
+            // Then an empty set should be returned
+            expect(result.isEmpty()).toBeTrue();
+        });
+    });
+
 });
