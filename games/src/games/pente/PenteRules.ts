@@ -75,7 +75,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
     {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
-        newBoard[move.coord.y][move.coord.x]= player;
+        newBoard[move.coord.y][move.coord.x] = player;
         const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config, player);
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;

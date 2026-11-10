@@ -14,7 +14,7 @@ import { GoBoardComponent } from '../abstract-rectangular-go/go-board/go-board.c
 })
 export class ZoomedGoComponent extends AbstractRectangularGoComponent {
 
-    public hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
+    protected readonly hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
 
     public constructor() {
         super('ZoomedGo');

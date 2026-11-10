@@ -84,7 +84,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }],
         };
         this.encoder = AbaloneMove.encoder;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(MGPOptional.of(PlayerNumberMap.of(0, 0)));
         this.SPACE_SIZE = 30;
         this.setHexaLayout();
     }
@@ -120,7 +120,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.state().getCopiedBoard();
-        this.scores = MGPOptional.of(this.state().getScores());
+        this.scores.set(MGPOptional.of(this.state().getScores()));
     }
 
     public override hideLastMove(): void {

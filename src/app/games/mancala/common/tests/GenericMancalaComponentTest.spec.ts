@@ -447,7 +447,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             expect(hash.split('-')).toEqual([
                 '0',
                 '[[4,4,4,4,4,4],[4,4,4,4,4,4]]',
-                '{"map":{"map":[{"key":{"value":0},"value":0},{"key":{"value":1},"value":0}],"isImmutable":false}}',
+                '{"map":{"map":[{"key":{"value":0},"value":0},{"key":{"value":1},"value":0}],"isImmutable":true}}',
             ]);
         }));
 
