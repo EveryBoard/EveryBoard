@@ -53,10 +53,11 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click-1-5');
 
         // When clicking on 'done'
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.empty());
+        const move: DiaballikMove = new DiaballikMove(
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+            MGPOptional.empty(),
+        );
 
         // Then the move should succeed
         await testUtils.expectMoveSuccess('#done', move);
@@ -71,10 +72,11 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click-3-6');
 
         // When clicking on the last target for the move
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+        const move: DiaballikMove = new DiaballikMove(
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+            MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
+        );
 
         // Then it should do the move
         await testUtils.expectMoveSuccess('#click-4-6', move);
@@ -230,10 +232,11 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 0);
-        const previousMove: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+        const previousMove: DiaballikMove = new DiaballikMove(
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+            MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
+        );
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When displaying it
@@ -266,10 +269,11 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 1);
-        const previousMove: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+        const previousMove: DiaballikMove = new DiaballikMove(
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+            MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
+        );
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
         await testUtils.setupState(state, { previousState, previousMove });
 
@@ -301,10 +305,11 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 1);
-        const previousMove: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+        const previousMove: DiaballikMove = new DiaballikMove(
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+            MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
+        );
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
         await testUtils.setupState(state, { previousState, previousMove });
         await testUtils.expectClickSuccess('#click-0-0');
