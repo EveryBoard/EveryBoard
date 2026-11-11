@@ -86,6 +86,18 @@ describe('AwaleRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should allow vertical sowing when custom config allow it', () => {
+            // Given a custom config allowing vertical sowing
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                verticalSowing: true,
+            };
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When doing a vertical sowing
+            // Then it should be allowed
+        });
+
     });
 
     describe('starvation and monsoon', () => {

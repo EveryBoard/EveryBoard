@@ -28,6 +28,7 @@ export class AwaleRules extends MancalaRules {
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
+                verticalSowing: new BooleanConfig(false, MancalaRules.VERTICAL_SOWING),
             },
         });
 

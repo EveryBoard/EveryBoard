@@ -41,7 +41,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             expect(initialState.getHeight()).toBe(customConfig.numberOfRows * 2);
         });
 
-        it('should refuse distributing empty space', () => {
+        it('should forbid distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
             const board: number[][] = [
                 [4, 0, 4, 4, 4, 4],
@@ -55,7 +55,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveFailure(rules, state, entries.simpleMove, reason, defaultConfig);
         });
 
-        it('should refuse distributing opponent space', () => {
+        it('should forbid distributing opponent space', () => {
             // Given any board
             const state: MancalaState = rules.getInitialState(defaultConfig);
 
@@ -67,7 +67,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should refuse starving when custom config refuse starvation', () => {
+        it('should forbid starving when custom config refuse starvation', () => {
             // Given a state where you have to feed and pass by store
             const customConfig: MancalaConfig = {
                 ...defaultConfig,
@@ -135,7 +135,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it('should refuse ending move in store when config requires to continue', () => {
+        it('should forbid ending move in store when config requires to continue', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
             const customConfig: MancalaConfig = {
                 ...defaultConfig,

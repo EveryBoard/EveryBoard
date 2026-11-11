@@ -61,6 +61,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue distribution until capture or empty house`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
     public static readonly NUMBER_OF_ROWS: Localized = () => $localize`Number of rows`;
+    public static readonly VERTICAL_SOWING: Localized = () => $localize`Allow vertical sowing`;
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
     public static FAKE_STORE_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([
