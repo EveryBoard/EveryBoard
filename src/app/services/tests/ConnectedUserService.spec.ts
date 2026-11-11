@@ -5,6 +5,7 @@ import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { ReplaySubject, Subscription } from 'rxjs';
 
+import { LocaleUtils } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserDAO } from '../../dao/UserDAO';
@@ -275,23 +276,30 @@ describe('ConnectedUserService', () => {
 
     describe('sendEmailVerification', () => {
 
-        it('should send the email verification', async() => {
-            // Given a user that just registered and hence is not verified
-            const userRegistrationResult: MGPFallible<FireAuth.User> =
-                await connectedUserService.doRegister(username, email, password);
-            expect(userRegistrationResult.isSuccess()).toBeTrue();
-            // and that the user is connected
-            expect(await connectedUserService.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
+        describe('should use the current locale when sending the email verification', () => {
 
-            spyOn(Auth, 'sendEmailVerification').and.callThrough();
+            for (const locale of ['fr', 'en']) {
+                it(`${locale} variant`, async() => {
+                    // Given a user that just registered and hence is not verified
+                    const userRegistrationResult: MGPFallible<FireAuth.User> =
+                        await connectedUserService.doRegister(username, email, password);
+                    expect(userRegistrationResult.isSuccess()).toBeTrue();
+                    // and that the user is connected
+                    expect(await connectedUserService.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
 
-            // When the email verification is requested
-            const result: MGPValidation = await connectedUserService.sendEmailVerification();
+                    spyOn(LocaleUtils, 'getLocale').and.returnValue(locale);
+                    spyOn(Auth, 'sendEmailVerification').and.callThrough();
 
-            // Then the email verification has been sent
-            const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
-            expect(result).toBe(MGPValidation.SUCCESS);
-            expect(Auth.sendEmailVerification).toHaveBeenCalledOnceWith(user);
+                    // When the email verification is requested
+                    const result: MGPValidation = await connectedUserService.sendEmailVerification();
+
+                    // Then the email verification has been sent using the current locale
+                    const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
+                    expect(result).toBe(MGPValidation.SUCCESS);
+                    expect(auth.languageCode).toBe(locale);
+                    expect(Auth.sendEmailVerification).toHaveBeenCalledOnceWith(user);
+                });
+            }
         });
 
         it('should fail and log the error if there is no connected user', async() => {
