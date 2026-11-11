@@ -10,6 +10,7 @@ import { GameNode } from './GameNode';
  * It may also order moves from more interesting to less interesting.
  */
 export abstract class MoveGenerator<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
+
     /**
      * Gives the list of all the possible moves.
      * Has to be implemented for each rule so that the AI can choose among these moves.

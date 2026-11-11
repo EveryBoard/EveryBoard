@@ -10,9 +10,10 @@ import { Heuristic } from '../Heuristic';
 
 export class HeuristicUtils {
 
-    public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
-                                                          S extends GameState,
-                                                          C extends RulesConfig = EmptyRulesConfig
+    public static expectSecondStateToBeBetterThanFirstFor<
+        M extends Move,
+        S extends GameState,
+        C extends RulesConfig = EmptyRulesConfig
     >(
         heuristic: Heuristic<M, S, BoardValue, C>,
         weakState: S,

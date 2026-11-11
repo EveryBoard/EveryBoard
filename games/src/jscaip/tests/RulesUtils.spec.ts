@@ -11,11 +11,13 @@ import { GameState } from '../state/GameState';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,
+    public static expectMoveSuccess<
+        R extends SuperRules<M, S, C, L>,
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig>(
+        C extends RulesConfig
+    >(
         rules: R,
         state: S,
         move: M,
@@ -42,11 +44,13 @@ export class RulesUtils {
         }
     }
 
-    public static expectMoveFailure<R extends SuperRules<M, S, C, L>,
+    public static expectMoveFailure<
+        R extends SuperRules<M, S, C, L>,
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig = EmptyRulesConfig>(
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         rules: R,
         state: S,
         move: M,
@@ -58,11 +62,13 @@ export class RulesUtils {
         expect(legality.getReason()).toBe(reason);
     }
 
-    public static expectToBeVictoryFor<R extends SuperRules<M, S, C, L>,
+    public static expectToBeVictoryFor<
+        R extends SuperRules<M, S, C, L>,
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig = EmptyRulesConfig>(
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         rules: R,
         node: GameNode<M, S>,
         player: Player,
@@ -73,11 +79,13 @@ export class RulesUtils {
             .toEqual(GameStatus.getVictory(player));
     }
 
-    public static expectToBeOngoing<R extends SuperRules<M, S, C, L>,
+    public static expectToBeOngoing<
+        R extends SuperRules<M, S, C, L>,
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig = EmptyRulesConfig>(
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         rules: R,
         node: GameNode<M, S>,
         config: C,
@@ -85,11 +93,13 @@ export class RulesUtils {
         expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
 
-    public static expectToBeDraw<R extends SuperRules<M, S, C, L>,
+    public static expectToBeDraw<
+        R extends SuperRules<M, S, C, L>,
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig = EmptyRulesConfig>(
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         rules: R,
         node: GameNode<M, S>,
         config: C,

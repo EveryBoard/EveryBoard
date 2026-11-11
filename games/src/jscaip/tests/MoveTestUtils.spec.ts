@@ -10,10 +10,12 @@ import { GameState } from '../state/GameState';
 
 export class MoveTestUtils {
 
-    public static testFirstTurnMovesBijectivity<M extends Move,
+    public static testFirstTurnMovesBijectivity<
+        M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig = EmptyRulesConfig>(
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         rules: SuperRules<M, S, C, L>,
         generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,

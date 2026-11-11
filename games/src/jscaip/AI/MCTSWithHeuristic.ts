@@ -45,13 +45,15 @@ export class MCTSWithHeuristic<
         if (gameStatus === GameStatus.ONGOING) {
             const boardValue: B = this.heuristic.getBoardValue(node, config);
             const bounds: HeuristicBounds<B> = this.heuristic.getBounds(config);
+            const boardMetrics: number = boardValue.metrics.length;
+            const player0Metrics: number = bounds.player0Best.metrics.length;
+            const player1Metrics: number = bounds.player1Best.metrics.length;
             Utils.assert(
-                boardValue.metrics.length === bounds.player0Best.metrics.length &&
-                         boardValue.metrics.length === bounds.player1Best.metrics.length,
+                boardMetrics === player0Metrics && boardMetrics === player1Metrics,
                 `MCTSWithHeuristic ${this.name}: metrics and bound values should have the same shape`,
             );
             let value: number = 0;
-            for (let i: number = 0; i < boardValue.metrics.length; i++) {
+            for (let i: number = 0; i < boardMetrics; i++) {
                 const player0Best: number = bounds.player0Best.metrics[i];
                 const metric: number = boardValue.metrics[i];
                 const player1Best: number = bounds.player1Best.metrics[i];
@@ -73,7 +75,7 @@ export class MCTSWithHeuristic<
                     value += (boundedMetric - player0Best) / denom;
                 }
             }
-            value = value / boardValue.metrics.length;
+            value = value / boardMetrics;
             Utils.assert(0 <= value && value <= 1, `MCTSWithHeuristic ${this.name} got a value outside of [0,1]`);
             if (player === Player.ONE) {
                 return value;
