@@ -1,6 +1,6 @@
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { PylosMove } from './PylosMove';

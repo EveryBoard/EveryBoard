@@ -7,7 +7,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';

@@ -1,39 +1,37 @@
-import { ArrayUtils, MGPMap, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
 import { Player } from './Player';
+import { PlayerMap } from './PlayerMap';
 
-export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
+export class PlayerNumberTable extends PlayerMap<ReadonlyArray<number>> {
+
+    public constructor(playerZero: ReadonlyArray<number> = [], playerOne: ReadonlyArray<number> = []) {
+        super(playerZero, playerOne);
+    }
 
     public static of(playerZero: ReadonlyArray<number>, playerOne: ReadonlyArray<number>): PlayerNumberTable {
-        return new PlayerNumberTable([
-            { key: Player.ZERO, value: playerZero },
-            { key: Player.ONE, value: playerOne },
-        ]);
+        return new PlayerNumberTable(playerZero, playerOne);
     }
 
     public static ofSingle(playerZero: number, playerOne: number): PlayerNumberTable {
-        return PlayerNumberTable.of(
-            [playerZero],
-            [playerOne],
-        );
+        return PlayerNumberTable.of([playerZero], [playerOne]);
     }
 
     public add(player: Player, index: number, value: number): MGPOptional<readonly number[]> {
-        const list: number[] = ArrayUtils.copy(this.get(player).get());
+        const list: number[] = ArrayUtils.copy(this.get(player));
         list[index] += value;
-        return this.put(player, list);
+        return MGPOptional.of(this.put(player, list));
+    }
+
+    public override set(player: Player, value: ReadonlyArray<number>): void {
+        this.put(player, value);
     }
 
     public concat(other: PlayerNumberTable): PlayerNumberTable {
-        const playerZeroStart: readonly number[] = this.get(Player.ZERO).get();
-        const playerOneStart: readonly number[] = this.get(Player.ONE).get();
-        const playerZeroEnd: readonly number[] = other.get(Player.ZERO).get();
-        const playerOneEnd: readonly number[] = other.get(Player.ONE).get();
         return PlayerNumberTable.of(
-            playerZeroStart.concat(playerZeroEnd),
-            playerOneStart.concat(playerOneEnd),
+            this.get(Player.ZERO).concat(other.get(Player.ZERO)),
+            this.get(Player.ONE).concat(other.get(Player.ONE)),
         );
-
     }
 
 }

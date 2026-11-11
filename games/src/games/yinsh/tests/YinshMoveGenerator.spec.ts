@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { YinshCapture } from '../YinshMove';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';

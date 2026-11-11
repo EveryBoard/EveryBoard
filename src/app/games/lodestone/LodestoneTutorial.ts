@@ -9,8 +9,13 @@ import {
     LodestonePiecePlayer,
 } from '@everyboard/games/lodestone';
 import { LodestoneRules } from '@everyboard/games/lodestone';
-import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '@everyboard/games/lodestone';
-import { MGPMap, MGPValidation } from '@everyboard/lib';
+import {
+    LodestonePositions,
+    LodestonePressurePlateGroup,
+    LodestonePressurePlates,
+    LodestoneState,
+} from '@everyboard/games/lodestone';
+import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -78,7 +83,7 @@ export class LodestoneTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-            ], 0, new MGPMap([
+            ], 0, LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(2, 2) },
             ]), {
                 ...allPressurePlates,
@@ -105,7 +110,7 @@ export class LodestoneTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, B, _, _, _],
                 [_, _, _, _, _, _, _, _],
-            ], 0, new MGPMap([
+            ], 0, LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(1, 4) },
             ]), {
                 ...allPressurePlates,
@@ -132,7 +137,7 @@ export class LodestoneTutorial extends Tutorial {
                 [N, N, A, _, _, _, N, N],
                 [N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N],
-            ], 0, new MGPMap([
+            ], 0, LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
@@ -153,7 +158,7 @@ export class LodestoneTutorial extends Tutorial {
                 [_, _, A, _, _, _, _, _],
                 [_, _, B, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-            ], 0, new MGPMap([
+            ], 0, LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(3, 2) },
             ]), {
                 ...allPressurePlates,
@@ -175,7 +180,7 @@ export class LodestoneTutorial extends Tutorial {
                 [N, B, A, _, B, _, N, N],
                 [N, _, _, _, A, _, N, N],
                 [N, N, N, N, N, N, N, N],
-            ], 0, new MGPMap([
+            ], 0, LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),

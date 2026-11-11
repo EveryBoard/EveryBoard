@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -28,9 +28,8 @@ export class SixMoveGenerator extends MoveGenerator<SixMove, SixState, SixConfig
     }
 
     protected getTranslations(state: SixState, legalLandings: Coord[]): SixMove[] {
-        const allPieces: MGPMap<Player, Set<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: Set<Coord> = allPieces.get(currentPlayer).get();
+        const playerPieces: Set<Coord> = state.getPlayerPieces(currentPlayer);
         return this.getTranslationsFrom(state, playerPieces, legalLandings);
     }
 

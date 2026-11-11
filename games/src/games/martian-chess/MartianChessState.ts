@@ -2,6 +2,7 @@ import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
@@ -64,20 +65,17 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         return MartianChessState.isOnBoard(coord) === false;
     }
 
-    public readonly captured: MGPMap<Player, MartianChessCapture>;
+    public readonly captured: PlayerMap<MartianChessCapture>;
 
     public constructor(board: Table<MartianChessPiece>,
                        turn: number,
                        public readonly lastMove: MGPOptional<MartianChessMove> = MGPOptional.empty(),
                        public readonly countDown: MGPOptional<number> = MGPOptional.empty(),
-                       captured?: MGPMap<Player, MartianChessCapture>)
+                       captured?: PlayerMap<MartianChessCapture>)
     {
         super(board, turn);
         if (captured == null) {
-            captured = new MGPMap([
-                { key: Player.ZERO, value: MartianChessCapture.of([]) },
-                { key: Player.ONE, value: MartianChessCapture.of([]) },
-            ]);
+            captured = PlayerMap.ofValues(MartianChessCapture.of([]), MartianChessCapture.of([]));
         }
         captured.makeImmutable();
         this.captured = captured;
@@ -105,7 +103,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
     }
 
     public getScoreOf(player: Player): number {
-        return this.captured.get(player).get().toValue();
+        return this.captured.get(player).toValue();
     }
 
     public getEmptyTerritory(): MGPOptional<Player> {
@@ -143,7 +141,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
     }
 
     public getCapturesOf(player: Player): [number, number, number] {
-        const capture: MartianChessCapture = this.captured.get(player).get();
+        const capture: MartianChessCapture = this.captured.get(player);
         return [
             capture.captures.get(MartianChessPiece.PAWN).getOrElse(0),
             capture.captures.get(MartianChessPiece.DRONE).getOrElse(0),

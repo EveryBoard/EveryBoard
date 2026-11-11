@@ -7,7 +7,8 @@ import { CoordSet } from '../../../jscaip/CoordSet';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { PieceThreat } from '../../../jscaip/PieceThreat';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
@@ -293,7 +294,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
+            const pieces: PlayerMap<CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeTrue();
@@ -313,7 +314,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
+            const pieces: PlayerMap<CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(6, 6)))
@@ -338,7 +339,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
+            const pieces: PlayerMap<CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeFalse();
@@ -358,7 +359,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
+            const pieces: PlayerMap<CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(5, 7))).toBeFalse();
@@ -387,8 +388,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be the one attributed to one safe piece
-        expect(value.get(Player.ZERO).get()).toEqual([0, 0, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([1, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([0, 0, 0]);
+        expect(value.get(Player.ONE)).toEqual([1, 0, 0]);
     });
 
     it('should count one 2 SAFE - 1 THREATENED', () => {
@@ -413,8 +414,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value.get(Player.ZERO).get()).toEqual([0, 1, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([3, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([0, 1, 0]);
+        expect(value.get(Player.ONE)).toEqual([3, 0, 0]);
     });
 
     it(`should not count as threatened pieces which has a moving threat that is also a direct threat`, () => {
@@ -440,8 +441,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value.get(Player.ZERO).get()).toEqual([2, 0, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([3, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([2, 0, 0]);
+        expect(value.get(Player.ONE)).toEqual([3, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is not removable', () => {
@@ -465,8 +466,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value.get(Player.ZERO).get()).toEqual([3, 0, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([3, 0, 0]);
+        expect(value.get(Player.ONE)).toEqual([4, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
@@ -490,8 +491,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value.get(Player.ZERO).get()).toEqual([1, 0, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([1, 0, 0]);
+        expect(value.get(Player.ONE)).toEqual([4, 0, 0]);
     });
 
     it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
@@ -517,8 +518,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value.get(Player.ZERO).get()).toEqual([0, 1, 0]);
-        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
+        expect(value.get(Player.ZERO)).toEqual([0, 1, 0]);
+        expect(value.get(Player.ONE)).toEqual([4, 0, 0]);
     });
 
 });

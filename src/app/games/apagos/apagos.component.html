@@ -44,9 +44,9 @@
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(x)"
                       class="base mid-stroke"/>
-                @for (i of ArrayUtils.range(square.count(PlayerOrNone.NONE)); track i) {
+                @for (i of ArrayUtils.range(square.getCapacity()); track i) {
                     <ng-container>
-                        <circle id="square-{{ x }}-piece-{{ i }}-out-of-{{ square.count(PlayerOrNone.NONE) }}"
+                        <circle id="square-{{ x }}-piece-{{ i }}-out-of-{{ square.getCapacity() }}"
                                 [attr.transform]="getCircleTransform(i, square)"
                                 (click)="onSquareClick(x)"
                                 r="10"

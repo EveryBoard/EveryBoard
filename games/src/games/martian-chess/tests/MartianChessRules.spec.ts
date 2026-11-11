@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -307,7 +308,7 @@ describe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
 
         // Then the captured piece should have been added
-        const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        const captured: PlayerMap<MartianChessCapture> = PlayerMap.ofValues(noCapture, noCapture);
         captured.set(Player.ZERO, noCapture);
         captured.set(Player.ONE, capturedPawn);
         const expectedState: MartianChessState = new MartianChessState(expectedBoardAfterCapture,
@@ -320,7 +321,7 @@ describe('MartianChessRules', () => {
 
     it('should add score when capturing again', () => {
         // Given a board where a capture can be done again
-        const capturedBefore: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        const capturedBefore: PlayerMap<MartianChessCapture> = PlayerMap.ofValues(noCapture, noCapture);
         capturedBefore.set(Player.ZERO, noCapture);
         capturedBefore.set(Player.ONE, capturedPawn);
         const state: MartianChessState = new MartianChessState(boardWhereCaptureCanBeDone,
@@ -333,7 +334,7 @@ describe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 3), new Coord(2, 4)).get();
 
         // Then the captured piece should have been added
-        const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+        const captured: PlayerMap<MartianChessCapture> = PlayerMap.ofValues(noCapture, noCapture);
         const capturedPawns: MartianChessCapture = MartianChessCapture.of([A, A]);
         captured.set(Player.ZERO, noCapture);
         captured.set(Player.ONE, capturedPawns);
@@ -522,7 +523,7 @@ describe('MartianChessRules', () => {
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ONE)', () => {
                 // Given a board with no more piece in the previous player's territory
                 // and one player having a superior score
-                const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+                const captured: PlayerMap<MartianChessCapture> = PlayerMap.ofValues(noCapture, noCapture);
                 captured.set(Player.ZERO, noCapture);
                 captured.set(Player.ONE, capturedPawn);
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 0), new Coord(1, 7)).get();
@@ -551,7 +552,7 @@ describe('MartianChessRules', () => {
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ZERO)', () => {
                 // Given a board with no more piece in the previous player's territory
                 // and one player having a superior score
-                const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
+                const captured: PlayerMap<MartianChessCapture> = PlayerMap.ofValues(noCapture, noCapture);
                 captured.set(Player.ZERO, capturedPawn);
                 captured.set(Player.ONE, noCapture);
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(1, 0)).get();
@@ -733,7 +734,7 @@ describe('MartianChessRules', () => {
                     [_, _, _, _],
                     [_, _, _, _],
                 ];
-                const captured: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
+                const captured: PlayerMap<MartianChessCapture> = state.captured.getCopy();
                 captured.replace(Player.ONE, capturedPawn);
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard,
                                                                                2,
@@ -747,7 +748,7 @@ describe('MartianChessRules', () => {
                 // Given a board with clock about to time out
                 const initialState: MartianChessState = MartianChessRules.get().getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
-                const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
+                const captured: PlayerMap<MartianChessCapture> = initialState.captured.getCopy();
                 captured.replace(Player.ZERO, capturedPawn);
                 const state: MartianChessState = new MartianChessState(board,
                                                                        1,
@@ -783,7 +784,7 @@ describe('MartianChessRules', () => {
                 // Given a board with clock about to time out
                 const initialState: MartianChessState = MartianChessRules.get().getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
-                const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
+                const captured: PlayerMap<MartianChessCapture> = initialState.captured.getCopy();
                 captured.replace(Player.ONE, capturedPawn);
                 const state: MartianChessState = new MartianChessState(board,
                                                                        1,

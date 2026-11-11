@@ -1,6 +1,6 @@
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { GoNode, AbstractGoConfig, AbstractGoRules } from './AbstractGoRules';

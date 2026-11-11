@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
@@ -53,7 +52,7 @@ describe('LodestoneMoveGenerator', () => {
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestonePositions = new MGPMap([
+        const lodestones: LodestonePositions = LodestonePositions.from([
             { key: Player.ZERO, value: new Coord(5, 4) },
             { key: Player.ONE, value: new Coord(4, 2) },
         ]);
@@ -85,7 +84,7 @@ describe('LodestoneMoveGenerator', () => {
             [N, _, _, _, _, _, _, N],
             [N, N, N, N, N, N, N, N],
         ];
-        const lodestones: LodestonePositions = new MGPMap();
+        const lodestones: LodestonePositions = LodestonePositions.empty();
         const pressurePlates: LodestonePressurePlates = {
             top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
             bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),

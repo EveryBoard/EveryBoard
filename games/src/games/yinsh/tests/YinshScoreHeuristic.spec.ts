@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
 import { YinshState } from '../YinshState';

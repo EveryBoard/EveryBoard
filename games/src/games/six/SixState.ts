@@ -4,7 +4,7 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils, Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
@@ -110,6 +110,16 @@ export class SixState extends OpenHexagonalGameState<Player> {
         const zeroPieces: Set<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
         const onePieces: Set<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
+    }
+
+    public getPlayerPieces(player: Player): CoordSet {
+        const playerPieces: Coord[] = [];
+        for (const [coord, owner] of this.pieces) {
+            if (owner === player) {
+                playerPieces.push(coord);
+            }
+        }
+        return new CoordSet(playerPieces);
     }
 
     public countPiecesToDrop(config: SixConfig): PlayerNumberMap {

@@ -20,7 +20,7 @@ import {
     LodestoneState,
 } from '@everyboard/games/lodestone';
 import { LodestoneFailure } from '@everyboard/games/lodestone';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LodestoneComponent } from '../lodestone.component';
@@ -36,7 +36,7 @@ describe('LodestoneComponent', () => {
 
     const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSURE_PLATES;
 
-    const noLodestones: LodestonePositions = new MGPMap();
+    const noLodestones: LodestonePositions = LodestonePositions.empty();
     const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
 
     beforeEach(fakeAsync(async() => {
@@ -112,7 +112,7 @@ describe('LodestoneComponent', () => {
                 ...allPressurePlates,
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
             };
-            const expectedLodestones: LodestonePositions = new MGPMap([
+            const expectedLodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
@@ -160,7 +160,7 @@ describe('LodestoneComponent', () => {
                 ...allPressurePlates,
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
             };
-            const expectedLodestones: LodestonePositions = new MGPMap([
+            const expectedLodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
@@ -294,7 +294,7 @@ describe('LodestoneComponent', () => {
                 ...allPressurePlates,
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
             };
-            const expectedLodestones: LodestonePositions = new MGPMap([
+            const expectedLodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
@@ -343,7 +343,7 @@ describe('LodestoneComponent', () => {
                 ...allPressurePlates,
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
             };
-            const expectedLodestones: LodestonePositions = new MGPMap([
+            const expectedLodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
@@ -579,7 +579,7 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ];
-            const lodestones: LodestonePositions = new MGPMap([
+            const lodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ONE, value: new Coord(0, 0) },
             ]);
             const pressurePlates: LodestonePressurePlates = {
@@ -632,7 +632,7 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ];
-            const lodestones: LodestonePositions = new MGPMap([
+            const lodestones: LodestonePositions = LodestonePositions.from([
                 { key: Player.ZERO, value: new Coord(0, 0) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);

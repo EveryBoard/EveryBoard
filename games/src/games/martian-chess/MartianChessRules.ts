@@ -1,9 +1,10 @@
-import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
@@ -15,7 +16,7 @@ import { MartianChessCapture, MartianChessState } from './MartianChessState';
 
 export interface MartianChessMoveResult {
 
-    score: MGPMap<Player, MartianChessCapture>;
+    score: PlayerMap<MartianChessCapture>;
 
     finalPiece: MartianChessPiece;
 }
@@ -63,7 +64,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         newBoard[move.getStart().y][move.getStart().x] = MartianChessPiece.EMPTY;
         const landingPiece: MartianChessPiece = info.finalPiece;
         newBoard[move.getEnd().y][move.getEnd().x] = landingPiece;
-        const captured: MGPMap<Player, MartianChessCapture> = info.score;
+        const captured: PlayerMap<MartianChessCapture> = info.score;
         let countDown: MGPOptional<number> = state.countDown;
         if (countDown.isPresent()) {
             const isCapture: boolean = this.isCapture(move, state);
@@ -92,13 +93,13 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
             return this.isLegalFieldPromotion(move, state);
         }
         const landingPiece: MartianChessPiece = state.getPieceAt(move.getStart());
-        const captured: MGPMap<Player, MartianChessCapture> = state.captured.getCopy();
+        const captured: PlayerMap<MartianChessCapture> = state.captured.getCopy();
         if (this.isCapture(move, state)) {
             const currentPlayer: Player = state.getCurrentPlayer();
-            let playerScore: MartianChessCapture = captured.get(currentPlayer).get();
+            let playerScore: MartianChessCapture = captured.get(currentPlayer);
             const capturedPiece: MartianChessPiece = state.getPieceAt(move.getEnd());
             playerScore = playerScore.add(capturedPiece);
-            captured.replace(currentPlayer, playerScore);
+            captured.put(currentPlayer, playerScore);
             captured.makeImmutable();
         }
         const moveResult: MartianChessMoveResult = { finalPiece: landingPiece, score: captured };

@@ -5,7 +5,7 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { Vector } from '../../jscaip/Vector';
 import { Debug } from '../../utils/Debug';
