@@ -269,7 +269,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
          * 3 . . .
          *   4 5 6
          */
-        const remainingPieceCenterCoords: Coord[][] = [];
+        this.remainingPieceCenterCoords = PlayerMap.ofValues([], []);
         const height: number = this.height();
         const maxX: number = this.width() - 1;
         const maxY: number = height - 1;
@@ -293,12 +293,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 const realY: number = this.getPieceCenter(rotatedAbstractCoord.y);
                 playersRemainingPieceLeftPieceCoords.push(new Coord(realX, realY));
             }
-            remainingPieceCenterCoords[player.getValue()] = playersRemainingPieceLeftPieceCoords;
+            this.remainingPieceCenterCoords.put(player, playersRemainingPieceLeftPieceCoords);
         }
-        this.remainingPieceCenterCoords = PlayerMap.ofValues(
-            remainingPieceCenterCoords[0],
-            remainingPieceCenterCoords[1],
-        );
     }
 
     protected getRemainingPieceTranslate(player: Player, pieceIdX: number): string {

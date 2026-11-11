@@ -12,7 +12,7 @@ import { DiamMoveGenerator } from '@everyboard/games/diam';
 import { DiamPiece } from '@everyboard/games/diam';
 import { DiamRules } from '@everyboard/games/diam';
 import { DiamState } from '@everyboard/games/diam';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -293,22 +293,24 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.viewInfo.remainingPieces = PlayerMap.ofValues([], []);
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
+            Utils.assert(piece.owner.isPlayer(), 'DiamPiece.PLAYER_PIECES cannot contain an empty piece');
+            const owner: Player = piece.owner;
             const remaining: number = this.state().getRemainingPiecesOf(piece);
             for (let y: number = 0; y < remaining; y++) {
                 const foregroundClasses: string[] = [];
                 if (this.isTopPieceOfReserveAndSelected(y, remaining, piece)) {
                     foregroundClasses.push('selected-stroke');
                 }
-                if (isPlayerTurn && y === remaining-1 && piece.owner === currentPlayer) {
+                if (isPlayerTurn && y === remaining-1 && owner === currentPlayer) {
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-stroke-hover');
                 }
-                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner);
+                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(owner);
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
-                    backgroundClasses.push('player' + (piece.owner.getValue()) + '-alternate-fill');
+                    backgroundClasses.push('player' + owner.getValue() + '-alternate-fill');
                 } else {
-                    backgroundClasses.push('player' + (piece.owner.getValue()) + '-fill');
+                    backgroundClasses.push('player' + owner.getValue() + '-fill');
                 }
                 pieceInfos.push({
                     backgroundClasses,
@@ -317,7 +319,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     drawPosition: this.getDrawPositionRemainingPiece(piece, y),
                     actualPiece: piece,
                 });
-                this.viewInfo.remainingPieces.put(piece.owner, pieceInfos);
+                this.viewInfo.remainingPieces.put(owner, pieceInfos);
             }
         }
     }
