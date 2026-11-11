@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
@@ -30,11 +30,11 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 
 export type PossibleMove = {
 
-    arrow: Arrow<Ordinal>;
+    readonly arrow: Arrow<Ordinal>;
 
-    endingCoord: Coord;
+    readonly endingCoord: Coord;
 
-    relatedMove: EpaminondasMove;
+    readonly relatedMove: EpaminondasMove;
 };
 
 @Component({
@@ -53,12 +53,12 @@ export class EpaminondasComponent extends RectangularGameComponent<
     EpaminondasLegalityInformation
 > {
 
-    public NONE: PlayerOrNone = PlayerOrNone.NONE;
+    protected readonly NONE: PlayerOrNone = PlayerOrNone.NONE;
 
     // Data linked to the move attempt
-    public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
-    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
-    public possibleMoves: PossibleMove[] = [];
+    private readonly firstPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    private readonly lastPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly possibleMoves: WritableSignal<ReadonlyArray<PossibleMove>> = signal([]);
 
     // Data linked to the last move
     private moveds: Coord[] = [];
@@ -141,7 +141,7 @@ export class EpaminondasComponent extends RectangularGameComponent<
 
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.firstPiece.isPresent()) {
+        if (this.firstPiece().isPresent()) {
             return this.secondClick(x, y);
         } else {
             return this.firstClick(x, y);
@@ -153,8 +153,8 @@ export class EpaminondasComponent extends RectangularGameComponent<
         const player: Player = this.state().getCurrentPlayer();
         switch (this.board[y][x]) {
             case player:
-                this.firstPiece = MGPOptional.of(new Coord(x, y));
-                this.possibleMoves = this.getPossibleMoves();
+                this.firstPiece.set(MGPOptional.of(new Coord(x, y)));
+                this.possibleMoves.set(this.getPossibleMoves());
                 return MGPValidation.SUCCESS;
             case opponent:
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
@@ -174,18 +174,18 @@ export class EpaminondasComponent extends RectangularGameComponent<
         const possibleMoves: PossibleMove[] = [];
         for (const direction of Ordinal.ORDINALS) {
             const phalanxSize: number = this.countPhalanxSize(direction);
-            let coord: Coord = this.firstPiece.get().getNext(direction, phalanxSize);
+            let coord: Coord = this.firstPiece().get().getNext(direction, phalanxSize);
             for (let stepSize: number = 1; stepSize <= phalanxSize; stepSize++) {
                 const move: EpaminondasMove = new EpaminondasMove(
-                    this.firstPiece.get().x,
-                    this.firstPiece.get().y,
+                    this.firstPiece().get().x,
+                    this.firstPiece().get().y,
                     phalanxSize,
                     stepSize,
                     direction,
                 );
                 if (this.rules.isLegal(move, state).isSuccess()) {
                     const arrow: Arrow<Ordinal> = new Arrow<Ordinal>(
-                        this.firstPiece.get(),
+                        this.firstPiece().get(),
                         coord,
                         direction,
                         (c: Coord) => this.getCenterAt(c),
@@ -208,19 +208,19 @@ export class EpaminondasComponent extends RectangularGameComponent<
     }
 
     public override cancelMoveAttempt(): void {
-        this.firstPiece = MGPOptional.empty();
-        this.possibleMoves = [];
-        this.lastPiece = MGPOptional.empty();
+        this.firstPiece.set(MGPOptional.empty());
+        this.possibleMoves.set([]);
+        this.lastPiece.set(MGPOptional.empty());
     }
 
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
-        const firstPiece: Coord = this.firstPiece.get();
+        const firstPiece: Coord = this.firstPiece().get();
         if (clicked.equals(firstPiece)) {
             return this.cancelMove();
         }
         const validMoves: PossibleMove[] =
-            this.possibleMoves.filter((m: PossibleMove) => m.endingCoord.equals(clicked));
+            this.possibleMoves().filter((m: PossibleMove) => m.endingCoord.equals(clicked));
         if (validMoves.length > 0) {
             return this.chooseMove(validMoves[0].relatedMove);
         }
@@ -235,7 +235,7 @@ export class EpaminondasComponent extends RectangularGameComponent<
     }
 
     private chooseMoveFromClicks(clicked: Coord): Promise<MGPValidation> {
-        const direction: Ordinal = this.firstPiece.get().getDirectionToward(clicked).get();
+        const direction: Ordinal = this.firstPiece().get().getDirectionToward(clicked).get();
         const phalanxSize: number = this.countPhalanxSize(direction);
         const stepSize: number = this.getStepSize(clicked, phalanxSize);
         if (stepSize > phalanxSize) {
@@ -253,7 +253,7 @@ export class EpaminondasComponent extends RectangularGameComponent<
 
     private countPhalanxSize(direction: Ordinal): number {
         let phalanxSize: number = 1;
-        let coord: Coord = this.firstPiece.get().getNext(direction, 1);
+        let coord: Coord = this.firstPiece().get().getNext(direction, 1);
         const currentPlayer: Player = this.state().getCurrentPlayer();
         while (this.state().hasPieceAt(coord, currentPlayer)) {
             phalanxSize++;
@@ -264,9 +264,9 @@ export class EpaminondasComponent extends RectangularGameComponent<
 
     private getStepSize(clicked: Coord, phalanxSize: number): number {
         // Only called if clicked is aligned with first piece
-        const direction: Ordinal = this.firstPiece.get().getDirectionToward(clicked).get();
+        const direction: Ordinal = this.firstPiece().get().getDirectionToward(clicked).get();
         let stepSize: number = 1;
-        let coord: Coord = this.firstPiece.get().getNext(direction, phalanxSize);
+        let coord: Coord = this.firstPiece().get().getNext(direction, phalanxSize);
         while (coord.equals(clicked) === false) {
             stepSize++;
             coord = coord.getNext(direction, 1);
@@ -283,7 +283,7 @@ export class EpaminondasComponent extends RectangularGameComponent<
     private getPieceStrokeClasses(x: number, y: number): string[] {
         // Show pieces belonging to the phalanx to move
         const coord: Coord = new Coord(x, y);
-        if (this.firstPiece.equalsValue(coord)) {
+        if (this.firstPiece().equalsValue(coord)) {
             return ['selected-stroke'];
         } else {
             return [];
@@ -304,8 +304,8 @@ export class EpaminondasComponent extends RectangularGameComponent<
         if (this.interactive() === false) {
             return [];
         }
-        if (this.firstPiece.isPresent()) {
-            return this.possibleMoves.map((p: PossibleMove) => p.endingCoord);
+        if (this.firstPiece().isPresent()) {
+            return this.possibleMoves().map((p: PossibleMove) => p.endingCoord);
         } else {
             return this.getCurrentPlayerPieces();
         }
