@@ -30,7 +30,7 @@
       "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
       "noImplicitAny": false, // cannot be enabled if we want to access object fields with their name in a weakly-typed setting
       "typeRoots": [
-        "node_modules/@types",
+        "node_modules/@types"
       ],
       "types": [
         "jasmine"
