@@ -486,7 +486,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                 if (lineInfo.mountainEncountered) {
                     lineInfo.missingForce -= 1; // We count her as active pusher
                     // We found a piece pushing right in the good direction
-                    if (lineInfo.missingForce <= 0) {// And she has enough force to push
+                    if (lineInfo.missingForce <= 0) { // And she has enough force to push
                         lineInfo.pusherFound = true;
                         lineInfo.closestPusher.coord =
                             lineInfo.closestPusher.coord.getNext(direction);

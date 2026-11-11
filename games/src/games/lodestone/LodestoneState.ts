@@ -144,8 +144,7 @@ export class LodestonePressurePlate {
 
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 
-export type LodestonePressurePlates = Record<LodestonePressurePlatePosition,
-    LodestonePressurePlateGroup>;
+export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, LodestonePressurePlateGroup>;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace LodestonePressurePlates {

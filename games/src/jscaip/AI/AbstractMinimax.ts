@@ -34,12 +34,13 @@ export type SearchResult<M> = {
 /**
  * This implements the minimax algorithm with alpha-beta pruning.
  */
-export abstract class AbstractMinimax<M extends Move,
+export abstract class AbstractMinimax<
+    M extends Move,
     S extends GameState,
     O extends AIOptions,
     C extends RulesConfig = EmptyRulesConfig,
-    L = void>
-implements AI<M, S, O, C> {
+    L = void
+> implements AI<M, S, O, C> {
 
     // States whether the minimax takes random moves from the list of best moves.
     protected useRandomness: boolean = false;

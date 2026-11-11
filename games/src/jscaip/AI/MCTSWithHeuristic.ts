@@ -16,12 +16,13 @@ import { MCTS } from './MCTS';
 /**
  * Like MCTS, but uses a heuristic function to evaluate non-terminated states.
  */
-export class MCTSWithHeuristic<M extends Move,
+export class MCTSWithHeuristic<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig = EmptyRulesConfig,
     B extends BoardValue = BoardValue,
-    L = void>
-    extends MCTS<M, S, C, L> {
+    L = void
+> extends MCTS<M, S, C, L> {
 
     public constructor(
         name: string,

@@ -38,12 +38,14 @@ export namespace SlowTest {
 
 export const UNIVERSAL_SELF_PLAY_PLIES: number = 24;
 
-export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+export type MinimaxTestOptions<
+    R extends SuperRules<M, S, C, L>,
     M extends Move,
     S extends GameState,
     O extends AIOptions,
     C extends RulesConfig,
-    L> = {
+    L
+> = {
     rules: R;
     minimax: Minimax<M, S, C, L>;
     options: O;
@@ -51,12 +53,14 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
     shouldFinish: boolean;
 }
 
-export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+export type BoundedMinimaxTestOptions<
+    R extends SuperRules<M, S, C, L>,
     M extends Move,
     S extends GameState,
     O extends AIDepthLimitOptions,
     C extends RulesConfig,
-    L> = {
+    L
+> = {
     rules: R;
     playerZeroMinimax: Minimax<M, S, C, L>;
     playerZeroOptions: O;
@@ -68,13 +72,14 @@ export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
 }
 
 /* Run a minimax test by battling it against itself for a number of turns */
-export function minimaxTest<R extends SuperRules<M, S, C, L>,
+export function minimaxTest<
+    R extends SuperRules<M, S, C, L>,
     M extends Move,
     S extends GameState,
     O extends AIDepthLimitOptions,
     C extends RulesConfig,
-    L>(options: MinimaxTestOptions<R, M, S, O, C, L>): void
-{
+    L
+>(options: MinimaxTestOptions<R, M, S, O, C, L>): void {
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
     const limit: number = 10000; // Play for 10 seconds at most
@@ -101,12 +106,14 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     }
 }
 
-export function expectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, L>,
+export function expectToBeAbleToPlayAgainstItself<
+    R extends SuperRules<M, S, C, L>,
     M extends Move,
     S extends GameState,
     O extends AIDepthLimitOptions,
     C extends RulesConfig,
-    L>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void {
+    L
+>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void {
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
     const playerOneMinimax: Minimax<M, S, C, L> = options.playerOneMinimax ?? options.playerZeroMinimax;
     const playerOneOptions: O = options.playerOneOptions ?? options.playerZeroOptions;
@@ -128,11 +135,12 @@ export function expectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, 
     }
 }
 
-export function getShallowestMinimaxOptions<M extends Move,
+export function getShallowestMinimaxOptions<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig,
-    L>(minimax: Minimax<M, S, C, L>): AIDepthLimitOptions
-{
+    L
+>(minimax: Minimax<M, S, C, L>): AIDepthLimitOptions {
     const options: AIOptions[] = minimax.availableOptions as AIOptions[];
     const depthOptions: AIDepthLimitOptions[] = options.filter((option: AIOptions): option is AIDepthLimitOptions => {
         return 'maxDepth' in option;
@@ -143,13 +151,12 @@ export function getShallowestMinimaxOptions<M extends Move,
     });
 }
 
-export function createConfiguredMinimaxForTest<R extends SuperRules<M, S, C, L>,
+export function createConfiguredMinimaxForTest<
+    R extends SuperRules<M, S, C, L>,
     M extends Move,
     S extends GameState,
     C extends RulesConfig,
-    L>(
-    rules: R,
-    config: MinimaxConfig<M, S, C>,
-): Minimax<M, S, C, L> {
+    L
+>(rules: R, config: MinimaxConfig<M, S, C>): Minimax<M, S, C, L> {
     return createMinimaxFromConfig(rules, config);
 }

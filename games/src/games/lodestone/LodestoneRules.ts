@@ -31,8 +31,7 @@ export interface PressurePlateViewPosition {
     direction: Ordinal;
 }
 
-export type PressurePlatePositionInformation = MGPMap<LodestonePressurePlatePosition,
-    PressurePlateViewPosition>;
+export type PressurePlatePositionInformation = MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
 export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
 
@@ -164,10 +163,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         direction: Ordinal,
         lodestones: LodestonePositions,
     ): void {
-        for (let coord: Coord = start; // eslint-disable-next-line indent
-            coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
-            coord = coord.getNext(direction))
-        {
+        for (
+            let coord: Coord = start;
+            coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE);
+            coord = coord.getNext(direction)
+        ) {
             for (const player of Player.PLAYERS) {
                 if (lodestones.get(player).equalsValue(coord)) {
                     lodestones.delete(player);
@@ -277,10 +277,11 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const directions: readonly Ordinal[] = orientation === 'diagonal' ? Ordinal.DIAGONALS : Ordinal.ORTHOGONALS;
         for (const direction of directions) {
             const start: Coord = lodestone.getNext(direction, LodestoneState.SIZE);
-            for (let coord: Coord = start; // eslint-disable-next-line indent
-                coord.equals(lodestone) === false; // eslint-disable-next-line indent
-                coord = coord.getPrevious(direction))
-            {
+            for (
+                let coord: Coord = start;
+                coord.equals(lodestone) === false;
+                coord = coord.getPrevious(direction)
+            ) {
                 if (state.coordIsOwnedBy(coord, opponent)) {
                     const pieceToMove: LodestonePiece = board[coord.y][coord.x];
                     if (pieceToMove.isPlayerPiece()) {

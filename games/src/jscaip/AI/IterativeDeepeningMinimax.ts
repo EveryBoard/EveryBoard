@@ -11,11 +11,12 @@ import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
 
-export class IterativeDeepeningMinimax<M extends Move,
+export class IterativeDeepeningMinimax<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig = EmptyRulesConfig,
-    L = void>
-    extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
+    L = void
+> extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
 
     private readonly MAX_MINIMAX_LEVEL: number = 10;
 

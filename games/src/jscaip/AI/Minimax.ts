@@ -13,10 +13,12 @@ import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic, HeuristicWithBounds } from './Heuristic';
 
-export abstract class PlayerMetricHeuristicWithBounds<M extends Move,
+export abstract class PlayerMetricHeuristicWithBounds<
+    M extends Move,
     S extends GameState,
-    C extends RulesConfig = EmptyRulesConfig>
-    extends HeuristicWithBounds<M, S, BoardValue, C> {
+    C extends RulesConfig = EmptyRulesConfig
+> extends HeuristicWithBounds<M, S, BoardValue, C> {
+
     public abstract getMetrics(node: GameNode<M, S>, config: C): PlayerNumberTable;
 
     // Yes, this is duplicated from PlayerMetricHeuristic, because we don't have multiple inheritance
@@ -34,11 +36,12 @@ export abstract class PlayerMetricHeuristicWithBounds<M extends Move,
 /**
  * This implements the minimax algorithm with alpha-beta pruning.
  */
-export class Minimax<M extends Move,
+export class Minimax<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig = EmptyRulesConfig,
-    L = void>
-    extends AbstractMinimax<M, S, AIDepthLimitOptions, C, L> {
+    L = void
+> extends AbstractMinimax<M, S, AIDepthLimitOptions, C, L> {
 
     public constructor(
         name: string,

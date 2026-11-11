@@ -46,10 +46,12 @@ export class AIStats {
 /**
  * An AI selects a move from a game node.
  */
-export abstract class AI<M extends Move,
+export abstract class AI<
+    M extends Move,
     S extends GameState,
     O extends AIOptions,
-    C extends RulesConfig = EmptyRulesConfig> {
+    C extends RulesConfig = EmptyRulesConfig
+> {
     public abstract readonly name: string;
     public abstract readonly availableOptions: O[];
 

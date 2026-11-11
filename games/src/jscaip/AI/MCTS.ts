@@ -22,11 +22,13 @@ type NodeAndPath<M extends Move, S extends GameState> = {
  *   - https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/
  *   - https://vgarciasc.github.io/mcts-viz/
  */
-export class MCTS<M extends Move,
+export class MCTS<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig = EmptyRulesConfig,
-    L = void>
-implements AI<M, S, AITimeLimitOptions, C> {
+    L = void
+> implements AI<M, S, AITimeLimitOptions, C> {
+
     // The exploration parameter influences the MCTS results.
     // It is chosen "empirically". The generally recommended value from Wikipedia is Math.sqrt(2),
     // but in our case it seems to work much better with a higher exploration parameter.

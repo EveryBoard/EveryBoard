@@ -21,7 +21,11 @@ export type YinshLegalityInformation = YinshState;
 
 export class YinshNode extends GameNode<YinshMove, YinshState> {}
 
-type HexaTrajectory = { start: Coord; end: Coord; dir: HexaDirection};
+type HexaTrajectory = {
+    start: Coord;
+    end: Coord;
+    dir: HexaDirection;
+};
 
 export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 

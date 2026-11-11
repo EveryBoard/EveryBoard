@@ -41,10 +41,7 @@ export class AIInstanceRegistry {
 
 }
 
-export function createMinimaxFromConfig<M extends Move,
-    S extends GameState,
-    C extends RulesConfig,
-    L>(
+export function createMinimaxFromConfig<M extends Move, S extends GameState, C extends RulesConfig, L>(
     rules: SuperRules<M, S, C, L>,
     config: MinimaxConfig<M, S, C>,
 ): Minimax<M, S, C, L> {
@@ -54,10 +51,12 @@ export function createMinimaxFromConfig<M extends Move,
     return minimax;
 }
 
-export function createIterativeDeepeningMinimaxFromConfig<M extends Move,
+export function createIterativeDeepeningMinimaxFromConfig<
+    M extends Move,
     S extends GameState,
     C extends RulesConfig,
-    L>(
+    L
+>(
     rules: SuperRules<M, S, C, L>,
     config: MinimaxConfig<M, S, C>,
 ): IterativeDeepeningMinimax<M, S, C, L> {
@@ -73,10 +72,7 @@ export function createIterativeDeepeningMinimaxFromConfig<M extends Move,
     return minimax;
 }
 
-export function createMCTSFromConfig<M extends Move,
-    S extends GameState,
-    C extends RulesConfig,
-    L>(
+export function createMCTSFromConfig<M extends Move, S extends GameState, C extends RulesConfig, L>(
     rules: SuperRules<M, S, C, L>,
     config: MCTSConfig<M, S, C>,
 ): MCTS<M, S, C, L> {
