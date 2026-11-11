@@ -121,6 +121,21 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         ], 1),
         move: CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 7)]),
     },
+    tripleFlyingCaptureTest: {
+        state: OddCheckersState.of([
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, V, _, _, _, _, _, _],
+            [_, _, _, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+        ], 0),
+        move: CheckersMove.fromCapture([new Coord(0, 5), new Coord(4, 1), new Coord(7, 4), new Coord(5, 6)]),
+    },
     promotionTest: {
         state: OddCheckersState.of([
             [_, _, _, _, _, V, _],
@@ -419,6 +434,7 @@ describe('InternationalCheckersComponent', () => {
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-5', move);
+
             // Then the stack of captured pieces should not exist
             testUtils.expectElementToExist('#square-6-5-piece-0');
             testUtils.expectElementNotToExist('#square-6-5-piece-1');
@@ -458,6 +474,7 @@ describe('InternationalCheckersComponent', () => {
             // Given a state
             // When it is interactive
             testUtils.getGameComponent().interactive.set(true);
+
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-1-6', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-3-6', 'clickable-stroke');

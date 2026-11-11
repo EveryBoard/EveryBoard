@@ -36,6 +36,7 @@ describe('NewGameRules', () => {
 
         // Given some state
         const state: NewGameState = new NewGameState(42);
+
         // When checking the game status
         // Then it should be a draw
         const node: NewGameNode = new NewGameNode(state);
