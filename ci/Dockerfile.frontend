@@ -1,4 +1,4 @@
-FROM node:24-trixie-slim AS frontend
+FROM node:26-trixie-slim AS frontend
 
 ENV NG_CLI_ANALYTICS=false
 

@@ -1,4 +1,4 @@
-FROM node:24-trixie-slim AS firebase
+FROM node:26-trixie-slim AS firebase
 
 RUN npm install --global firebase-tools@15.29.0 \
     && npm cache clean --force \
