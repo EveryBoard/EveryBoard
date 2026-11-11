@@ -8,8 +8,7 @@ updates:
       - /lib
       - /ci/deploy-tools
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "06:00"
       timezone: Europe/Brussels
     open-pull-requests-limit: 5
@@ -34,8 +33,7 @@ updates:
   - package-ecosystem: gomod
     directory: /backend
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "06:00"
       timezone: Europe/Brussels
     open-pull-requests-limit: 3
@@ -53,5 +51,18 @@ updates:
       interval: monthly
     groups:
       github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directories:
+      - /backend
+      - /ci
+    schedule:
+      interval: monthly
+      time: "06:00"
+      timezone: Europe/Brussels
+    groups:
+      docker-images:
         patterns:
           - "*"
