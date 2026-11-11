@@ -3,7 +3,7 @@ import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { Debug } from '@everyboard/games';
+import { Debug, LocaleUtils } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserDAO } from '../dao/UserDAO';
@@ -222,6 +222,7 @@ export class ConnectedUserService implements OnDestroy {
                 return Utils.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
             }
             try {
+                this.auth.languageCode = LocaleUtils.getLocale();
                 await Auth.sendEmailVerification(user.get());
                 return MGPValidation.SUCCESS;
             } catch (e: unknown) {
