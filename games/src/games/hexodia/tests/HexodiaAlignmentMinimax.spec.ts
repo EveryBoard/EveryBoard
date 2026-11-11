@@ -55,7 +55,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 2);
-        const node: HexodiaNode = new HexodiaNode(state);
+        const node: HexodiaNode = HexodiaNode.root(state);
 
         // When asking what is the best move
         const bestMove: HexodiaMove = minimax.chooseNextMove(node, level1, defaultConfig);
@@ -89,7 +89,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
-        const node: HexodiaNode = new HexodiaNode(state);
+        const node: HexodiaNode = HexodiaNode.root(state);
 
         // When asking what is the best move
         const bestMove: HexodiaMove = minimax.chooseNextMove(node, level2, defaultConfig);
@@ -123,7 +123,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
-        const node: HexodiaNode = new HexodiaNode(state);
+        const node: HexodiaNode = HexodiaNode.root(state);
 
         // When asking what is the best move
         const bestMove: HexodiaMove = minimax.chooseNextMove(node, level2, defaultConfig);

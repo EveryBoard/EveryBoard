@@ -185,7 +185,7 @@ describe('PenteRules', () => {
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
         const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
-        const node: PenteNode = new PenteNode(state);
+        const node: PenteNode = PenteNode.root(state);
 
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -214,7 +214,7 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
         ], PlayerNumberMap.of(8, 8), 1337);
-        const node: PenteNode = new PenteNode(state);
+        const node: PenteNode = PenteNode.root(state);
 
         // When checking the game status
         // Then it should be a draw
@@ -244,7 +244,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(10, 0), 3);
-        const node: PenteNode = new PenteNode(state);
+        const node: PenteNode = PenteNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ZERO
@@ -274,7 +274,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(0, 0), 3);
-        const node: PenteNode = new PenteNode(state);
+        const node: PenteNode = PenteNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ZERO

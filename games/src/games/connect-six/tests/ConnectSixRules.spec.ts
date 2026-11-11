@@ -41,7 +41,7 @@ describe('ConnectSixRules', () => {
         const heuristic: ConnectSixAlignmentHeuristic = new ConnectSixAlignmentHeuristic();
 
         // When evaluating it
-        const value: BoardValue = heuristic.getBoardValue(new ConnectSixNode(state), { width: 3, height: 3 });
+        const value: BoardValue = heuristic.getBoardValue(ConnectSixNode.root(state), { width: 3, height: 3 });
 
         // Then the heuristic should inspect occupied squares
         expect(value.metrics.length).toBe(1);
@@ -348,7 +348,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
-            const node: ConnectSixNode = new ConnectSixNode(state);
+            const node: ConnectSixNode = ConnectSixNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -406,7 +406,7 @@ describe('ConnectSixRules', () => {
 
             // Then the board should be a draw
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ConnectSixNode = new ConnectSixNode(expectedState);
+            const node: ConnectSixNode = ConnectSixNode.root(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

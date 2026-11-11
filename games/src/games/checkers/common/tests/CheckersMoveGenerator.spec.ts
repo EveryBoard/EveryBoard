@@ -35,7 +35,7 @@ for (const rule of rules) {
         it('should return full list of steps when no capture must be done', () => {
             // Given a state where only steps can be made
             const state: CheckersState = rule.getInitialState(defaultConfig);
-            const node: CheckersNode = new CheckersNode(state);
+            const node: CheckersNode = CheckersNode.root(state);
 
             // When listing the moves
             const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -68,7 +68,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 1);
-        const node: CheckersNode = new CheckersNode(state);
+        const node: CheckersNode = CheckersNode.root(state);
 
         // When listing the moves
         const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -132,7 +132,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
             [_, _, _, _, _, U, _],
             [_, _, _, _, _, _, _],
         ], 1);
-        const node: CheckersNode = new CheckersNode(state);
+        const node: CheckersNode = CheckersNode.root(state);
 
         // When listing the moves
         const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -204,7 +204,7 @@ describe('CheckersMoveGenerator for Bashni', () => {
             [_, U, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ], 0);
-        const node: CheckersNode = new CheckersNode(state);
+        const node: CheckersNode = CheckersNode.root(state);
 
         // When listing the generated moves
         const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);

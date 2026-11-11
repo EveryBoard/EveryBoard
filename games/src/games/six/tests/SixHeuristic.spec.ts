@@ -6,6 +6,7 @@ import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
@@ -38,7 +39,7 @@ describe('SixHeuristic', () => {
             ];
             const state: SixState = SixState.ofRepresentation(board, 9);
             const move: SixMove = SixMove.ofDrop(new Coord(2, 3));
-            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: SixNode = RulesUtils.nodeWithPreviousMove(state, move);
 
             // When evaluation its value
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
@@ -160,8 +161,7 @@ describe('SixHeuristic', () => {
             [X, X, X, X, O, O, O, O, O],
             [X, X, X, X, O, O, O, O, O],
         ], 40);
-        const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-        const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SixNode = SixNode.root(state);
         expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2 * Player.ZERO.getScoreModifier()]);
     });
 
@@ -178,8 +178,7 @@ describe('SixHeuristic', () => {
                 ...defaultConfig,
                 piecesPerPlayer: 10,
             };
-            const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: SixNode = SixNode.root(state);
 
             // When evaluating its board value
             const boardValue: BoardValue = heuristic.getBoardValue(node, customConfig);

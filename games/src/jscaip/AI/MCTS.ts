@@ -78,7 +78,7 @@ implements AI<M, S, AITimeLimitOptions, C>
         const seconds: number = (Date.now() - startTime) / 1000;
         Debug.display('MCTS', 'chooseNextMove', `Computed ${iterations} in ${seconds} (rate: ${iterations/seconds} it/s)`);
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
-        return bestChild.previousMove.get();
+        return bestChild.getPreviousMove();
     }
 
     /**
@@ -197,7 +197,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * @returns the game status at the end of the simulation
      */
     private simulate(node: GameNode<M, S>, endTime: number, config: C): GameStatus {
-        Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.previousMove.get().toString());
+        Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.getPreviousMove().toString());
         let current: GameNode<M, S> = node;
         let steps: number = 0;
         while (steps < this.maxGameLength && Date.now() < endTime) {
@@ -232,9 +232,7 @@ implements AI<M, S, AITimeLimitOptions, C>
         const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
         Utils.assert(legality.isSuccess(), 'heuristic returned illegal move', { move: move.toString() });
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
-        const childNode: GameNode<M, S> = new GameNode(childState,
-                                                       MGPOptional.of(node),
-                                                       MGPOptional.of(move));
+        const childNode: GameNode<M, S> = GameNode.child(childState, node, move);
         return childNode;
     }
 

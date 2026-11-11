@@ -49,7 +49,7 @@ describe('ReversiMoveGenerator', () => {
                     [_, _, _, _, O, _, _, _],
                 ];
                 const state: ReversiState = new ReversiState(board, 1);
-                const node: ReversiNode = new ReversiNode(state);
+                const node: ReversiNode = ReversiNode.root(state);
                 const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
                 expect(moves.length).toBe(1);
                 expect(moves[0]).toBe(ReversiMove.PASS);

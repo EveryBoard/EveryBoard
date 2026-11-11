@@ -47,7 +47,7 @@ describe('PylosMoveGenerator', () => {
             ],
         ];
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new PylosNode(state);
+        const node: PylosNode = PylosNode.root(state);
 
         // When listing the moves
         const choices: PylosMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -86,7 +86,7 @@ describe('PylosMoveGenerator', () => {
             ],
         ];
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new PylosNode(state);
+        const node: PylosNode = PylosNode.root(state);
 
         // When listing the moves
         const choices: PylosMove[] = moveGenerator.getListMoves(node, defaultConfig);

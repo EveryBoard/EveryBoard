@@ -33,7 +33,7 @@ describe('ReversiOrderedMoveGenerator', () => {
             [_, _, _, _, X, O, X, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = ReversiNode.root(state);
 
         // When listing the moves
         const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);

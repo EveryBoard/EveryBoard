@@ -467,7 +467,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.VICTORY_OF_ZERO);
-            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().getPreviousMove()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
@@ -488,7 +488,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.VICTORY_OF_ONE);
-            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().getPreviousMove()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
@@ -525,7 +525,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.HARD_DRAW);
-            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().getPreviousMove()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));

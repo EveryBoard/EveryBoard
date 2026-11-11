@@ -19,7 +19,7 @@ describe('KalahMoveGenerator', () => {
     it('should have all move options', () => {
         // Given an initial node
         const initialState: MancalaState = KalahRules.get().getInitialState(defaultConfig);
-        const node: MancalaNode = new MancalaNode(initialState);
+        const node: MancalaNode = MancalaNode.root(initialState);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -34,7 +34,7 @@ describe('KalahMoveGenerator', () => {
             [5, 2, 3, 2, 1, 2],
             [1, 0, 0, 0, 0, 0],
         ], 24, PlayerNumberMap.of(13, 20));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -55,7 +55,7 @@ describe('KalahMoveGenerator', () => {
             [0, 1, 0, 0, 0, 0],
             [0, 1, 0, 0, 0, 0],
         ], 24, PlayerNumberMap.of(13, 20));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);

@@ -12,6 +12,11 @@ export class GameNodeStats {
     public static createdNodes: number = 0;
 }
 
+type NodeAndMove<M extends Move, S extends GameState> = {
+    readonly parent: GameNode<M, S>;
+    readonly move: M;
+}
+
 /**
  * A node of the game tree.
  * A node has a state, and may have a parent and previous move.
@@ -37,12 +42,40 @@ export class GameNode<M extends Move, S extends GameState> {
      */
     private readonly cache: MGPMap<string, NonNullable<unknown>> = new MGPMap();
 
-    public constructor(public readonly gameState: S,
-                       public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
-                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
-    {
+    protected constructor(
+        public readonly gameState: S,
+        private readonly parentAndPreviousMove: MGPOptional<NodeAndMove<M, S>>,
+    ) {
         this.id = GameNode.ID++;
         GameNodeStats.createdNodes++;
+    }
+
+    public static root<M extends Move, S extends GameState>(gameState: S): GameNode<M, S> {
+        return new GameNode<M, S>(gameState, MGPOptional.empty());
+    }
+
+    public static child<M extends Move, S extends GameState>(
+        gameState: S,
+        parent: GameNode<M, S>,
+        move: M,
+    ): GameNode<M, S> {
+        return new GameNode<M, S>(gameState, MGPOptional.of({ parent, move }));
+    }
+
+    public hasParent(): boolean {
+        return this.parentAndPreviousMove.isPresent();
+    }
+
+    public getParent(): GameNode<M, S> {
+        return this.parentAndPreviousMove.get().parent;
+    }
+
+    public getPreviousState(): S {
+        return this.getParent().gameState;
+    }
+
+    public getPreviousMove(): M {
+        return this.parentAndPreviousMove.get().move;
     }
 
     /**
@@ -71,8 +104,8 @@ export class GameNode<M extends Move, S extends GameState> {
      * Adds a child to this node.
      */
     public addChild(node: GameNode<M, S>): void {
-        Utils.assert(node.previousMove.isPresent(), 'GameNode: addChild expects a node with a previous move');
-        this.children.set(node.previousMove.get(), node);
+        Utils.assert(node.hasParent(), 'GameNode: addChild expects a node with a previous move');
+        this.children.set(node.getPreviousMove(), node);
     }
 
     /**
@@ -106,7 +139,7 @@ export class GameNode<M extends Move, S extends GameState> {
             const children: GameNode<M, S>[] = this.children.getValueList();
             for (const child of children) {
                 const playerColor: string = this.getPlayerDotColor(this.gameState.getCurrentPlayer());
-                buffer += `    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"; color="${playerColor}"];\n`;
+                buffer += `    node_${id} -> node_${nextId} [label="${child.getPreviousMove()}"; color="${playerColor}"];\n`;
                 const result: { dot: string; nextId: number; winner: PlayerOrNone } =
                     child.showDot(rules, config, labelFn, max, level+1, nextId);
                 nextId = result.nextId;

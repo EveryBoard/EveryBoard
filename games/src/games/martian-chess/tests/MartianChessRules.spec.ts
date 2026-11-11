@@ -541,7 +541,7 @@ describe('MartianChessRules', () => {
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
                                                                        captured);
-                const node: MartianChessNode = new MartianChessNode(state);
+                const node: MartianChessNode = MartianChessNode.root(state);
 
                 // When checking the game status
                 // Then it should be a victory for Player.ONE
@@ -570,7 +570,7 @@ describe('MartianChessRules', () => {
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
                                                                        captured);
-                const node: MartianChessNode = new MartianChessNode(state);
+                const node: MartianChessNode = MartianChessNode.root(state);
 
                 // When checking the game status
                 // Then it should be a victory for Player.ZERO
@@ -607,7 +607,7 @@ describe('MartianChessRules', () => {
                 ];
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-                const node: MartianChessNode = new MartianChessNode(expectedState);
+                const node: MartianChessNode = MartianChessNode.root(expectedState);
 
                 // When checking the game status
                 // Then it should be a victory for Player.ONE
@@ -775,7 +775,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(0),
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-                const node: MartianChessNode = new MartianChessNode(expectedState);
+                const node: MartianChessNode = MartianChessNode.root(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
 
@@ -811,7 +811,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(0),
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-                const node: MartianChessNode = new MartianChessNode(expectedState);
+                const node: MartianChessNode = MartianChessNode.root(expectedState);
 
                 // When checking the game status
                 // Then it should be a victory for Player.ONE
@@ -846,7 +846,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.of(0));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-                const node: MartianChessNode = new MartianChessNode(expectedState);
+                const node: MartianChessNode = MartianChessNode.root(expectedState);
                 RulesUtils.expectToBeDraw(rules, node, defaultConfig);
             });
 

@@ -458,10 +458,6 @@ describe('GipfRules', () => {
     });
 
     describe('game status', () => {
-        const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
-        const dummyMove: GipfMove = new GipfMove(placement, [], []);
-
         it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],
@@ -473,7 +469,7 @@ describe('GipfRules', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 0), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            const node: GipfNode = GipfNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -491,7 +487,7 @@ describe('GipfRules', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            const node: GipfNode = GipfNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -509,7 +505,7 @@ describe('GipfRules', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            const node: GipfNode = GipfNode.root(state);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);

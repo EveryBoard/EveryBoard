@@ -115,7 +115,7 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
         const generator: EpaminondasPhalanxSizeAndFilterMoveGenerator =
             new EpaminondasPhalanxSizeAndFilterMoveGenerator();
         const moves: EpaminondasMove[] = generator.getListMoves(node, defaultConfig);

@@ -35,7 +35,7 @@ describe('MartianChessMoveGenerator', () => {
     it('should includes all moves at first turn (but no call the clock)', () => {
         // Given the initial state
         const state: MartianChessState = MartianChessRules.get().getInitialState();
-        const node: MartianChessNode = new MartianChessNode(state);
+        const node: MartianChessNode = MartianChessNode.root(state);
 
         // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -67,7 +67,7 @@ describe('MartianChessMoveGenerator', () => {
             [_, _, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 1);
-        const node: MartianChessNode = new MartianChessNode(state);
+        const node: MartianChessNode = MartianChessNode.root(state);
 
         // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -92,7 +92,7 @@ describe('MartianChessMoveGenerator', () => {
             [_, _, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(1));
-        const node: MartianChessNode = new MartianChessNode(state);
+        const node: MartianChessNode = MartianChessNode.root(state);
 
         // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -120,7 +120,7 @@ describe('MartianChessMoveGenerator', () => {
         const last: MartianChessMove = MartianChessMove.from(new Coord(1, 4), new Coord(0, 3)).get();
         const optLast: MGPOptional<MartianChessMove> = MGPOptional.of(last);
         const state: MartianChessState = new MartianChessState(board, 1, optLast, MGPOptional.of(1));
-        const node: MartianChessNode = new MartianChessNode(state);
+        const node: MartianChessNode = MartianChessNode.root(state);
 
         // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -143,7 +143,7 @@ describe('MartianChessMoveGenerator', () => {
             [_, _, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(4));
-        const node: MartianChessNode = new MartianChessNode(state);
+        const node: MartianChessNode = MartianChessNode.root(state);
 
         // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);

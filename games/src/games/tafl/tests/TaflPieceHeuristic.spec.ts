@@ -31,7 +31,7 @@ describe('TaflPieceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 0);
-        const node: TablutNode = new TablutNode(state);
+        const node: TablutNode = TablutNode.root(state);
 
         // When computing the board value
         const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -51,7 +51,7 @@ describe('TaflPieceHeuristic', () => {
             [_, _],
         ];
         const state: TaflState = new TaflState(board, 0);
-        const node: TablutNode = new TablutNode(state);
+        const node: TablutNode = TablutNode.root(state);
 
         // When computing the board value
         const value: readonly number[] = heuristic.getBoardValue(node, customConfig).metrics;

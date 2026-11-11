@@ -253,7 +253,7 @@ describe('DvonnRules', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new DvonnNode(state);
+            const node: DvonnNode = DvonnNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -269,7 +269,7 @@ describe('DvonnRules', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new DvonnNode(state);
+            const node: DvonnNode = DvonnNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -285,7 +285,7 @@ describe('DvonnRules', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new DvonnNode(state);
+            const node: DvonnNode = DvonnNode.root(state);
 
             // When checking the game status
             // Then it should be a draw

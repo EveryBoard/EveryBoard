@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { GameStatus } from '../../../jscaip/GameStatus';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -26,8 +25,8 @@ describe('AbaloneRules', () => {
 
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
-        const node: AbaloneNode = new AbaloneNode(state);
-        expect(rules.getGameStatus(node, defaultConfig)).toBe(GameStatus.ONGOING);
+        const node: AbaloneNode = AbaloneNode.root(state);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
 
     it('should move simple piece in provided direction', () => {
@@ -239,7 +238,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new AbaloneNode(winningState);
+        const node: AbaloneNode = AbaloneNode.root(winningState);
 
         // When checking the game status
         // Then it should be a victory for Player.ZERO
@@ -259,7 +258,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new AbaloneNode(winningState);
+        const node: AbaloneNode = AbaloneNode.root(winningState);
 
         // When checking the game status
         // Then it should be a victory for Player.ONE
@@ -446,7 +445,7 @@ describe('AbaloneRules', () => {
                 [O, O, O, O, O, N, N, N, N],
             ];
             const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-            const node: AbaloneNode = new AbaloneNode(winningState);
+            const node: AbaloneNode = AbaloneNode.root(winningState);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

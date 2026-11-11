@@ -28,7 +28,7 @@ describe('AwaleScoreHeuristic', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ], 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
         const strongMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(2, 0));
         const weakMove: MancalaMove = moveGenerator.getListMoves(node, defaultConfig).find((move: MancalaMove) => {
             return move.equals(strongMove) === false;

@@ -84,18 +84,20 @@ describe('GameNode', () => {
             const stateAtTurn2: GameStateMock = new GameStateMock(2);
             const stateAtTurn3: GameStateMock = new GameStateMock(3);
 
-            treeRoot = new GameNode(stateAtTurn0);
+            treeRoot = GameNode.root(stateAtTurn0);
             const optionalTreeRoot: MGPOptional<MockNode> = MGPOptional.of(treeRoot);
-            const child: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalMove);
+            const child: MockNode = MockNode.child(stateAtTurn1, optionalTreeRoot.get(), optionalMove.get());
             treeRoot.addChild(child);
 
-            const otherChild: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalOtherMove);
+            const otherChild: MockNode = MockNode.child(stateAtTurn1,
+                                                        optionalTreeRoot.get(),
+                                                        optionalOtherMove.get());
             treeRoot.addChild(otherChild);
 
-            const grandChild: MockNode = new MockNode(stateAtTurn2, MGPOptional.of(child), optionalMove);
+            const grandChild: MockNode = MockNode.child(stateAtTurn2, child, optionalMove.get());
             child.addChild(grandChild);
 
-            terminalNode = new MockNode(stateAtTurn3, MGPOptional.of(grandChild), optionalMove);
+            terminalNode = MockNode.child(stateAtTurn3, grandChild, optionalMove.get());
             grandChild.addChild(terminalNode);
 
             getGameStatusSpy = spyOn(rules, 'getGameStatus');
@@ -206,9 +208,9 @@ describe('GameNode', () => {
 
     it('should expose children and cache values', () => {
         // Given a node with one child
-        const root: MockNode = new MockNode(new GameStateMock(0));
+        const root: MockNode = MockNode.root(new GameStateMock(0));
         const move: MoveMock = new MoveMock(1);
-        const child: MockNode = new MockNode(new GameStateMock(1), MGPOptional.of(root), MGPOptional.of(move));
+        const child: MockNode = MockNode.child(new GameStateMock(1), root, move);
 
         // When adding a child and replacing a cached value
         root.addChild(child);

@@ -29,7 +29,7 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 1);
-        const node: BrandhubNode = new BrandhubNode(state);
+        const node: BrandhubNode = BrandhubNode.root(state);
 
         // When listing the moves
         const moves: BrandhubMove[] = moveGenerator.getListMoves(node, defaultConfig);

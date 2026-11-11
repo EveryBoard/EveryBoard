@@ -1,4 +1,4 @@
-import { AbstractNode, GameNode } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
@@ -66,13 +66,18 @@ export abstract class TutorialStep {
         return new TutorialStepInformational(title, instruction, state, config);
     }
 
-    public previousMove: MGPOptional<Move> = MGPOptional.empty();
-    public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
+    public node: GameNode<Move, GameState>;
 
     protected constructor(public readonly title: string,
                           public readonly instruction: string,
-                          public readonly state: GameState,
-                          public readonly config: MGPOptional<RulesConfig>) {
+                          state: GameState,
+                          public readonly config: MGPOptional<RulesConfig>,
+    ) {
+        this.node = GameNode.root(state);
+    }
+
+    public getState(): GameState {
+        return this.node.gameState;
     }
 
     public isMove(): this is TutorialStepMove {
@@ -100,10 +105,11 @@ export abstract class TutorialStep {
     }
 
     public withPreviousMove(previousMove: Move, previousState?: GameState): this {
-        this.previousMove = MGPOptional.of(previousMove);
-        if (previousState != null) {
-            this.parent = MGPOptional.of(new GameNode(previousState));
+        if (previousState === undefined) {
+            // User deems that the previous state is not important, so we use a dummy one (the current one)
+            previousState = this.node.gameState;
         }
+        this.node = GameNode.child(this.node.gameState, GameNode.root(previousState), previousMove);
         return this;
     }
 

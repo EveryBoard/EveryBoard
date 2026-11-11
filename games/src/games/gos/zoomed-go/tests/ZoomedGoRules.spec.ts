@@ -224,7 +224,7 @@ describe('ZoomedGoRules', () => {
         ];
         const state: GoState =
             new GoState(board, PlayerNumberMap.of(5, 6), 2, MGPOptional.empty(), GoPhase.FINISHED);
-        const node: GoNode = new GoNode(state);
+        const node: GoNode = GoNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ONE

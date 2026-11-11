@@ -3,7 +3,6 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
-import { GameStatus } from '../../../jscaip/GameStatus';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
@@ -706,19 +705,19 @@ describe('YinshRules', () => {
 
         it('should consider initial phase as ongoing', () => {
             const state: YinshState = YinshRules.get().getInitialState();
-            expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
+            RulesUtils.expectToBeOngoing(rules, YinshNode.root(state), defaultConfig);
         });
 
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 0), 20);
-            expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
+            RulesUtils.expectToBeOngoing(rules, YinshNode.root(state), defaultConfig);
         });
 
         it('should detect victory for a player if it obtains more than 3 rings (Player.ZERO)', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(3, 0), 20);
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -728,7 +727,7 @@ describe('YinshRules', () => {
         it('should detect victory for a player if it obtains more than 3 rings (Player.ONE)', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 3), 20);
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

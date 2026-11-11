@@ -24,7 +24,7 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 0, 2],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -48,7 +48,7 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 0, 2],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);

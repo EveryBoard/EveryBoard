@@ -146,7 +146,7 @@ export class SixComponent
         const newPieces: Coord[] = this.state().getPieceCoords();
         const disconnecteds: CoordAndClass[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.node().previousMove.get().start;
+            const start: MGPOptional<Coord> = this.node().getPreviousMove().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {

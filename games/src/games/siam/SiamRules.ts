@@ -312,19 +312,6 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         return { rows, columns, nbMountain };
     }
 
-    private getWinner(state: SiamState,
-                      move: MGPOptional<SiamMove>,
-                      nbMountain: number,
-                      config: SiamConfig)
-    : PlayerOrNone
-    {
-        if (nbMountain === config.numberOfBonusMountain) {
-            return this.getPusher(state, move.get());
-        } else {
-            return PlayerOrNone.NONE;
-        }
-    }
-
     public getPusher(state: SiamState, finishingMove: SiamMove): PlayerOrNone {
         // here we will call the piece that started the move "moveStarter", obviously
         // and the piece in the right direction that was the closest to the falling mountain: the pusher
@@ -609,13 +596,14 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         const mountainsInfo: { rows: number[]; columns: number[]; nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: PlayerOrNone =
-            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, config);
-        if (winner.isPlayer()) {
-            return GameStatus.getVictory(winner);
+        if (mountainsInfo.nbMountain === config.numberOfBonusMountain) {
+            const pusher: PlayerOrNone = this.getPusher(node.gameState, node.getPreviousMove());
+            Utils.assert(pusher.isPlayer(), 'mountain pusher should be player');
+            return GameStatus.getVictory(pusher);
         } else {
             return GameStatus.ONGOING;
         }
+
     }
 
 }

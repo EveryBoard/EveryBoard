@@ -294,12 +294,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
         let oldNode: AbstractNode = this.gameComponent.node();
-        this.gameComponent.node.set(oldNode.parent.get());
+        this.gameComponent.node.set(oldNode.getParent());
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never moved to take back');
             // Take back a second time to make sure it end up on player's turn
             oldNode = this.gameComponent.node();
-            this.gameComponent.node.set(oldNode.parent.get());
+            this.gameComponent.node.set(oldNode.getParent());
         }
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
@@ -445,7 +445,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
-        const nextNode: AbstractNode = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        const nextNode: AbstractNode = GameNode.child(stateAfterMove, oldNode, move);
         this.gameComponent.node.set(nextNode);
         await this.showNewMove(triggerAnimation);
     }
@@ -521,7 +521,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
-        if (this.gameComponent.node().previousMove.isPresent()) {
+        if (this.gameComponent.node().hasParent()) {
             await this.gameComponent.showLastMoveAndRedraw();
         }
         this.cdr.detectChanges();

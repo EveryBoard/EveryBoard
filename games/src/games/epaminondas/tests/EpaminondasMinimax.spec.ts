@@ -56,7 +56,7 @@ describe('EpaminondasMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Ordinal.UP);
         const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove).toEqual(capture);
