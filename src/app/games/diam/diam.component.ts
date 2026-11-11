@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
-import { Player, PlayerOrNone } from '@everyboard/games';
+import { Player, PlayerMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
 import { DiamFailure } from '@everyboard/games/diam';
@@ -12,7 +12,7 @@ import { DiamMoveGenerator } from '@everyboard/games/diam';
 import { DiamPiece } from '@everyboard/games/diam';
 import { DiamRules } from '@everyboard/games/diam';
 import { DiamState } from '@everyboard/games/diam';
-import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -20,7 +20,7 @@ import { GameComponent } from '../../components/game-components/game-component/G
 
 interface ViewInfo {
     boardInfo: SpaceInfo[];
-    remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>;
+    remainingPieces: PlayerMap<PieceInfo[]>;
 }
 
 interface SpaceInfo {
@@ -100,10 +100,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     public viewInfo: ViewInfo = {
         boardInfo: [],
-        remainingPieces: new MGPMap([
-            { key: Player.ZERO, value: [] },
-            { key: Player.ONE, value: [] },
-        ]),
+        remainingPieces: PlayerMap.ofValues([], []),
     };
 
     public constructor() {
@@ -293,10 +290,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
-        this.viewInfo.remainingPieces = new MGPMap([
-            { key: Player.ZERO, value: [] },
-            { key: Player.ONE, value: [] },
-        ]);
+        this.viewInfo.remainingPieces = PlayerMap.ofValues([], []);
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.state().getRemainingPiecesOf(piece);
@@ -309,7 +303,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-stroke-hover');
                 }
-                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
+                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner);
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
                     backgroundClasses.push('player' + (piece.owner.getValue()) + '-alternate-fill');

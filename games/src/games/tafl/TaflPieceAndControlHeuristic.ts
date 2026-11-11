@@ -6,6 +6,7 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';
@@ -35,13 +36,13 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
     : TaflPieceAndControlHeuristicMetrics
     {
         const state: TaflState = node.gameState;
-        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
+        const pieceMap: PlayerMap<CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, Set<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         const metrics: TaflPieceAndControlHeuristicMetrics = { safeScore: 0, threatenedScore: 0, controlScore: 0 };
         for (const owner of Player.PLAYERS) {
             let controlledSquares: CoordSet = new CoordSet();
-            for (const coord of pieceMap.get(owner).get()) {
+            for (const coord of pieceMap.get(owner)) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     metrics.threatenedScore += owner.getScoreModifier();
                 } else {

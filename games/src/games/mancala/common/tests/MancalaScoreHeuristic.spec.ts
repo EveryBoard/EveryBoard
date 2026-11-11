@@ -5,7 +5,7 @@ import { BoardValue } from '../../../../jscaip/AI/BoardValue';
 import { HeuristicBounds } from '../../../../jscaip/AI/Heuristic';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../../../jscaip/PlayerNumberTable';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';

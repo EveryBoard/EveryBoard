@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
@@ -20,7 +20,7 @@ describe('LodestoneScoreHeuristic', () => {
 
     const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSURE_PLATES;
 
-    const noLodestones: LodestonePositions = new MGPMap();
+    const noLodestones: LodestonePositions = LodestonePositions.empty();
 
     beforeEach(() => {
         heuristic = new LodestoneScoreHeuristic();

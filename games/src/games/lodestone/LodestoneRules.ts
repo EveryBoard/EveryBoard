@@ -6,7 +6,7 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
@@ -91,7 +91,8 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             [_, _, X, O, X, O, _, _],
         ];
         const plates: LodestonePressurePlates = LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
-        return new LodestoneState(board, 0, new MGPMap(), plates);
+        const lodestones: LodestonePositions = LodestonePositions.empty();
+        return new LodestoneState(board, 0, lodestones, plates);
     }
 
     public override applyLegalMove(
@@ -104,7 +105,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = TableUtils.copy(infos.board);
         const lodestones: LodestonePositions = state.lodestones.getCopy();
-        lodestones.put(currentPlayer, move.coord);
+        lodestones.put(currentPlayer, MGPOptional.of(move.coord));
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         this.updatePressurePlates(board, pressurePlates, lodestones, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
@@ -166,7 +167,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         {
             for (const player of Player.PLAYERS) {
                 if (lodestones.get(player).equalsValue(coord)) {
-                    lodestones.delete(player);
+                    lodestones.put(player, MGPOptional.empty());
                 }
             }
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;

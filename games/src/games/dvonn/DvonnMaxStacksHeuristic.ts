@@ -2,7 +2,7 @@ import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { DvonnMove } from './DvonnMove';

@@ -1,4 +1,4 @@
-import { Set, MGPMap } from '@everyboard/lib';
+import { Set } from '@everyboard/lib';
 
 import { AlignmentStatus, BoardInfo } from '../../jscaip/AI/AlignmentHeuristic';
 import { Coord } from '../../jscaip/Coord';
@@ -20,9 +20,8 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
     }
 
     private getSafelyMovablePieceOrFirstOne(state: SixState): CoordSet {
-        const allPieces: MGPMap<Player, Set<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: Set<Coord> = allPieces.get(currentPlayer).get();
+        const playerPieces: Set<Coord> = state.getPlayerPieces(currentPlayer);
         const firstPiece: Coord = playerPieces.getAnyElement().get();
 
         const safePieces: Coord[] = [];

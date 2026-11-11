@@ -1,8 +1,9 @@
-import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
@@ -156,7 +157,24 @@ export namespace LodestonePressurePlates {
 
 }
 
-export type LodestonePositions = MGPMap<Player, Coord>;
+export type LodestonePositions = PlayerMap<MGPOptional<Coord>>;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace LodestonePositions {
+
+    export function empty(): LodestonePositions {
+        return PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
+    }
+
+    export function from(entries: ReadonlyArray<{ key: Player; value: Coord }>): LodestonePositions {
+        const positions: LodestonePositions = empty();
+        for (const entry of entries) {
+            positions.put(entry.key, MGPOptional.of(entry.value));
+        }
+        return positions;
+    }
+
+}
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 

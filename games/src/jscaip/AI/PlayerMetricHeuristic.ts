@@ -18,8 +18,8 @@ export abstract class PlayerMetricHeuristic<M extends Move,
     public getBoardValue(node: GameNode<M, S>, config: C): BoardValue {
         const metrics: PlayerNumberTable = this.getMetrics(node, config);
         return BoardValue.ofMultiple(
-            metrics.get(Player.ZERO).get(),
-            metrics.get(Player.ONE).get(),
+            metrics.get(Player.ZERO),
+            metrics.get(Player.ONE),
         );
     }
 

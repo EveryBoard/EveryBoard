@@ -2,7 +2,7 @@ import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
 import { PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { TaflConfig } from './TaflConfig';

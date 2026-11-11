@@ -1,19 +1,21 @@
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { Player } from './Player';
-import { PlayerNumberTable } from './PlayerNumberTable';
 
 export class PlayerMap<T extends NonNullable<unknown>> {
 
     public static ofValues<U extends NonNullable<unknown>>(playerZeroValue: U, playerOneValue: U): PlayerMap<U> {
-        const map: MGPMap<Player, U> = new MGPMap([
+        return new PlayerMap(playerZeroValue, playerOneValue);
+    }
+
+    protected readonly map: MGPMap<Player, T>;
+
+    protected constructor(playerZeroValue: T, playerOneValue: T) {
+        this.map = new MGPMap([
             { key: Player.ZERO, value: playerZeroValue },
             { key: Player.ONE, value: playerOneValue },
         ]);
-        return new PlayerMap(map);
     }
-
-    protected constructor(protected readonly map: MGPMap<Player, T>) {}
 
     public makeImmutable(): void {
         return this.map.makeImmutable();
@@ -31,37 +33,16 @@ export class PlayerMap<T extends NonNullable<unknown>> {
         return this.map.put(player, value).get();
     }
 
-}
-
-export class PlayerNumberMap extends PlayerMap<number> {
-
-    public static of(playerZeroValue: number, playerOneValue: number): PlayerNumberMap {
-        const map: MGPMap<Player, number> = new MGPMap([
-            { key: Player.ZERO, value: playerZeroValue },
-            { key: Player.ONE, value: playerOneValue },
-        ]);
-        return new PlayerNumberMap(map);
+    public set(player: Player, value: T): void {
+        this.map.put(player, value);
     }
 
-    public add(player: Player, value: number): MGPOptional<number> {
-        const oldValue: number = this.get(player);
-        return this.map.put(player, oldValue + value);
+    public replace(player: Player, value: T): T {
+        return this.map.replace(player, value);
     }
 
-    public subtract(player: Player, value: number): MGPOptional<number> {
-        const oldValue: number = this.get(player);
-        return this.map.put(player, oldValue - value);
-    }
-
-    public toTable(): PlayerNumberTable {
-        return PlayerNumberTable.ofSingle(
-            this.get(Player.ZERO),
-            this.get(Player.ONE),
-        );
-    }
-
-    public getCopy(): PlayerNumberMap {
-        return new PlayerNumberMap(this.map.getCopy());
+    public getCopy(): PlayerMap<T> {
+        return new PlayerMap(this.get(Player.ZERO), this.get(Player.ONE));
     }
 
 }
