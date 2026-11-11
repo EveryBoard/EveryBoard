@@ -71,7 +71,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.state().board;
-        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state());
+        this.victoriousCoords = QuixoRules.getVictoriousSpaces(this.state());
     }
 
     public override cancelMoveAttempt(): void {

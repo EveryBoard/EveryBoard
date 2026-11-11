@@ -123,7 +123,7 @@ export class LinesOfActionTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
-            $localize`In the special case where a move ends up connecting all pieces of both player, simultaneously,
+            $localize`In the special case where a move ends up connecting all pieces of both players, simultaneously,
         then the game ends up with a tie.<br/><br/>
         You're playing Dark, force the tie in one move.`,
             new LinesOfActionState([

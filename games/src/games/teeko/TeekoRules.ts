@@ -134,8 +134,8 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
 
     public override getGameStatus(node: TeekoNode): GameStatus {
         const state: TeekoState = node.gameState;
-        const victoriousCoord: Coord[] = this.getVictoryCoord(state);
-        if (victoriousCoord.length > 0) {
+        const victoriousCoords: Coord[] = this.getVictoryCoord(state);
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         } else {
             return GameStatus.ONGOING;

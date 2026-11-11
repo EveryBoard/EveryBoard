@@ -36,7 +36,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return TrexoRules.TREXO_HELPER.getSquareScore(state, coord);
     }
 
-    public static getVictoriousCoords(state: TrexoState): Coord[] {
+    public static getVictoriousSpaces(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];
         const victoryOfNextPlayer: Coord[] = [];
         const previousPlayer: Player = state.getPreviousPlayer();
