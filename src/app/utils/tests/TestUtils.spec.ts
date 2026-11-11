@@ -360,7 +360,8 @@ export class SimpleComponentTestUtils<T> {
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
-    extends SimpleComponentTestUtils<GameWrapper<P>> {
+    extends SimpleComponentTestUtils<GameWrapper<P>>
+{
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -456,9 +457,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public async setupState(
         state: GameState,
-        params: { previousState?: GameState;
+        params: {
+            previousState?: GameState;
             previousMove?: Move;
-            config?: RulesConfig; } = {},
+            config?: RulesConfig;
+        } = {},
     ): Promise<void> {
         const config: RulesConfig = this.getConfigFrom(params.config);
         if (Object.keys(config).length > 0) {

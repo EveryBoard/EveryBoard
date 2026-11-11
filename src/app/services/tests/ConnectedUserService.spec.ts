@@ -110,8 +110,10 @@ export async function createConnectedGoogleUser(email: string, username?: string
     await FireAuth.signOut(FireAuth.getAuth());
     // Create a new google user
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
-    const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(FireAuth.getAuth(), FireAuth.GoogleAuthProvider.credential(token));
+    const credential: FireAuth.UserCredential = await FireAuth.signInWithCredential(
+        FireAuth.getAuth(),
+        FireAuth.GoogleAuthProvider.credential(token),
+    );
     await userDAO.set(credential.user.uid, { verified: false });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
@@ -143,11 +145,10 @@ export async function reconnectUser(email: string): Promise<void> {
 export async function createUnverifiedUser(email: string, username: string): Promise<MinimalUser> {
     const userDAO: UserDAO = TestBed.inject(UserDAO);
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
-    const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(
-            FireAuth.getAuth(),
-            FireAuth.GoogleAuthProvider.credential(token),
-        );
+    const credential: FireAuth.UserCredential = await FireAuth.signInWithCredential(
+        FireAuth.getAuth(),
+        FireAuth.GoogleAuthProvider.credential(token),
+    );
     await userDAO.set(credential.user.uid, { verified: false });
     await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };

@@ -20,12 +20,11 @@ import { ModeConfig } from '../../../components/game-components/parallelogram-ga
 import { ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
-    extends ParallelogramGameComponent<R,
-        CheckersMove,
-        CheckersState,
-        CheckersStack,
-        CheckersConfig> {
+    extends ParallelogramGameComponent<R, CheckersMove, CheckersState, CheckersStack, CheckersConfig>
+{
+
     public readonly THICKNESS: number = 40;
+
     public readonly mode: Signal<ModeConfig> = signal({
         horizontalWidthRatio: 1.2,
         offsetRatio: 0.4,
@@ -33,8 +32,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     });
 
-    public readonly constructedState: WritableSignal<MGPOptional<CheckersState>> =
-        signal(MGPOptional.empty());
+    public readonly constructedState: WritableSignal<MGPOptional<CheckersState>> = signal(MGPOptional.empty());
 
     private readonly boardSize: Signal<Coord> = computed(() => {
         const state: CheckersState = this.constructedState().get();

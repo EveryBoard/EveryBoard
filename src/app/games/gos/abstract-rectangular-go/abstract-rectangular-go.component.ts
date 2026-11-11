@@ -21,13 +21,14 @@ import { GobanGameComponent } from '../../../components/game-components/goban-ga
 import { GoSubBoardHelper } from './GoSubBoardHelper';
 
 
-export abstract class AbstractRectangularGoComponent
-    extends GobanGameComponent<AbstractRectangularGoRules,
-        GoMove,
-        GoState,
-        GoPiece,
-        RectangularGoConfig,
-        GoLegalityInformation> {
+export abstract class AbstractRectangularGoComponent extends GobanGameComponent<
+    AbstractRectangularGoRules,
+    GoMove,
+    GoState,
+    GoPiece,
+    RectangularGoConfig,
+    GoLegalityInformation
+> {
 
     protected ko: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 

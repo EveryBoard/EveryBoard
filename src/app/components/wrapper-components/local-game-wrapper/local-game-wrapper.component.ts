@@ -45,8 +45,8 @@ type AIChoice = {
     imports: [ViewConfigComponent, NgClass, ReactiveFormsModule, FormsModule],
 })
 @Debug.log
-export class LocalGameWrapperComponent extends GameWrapper<
-    string> implements AfterViewInit, OnDestroy {
+export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnDestroy {
+
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly aiInstances: AIInstanceRegistry = new AIInstanceRegistry();

@@ -93,8 +93,10 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
     };
 }
 
-export function DoCheckersTests<C extends CheckersComponent<R>,
-    R extends AbstractCheckersRules>(
+export function DoCheckersTests<
+    C extends CheckersComponent<R>,
+    R extends AbstractCheckersRules
+>(
     getTestUtils: () => ComponentTestUtils<C>,
     entries: CheckersComponentTestEntries<C, R>,
 ): void {

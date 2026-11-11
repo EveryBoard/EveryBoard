@@ -21,8 +21,7 @@ import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 
 type MancalaHouseContents = Cell<{ mainContent: string; secondaryContent?: string }>;
 
-export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
-    R extends MancalaRules> {
+export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends MancalaRules> {
 
     public constructor(
         public readonly testUtils: ComponentTestUtils<C>,
@@ -105,12 +104,11 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             nextSeedDropResult.houseToDistribute = nextCoord.get();
             if (initial.equals(nextSeedDropResult.houseToDistribute) === false || config.feedOriginalHouse) {
                 // not to distribute on our starting space
-                const feedResult: MancalaDropResult =
-                    component.rules.getDropResult(
-                        nextSeedDropResult.seedsInHand,
-                        nextSeedDropResult.resultingState,
-                        nextSeedDropResult.houseToDistribute,
-                    );
+                const feedResult: MancalaDropResult = component.rules.getDropResult(
+                    nextSeedDropResult.seedsInHand,
+                    nextSeedDropResult.resultingState,
+                    nextSeedDropResult.houseToDistribute,
+                );
                 nextSeedDropResult.resultingState = feedResult.resultingState;
                 nextSeedDropResult.seedsInHand--; // drop in this space a piece we have in hand
             }
@@ -248,10 +246,10 @@ export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaR
     fillThenCapture: MancalaActionAndResult;
     receivedMultiDistributionAnimation?: ReceivedMultiDistributionAnimationTestEntry;
 }
-export function doMancalaComponentTests<C extends MancalaComponent<R>,
-    R extends MancalaRules>(entries: MancalaTestEntries<C, R>)
-: void
-{
+export function doMancalaComponentTests<C extends MancalaComponent<R>, R extends MancalaRules>(
+    entries: MancalaTestEntries<C, R>,
+): void {
+
     let mancalaTestUtils: MancalaComponentTestUtils<C, R>;
 
     const defaultConfig: MancalaConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);

@@ -23,8 +23,8 @@ const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
 const V: CheckersStack = new CheckersStack([one]);
 const _: CheckersStack = CheckersStack.EMPTY;
 
-type InternationalCheckersComponentTestEntries = CheckersComponentTestEntries<InternationalCheckersComponent,
-    InternationalCheckersRules>;
+type InternationalCheckersComponentTestEntries =
+    CheckersComponentTestEntries<InternationalCheckersComponent, InternationalCheckersRules>;
 
 const internationalCheckersEntries: InternationalCheckersComponentTestEntries = {
     gameName: 'InternationalCheckers',

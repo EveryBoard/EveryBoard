@@ -729,16 +729,15 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // When creating the captures and selecting them
-            const move: YinshMove =
-                new YinshMove(
-                    [],
-                    new Coord(3, 3),
-                    MGPOptional.of(new Coord(3, 8)),
-                    [
-                        YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(4, 2))),
-                        YinshCapture.of(new Coord(3, 7), new Coord(7, 7), MGPOptional.of(new Coord(5, 2))),
-                    ],
-                );
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 3),
+                MGPOptional.of(new Coord(3, 8)),
+                [
+                    YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(4, 2))),
+                    YinshCapture.of(new Coord(3, 7), new Coord(7, 7), MGPOptional.of(new Coord(5, 2))),
+                ],
+            );
 
             // Then it should succeed
             await testUtils.expectClickSuccess('#click-3-3'); // Select the ring
@@ -768,15 +767,14 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // When creating the captures, selecting the ambiguous coord first
-            const move: YinshMove =
-                new YinshMove(
-                    [],
-                    new Coord(3, 3),
-                    MGPOptional.of(new Coord(3, 8)),
-                    [
-                        YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(4, 2))),
-                    ],
-                );
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 3),
+                MGPOptional.of(new Coord(3, 8)),
+                [
+                    YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(4, 2))),
+                ],
+            );
 
             // Then it should succeed
             await testUtils.expectClickSuccess('#click-3-3'); // Select the ring
@@ -864,13 +862,12 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
-            const move: YinshMove =
-                new YinshMove(
-                    [YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(3, 2)))],
-                    new Coord(4, 2),
-                    MGPOptional.of(new Coord(4, 3)),
-                    [],
-                );
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(3, 2)))],
+                new Coord(4, 2),
+                MGPOptional.of(new Coord(4, 3)),
+                [],
+            );
 
             await testUtils.expectClickSuccess('#click-3-3'); // capture
             await testUtils.expectClickSuccess('#click-3-2'); // take ring

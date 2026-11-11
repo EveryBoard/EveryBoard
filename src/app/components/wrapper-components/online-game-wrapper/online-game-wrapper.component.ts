@@ -70,8 +70,7 @@ export class OnlineGameWrapperMessages {
     ],
 })
 @Debug.log
-export class OnlineGameWrapperComponent extends GameWrapper<
-    MinimalUser> implements OnInit, OnDestroy {
+export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
     private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
     private readonly gameService: GameService = inject(GameService);

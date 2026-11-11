@@ -12,13 +12,14 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
-export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
-    extends RectangularGameComponent<R,
-        ReversiMove,
-        ReversiState,
-        PlayerOrNone,
-        ReversiConfig,
-        ReversiLegalityInformation> {
+export abstract class AbstractReversiComponent<R extends AbstractReversiRules> extends RectangularGameComponent<
+    R,
+    ReversiMove,
+    ReversiState,
+    PlayerOrNone,
+    ReversiConfig,
+    ReversiLegalityInformation
+> {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private captured: Coord[] = [];

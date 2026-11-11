@@ -23,8 +23,8 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
-    extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig> {
-
+    extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
+{
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
 
     public EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;

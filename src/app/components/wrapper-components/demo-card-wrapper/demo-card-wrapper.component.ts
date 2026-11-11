@@ -22,8 +22,7 @@ export type DemoNodeInfo = {
     template: `<div class="is-fullheight"><div #board></div></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemoCardWrapperComponent extends GameWrapper<
-    string> implements AfterViewInit, OnChanges {
+export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef: ElementRef = inject(ElementRef);
