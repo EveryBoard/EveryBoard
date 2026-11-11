@@ -242,8 +242,8 @@ export class EpaminondasComponent extends RectangularGameComponent<
             return this.cancelMove(EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(stepSize, phalanxSize));
         }
         const move: EpaminondasMove = new EpaminondasMove(
-            this.firstPiece.get().x,
-            this.firstPiece.get().y,
+            this.firstPiece().get().x,
+            this.firstPiece().get().y,
             phalanxSize,
             stepSize,
             direction,

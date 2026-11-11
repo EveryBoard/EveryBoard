@@ -43,7 +43,7 @@ export class EncapsuleComponent extends RectangularGameComponent<
     EncapsuleState,
     EncapsuleSpace,
     EncapsuleConfig,
-    EncapsuleLegalityInformation,
+    EncapsuleLegalityInformation
 > {
     private readonly lastLandingCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly lastStartingCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
