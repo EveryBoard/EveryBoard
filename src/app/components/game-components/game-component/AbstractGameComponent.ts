@@ -5,13 +5,16 @@ import { GameState } from '@everyboard/games';
 
 import { GameComponent } from './GameComponent';
 
-export abstract class AbstractGameComponent
-    extends GameComponent<SuperRules<Move,
+export abstract class AbstractGameComponent extends GameComponent<
+    SuperRules<
+        Move,
         GameState,
         RulesConfig,
-        unknown>,
+        unknown
+    >,
     Move,
     GameState,
     RulesConfig,
-    unknown> {
+    unknown
+> {
 }

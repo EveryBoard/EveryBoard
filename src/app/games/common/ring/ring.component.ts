@@ -20,22 +20,28 @@ export class RingComponent {
 
     public readonly midRingClasses: InputSignal<string | string[]> = input.required();
 
-    private readonly outsideStrokeInsideRadius: Signal<number> = computed(() =>
-        this.outsideRadius() - this.strokeWidth());
+    private readonly outsideStrokeInsideRadius: Signal<number> = computed(() => {
+        return this.outsideRadius() - this.strokeWidth();
+    });
 
-    protected readonly outsideStrokeRadius: Signal<number> = computed(() =>
-        this.outsideStrokeInsideRadius() + (this.strokeWidth() / 2));
+    protected readonly outsideStrokeRadius: Signal<number> = computed(() => {
+        return this.outsideStrokeInsideRadius() + (this.strokeWidth() / 2);
+    });
 
-    private readonly midRingInsideRadius: Signal<number> = computed(() =>
-        this.outsideStrokeInsideRadius() - this.width());
+    private readonly midRingInsideRadius: Signal<number> = computed(() => {
+        return this.outsideStrokeInsideRadius() - this.width();
+    });
 
-    protected readonly midRingRadius: Signal<number> = computed(() =>
-        this.midRingInsideRadius() + (this.width() / 2));
+    protected readonly midRingRadius: Signal<number> = computed(() => {
+        return this.midRingInsideRadius() + (this.width() / 2);
+    });
 
-    private readonly insideStrokeInsideRadius: Signal<number> = computed(() =>
-        this.midRingInsideRadius() - this.strokeWidth());
+    private readonly insideStrokeInsideRadius: Signal<number> = computed(() => {
+        return this.midRingInsideRadius() - this.strokeWidth();
+    });
 
-    protected readonly insideStrokeRadius: Signal<number> = computed(() =>
-        this.insideStrokeInsideRadius() + (this.strokeWidth() / 2));
+    protected readonly insideStrokeRadius: Signal<number> = computed(() => {
+        return this.insideStrokeInsideRadius() + (this.strokeWidth() / 2);
+    });
 
 }

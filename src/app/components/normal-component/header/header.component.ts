@@ -36,8 +36,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public readonly currentGame: Signal<MGPOptional<CurrentGame>> = this.currentGameState.asReadonly();
     public readonly loading: WritableSignal<boolean> = signal(true);
-    public readonly username: Signal<MGPOptional<string>> = computed(() =>
-        this.connectedUser().username.orElse(this.connectedUser().email));
+
+    public readonly username: Signal<MGPOptional<string>> = computed(() => {
+        return this.connectedUser().username.orElse(this.connectedUser().email);
+    });
+
     public readonly currentGameLabel: Signal<string> = computed(() => {
         const currentGame: CurrentGame = this.currentGame().get();
         const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;

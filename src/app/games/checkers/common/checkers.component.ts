@@ -41,11 +41,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(state.getWidth(), state.getHeight());
     });
 
-    public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().x * this.mode().parallelogramHeight);
+    public readonly basicWidth: Signal<number> = computed(() => {
+        return this.boardSize().x * this.mode().parallelogramHeight;
+    });
 
-    public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().y * this.mode().parallelogramHeight);
+    public readonly basicHeight: Signal<number> = computed(() => {
+        return this.boardSize().y * this.mode().parallelogramHeight;
+    });
 
     private currentMoveClicks: Coord[] = [];
     private lastCaptures: Coord[] = [];
