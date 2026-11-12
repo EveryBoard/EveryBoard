@@ -19,7 +19,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         for (const coord of MancalaRules.getAllCoordOf(state.getCurrentPlayer(), config)) {
             if (state.getPieceAt(coord) > 0) {
                 // if the house is not empty
-                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(coord.x, coord.y));
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', coord.x, coord.y));
                 if (config.mustContinueDistributionAfterStore) {
                     moves.push(...this.getPossibleMoveContinuations(state, coord.x, coord.y, move, config));
                 } else {
@@ -33,18 +33,18 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         return moves;
     }
 
-    private getPossibleMoveContinuations(state: MancalaState,
-                                         x: number,
-                                         y: number,
-                                         currentMove: MancalaMove,
-                                         config: MancalaConfig)
-    : MancalaMove[]
-    {
+    private getPossibleMoveContinuations(
+        state: MancalaState,
+        x: number,
+        y: number,
+        currentMove: MancalaMove,
+        config: MancalaConfig,
+    ): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const previousDistributionResult: MancalaDistributionResult =
             MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
-            this.rules.distributeHouse(MancalaDistribution.of(x, y), previousDistributionResult, config);
+            this.rules.distributeHouse(MancalaDistribution.of('CLOCKWISE', x, y), previousDistributionResult, config);
         const stateAfterDistribution: MancalaState = distributionResult.resultingState;
         const isStarving: boolean = MancalaRules.isStarving(
             stateAfterDistribution.getCurrentPlayer(),
@@ -55,7 +55,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         if (distributionResult.endsUpInStore && playerHasPieces) {
             for (let i: number = 0; i < stateAfterDistribution.getWidth(); i++) {
                 if (stateAfterDistribution.getPieceAtXY(i, y) > 0) {
-                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(i, y));
+                    const move: MancalaMove = currentMove.add(MancalaDistribution.of('CLOCKWISE', i, y));
                     moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, i, y, move, config));
                 }
             }

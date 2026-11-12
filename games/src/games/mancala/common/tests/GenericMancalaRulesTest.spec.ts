@@ -60,7 +60,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = rules.getInitialState(defaultConfig);
 
             // When attempting to distribute opponent space
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0));
 
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
@@ -80,7 +80,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 10, PlayerNumberMap.of(0, 0));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 4, 1));
 
             // Then it should be refused
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
@@ -100,7 +100,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 10, PlayerNumberMap.of(22, 22));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 4, 1));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -124,7 +124,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 11, PlayerNumberMap.of(22, 22));
 
             // When doing the last move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -145,7 +145,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const reason: string = 'Must continue playing after kalah move';

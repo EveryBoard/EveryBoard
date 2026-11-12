@@ -49,7 +49,7 @@ describe('KalahComponent', () => {
 
         distribution: {
             state: KalahRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -61,7 +61,7 @@ describe('KalahComponent', () => {
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
             ], 1, PlayerNumberMap.of(1, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0, 0)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -76,7 +76,7 @@ describe('KalahComponent', () => {
                 [4, 4, 0, 5, 5, 0],
                 [4, 4, 5, 5, 5, 5],
             ], 1, PlayerNumberMap.of(2, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(2, 0), [MancalaDistribution.of(5, 0)]),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 2, 0), [MancalaDistribution.of('CLOCKWISE', 5, 0)]),
             distributedSeedCountsByLap: [4, 5],
         },
         monsoon: {
@@ -84,7 +84,7 @@ describe('KalahComponent', () => {
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
             ], 100, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 1)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } },
                 { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -96,7 +96,7 @@ describe('KalahComponent', () => {
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
             ], 2, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 1)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
                 { x: 1, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -107,7 +107,7 @@ describe('KalahComponent', () => {
                 [1, 0, 0, 0, 0, 0],
                 [8, 1, 0, 0, 0, 0],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
                 { x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -157,7 +157,7 @@ describe('KalahComponent', () => {
             it('should wait TIMEOUT_BETWEEN_LAPS between each sub-distribution when receiving move', fakeAsync(async() => {
                 // Given a board where AI move is sure to be two distributions (here, the initial state)
                 // When AI plays
-                const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1, 1)));
+                const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 1)));
                 const localGameWrapper: LocalGameWrapperComponent =
                     mancalaTestUtils.testUtils.getComponent() as LocalGameWrapperComponent;
                 await localGameWrapper.doAIMove(ai, { name: 'noOption' });
@@ -236,7 +236,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.expectClickSuccess('#click-3-1');
 
             // When doing double distribution move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(0, 1)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 1), [MancalaDistribution.of('CLOCKWISE', 0, 1)]);
 
             // Then it should be a success
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
@@ -275,8 +275,8 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-0-0');
             await mancalaTestUtils.expectClickSuccess('#click-4-0');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0),
-                                                     [MancalaDistribution.of(4, 0), MancalaDistribution.of(1, 0)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0),
+                                                     [MancalaDistribution.of('CLOCKWISE', 4, 0), MancalaDistribution.of('CLOCKWISE', 1, 0)]);
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-1-0', move, defaultConfig);
@@ -293,8 +293,8 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-4-1');
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1),
-                                                     [MancalaDistribution.of(0, 1), MancalaDistribution.of(5, 1)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 4, 1),
+                                                     [MancalaDistribution.of('CLOCKWISE', 0, 1), MancalaDistribution.of('CLOCKWISE', 5, 1)]);
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
@@ -312,7 +312,7 @@ describe('KalahComponent', () => {
                 [0, 0, 1, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
-            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 0));
+            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 0));
             await mancalaTestUtils.testUtils.setupState(state,
                                                         { previousState, previousMove, config: defaultConfig });
 
@@ -326,7 +326,7 @@ describe('KalahComponent', () => {
 
         it('should get back to original board when taking back move', fakeAsync(async() => {
             // Given a board where a first move has been done
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
 
             // When taking back
@@ -345,7 +345,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When the AI plays a move
-            const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1, 1)));
+            const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 1)));
             const localGameWrapper: LocalGameWrapperComponent =
                 mancalaTestUtils.testUtils.getComponent() as LocalGameWrapperComponent;
             await localGameWrapper.doAIMove(ai, { name: 'noOption' });
@@ -365,7 +365,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the only move possible for the remaining sub-move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             // Then that normally-illegal move should be accepted
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);

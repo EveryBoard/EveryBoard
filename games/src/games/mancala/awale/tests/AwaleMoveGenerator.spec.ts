@@ -32,7 +32,7 @@ describe('AwaleMoveGenerator', () => {
 
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0)));
     });
 
     describe('Custom Config', () => {

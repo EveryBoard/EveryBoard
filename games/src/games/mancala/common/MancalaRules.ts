@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils, Set } from '@everyboard/lib';
 
 import { GameNode } from '../../../jscaip/AI/GameNode';
@@ -152,10 +153,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     private isLegalDistribution(distribution: MancalaDistribution, state: MancalaState, config: MancalaConfig)
     : MGPFallible<boolean>
     {
-        if (state.getPieceAtXY(distribution.x, distribution.y) === 0) {
+        if (state.getPieceAt(distribution.coord) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
-        const spaceOwner: Player = this.getSpaceOwner(new Coord(distribution.x, distribution.y), config);
+        const spaceOwner: Player = this.getSpaceOwner(distribution.coord, config);
         if (spaceOwner === state.getCurrentOpponent()) {
             return MGPFallible.failure(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
@@ -190,21 +191,26 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             resultingState: state,
         };
         for (const distribution of move) {
-            let houseToDistribute: Coord = new Coord(distribution.x, distribution.y);
+            let houseToDistribute: Coord = distribution.coord;
             let mustDoOneMoreLap: boolean = true;
             while (mustDoOneMoreLap) {
-                distributionResult =
-                    this.distributeHouse(houseToDistribute, distributionResult, config);
+                const lapDistribution: MancalaDistribution = MancalaDistribution.of(
+                    distribution.direction,
+                    houseToDistribute.x,
+                    houseToDistribute.y,
+                );
+                distributionResult = this.distributeHouse(lapDistribution, distributionResult, config);
                 const captures: PlayerNumberMap = distributionResult.resultingState.getScoresCopy();
                 captures.add(player, distributionResult.passedByStoreNTimes);
                 filledCoords.push(...distributionResult.filledCoords);
-                // distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
                 houseToDistribute = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
                 if (config.continueLapUntilCaptureOrEmptyHouse &&
                     distributionResult.endsUpInStore === false
                 ) {
-                    mustDoOneMoreLap = this.isHouseCapturableOrEmpty(houseToDistribute,
-                                                                     distributionResult.resultingState) === false;
+                    mustDoOneMoreLap = this.isHouseCapturableOrEmpty(
+                        houseToDistribute,
+                        distributionResult.resultingState,
+                    ) === false;
                 } else {
                     mustDoOneMoreLap = false;
                 }
@@ -304,8 +310,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         previousLapResult: MancalaDistributionResult,
         config: MancalaConfig,
     ): MancalaDistributionResult {
-        let coord: Coord = new Coord(distribution.x, distribution.y);
-        const initial: Coord = new Coord(distribution.x, distribution.y);
+        const initial: Coord = distribution.coord;
+        let coord: Coord = distribution.coord;
         let seedsInHand: number = previousLapResult.resultingState.getPieceAt(initial);
         let resultingState: MancalaState = previousLapResult.resultingState.setPieceAt(initial, 0);
         const player: Player = resultingState.getCurrentPlayer();

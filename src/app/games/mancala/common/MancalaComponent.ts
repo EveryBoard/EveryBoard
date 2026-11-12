@@ -128,7 +128,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.filledCoords = distributionResult.filledCoords;
         let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult, config);
         this.captured = captureResult.captureMap;
-        this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => new Coord(d.x, d.y));
+        this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => d.coord);
         const monsoonedPlayer: Player[] = this.rules.mustMonsoon(captureResult.resultingState, config);
         if (monsoonedPlayer.length > 0) {
             captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who captures here is not important
@@ -174,6 +174,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
+        // TODO: make it private and don't call it in tests
         const config: MancalaConfig = this.config();
         if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.state().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
@@ -192,7 +193,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             return this.cancelMove(moveValidity.getReason());
         }
         const distributionResult: MancalaDistributionResult =
-            await this.showSeedBySeedDistribution(MancalaDistribution.of(x, y));
+            await this.showSeedBySeedDistribution(MancalaDistribution.of('CLOCKWISE', x, y));
         if (distributionResult.endsUpInStore &&
             this.config().mustContinueDistributionAfterStore)
         {
@@ -212,7 +213,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private async isDistributionLegal(x: number, y: number): Promise<MGPValidation> {
         const config: MancalaConfig = this.config();
         const distributionResult: MancalaDistributionResult =
-            await this.getDistributionResult(MancalaDistribution.of(x, y));
+            await this.getDistributionResult(MancalaDistribution.of('CLOCKWISE', x, y));
         if (distributionResult.endsUpInStore &&
             config.mustContinueDistributionAfterStore)
         {
@@ -241,7 +242,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     : Promise<MancalaDistributionResult>
     {
         const state: MancalaState = this.constructedState;
-        const coord: Coord = new Coord(distribution.x, distribution.y);
+        const coord: Coord = distribution.coord;
         this.lastDistributedHouses.push(coord);
         const config: MancalaConfig = this.config();
         if (showSeedBySeed) {
@@ -472,11 +473,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public generateMove(x: number, y: number): MancalaMove {
-        return MancalaMove.of(MancalaDistribution.of(x, y));
+        return MancalaMove.of(MancalaDistribution.of('CLOCKWISE', x, y));
     }
 
     protected addToMove(x: number, y: number): MancalaMove {
-        return this.currentMove.get().add(MancalaDistribution.of(x, y));
+        return this.currentMove.get().add(MancalaDistribution.of('CLOCKWISE', x, y));
     }
 
 }

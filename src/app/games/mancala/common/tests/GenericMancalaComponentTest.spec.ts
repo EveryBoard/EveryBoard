@@ -25,15 +25,17 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                                        R extends MancalaRules>
 {
 
-    public constructor(public readonly testUtils: ComponentTestUtils<C>,
-                       public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
+    public constructor(
+        public readonly testUtils: ComponentTestUtils<C>,
+        public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>,
+    ) {
     }
 
     public async expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
-        const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
+        const coord: Coord = lastDistribution.coord;
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
     }
@@ -159,7 +161,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                     this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
                 } else {
                     const firstDistribution: MancalaDistribution = actionAndResult.move.getFirstDistribution();
-                    const startingCoord: Coord = new Coord(firstDistribution.x, firstDistribution.y);
+                    const startingCoord: Coord = firstDistribution.coord;
                     if (startingCoord.equals(coord)) { // Initial house
                         const classes: string[] = ['base', 'last-move-stroke', playerFill];
                         this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
@@ -202,7 +204,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult): string {
-        const lastMoveX: number = mancalaActionAndResult.move.getFirstDistribution().x;
+        const lastMoveX: number = mancalaActionAndResult.move.getFirstDistribution().coord.x;
         const suffix: string = lastMoveX + '-' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }
