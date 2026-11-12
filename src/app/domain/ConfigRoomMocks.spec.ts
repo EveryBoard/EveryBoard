@@ -1,14 +1,18 @@
-/* eslint-disable max-lines-per-function */
 import { RulesConfig } from '@everyboard/games';
 
 import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
+import { PlayerInfo } from './PlayerInfo';
 import { UserMocks } from './UserMocks.spec';
+
+export type ConfigRoomWithOpponent = ConfigRoom & {
+    readonly chosenOpponent: PlayerInfo;
+};
 
 export class ConfigRoomMocks {
 
     public static getInitial(rulesConfig: RulesConfig): ConfigRoom {
         return {
-            creator: { user: UserMocks.CREATOR_MINIMAL_USER, elo: 0 },
+            creator: { user: UserMocks.CREATOR_MINIMAL_USER, elo: 0, botIdentifier: null },
 
             chosenOpponent: null,
             status: Status.CREATED,
@@ -33,29 +37,29 @@ export class ConfigRoomMocks {
     public static withChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0 },
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         };
     }
 
     public static withAnotherChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: { user: UserMocks.OTHER_OPPONENT_MINIMAL_USER, elo: 0 },
+            chosenOpponent: { user: UserMocks.OTHER_OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
         };
     }
 
     public static withProposedConfig(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0 },
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
             status: Status.CONFIG_PROPOSED,
         };
     }
 
-    public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoom {
+    public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoomWithOpponent {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0 },
+            chosenOpponent: { user: UserMocks.OPPONENT_MINIMAL_USER, elo: 0, botIdentifier: null },
             status: Status.STARTED,
         };
     }
