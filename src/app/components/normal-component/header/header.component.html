@@ -136,7 +136,7 @@
              class="modal-background"
              (click)="closeSettings()"></div>
         <div class="modal-content">
-            <app-settings></app-settings>
+            <app-settings (settingsClosed)="closeSettings()"></app-settings>
         </div>
         <button id="close-settings"
                 class="modal-close is-large"

@@ -5306,6 +5306,30 @@
         <source>Shape</source>
         <target>Forme</target>
       </trans-unit>
+      <trans-unit id="2102825898069375693" datatype="html">
+        <source>Menu</source>
+        <target>Menu</target>
+      </trans-unit>
+      <trans-unit id="6158176952588553376" datatype="html">
+        <source>Close settings</source>
+        <target>Fermer les paramètres</target>
+      </trans-unit>
+      <trans-unit id="7305206414427808284" datatype="html">
+        <source>Reload required</source>
+        <target>Rechargement nécessaire</target>
+      </trans-unit>
+      <trans-unit id="6859823052725287737" datatype="html">
+        <source> Changing the language requires reloading EveryBoard. Your current local game may be lost. </source>
+        <target> Changer la langue nécessite de recharger EveryBoard. Votre partie locale en cours pourrait être perdue. </target>
+      </trans-unit>
+      <trans-unit id="8491974984518503778" datatype="html">
+        <source>Reload now</source>
+        <target>Recharger maintenant</target>
+      </trans-unit>
+      <trans-unit id="6011903198155615984" datatype="html">
+        <source>Apply next time</source>
+        <target>Appliquer au prochain rechargement</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

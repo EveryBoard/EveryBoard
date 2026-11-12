@@ -40,15 +40,67 @@ describe('UserSettingsService', () => {
     });
 
     describe('language', () => {
-        it('should update local storage on language change', () => {
-            // Given no language preference
-            localStorage.clear();
+        it('should activate a language and clear a deferred language', () => {
+            // Given another language deferred until the next reload
+            localStorage.setItem('pendingLocale', 'en');
 
-            // When changing the language
-            userSettingsService.changeLanguage('fr');
+            // When activating a language now
+            userSettingsService.activateLanguage('fr');
 
-            // Then localStorage is updated to reflect preference
+            // Then the active language is updated and the deferred language is cleared
             expect(localStorage.getItem('locale')).toEqual('fr');
+            expect(localStorage.getItem('pendingLocale')).toBeNull();
+        });
+
+        it('should defer a language without changing the active language', () => {
+            // Given English is the active language
+            localStorage.setItem('locale', 'en');
+
+            // When deferring French until the next reload
+            userSettingsService.scheduleLanguageChange('fr');
+
+            // Then only the deferred language is stored and the current session remains English
+            expect(localStorage.getItem('locale')).toBe('en');
+            expect(localStorage.getItem('pendingLocale')).toBe('fr');
+            expect(userSettingsService.getLanguage()).toBe('en');
+        });
+
+        it('should promote a valid deferred language', () => {
+            // Given English is active and French is deferred
+            localStorage.setItem('locale', 'en');
+            localStorage.setItem('pendingLocale', 'fr');
+
+            // When applying the deferred language
+            UserSettingsService.applyPendingLanguageChange();
+
+            // Then French becomes active and is no longer deferred
+            expect(localStorage.getItem('locale')).toBe('fr');
+            expect(localStorage.getItem('pendingLocale')).toBeNull();
+        });
+
+        it('should discard an invalid deferred language', () => {
+            // Given English is active and an unsupported language is deferred
+            localStorage.setItem('locale', 'en');
+            localStorage.setItem('pendingLocale', 'invalid');
+
+            // When applying the deferred language
+            UserSettingsService.applyPendingLanguageChange();
+
+            // Then English remains active and the invalid deferred value is cleared
+            expect(localStorage.getItem('locale')).toBe('en');
+            expect(localStorage.getItem('pendingLocale')).toBeNull();
+        });
+
+        it('should preserve the active language when no language is deferred', () => {
+            // Given English is active with no deferred language
+            localStorage.setItem('locale', 'en');
+
+            // When applying a deferred language
+            UserSettingsService.applyPendingLanguageChange();
+
+            // Then English remains active
+            expect(localStorage.getItem('locale')).toBe('en');
+            expect(localStorage.getItem('pendingLocale')).toBeNull();
         });
 
         it('should rely on local storage to know the language', () => {

@@ -27,6 +27,7 @@
         <div class="control">
             <div class="select">
                 <select id="language"
+                        [value]="candidateLanguage() ?? currentLanguage"
                         (change)="changeLanguage($event)">
                     @for (language of availableLanguages; track language) {
                         <option [value]="language.value"
@@ -39,4 +40,41 @@
             </div>
         </div>
     </div>
+
+    @if (candidateLanguage() !== null) {
+        <article id="language-change-warning"
+                 class="message is-warning"
+                 role="alertdialog"
+                 aria-modal="true"
+                 aria-labelledby="language-change-title"
+                 aria-describedby="language-change-description">
+            <div class="message-header">
+                <p id="language-change-title"
+                   i18n>Reload required</p>
+            </div>
+            <div class="message-body">
+                <p id="language-change-description"
+                   i18n>
+                    Changing the language requires reloading EveryBoard. Your current local game may be lost.
+                </p>
+                <div class="buttons mt-4">
+                    <button id="reload-with-language"
+                            class="button is-warning"
+                            type="button"
+                            (click)="reloadWithCandidateLanguage()"
+                            i18n>Reload now</button>
+                    <button id="apply-language-next-time"
+                            class="button"
+                            type="button"
+                            (click)="applyCandidateLanguageNextTime()"
+                            i18n>Apply next time</button>
+                    <button id="cancel-language-change"
+                            class="button"
+                            type="button"
+                            (click)="cancelLanguageChange()"
+                            i18n>Cancel</button>
+                </div>
+            </div>
+        </article>
+    }
 </div>

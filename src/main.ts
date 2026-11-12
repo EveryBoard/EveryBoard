@@ -5,8 +5,9 @@ import { loadTranslations } from '@angular/localize';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
-import { LocaleUtils } from '@everyboard/games';
+import { Locale } from '@everyboard/games';
 
+import { LocaleBootstrapConfiguration, prepareLocaleBootstrap } from './app/LocaleBootstrap';
 import { AppComponent } from './app/app.component';
 import { initializeFirebase, routes } from './app/app.routes';
 import { ChatService } from './app/services/ChatService';
@@ -19,7 +20,7 @@ import { environment } from './environments/environment';
 
 registerLocaleData(localeFr);
 
-function bootstrapApp(): void {
+function bootstrapApp(locale: Locale): void {
     if (environment.production) {
         enableProdMode();
     }
@@ -33,7 +34,7 @@ function bootstrapApp(): void {
             UserService,
             ChatService,
             ThemeService,
-            { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
+            { provide: LOCALE_ID, useValue: locale },
             provideRouter(routes),
         ],
     })
@@ -41,10 +42,10 @@ function bootstrapApp(): void {
 }
 
 const runtimeTranslations: boolean = true;
+const localeBootstrap: LocaleBootstrapConfiguration = prepareLocaleBootstrap(environment.root, runtimeTranslations);
 
-const locale: string = LocaleUtils.getLocale();
-if (runtimeTranslations && locale !== 'en') {
-    fetch(environment.root + 'assets/' + locale + '.json')
+if (localeBootstrap.translationUrl != null) {
+    fetch(localeBootstrap.translationUrl)
         .then((response: Response) => {
             if (response.ok) {
                 return response.json();
@@ -56,11 +57,11 @@ if (runtimeTranslations && locale !== 'en') {
             loadTranslations(json.translations);
             $localize.locale = json.locale;
 
-            bootstrapApp();
+            bootstrapApp(localeBootstrap.locale);
         })
         .catch(function(err: Error) {
             console.log(err);
         });
 } else {
-    bootstrapApp();
+    bootstrapApp(localeBootstrap.locale);
 }
