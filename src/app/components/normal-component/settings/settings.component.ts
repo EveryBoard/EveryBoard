@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, Signal, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ThemeService } from '../../../services/ThemeService';
+import { Theme, ThemeService } from '../../../services/ThemeService';
 import { UserSettingsService } from '../../../services/UserSettingsService';
 
-type SettingOption = { value: string; name: string }
+type SettingOption<T> = { value: T; name: string }
 
 @Component({
     selector: 'app-settings',
@@ -14,20 +14,20 @@ type SettingOption = { value: string; name: string }
 export class SettingsComponent {
 
     private readonly userSettingsService: UserSettingsService = inject(UserSettingsService);
+    private readonly themeService: ThemeService = inject(ThemeService);
 
-    public readonly availableLanguages: SettingOption[] = [
+    public readonly availableLanguages: SettingOption<string>[] = [
         { value: 'fr', name: 'Français' },
         { value: 'en', name: 'English' },
     ];
-    public readonly availableThemes: SettingOption[] = [
+    public readonly availableThemes: SettingOption<Theme>[] = [
         { value: 'light', name: $localize`Light` },
         { value: 'dark', name: $localize`Dark` },
     ];
-    public currentTheme: string;
+    public readonly currentTheme: Signal<Theme> = this.themeService.theme;
     public currentLanguage: string;
 
     public constructor() {
-        this.currentTheme = inject(ThemeService).getTheme();
         this.currentLanguage = this.userSettingsService.getLanguage();
     }
     public changeLanguage(event: Event): void {
@@ -37,8 +37,12 @@ export class SettingsComponent {
     }
     public changeTheme(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.userSettingsService.changeTheme(target.value);
-        this.reload();
+        const selectedTheme: SettingOption<Theme> | undefined =
+            this.availableThemes.find((theme: SettingOption<Theme>): boolean => theme.value === target.value);
+        if (selectedTheme != null) {
+            this.userSettingsService.changeTheme(selectedTheme.value);
+            this.themeService.loadTheme(selectedTheme.value);
+        }
     }
     private reload(): void {
         // Reload app to apply changes

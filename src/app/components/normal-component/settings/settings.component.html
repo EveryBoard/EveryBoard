@@ -12,7 +12,7 @@
                     @for (theme of availableThemes; track theme) {
                         <option [value]="theme.value"
                                 id="theme_{{ theme.value }}"
-                                [selected]="theme.value === currentTheme">
+                                [selected]="theme.value === currentTheme()">
                             {{ theme.name }}
                         </option>
                     }
