@@ -20,10 +20,13 @@ const noAbstractComponent: TSESLint.RuleModule<MessageIds> = ESLintUtils.RuleCre
                     return;
                 }
 
-                const hasComponent: boolean = node.decorators.some((decorator: TSESTree.Decorator) =>
-                    decorator.expression.type === 'CallExpression' &&
-                    decorator.expression.callee.type === 'Identifier' &&
-                    decorator.expression.callee.name === 'Component');
+                const hasComponent: boolean = node.decorators.some(
+                    (decorator: TSESTree.Decorator) => {
+                        return decorator.expression.type === 'CallExpression' &&
+                            decorator.expression.callee.type === 'Identifier' &&
+                            decorator.expression.callee.name === 'Component';
+                    },
+                );
 
                 if (hasComponent) {
                     context.report({
