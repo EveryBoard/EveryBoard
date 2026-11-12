@@ -172,7 +172,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Light, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both players have the same number of points, it is a tie.<br/><br/>You're playing Light, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

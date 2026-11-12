@@ -88,7 +88,7 @@ export class HexodiaComponent extends HexagonalGameComponent<
         const state: FourStatePieceGameStateWithTable = this.state();
         this.hexaBoard = state.getCopiedBoard();
         const config: HexodiaConfig = this.config();
-        this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
+        this.victoryCoords = HexodiaRules.getVictoriousSpaces(state, config);
     }
 
     protected override async showLastMove(move: HexodiaMove): Promise<void> {

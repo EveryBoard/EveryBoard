@@ -184,7 +184,7 @@ describe('TrexoRules', () => {
         const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
-        const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
+        const victoryCoords: Coord[] = TrexoRules.getVictoriousSpaces(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
 
@@ -258,7 +258,7 @@ describe('TrexoRules', () => {
         const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
-        const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
+        const victoryCoords: Coord[] = TrexoRules.getVictoriousSpaces(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
 

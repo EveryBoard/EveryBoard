@@ -155,7 +155,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
         this.currentPlayerClass = this.getPlayerClass(state.getCurrentPlayer());
         this.possibleMoves = this.rules.getLegalMoves(state);
-        this.victoryCoords = TrexoRules.getVictoriousCoords(state);
+        this.victoryCoords = TrexoRules.getVictoriousSpaces(state);
         this.pieceOnBoard.set(this.get3DBoard());
     }
 
