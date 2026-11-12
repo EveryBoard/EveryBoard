@@ -9,18 +9,20 @@
                  width="28"
                  height="28">
         </a>
-        <a role="button"
-           class="navbar-burger"
-           [ngClass]="showMenu ? 'is-active' : ''"
-           aria-label="menu"
-           aria-expanded="false"
-           data-target="menu"
-           (click)="showMenu = !showMenu">
+        <button id="menu-button"
+                type="button"
+                class="navbar-burger has-text-primary-invert"
+                [ngClass]="showMenu ? 'is-active' : ''"
+                i18n-aria-label
+                aria-label="Menu"
+                [attr.aria-expanded]="showMenu"
+                aria-controls="menu"
+                (click)="showMenu = !showMenu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-        </a>
+        </button>
     </div>
 
     <div id="menu"
@@ -69,10 +71,19 @@
                    (click)="navigateToPart()">{{ currentGameLabel() }}</a>
             }
 
-            <a class="navbar-item"
-               [routerLink]="['/settings']"
+            <a id="settings"
+               role="button"
+               tabindex="0"
+               class="navbar-item"
+               [attr.aria-expanded]="showSettings()"
+               aria-controls="settings-modal"
+               i18n-aria-label
+               aria-label="Settings"
                i18n-data-tooltip
-               data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
+               data-tooltip="Settings"
+               (click)="toggleSettings()"
+               (keydown.enter)="toggleSettings()"
+               (keydown.space)="toggleSettings(); $event.preventDefault()"><fa-icon [icon]="faCog"></fa-icon></a>
 
             <div class="navbar-item">
                 @if (loading()) {
@@ -113,3 +124,25 @@
         </div>
     </div>
 </nav>
+
+@if (showSettings()) {
+    <div id="settings-modal"
+         class="modal is-active"
+         role="dialog"
+         aria-modal="true"
+         i18n-aria-label
+         aria-label="User settings">
+        <div id="close-settings-backdrop"
+             class="modal-background"
+             (click)="closeSettings()"></div>
+        <div class="modal-content">
+            <app-settings></app-settings>
+        </div>
+        <button id="close-settings"
+                class="modal-close is-large"
+                type="button"
+                i18n-aria-label
+                aria-label="Close settings"
+                (click)="closeSettings()"></button>
+    </div>
+}

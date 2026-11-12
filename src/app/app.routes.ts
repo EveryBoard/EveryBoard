@@ -15,7 +15,6 @@ export const routes: Route[] = [
     { path: 'login', loadComponent: () => import('./components/normal-component/login/login.component').then((m) => m.LoginComponent) },
     { path: 'lobby', loadComponent: () => import('./components/normal-component/lobby/lobby.component').then((m) => m.LobbyComponent), canActivate: [VerifiedAccountGuard] },
     { path: 'account', loadComponent: () => import('./components/normal-component/account/account.component').then((m) => m.AccountComponent), canActivate: [VerifiedAccountGuard] },
-    { path: 'settings', loadComponent: () => import('./components/normal-component/settings/settings.component').then((m) => m.SettingsComponent) },
     { path: 'register', loadComponent: () => import('./components/normal-component/register/register.component').then((m) => m.RegisterComponent), canActivate: [NotConnectedGuard] },
     { path: 'reset-password', loadComponent: () => import('./components/normal-component/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent) },
     { path: 'notFound/:message', loadComponent: () => import('./components/normal-component/not-found/not-found.component').then((m) => m.NotFoundComponent) },

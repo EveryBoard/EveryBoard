@@ -11,11 +11,12 @@ import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameInfo } from '../pick-game/GameInfo';
+import { SettingsComponent } from '../settings/settings.component';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    imports: [RouterLink, NgClass, FaIconComponent],
+    imports: [RouterLink, NgClass, FaIconComponent, SettingsComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
@@ -33,6 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly currentGameState: WritableSignal<MGPOptional<CurrentGame>> = signal(MGPOptional.empty());
 
     public showMenu: boolean = false;
+    public readonly showSettings: WritableSignal<boolean> = signal(false);
 
     public readonly currentGame: Signal<MGPOptional<CurrentGame>> = this.currentGameState.asReadonly();
     public readonly loading: WritableSignal<boolean> = signal(true);
@@ -68,6 +70,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public async logout(): Promise<void> {
         await this.connectedUserService.disconnect();
         await this.router.navigate(['/']);
+    }
+
+    public toggleSettings(): void {
+        this.showSettings.update((showSettings: boolean): boolean => showSettings === false);
+    }
+
+    public closeSettings(): void {
+        this.showSettings.set(false);
     }
 
     public async navigateToPart(): Promise<boolean> {

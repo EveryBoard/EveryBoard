@@ -62,6 +62,56 @@ describe('HeaderComponent', () => {
         await expectValidRoutingLink(button, '/account', AccountComponent);
     }));
 
+    describe('settings', () => {
+        it('should open and close settings without navigating', fakeAsync(async() => {
+            // Given a header with closed settings
+            testUtils.detectChanges();
+            testUtils.expectElementNotToExist('#settings-modal');
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate');
+
+            // When clicking the settings cog
+            await testUtils.clickElement('#settings');
+
+            // Then settings are displayed without navigating
+            testUtils.expectElementToExist('#settings-modal');
+            expect(router.navigate).not.toHaveBeenCalled();
+
+            // When clicking the settings cog again
+            await testUtils.clickElement('#settings');
+
+            // Then settings are closed without navigating
+            testUtils.expectElementNotToExist('#settings-modal');
+            expect(router.navigate).not.toHaveBeenCalled();
+        }));
+
+        it('should close settings from its close button', fakeAsync(async() => {
+            // Given a header with open settings
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            testUtils.expectElementToExist('#settings-modal');
+
+            // When clicking the close button
+            await testUtils.clickElement('#close-settings');
+
+            // Then settings are closed
+            testUtils.expectElementNotToExist('#settings-modal');
+        }));
+
+        it('should close settings from its backdrop', fakeAsync(async() => {
+            // Given a header with open settings
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            testUtils.expectElementToExist('#settings-modal');
+
+            // When clicking the backdrop
+            await testUtils.clickElement('#close-settings-backdrop');
+
+            // Then settings are closed
+            testUtils.expectElementNotToExist('#settings-modal');
+        }));
+    });
+
     describe('disconnection', () => {
         it('should disconnect when connected user clicks on the logout button', fakeAsync(async() => {
             // Given a connected user
