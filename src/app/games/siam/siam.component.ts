@@ -306,7 +306,7 @@ export class SiamComponent extends RectangularGameComponent<
         let x: number;
         let y: number;
         let orientation: Orthogonal;
-        if (player === this.getPointOfView()) {
+        if (player === this.pointOfView()) {
             x = cx - (width / 2) + (piece * offset);
             y = config.height;
             orientation = Orthogonal.LEFT;

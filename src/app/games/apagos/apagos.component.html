@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+    <g [attr.transform]="'rotate(' + rotationAngle() + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
         @for (x of ArrayUtils.range(remainingOne); track x) {
             <circle [attr.cx]="getRemainingPieceCx(x)"
                     [attr.cy]="PIECE_RADIUS"
