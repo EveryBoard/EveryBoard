@@ -10,7 +10,7 @@ describe('MancalaMove', () => {
 
         it('should be defined', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
-            expect(move.toString()).toBe('MancalaMove([(0, 1)])');
+            expect(move.toString()).toBe(`MancalaMove('CLOCKWISE', [(0, 1)])`);
         });
 
     });
@@ -65,6 +65,12 @@ describe('MancalaMove', () => {
         it('should return false for move with different y', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
             const other: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0));
+            expect(move.equals(other)).toBeFalse();
+        });
+
+        it('should return false for move with different direction', () => {
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0));
+            const other: MancalaMove = MancalaMove.of(MancalaDistribution.of('UP', 0, 0));
             expect(move.equals(other)).toBeFalse();
         });
 

@@ -18,11 +18,11 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
     extends GameComponent<R, M, S, C, L>
 {
 
-    public constructor(urlName: string) {
+    protected constructor(urlName: string) {
         super(urlName);
     }
 
-    public board: Table<P>;
+    protected board: Table<P>;
 
     protected readonly width: Signal<number> = computed(() => this.state().getWidth());
 
@@ -34,7 +34,7 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
         return this.getViewBoxFor(width, height);
     }
 
-    public getViewBoxFor(width: number, height: number): ViewBox {
+    protected getViewBoxFor(width: number, height: number): ViewBox {
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
         return ViewBox
             .fromLimits(0, width, 0, height)

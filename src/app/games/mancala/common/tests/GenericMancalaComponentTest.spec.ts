@@ -453,6 +453,23 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             ]);
         }));
 
+        it('should show legal sowing direction when clicking with verticalSowing config', fakeAsync(async() => {
+            // Given a config with vertical sowing allowed
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                verticalSowing: true,
+            };
+            await mancalaTestUtils.testUtils.setupState(entries.distribution.state, { config: customConfig });
+
+            // When clicking on a space
+            const clickedCoord: Coord = entries.distribution.move.getFirstDistribution().coord;
+            await mancalaTestUtils.testUtils.expectClickSuccess(`#space-${ clickedCoord.x }-${ clickedCoord.y }`);
+
+            // Then the legal direction arrows should be displayed
+            mancalaTestUtils.testUtils.expectElementToExist('#left-arrow');
+            mancalaTestUtils.testUtils.expectElementToExist('#up-arrow');
+        }));
+
         describe('Move Animation', () => {
 
             for (const actor of ['user', 'not_the_user']) {

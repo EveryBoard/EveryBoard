@@ -29,7 +29,7 @@ export class MancalaDistribution {
         this.coord = new Coord(x, y);
     }
 
-    public equals(other: MancalaDistribution): boolean { // TODO: add tests
+    public equals(other: MancalaDistribution): boolean {
         if (other === this) return true;
         if (other.coord.equals(this.coord) === false) return false;
         return other.direction === this.direction;

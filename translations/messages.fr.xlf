@@ -454,6 +454,10 @@
         <source>Number of rows</source>
         <target>Number of rows</target>
       </trans-unit>
+      <trans-unit id="5399489507923824436" datatype="html">
+        <source>Allow vertical sowing</source>
+        <target>Authoriser la distribution verticale</target>
+      </trans-unit>
       <trans-unit id="1086558575410854374" datatype="html">
         <source>Feed original house</source>
         <target>Nourrir la maison d'origine</target>

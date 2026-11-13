@@ -155,6 +155,18 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             );
         });
 
+        it('should forbid vertical sowing on standard config', () => {
+            // Given a board with standard config
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When applying vertical sowing
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('UP', 0, 1));
+
+            // Then it should be illegal
+            const reason: string = MancalaFailure.VERTICAL_SOWING_NOT_ALLOWED();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
+
         describe('getGameStatus', () => {
             const smallerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 2 };
             const biggerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 6 };

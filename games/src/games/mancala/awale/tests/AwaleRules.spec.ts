@@ -91,11 +91,22 @@ describe('AwaleRules', () => {
             const customConfig: MancalaConfig = {
                 ...defaultConfig,
                 verticalSowing: true,
+                numberOfRows: 2,
             };
-            const state: MancalaState = rules.getInitialState(defaultConfig);
+            const state: MancalaState = rules.getInitialState(customConfig);
 
             // When doing a vertical sowing
-            // Then it should be allowed
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('UP', 0, 2));
+
+            // Then the seeds should be distributed
+            const expectedBoard: Table<number> = [
+                [5, 4, 4, 4, 4, 4],
+                [6, 4, 4, 4, 4, 4],
+                [0, 4, 4, 4, 4, 4],
+                [5, 4, 4, 4, 4, 4],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(0, 0));
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
     });

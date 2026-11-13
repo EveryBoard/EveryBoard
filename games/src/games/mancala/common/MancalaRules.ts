@@ -13,7 +13,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
-import { MancalaDistribution, MancalaMove } from './MancalaMove';
+import { MancalaDistribution, MancalaDistributionDirection, MancalaMove } from './MancalaMove';
 import { MancalaState } from './MancalaState';
 
 export interface MancalaCaptureResult {
@@ -111,9 +111,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         super();
     }
 
-    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
         let canStillPlay: boolean = true;
         for (const distribution of move) {
             Utils.assert(canStillPlay, 'Cannot play after non kalah move');
@@ -150,9 +148,14 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * If the distribution is illegal, returns a failure including the failure reason
      * If the distribution is legal, return a MGPFallible of a boolean that is true if user can still play
      */
-    private isLegalDistribution(distribution: MancalaDistribution, state: MancalaState, config: MancalaConfig)
-    : MGPFallible<boolean>
-    {
+    private isLegalDistribution(
+        distribution: MancalaDistribution,
+        state: MancalaState,
+        config: MancalaConfig,
+    ): MGPFallible<boolean> {
+        if (this.isVerticalDistribution(distribution.direction) && config.verticalSowing === false) {
+            return MGPFallible.failure(MancalaFailure.VERTICAL_SOWING_NOT_ALLOWED());
+        }
         if (state.getPieceAt(distribution.coord) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
@@ -168,6 +171,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             config,
         );
         return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
+    }
+
+    private isVerticalDistribution(direction: MancalaDistributionDirection): boolean {
+        return direction === 'UP';
     }
 
     /**
@@ -324,8 +331,13 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         while (seedsInHand > 0) {
             previousDropWasStore = endsUpInStore;
             endsUpInStore = false;
-            const nextCoord: MGPOptional<Coord> =
-                this.getNextCoord(coord, previousDropWasStore, previousLapResult.resultingState, config);
+            const nextCoord: MGPOptional<Coord> = this.getNextCoord(
+                distribution.direction,
+                coord,
+                previousDropWasStore,
+                previousLapResult.resultingState,
+                config,
+            );
             endsUpInStore = nextCoord.isAbsent();
 
             if (endsUpInStore) {
@@ -377,10 +389,33 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         };
     }
 
-    public getNextCoord(coord: Coord,
-                        previousDropWasStore: boolean,
-                        state: MancalaState,
-                        config: MancalaConfig,
+    public getNextCoord(
+        direction: MancalaDistributionDirection,
+        coord: Coord,
+        previousDropWasStore: boolean,
+        state: MancalaState,
+        config: MancalaConfig,
+    ): MGPOptional<Coord> {
+        if (this.isVerticalDistribution(direction)) {
+            return this.getNextVerticalCoord(coord, state);
+        } else {
+            return this.getNextHorizontalCoord(coord, previousDropWasStore, state, config);
+        }
+    }
+
+    private getNextVerticalCoord(coord: Coord, state: MancalaState): MGPOptional<Coord> {
+        let y: number = coord.y - 1;
+        if (y < 0) {
+            y = state.getHeight() - 1;
+        }
+        return MGPOptional.of(new Coord(coord.x, y));
+    }
+
+    private getNextHorizontalCoord(
+        coord: Coord,
+        previousDropWasStore: boolean,
+        state: MancalaState,
+        config: MancalaConfig,
     ): MGPOptional<Coord> {
         const coordOwner: Player = this.getSpaceOwner(coord, config);
         const horizontalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.RIGHT : Orthogonal.LEFT;
