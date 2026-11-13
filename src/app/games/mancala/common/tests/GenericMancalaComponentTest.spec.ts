@@ -33,7 +33,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends 
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
-        const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
+        const coord: Coord = lastDistribution.coord;
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
     }
@@ -166,7 +166,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends 
                     this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
                 } else {
                     const firstDistribution: MancalaDistribution = actionAndResult.move.getFirstDistribution();
-                    const startingCoord: Coord = new Coord(firstDistribution.x, firstDistribution.y);
+                    const startingCoord: Coord = firstDistribution.coord;
                     if (startingCoord.equals(coord)) { // Initial house
                         const classes: string[] = ['base', 'last-move-stroke', playerFill];
                         this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
@@ -211,7 +211,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends 
     }
 
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult): string {
-        const lastMoveX: number = mancalaActionAndResult.move.getFirstDistribution().x;
+        const lastMoveX: number = mancalaActionAndResult.move.getFirstDistribution().coord.x;
         const suffix: string = lastMoveX + '-' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }
@@ -458,6 +458,23 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>, R extends
                 '[[4,4,4,4,4,4],[4,4,4,4,4,4]]',
                 '{"map":{"map":[{"key":{"value":0},"value":0},{"key":{"value":1},"value":0}],"isImmutable":false}}',
             ]);
+        }));
+
+        it('should show legal sowing direction when clicking with verticalSowing config', fakeAsync(async() => {
+            // Given a config with vertical sowing allowed
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                verticalSowing: true,
+            };
+            await mancalaTestUtils.testUtils.setupState(entries.distribution.state, { config: customConfig });
+
+            // When clicking on a space
+            const clickedCoord: Coord = entries.distribution.move.getFirstDistribution().coord;
+            await mancalaTestUtils.testUtils.expectClickSuccess(`#space-${ clickedCoord.x }-${ clickedCoord.y }`);
+
+            // Then the legal direction arrows should be displayed
+            mancalaTestUtils.testUtils.expectElementToExist('#left-arrow');
+            mancalaTestUtils.testUtils.expectElementToExist('#up-arrow');
         }));
 
         describe('Move Animation', () => {

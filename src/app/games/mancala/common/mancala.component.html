@@ -3,6 +3,10 @@
      [attr.viewBox]="viewBoxString()"
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <polygon id="arrow"
+                 points="30 10, 30 50, 10 50, 50 90, 90 50, 70 50, 70 10"/>
+    </defs>
     <rect x="0"
           y="0"
           ry="115"
@@ -66,4 +70,19 @@
        [spaceClasses]="getSpaceClasses(-1, 1)"
        [rotation]="getPieceRotation()"
        [secondaryContent]="getStoreSecondaryContent(Player.ONE)"></g>
+    @if (selectedSpace().isPresent()) {
+        <use id="left-arrow"
+             class="base mid-stroke semi-transparent"
+             xlink:href="#arrow"
+             (click)="onDirectionClick('CLOCKWISE')"
+             [attr.transform]="getPieceTransform(selectedSpace().get().x - 1, selectedSpace().get().y) + 'rotate(90)'"
+        />
+        <use id="up-arrow"
+             class="base mid-stroke semi-transparent"
+             xlink:href="#arrow"
+             (click)="onDirectionClick('UP')"
+             [attr.transform]="getPieceTransform(selectedSpace().get().x, selectedSpace().get().y - 1) + 'rotate(180)'"
+        />
+
+    }
 </svg>

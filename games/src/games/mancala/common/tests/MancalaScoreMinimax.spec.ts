@@ -17,7 +17,6 @@ export class MancalaScoreMinimax extends Minimax<MancalaMove, MancalaState, Manc
         super('Score', rules, new MancalaScoreHeuristic(), moveGenerator);
     }
 }
-
 describe('MancalaScoreMinimax', () => {
 
     for (const mancalaRules of [AwaleRules, KalahRules, BaAwaRules]) {

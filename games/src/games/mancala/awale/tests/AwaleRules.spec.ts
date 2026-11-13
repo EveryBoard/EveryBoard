@@ -23,7 +23,7 @@ describe('AwaleRules', () => {
         DoMancalaRulesTests({
             gameName: 'Awale',
             rules,
-            simpleMove: MancalaMove.of(MancalaDistribution.of(5, 1)),
+            simpleMove: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 1)),
         });
 
     });
@@ -35,7 +35,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = rules.getInitialState(defaultConfig);
 
             // When doing a simple move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 1));
 
             // Then the seeds should be distributed
             const expectedBoard: Table<number> = [
@@ -55,7 +55,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
 
             // When performing a distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then the distribution should be performed as expected, and leave 0 seeds in the starting space
             const expectedBoard: Table<number> = [
@@ -75,7 +75,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(23, 23));
 
             // When performing a move that feeds the opponent
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
             const expectedBoard: Table<number> = [
                 [1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1],
@@ -84,6 +84,29 @@ describe('AwaleRules', () => {
 
             // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
+        it('should allow vertical sowing when custom config allow it', () => {
+            // Given a custom config allowing vertical sowing
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                verticalSowing: true,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = rules.getInitialState(customConfig);
+
+            // When doing a vertical sowing
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('UP', 0, 2));
+
+            // Then the seeds should be distributed
+            const expectedBoard: Table<number> = [
+                [5, 4, 4, 4, 4, 4],
+                [6, 4, 4, 4, 4, 4],
+                [0, 4, 4, 4, 4, 4],
+                [5, 4, 4, 4, 4, 4],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(0, 0));
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
     });
@@ -99,7 +122,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(23, 23));
 
             // When performing a move that does not feed the opponent
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0));
 
             // Then the move should be illegal
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
@@ -115,7 +138,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
 
             // When current player player gives its last seed
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then the move should succeed and no monsoon should be done
             const expectedBoard: Table<number> = [
@@ -135,7 +158,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(10, 23));
 
             // When player gives its last seed
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then, since the other player can't distribute, all its pieces should be monsooned
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
@@ -152,7 +175,7 @@ describe('AwaleRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 42, PlayerNumberMap.of(24, 23));
 
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 43, PlayerNumberMap.of(24, 24));
@@ -174,7 +197,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(1, 2));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [
@@ -194,7 +217,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(1, 2));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [
@@ -214,7 +237,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [
@@ -234,7 +257,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [
@@ -254,7 +277,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
 
             // When the player does a would-starve move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0));
 
             // Then, the distribution should be done but not the capture
             const expectedBoard: Table<number> = [
@@ -274,7 +297,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
 
             // When doing that move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 1));
 
             // Then the distribution should be done but not the capture
             const expectedBoard: Table<number> = [
@@ -298,7 +321,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution from the leftmost house
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
@@ -318,7 +341,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
@@ -339,7 +362,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing a double distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(0, 1)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 1), [MancalaDistribution.of('CLOCKWISE', 0, 1)]);
 
             // Then the move should succeed and the store should contain one (so, the score)
             const expectedState: MancalaState = new MancalaState([
@@ -361,7 +384,7 @@ describe('AwaleRules', () => {
             ], 10, PlayerNumberMap.of(0, 0));
 
             // When doing that capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 1));
 
             // Then it should end the move
             const expectedState: MancalaState = new MancalaState([
@@ -387,7 +410,7 @@ describe('AwaleRules', () => {
                 ], 10, PlayerNumberMap.of(22, 22));
 
                 // When sowing inner row
-                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 2));
 
                 // Then the move should succeed
                 const expectedState: MancalaState = new MancalaState([
@@ -413,7 +436,7 @@ describe('AwaleRules', () => {
                 ], 10, PlayerNumberMap.of(22, 22));
 
                 // When sowing the outer row
-                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 3));
 
                 // Then the move should succeed
                 const expectedState: MancalaState = new MancalaState([

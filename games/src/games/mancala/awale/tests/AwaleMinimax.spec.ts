@@ -50,7 +50,7 @@ describe('AwaleScoreMinimax', () => {
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
 
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2, 0)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 2, 0)));
     });
 
     it('should choose capture when possible (at depth 2)', () => {
@@ -66,7 +66,7 @@ describe('AwaleScoreMinimax', () => {
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(4, 0)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 4, 0)));
     });
 
     it('should prioritize moves in the same territory when no captures are possible', () => {
@@ -82,7 +82,7 @@ describe('AwaleScoreMinimax', () => {
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
 
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0, 0)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0)));
     });
 
 });
