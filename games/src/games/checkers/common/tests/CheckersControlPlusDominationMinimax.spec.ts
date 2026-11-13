@@ -12,10 +12,11 @@ import { CheckersState } from '../CheckersState';
 
 class CheckersControlPlusDominationMinimax extends Minimax<CheckersMove, CheckersState, CheckersConfig> {
     public constructor(rules: AbstractCheckersRules) {
-        super('Control and Domination',
-              rules,
-              new CheckersControlPlusDominationHeuristic(rules),
-              new CheckersMoveGenerator(rules),
+        super(
+            'Control and Domination',
+            rules,
+            new CheckersControlPlusDominationHeuristic(rules),
+            new CheckersMoveGenerator(rules),
         );
     }
 }

@@ -15,12 +15,16 @@ export class LascaRules extends AbstractCheckersRules {
         new RulesConfigDescription<CheckersConfig>({
             name: (): string => $localize`Lasca`,
             config: {
-                playerRows: new NumberConfig(3,
-                                             RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
-                                             MGPValidators.range(1, 99)),
-                emptyRows: new NumberConfig(1,
-                                            RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
-                                            MGPValidators.range(1, 99)),
+                playerRows: new NumberConfig(
+                    3,
+                    RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
+                    MGPValidators.range(1, 99),
+                ),
+                emptyRows: new NumberConfig(
+                    1,
+                    RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
+                    MGPValidators.range(1, 99),
+                ),
                 width: new NumberConfig(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 99)),
                 canStackPieces:
                     new BooleanConfig(true, CheckersOptionLocalizable.STACK_PIECES),

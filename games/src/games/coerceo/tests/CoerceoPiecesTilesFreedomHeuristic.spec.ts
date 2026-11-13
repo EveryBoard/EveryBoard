@@ -57,11 +57,15 @@ describe('CoerceoPiecesTilesFreedomHeuristic', () => {
 
         // When comparing them
         // Then the one with more piece of Player.ONE should be deemed better for Player.ONE
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
 });

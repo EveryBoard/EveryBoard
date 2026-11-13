@@ -88,9 +88,10 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         return map;
     }
 
-    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, CoordSet>)
-    : MGPMap<Coord, Set<SandwichThreat>>
-    {
+    public getThreatMap(
+        node: TaflNode<M>,
+        pieces: MGPMap<Player, CoordSet>,
+    ): MGPMap<Coord, Set<SandwichThreat>> {
         const threatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
@@ -165,9 +166,10 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
     }
 
-    public filterThreatMap(threatMap: MGPMap<Coord, Set<SandwichThreat>>, state: TaflState)
-    : MGPMap<Coord, Set<SandwichThreat>>
-    {
+    public filterThreatMap(
+        threatMap: MGPMap<Coord, Set<SandwichThreat>>,
+        state: TaflState,
+    ): MGPMap<Coord, Set<SandwichThreat>> {
         const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         const threateneds: Coord[] = threatMap.getKeyList();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {

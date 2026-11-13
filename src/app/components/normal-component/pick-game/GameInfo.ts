@@ -242,15 +242,16 @@ export class GameInfo {
         });
     }
 
-    public constructor(public readonly name: string,
-                       public readonly urlName: string,
-                       public readonly component: Type<AbstractGameComponent>,
-                       public readonly tutorial: Tutorial,
-                       public readonly rules: AbstractRules,
-                       public readonly creationDate: Date,
-                       public readonly description: string,
-                       public readonly display: boolean = true)
-    {
+    public constructor(
+        public readonly name: string,
+        public readonly urlName: string,
+        public readonly component: Type<AbstractGameComponent>,
+        public readonly tutorial: Tutorial,
+        public readonly rules: AbstractRules,
+        public readonly creationDate: Date,
+        public readonly description: string,
+        public readonly display: boolean = true,
+    ) {
     }
 
     public getRulesConfigDescription(): RulesConfigDescription<RulesConfig> {

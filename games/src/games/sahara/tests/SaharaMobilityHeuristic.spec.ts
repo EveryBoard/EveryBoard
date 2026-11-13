@@ -47,11 +47,15 @@ describe('SaharaMobilityHeuristic', () => {
                 [N, N, O, X, _, _, _, O, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ZERO,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ZERO,
+                defaultConfig,
+            );
         });
 
     });

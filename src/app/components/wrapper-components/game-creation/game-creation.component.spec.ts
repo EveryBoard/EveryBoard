@@ -124,7 +124,8 @@ describe('GameCreationComponent', () => {
             async() => {
                 await receiveError('already-subscribed');
                 await expectValidRouting(router, ['/'], WelcomeComponent);
-            });
+            },
+        );
     }));
 
     it('should go to /notFound if it receives unknown-game from the server', fakeAsync(async() => {
@@ -165,7 +166,8 @@ describe('GameCreationComponent', () => {
             async() => {
                 await receiveError('unknown-message');
                 await expectValidRouting(router, ['/'], WelcomeComponent);
-            });
+            },
+        );
 
     }));
 
@@ -560,7 +562,8 @@ describe('GameCreationComponent', () => {
                 // Given a game creation where the config has been proposed
                 await awaitComponentInitialization();
                 configRoomService.mockConfigRoomUpdate(
-                    ConfigRoomMocks.withProposedConfig(defaultConfig));
+                    ConfigRoomMocks.withProposedConfig(defaultConfig),
+                );
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');
@@ -637,7 +640,8 @@ describe('GameCreationComponent', () => {
                 async() => {
                     await receiveCancellation();
                     await expectValidRouting(router, ['/'], WelcomeComponent);
-                });
+                },
+            );
         }));
 
         it('should update the view accordingly when receiving blitz update', fakeAsync(async() => {

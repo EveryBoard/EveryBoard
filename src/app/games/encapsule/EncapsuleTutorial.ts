@@ -49,14 +49,16 @@ export class EncapsuleTutorial extends Tutorial {
                 0,
                 EncapsuleRules.get().getEncapsulePieceMapFrom([1, 1, 1], [1, 2, 1]),
                 3,
-            )),
+            ),
+        ),
         TutorialStep.anyMove(
             $localize`Putting a piece`,
             $localize`This is the initial board.<br/><br/>
         You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
             EncapsuleRules.get().getInitialState(defaultConfig),
             EncapsuleMove.ofDrop(smallDark, new Coord(1, 1)),
-            TutorialStepMessage.CONGRATULATIONS()),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
         TutorialStep.fromMove(
             $localize`Moving`,
             $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>

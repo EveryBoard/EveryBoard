@@ -43,18 +43,20 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
     }
 
     public override getInitialState(config: GobanConfig): ConnectSixState {
-        const board: Table<PlayerOrNone> = TableUtils.create(config.width,
-                                                             config.height,
-                                                             PlayerOrNone.NONE);
+        const board: Table<PlayerOrNone> = TableUtils.create(
+            config.width,
+            config.height,
+            PlayerOrNone.NONE,
+        );
         return new ConnectSixState(board, 0);
     }
 
-    public override applyLegalMove(move: ConnectSixMove,
-                                   state: ConnectSixState,
-                                   _config: GobanConfig,
-                                   _info: void)
-    : ConnectSixState
-    {
+    public override applyLegalMove(
+        move: ConnectSixMove,
+        state: ConnectSixState,
+        _config: GobanConfig,
+        _info: void,
+    ): ConnectSixState {
         if (move instanceof ConnectSixDrops) {
             return this.applyLegalDrops(move, state);
         } else {

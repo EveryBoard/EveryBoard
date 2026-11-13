@@ -98,9 +98,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing two legal translations of the same piece and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 5), new Coord(1, 4)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(1, 4)).get()));
+            new DiaballikMove(
+                DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
+                MGPOptional.of(DiaballikTranslation.from(new Coord(1, 5), new Coord(1, 4)).get()),
+                MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(1, 4)).get()),
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -121,9 +123,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing two legal translations of different pieces and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()));
+            new DiaballikMove(
+                DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
+                MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
+                MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -144,9 +148,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing one translation and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
-                              empty);
+            new DiaballikMove(
+                DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+                MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
+                empty,
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -167,9 +173,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing zero translations and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
-                              empty,
-                              empty);
+            new DiaballikMove(
+                DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
+                empty,
+                empty,
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -190,9 +198,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing two translations and no pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
-                              empty);
+            new DiaballikMove(
+                DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
+                MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
+                empty,
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -233,9 +243,11 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing one translation, one pass, and then another translation
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(2, 6), new Coord(2, 5)).get(),
-                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 5)).get()),
-                              MGPOptional.of(DiaballikTranslation.from(new Coord(3, 6), new Coord(3, 5)).get()));
+            new DiaballikMove(
+                DiaballikTranslation.from(new Coord(2, 6), new Coord(2, 5)).get(),
+                MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 5)).get()),
+                MGPOptional.of(DiaballikTranslation.from(new Coord(3, 6), new Coord(3, 5)).get()),
+            );
 
         // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([

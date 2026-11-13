@@ -8,14 +8,15 @@ import { RectangularGameComponent } from '../rectangular-game-component/Rectangu
 
 import { ModeConfig } from './ModeConfig';
 
-export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
-                                                 M extends Move,
-                                                 S extends GameStateWithTable<P>,
-                                                 P extends NonNullable<unknown>,
-                                                 C extends RulesConfig = EmptyRulesConfig,
-                                                 L = void>
-    extends RectangularGameComponent<R, M, S, P, C, L>
-{
+export abstract class ParallelogramGameComponent<
+    R extends SuperRules<M, S, C, L>,
+    M extends Move,
+    S extends GameStateWithTable<P>,
+    P extends NonNullable<unknown>,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void
+> extends RectangularGameComponent<R, M, S, P, C, L> {
+
     public constructor(urlName: string) {
         super(urlName);
     }

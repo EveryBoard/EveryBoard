@@ -228,12 +228,12 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         };
     }
 
-    public getBoardInfo(victorySource: SixVictorySource,
-                        move: SixMove,
-                        state: SixState,
-                        boardInfo: BoardInfo)
-    : BoardInfo
-    {
+    public getBoardInfo(
+        victorySource: SixVictorySource,
+        move: SixMove,
+        state: SixState,
+        boardInfo: BoardInfo,
+    ): BoardInfo {
         const lastDrop: Coord = move.landing;
         switch (victorySource.typeSource) {
             case 'CIRCLE':
@@ -273,12 +273,12 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
 
-    public getBoardInfoResult(subSum: number,
-                              lastEmpty: MGPOptional<Coord>,
-                              testedCoords: Coord[],
-                              boardInfo: BoardInfo)
-    : BoardInfo
-    {
+    public getBoardInfoResult(
+        subSum: number,
+        lastEmpty: MGPOptional<Coord>,
+        testedCoords: Coord[],
+        boardInfo: BoardInfo,
+    ): BoardInfo {
         let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
         if (subSum === 4.16) {
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
@@ -330,8 +330,10 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             const subSum: number = encountered.reduce((a: number, b: number) => a + b);
             if (subSum === 5.16 && status === AlignmentStatus.NOTHING) {
                 if (preVictory.isPresent()) {
-                    Utils.assert(preVictory.equals(lastEmpty) === false,
-                                 'Impossible to have point aligned with different line to a same point');
+                    Utils.assert(
+                        preVictory.equals(lastEmpty) === false,
+                        'Impossible to have point aligned with different line to a same point',
+                    );
                     status = AlignmentStatus.PRE_VICTORY;
                 } else {
                     preVictory = lastEmpty;
@@ -358,9 +360,11 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
     }
 
-    private updateEncounterAndReturnLastEmpty(state: SixState,
-                                              testedCoord: Coord,
-                                              encountered: number[]): MGPOptional<Coord> {
+    private updateEncounterAndReturnLastEmpty(
+        state: SixState,
+        testedCoord: Coord,
+        encountered: number[],
+    ): MGPOptional<Coord> {
         const previousOpponent: Player = state.getPreviousOpponent();
         switch (state.getPieceAt(testedCoord)) {
             case previousOpponent:
@@ -376,12 +380,12 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         }
     }
 
-    public getBoardInfoForTriangleCorner(index: number,
-                                         lastDrop: Coord,
-                                         state: SixState,
-                                         boardInfo: BoardInfo)
-    : BoardInfo
-    {
+    public getBoardInfoForTriangleCorner(
+        index: number,
+        lastDrop: Coord,
+        state: SixState,
+        boardInfo: BoardInfo,
+    ): BoardInfo {
         const previousOpponent: Player = state.getPreviousOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -411,10 +415,12 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
 
-    public getBoardInfoForTriangleEdge(index: number,
-                                       lastDrop: Coord,
-                                       state: SixState,
-                                       boardInfo: BoardInfo): BoardInfo {
+    public getBoardInfoForTriangleEdge(
+        index: number,
+        lastDrop: Coord,
+        state: SixState,
+        boardInfo: BoardInfo,
+    ): BoardInfo {
 
         const previousOpponent: Player = state.getPreviousOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];

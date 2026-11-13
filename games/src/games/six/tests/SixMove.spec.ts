@@ -32,8 +32,10 @@ describe('SixMove', () => {
         function creatingMovementKeepingStartingCoord(): void {
             SixMove.ofCut(new Coord(0, 0), new Coord(1, 1), new Coord(0, 0));
         }
-        TestUtils.expectToThrowAndLog(creatingMovementKeepingStartingCoord,
-                                      'Cannot keep starting coord, since it will always be empty after move!');
+        TestUtils.expectToThrowAndLog(
+            creatingMovementKeepingStartingCoord,
+            'Cannot keep starting coord, since it will always be empty after move!',
+        );
     });
 
     describe('Overrides', () => {

@@ -35,11 +35,9 @@ export class MancalaMove extends Move {
         (value: [MancalaDistribution[]]) => MancalaMove.of(value[0][0], value[0].slice(1)),
     );
 
-    public static of(mandatoryDistribution: MancalaDistribution, bonusDistributions: MancalaDistribution[] = [])
-    : MancalaMove
-    {
-        const distributions: MancalaDistribution[] = [mandatoryDistribution];
-        distributions.push(...bonusDistributions);
+    public static of(mandatory: MancalaDistribution, bonus: MancalaDistribution[] = []): MancalaMove {
+        const distributions: MancalaDistribution[] = [mandatory];
+        distributions.push(...bonus);
         return new MancalaMove(distributions);
     }
 
@@ -49,8 +47,10 @@ export class MancalaMove extends Move {
     }
 
     public add(move: MancalaDistribution): MancalaMove {
-        return MancalaMove.of(this.distributions[0],
-                              this.distributions.slice(1).concat(move));
+        return MancalaMove.of(
+            this.distributions[0],
+            this.distributions.slice(1).concat(move),
+        );
     }
 
     public override toString(): string {

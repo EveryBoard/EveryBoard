@@ -187,8 +187,10 @@ describe('PylosRules', () => {
         let reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
-        const otherMove: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0),
-                                                      [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
+        const otherMove: PylosMove = PylosMove.ofDrop(
+            new PylosCoord(0, 0, 0),
+            [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)],
+        );
 
         // Then the move should be illegal
         reason = PylosFailure.INVALID_SECOND_CAPTURE();
@@ -324,9 +326,11 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 3, 0),
-                                                  new PylosCoord(0, 0, 1),
-                                                  [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
+        const move: PylosMove = PylosMove.ofClimb(
+            new PylosCoord(0, 3, 0),
+            new PylosCoord(0, 0, 1),
+            [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)],
+        );
         const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });

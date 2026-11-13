@@ -12,9 +12,10 @@ import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
  */
 export class TrexoPiece {
 
-    public constructor(public readonly owner: PlayerOrNone,
-                       public readonly tileId: number)
-    {
+    public constructor(
+        public readonly owner: PlayerOrNone,
+        public readonly tileId: number,
+    ) {
     }
 
     public toString(): string {

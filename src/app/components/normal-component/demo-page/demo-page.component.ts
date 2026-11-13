@@ -69,12 +69,12 @@ export class DemoPageComponent {
         return demoNodes;
     }
 
-    private getNodeFromStep(step: TutorialStep,
-                            rules: AbstractRules,
-                            defaultConfig: RulesConfig,
-                            name: string)
-    : DemoNodeInfo
-    {
+    private getNodeFromStep(
+        step: TutorialStep,
+        rules: AbstractRules,
+        defaultConfig: RulesConfig,
+        name: string,
+    ): DemoNodeInfo {
         const state: GameState = step.state;
         const stepConfig: RulesConfig = step.config.getOrElse(defaultConfig);
         if (step.hasSolution()) {
@@ -92,9 +92,10 @@ export class DemoPageComponent {
                 const legalityStatus: MGPFallible<unknown> = rules.isLegal(move, state, stepConfig);
                 const resultingState: GameState = rules.applyLegalMove(move, state, stepConfig, legalityStatus.get());
                 const parent: AbstractNode = new GameNode(state);
-                const node: AbstractNode = new GameNode(resultingState,
-                                                        MGPOptional.of(parent),
-                                                        MGPOptional.of(move),
+                const node: AbstractNode = new GameNode(
+                    resultingState,
+                    MGPOptional.of(parent),
+                    MGPOptional.of(move),
                 );
                 return {
                     node,

@@ -9,7 +9,8 @@ import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
     BrowserTestingModule,
-    platformBrowserTesting(), {
+    platformBrowserTesting(),
+    {
         teardown: { destroyAfterEach: true },
     },
 );

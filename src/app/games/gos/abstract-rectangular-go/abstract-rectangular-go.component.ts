@@ -21,14 +21,14 @@ import { GobanGameComponent } from '../../../components/game-components/goban-ga
 import { GoSubBoardHelper } from './GoSubBoardHelper';
 
 
-export abstract class AbstractRectangularGoComponent
-    extends GobanGameComponent<AbstractRectangularGoRules,
-                               GoMove,
-                               GoState,
-                               GoPiece,
-                               RectangularGoConfig,
-                               GoLegalityInformation>
-{
+export abstract class AbstractRectangularGoComponent extends GobanGameComponent<
+    AbstractRectangularGoRules,
+    GoMove,
+    GoState,
+    GoPiece,
+    RectangularGoConfig,
+    GoLegalityInformation
+> {
 
     protected ko: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
@@ -167,8 +167,10 @@ export abstract class AbstractRectangularGoComponent
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase.isCounting() || phase.isAccept(),
-                     'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(
+            phase.isCounting() || phase.isAccept(),
+            'GoComponent: pass() must be called only in playing, passed, counting, or accept phases',
+        );
         return this.onClick(GoMove.ACCEPT.coord);
     }
 

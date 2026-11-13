@@ -12,9 +12,8 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         oldState: T,
         coord: Coord,
         value: Q,
-        stateAdapter: (oldState: T, newBoard: Table<Q>) => T)
-    : T
-    {
+        stateAdapter: (oldState: T, newBoard: Table<Q>) => T,
+    ): T {
         const newBoard: Q[][] = oldState.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
         return stateAdapter(oldState, newBoard);
@@ -25,8 +24,10 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
     }
 
     public getPieceAt(coord: Coord): P {
-        Utils.assert(this.isOnBoard(coord),
-                     'Accessing coord not on board ' + coord + '.');
+        Utils.assert(
+            this.isOnBoard(coord),
+            'Accessing coord not on board ' + coord + '.',
+        );
         return this.getUnsafe(coord);
     }
 
