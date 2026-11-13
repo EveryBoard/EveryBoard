@@ -57,11 +57,15 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
         // When comparing them
         // Then the one with more freedom should be considered better for Player.ONE
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
 });

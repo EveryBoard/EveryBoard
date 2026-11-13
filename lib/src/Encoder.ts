@@ -7,8 +7,9 @@ type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 
 export abstract class Encoder<T> {
 
-    public static fromFunctions<U>(toJSON: (value: U) => JSONValueWithoutArray,
-                                   fromJSON: (json: JSONValueWithoutArray) => U,
+    public static fromFunctions<U>(
+        toJSON: (value: U) => JSONValueWithoutArray,
+        fromJSON: (json: JSONValueWithoutArray) => U,
     ) : Encoder<U> {
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
@@ -38,9 +39,11 @@ export abstract class Encoder<T> {
         };
     }
 
-    public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
-                                                  encode: (t: T) => Fields,
-                                                  decode: (fields: Fields) => T): Encoder<T> {
+    public static tuple<T, Fields extends object>(
+        encoders: EncoderArray<Fields>,
+        encode: (t: T) => Fields,
+        decode: (fields: Fields) => T,
+    ): Encoder<T> {
         return new class extends Encoder<T> {
             public encode(value: T): JSONValueWithoutArray {
                 const fields: Fields = encode(value);
@@ -66,8 +69,9 @@ export abstract class Encoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
-    public static disjunction<U>(typePredicates: ((value: unknown) => boolean)[],
-                                 encoders: Encoder<unknown>[],
+    public static disjunction<U>(
+        typePredicates: ((value: unknown) => boolean)[],
+        encoders: Encoder<unknown>[],
     ): Encoder<U> {
         Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
         return new class extends Encoder<U> {
@@ -100,8 +104,10 @@ export abstract class Encoder<T> {
             public encode(list: T[]): JSONValue {
                 return list.map((t: T): JSONValueWithoutArray => {
                     const encodedCoord: JSONValue = encoder.encode(t);
-                    Utils.assert(Array.isArray(encodedCoord) === false,
-                                 'This encoder should not encode as array');
+                    Utils.assert(
+                        Array.isArray(encodedCoord) === false,
+                        'This encoder should not encode as array',
+                    );
                     return encodedCoord as JSONValueWithoutArray;
                 });
             }

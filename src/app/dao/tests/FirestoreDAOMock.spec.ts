@@ -25,6 +25,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public constructor(public readonly collectionName: string) {
         this.reset();
     }
+
     public abstract getStaticDB(): MGPMap<string, DocumentSubject<T>>;
 
     public abstract resetStaticDB(): void;
@@ -32,6 +33,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public reset(): void {
         this.resetStaticDB();
     }
+
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -41,14 +43,14 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             throw new Error('No doc of id ' + id + ' to observe in ' + this.collectionName);
         }
     }
+
     public async create(element: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
         await this.set(elemName, element);
         return elemName;
     }
-    private replaceFieldValueWith<V extends object>(elementWithFieldValue: V, replacement: FirestoreJSONValue)
-    : V
-    {
+
+    private replaceFieldValueWith<V extends object>(elementWithFieldValue: V, replacement: FirestoreJSONValue): V {
         const elementWithReplacement: FirestoreJSONObject = {};
         for (const key of Object.keys(elementWithFieldValue)) {
             if (elementWithFieldValue[key] instanceof FieldValue) {
@@ -59,10 +61,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return elementWithReplacement as V;
     }
-    private updateFieldValueWith<N extends object>(element: N,
-                                                   replacement: FirestoreJSONValue)
-    : UpdateData<N>
-    {
+
+    private updateFieldValueWith<N extends object>(
+        element: N,
+        replacement: FirestoreJSONValue,
+    ): UpdateData<N> {
         const update: object = {};
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
@@ -80,6 +83,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return false;
     }
+
     public async read(id: string): Promise<MGPOptional<T>> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -88,6 +92,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return MGPOptional.empty();
         }
     }
+
     public async set(id: string, data: T): Promise<void> {
         const localData: T = this.replaceFieldValueWith(data, null);
         await this.internalSet(id, localData);
@@ -98,6 +103,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             await this.internalUpdate(id, serverData);
         }
     }
+
     public async internalSet(id: string, data: T): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         const tid: FirestoreDocument<T> = { id, data };
@@ -111,6 +117,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return Promise.resolve();
     }
+
     public async update(id: string, update: UpdateData<T>): Promise<void> {
         const localUpdate: UpdateData<T> = this.replaceFieldValueWith(update, null);
         await this.internalUpdate(id, localUpdate);
@@ -120,6 +127,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             await this.internalUpdate(id, serverUpdate);
         }
     }
+
     private async internalUpdate(id: string, update: UpdateData<T>): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -132,6 +140,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
         }
     }
+
     public async delete(id: string): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
@@ -141,6 +150,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
+
     private conditionsHold(conditions: FirestoreCondition[], doc: T): boolean {
         for (const condition of conditions) {
             Utils.assert(condition[1] === '==', 'FirestoreDAOMock currently only supports == as a condition');
@@ -150,11 +160,12 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return true;
     }
-    public async findWhere(conditions: FirestoreCondition[],
-                           order?: string,
-                           limit?: number)
-    : Promise<FirestoreDocument<T>[]>
-    {
+
+    public async findWhere(
+        conditions: FirestoreCondition[],
+        order?: string,
+        limit?: number,
+    ): Promise<FirestoreDocument<T>[]> {
         const matchingDocs: FirestoreDocument<T>[] = [];
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         for (const value of db.getValueList()) {
@@ -173,4 +184,5 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return matchingDocs;
         }
     }
+
 }

@@ -10,7 +10,8 @@ export class QuartoMove extends MoveCoord {
     public static encoder: Encoder<QuartoMove> = Encoder.tuple(
         [Coord.encoder, QuartoPiece.encoder],
         (m: QuartoMove): [Coord, QuartoPiece] => [m.coord, m.piece],
-        (fields: [Coord, QuartoPiece]): QuartoMove => new QuartoMove(fields[0].x, fields[0].y, fields[1]));
+        (fields: [Coord, QuartoPiece]): QuartoMove => new QuartoMove(fields[0].x, fields[0].y, fields[1]),
+    );
 
     public constructor(x: number, y: number, public readonly piece: QuartoPiece) {
         /* (x, y) is the coord where you put the 'inHand' quarto piece

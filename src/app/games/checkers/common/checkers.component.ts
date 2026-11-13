@@ -20,13 +20,11 @@ import { ModeConfig } from '../../../components/game-components/parallelogram-ga
 import { ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
-    extends ParallelogramGameComponent<R,
-                                       CheckersMove,
-                                       CheckersState,
-                                       CheckersStack,
-                                       CheckersConfig>
+    extends ParallelogramGameComponent<R, CheckersMove, CheckersState, CheckersStack, CheckersConfig>
 {
+
     public readonly THICKNESS: number = 40;
+
     public readonly mode: Signal<ModeConfig> = signal({
         horizontalWidthRatio: 1.2,
         offsetRatio: 0.4,
@@ -42,13 +40,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(state.getWidth(), state.getHeight());
     });
 
-    public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().x * this.mode().parallelogramHeight,
-    );
+    public readonly basicWidth: Signal<number> = computed(() => {
+        return this.boardSize().x * this.mode().parallelogramHeight;
+    });
 
-    public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().y * this.mode().parallelogramHeight,
-    );
+    public readonly basicHeight: Signal<number> = computed(() => {
+        return this.boardSize().y * this.mode().parallelogramHeight;
+    });
 
     private readonly currentMoveClicks: WritableSignal<ReadonlyArray<Coord>> = signal([]);
     private readonly lastCaptures: WritableSignal<Set<Coord>> = signal(new Set());
@@ -301,7 +299,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const isSimpleJump: boolean = this.currentMoveClicks().length === 1;
         const stateWithoutStarting: CheckersState = this.state().remove(this.currentMoveClicks()[0]);
         const validation: MGPValidation = this.rules.getSubMoveValidity(
-            stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.config(),
+            stack,
+            isSimpleJump,
+            lastSegmentStart,
+            clicked,
+            stateWithoutStarting,
+            this.config(),
         );
         if (validation.isFailure()) {
             return validation.getReason();

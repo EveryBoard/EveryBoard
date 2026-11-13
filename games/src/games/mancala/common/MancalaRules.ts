@@ -52,8 +52,7 @@ export type MancalaDropResult = {
 export class MancalaNode extends GameNode<MancalaMove, MancalaState> {}
 
 export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
-    extends ConfigurableRules<MancalaMove, MancalaState, C>
-{
+    extends ConfigurableRules<MancalaMove, MancalaState, C> {
 
     public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
     public static readonly MUST_FEED: Localized = () => $localize`You must feed`;
@@ -242,8 +241,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * Should capture if there is context for it, and not capture otherwise
      * Should NOT increment the turn of the state
      */
-    public abstract applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig)
-    : MancalaCaptureResult;
+    public abstract applyCapture(
+        distributionResult: MancalaDistributionResult,
+        config: MancalaConfig,
+    ): MancalaCaptureResult;
 
     public mustMonsoon(postCaptureState: MancalaState, config: MancalaConfig): Player[] {
         const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
@@ -286,9 +287,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return GameStatus.ONGOING;
     }
 
-    public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MancalaConfig, _: void)
-    : MancalaState
-    {
+    public override applyLegalMove(
+        move: MancalaMove,
+        state: MancalaState,
+        config: MancalaConfig,
+        _: void,
+    ): MancalaState {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config);
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config);
         let resultingState: MancalaState = captureResult.resultingState;
@@ -302,9 +306,11 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             const monsoonResult: MancalaCaptureResult = this.sharedMonsoon(captureResult);
             resultingState = monsoonResult.resultingState;
         }
-        return new MancalaState(resultingState.board,
-                                resultingState.turn + 1,
-                                resultingState.scores);
+        return new MancalaState(
+            resultingState.board,
+            resultingState.turn + 1,
+            resultingState.scores,
+        );
     }
 
     /**
@@ -375,9 +381,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
      * @param coord the coord to feed
      * @returns the result of the drop (updated)
      */
-    public getDropResult(_seedsInHand: number, state: MancalaState, coord: Coord)
-    : MancalaDropResult
-    {
+    public getDropResult(_seedsInHand: number, state: MancalaState, coord: Coord): MancalaDropResult {
         return {
             capturedSum: 0,
             captureMap: TableUtils.create(

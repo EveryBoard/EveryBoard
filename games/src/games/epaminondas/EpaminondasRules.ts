@@ -31,11 +31,12 @@ export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
 export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
-export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
-                                                        EpaminondasState,
-                                                        EpaminondasConfig,
-                                                        EpaminondasLegalityInformation>
-{
+export class EpaminondasRules extends ConfigurableRules<
+    EpaminondasMove,
+    EpaminondasState,
+    EpaminondasConfig,
+    EpaminondasLegalityInformation
+> {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EpaminondasConfig> =
@@ -44,13 +45,17 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
             config: {
                 width: new NumberConfig(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 emptyRows:
-                    new NumberConfig(8,
-                                     RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
-                                     MGPValidators.range(1, 99)),
+                    new NumberConfig(
+                        8,
+                        RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
+                        MGPValidators.range(1, 99),
+                    ),
                 rowsOfSoldiers:
-                    new NumberConfig(2,
-                                     RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
-                                     MGPValidators.range(1, 99)),
+                    new NumberConfig(
+                        2,
+                        RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
+                        MGPValidators.range(1, 99),
+                    ),
             },
         });
 
@@ -102,8 +107,10 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return MGPValidation.SUCCESS;
     }
 
-    private static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
-    : MGPFallible<EpaminondasLegalityInformation> {
+    private static getLandingStatus(
+        state: EpaminondasState,
+        move: EpaminondasMove,
+    ): MGPFallible<EpaminondasLegalityInformation> {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         let emptied: Coord = move.coord;
@@ -133,12 +140,12 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return MGPFallible.success(newBoard);
     }
 
-    private static getCaptureValidity(oldState: EpaminondasState,
-                                      board: PlayerOrNone[][],
-                                      move: EpaminondasMove,
-                                      opponent: Player)
-    : MGPFallible<EpaminondasLegalityInformation>
-    {
+    private static getCaptureValidity(
+        oldState: EpaminondasState,
+        board: PlayerOrNone[][],
+        move: EpaminondasMove,
+        opponent: Player,
+    ): MGPFallible<EpaminondasLegalityInformation> {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.phalanxSize + move.stepSize - 1);
         let captured: number = 0;
         while (oldState.hasPieceAt(capturedSoldier, opponent)) {
@@ -170,18 +177,19 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return EpaminondasRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override isLegal(move: EpaminondasMove, state: EpaminondasState)
-    : MGPFallible<EpaminondasLegalityInformation>
-    {
+    public override isLegal(
+        move: EpaminondasMove,
+        state: EpaminondasState,
+    ): MGPFallible<EpaminondasLegalityInformation> {
         return EpaminondasRules.isLegal(move, state);
     }
 
-    public override applyLegalMove(_move: EpaminondasMove,
-                                   state: EpaminondasState,
-                                   _config: EpaminondasConfig,
-                                   newBoard: EpaminondasLegalityInformation)
-    : EpaminondasState
-    {
+    public override applyLegalMove(
+        _move: EpaminondasMove,
+        state: EpaminondasState,
+        _config: EpaminondasConfig,
+        newBoard: EpaminondasLegalityInformation,
+    ): EpaminondasState {
         const resultingState: EpaminondasState = new EpaminondasState(newBoard, state.turn + 1);
         return resultingState;
     }

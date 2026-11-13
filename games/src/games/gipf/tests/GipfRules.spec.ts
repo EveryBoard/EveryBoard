@@ -102,8 +102,10 @@ describe('GipfRules', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                               MGPOptional.of(HexaDirection.UP_RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(1, 6),
+                MGPOptional.of(HexaDirection.UP_RIGHT),
+            );
             const move: GipfMove = new GipfMove(placement, [], []);
 
             // This is diagram 2b in the rules of Gipf
@@ -203,10 +205,12 @@ describe('GipfRules', () => {
                     [_, _, _, _, _, N, N],
                     [_, _, _, _, N, N, N],
                 ];
-                const expectedState: GipfState = new GipfState(expectedBoard,
-                                                               P1Turn + 1,
-                                                               PlayerNumberMap.of(5, 4 + capturedSelf),
-                                                               PlayerNumberMap.of(0, capturedOpponent));
+                const expectedState: GipfState = new GipfState(
+                    expectedBoard,
+                    P1Turn + 1,
+                    PlayerNumberMap.of(5, 4 + capturedSelf),
+                    PlayerNumberMap.of(0, capturedOpponent),
+                );
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             }
         });
@@ -223,16 +227,20 @@ describe('GipfRules', () => {
                 [A, A, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const firstPlacement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                                    MGPOptional.of(HexaDirection.UP_RIGHT));
+            const firstPlacement: GipfPlacement = new GipfPlacement(
+                new Coord(1, 6),
+                MGPOptional.of(HexaDirection.UP_RIGHT),
+            );
             const move: GipfMove = new GipfMove(firstPlacement, [], []);
             const firstLegality: MGPFallible<GipfLegalityInformation> = rules.isLegal(move, state);
             expect(firstLegality.isSuccess()).toBeTrue();
 
             const resultingState: GipfState =
                 rules.applyLegalMove(move, state, defaultConfig, firstLegality.get());
-            const placement: GipfPlacement = new GipfPlacement(new Coord(2, 6),
-                                                               MGPOptional.of(HexaDirection.UP_RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(2, 6),
+                MGPOptional.of(HexaDirection.UP_RIGHT),
+            );
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
 
@@ -262,8 +270,10 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
-            const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(3, 0),
+                MGPOptional.of(HexaDirection.DOWN),
+            );
 
             const capture1: GipfCapture = new GipfCapture([
                 new Coord(0, 3), new Coord(1, 3), new Coord(2, 3), new Coord(3, 3), new Coord(4, 3),
@@ -306,8 +316,10 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
-            const placementA: GipfPlacement = new GipfPlacement(new Coord(0, 4),
-                                                                MGPOptional.of(HexaDirection.RIGHT));
+            const placementA: GipfPlacement = new GipfPlacement(
+                new Coord(0, 4),
+                MGPOptional.of(HexaDirection.RIGHT),
+            );
 
             const moveANoCapture: GipfMove = new GipfMove(placementA, [], []);
 
@@ -326,8 +338,10 @@ describe('GipfRules', () => {
 
             const resultingState: GipfState = rules.applyLegalMove(moveA, state, defaultConfig, legalityA.get());
 
-            const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
-                                                                MGPOptional.of(HexaDirection.RIGHT));
+            const placementB: GipfPlacement = new GipfPlacement(
+                new Coord(3, 0),
+                MGPOptional.of(HexaDirection.RIGHT),
+            );
             const moveBNoCapture: GipfMove = new GipfMove(placementB, [], []);
 
             // Then the move should be illegal
@@ -354,8 +368,10 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
-                                                               MGPOptional.of(HexaDirection.RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(-3, 1),
+                MGPOptional.of(HexaDirection.RIGHT),
+            );
             const capture: GipfCapture = new GipfCapture([
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
@@ -378,8 +394,10 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
-                                                               MGPOptional.of(HexaDirection.RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(-3, 1),
+                MGPOptional.of(HexaDirection.RIGHT),
+            );
 
             const capture: GipfCapture = new GipfCapture([
                 new Coord(2, 3), new Coord(2, 4), new Coord(2, 5), new Coord(2, 6),
@@ -403,8 +421,10 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
-            const placement: GipfPlacement = new GipfPlacement(new Coord(0, 4),
-                                                               MGPOptional.of(HexaDirection.RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(0, 4),
+                MGPOptional.of(HexaDirection.RIGHT),
+            );
             const capture: GipfCapture = new GipfCapture([
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
@@ -426,8 +446,10 @@ describe('GipfRules', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                               MGPOptional.of(HexaDirection.UP_RIGHT));
+            const placement: GipfPlacement = new GipfPlacement(
+                new Coord(1, 6),
+                MGPOptional.of(HexaDirection.UP_RIGHT),
+            );
             const move: GipfMove = new GipfMove(placement, [], []);
 
             const expectedBoard: Table<FourStatePiece> = [
@@ -458,8 +480,10 @@ describe('GipfRules', () => {
     });
 
     describe('game status', () => {
-        const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
-                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
+        const placement: GipfPlacement = new GipfPlacement(
+            new Coord(1, 6),
+            MGPOptional.of(HexaDirection.UP_RIGHT),
+        );
         const dummyMove: GipfMove = new GipfMove(placement, [], []);
 
         it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {

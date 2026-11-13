@@ -42,7 +42,8 @@ export class QuartoPiece implements ComparableObject {
 
     public static encoder: Encoder<QuartoPiece> = Encoder.fromFunctions(
         (p: QuartoPiece) => p.value,
-        QuartoPiece.ofInt);
+        QuartoPiece.ofInt,
+    );
 
     public static ofInt(piece: number): QuartoPiece {
         if (0 <= piece && piece <= 15) {

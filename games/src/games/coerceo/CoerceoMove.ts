@@ -114,6 +114,8 @@ export namespace CoerceoMove {
     }
 
     export const encoder: Encoder<CoerceoMove> =
-        Encoder.disjunction([CoerceoMove.isNormalMove, CoerceoMove.isTileExchange],
-                            [CoerceoRegularMove.encoder, CoerceoTileExchangeMove.encoder]);
+        Encoder.disjunction(
+            [CoerceoMove.isNormalMove, CoerceoMove.isTileExchange],
+            [CoerceoRegularMove.encoder, CoerceoTileExchangeMove.encoder],
+        );
 }

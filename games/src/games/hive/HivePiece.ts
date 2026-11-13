@@ -7,7 +7,8 @@ export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | '
 const HivePieceKindEncoder: Encoder<HivePieceKind> =
     Encoder.fromFunctions(
         (value: HivePieceKind) => value,
-        (json: JSONValueWithoutArray) => json as HivePieceKind);
+        (json: JSONValueWithoutArray) => json as HivePieceKind,
+    );
 
 export class HivePiece implements ComparableObject {
 

@@ -43,8 +43,9 @@ export class AwaleRules extends MancalaRules {
         return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override applyCapture(distributionResult: MancalaDistributionResult,
-                                 config: MancalaConfig,
+    public override applyCapture(
+        distributionResult: MancalaDistributionResult,
+        config: MancalaConfig,
     ): MancalaCaptureResult {
         const filledCoords: Coord[] = distributionResult.filledCoords;
         const landingCoord: Coord = filledCoords[filledCoords.length - 1];

@@ -6,9 +6,10 @@ import { Vector } from './Vector';
 
 export class BoardData {
 
-    private constructor(public readonly groupIndices: Table<number>,
-                        public readonly groups: ReadonlyArray<GroupInfos>)
-    {
+    private constructor(
+        public readonly groupIndices: Table<number>,
+        public readonly groups: ReadonlyArray<GroupInfos>,
+    ) {
     }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T, GroupData<T>>): BoardData {
@@ -44,9 +45,10 @@ export class BoardData {
  * The main caracteristic of a group is piece of the same type that are connected together.
  */
 export class GroupInfos {
-    public constructor(public readonly coords: ReadonlyArray<Coord>,
-                       public readonly neighborsEntryPoints: ReadonlyArray<Coord>)
-    {
+    public constructor(
+        public readonly coords: ReadonlyArray<Coord>,
+        public readonly neighborsEntryPoints: ReadonlyArray<Coord>,
+    ) {
     }
 }
 

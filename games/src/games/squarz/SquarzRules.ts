@@ -66,9 +66,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return new SquarzState(board, 0);
     }
 
-    public override isLegal(move: SquarzMove, state: SquarzState, config: SquarzConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: SquarzMove, state: SquarzState, config: SquarzConfig): MGPValidation {
         const distance: number = move.getDistance();
         const jumpSize: number = config.jumpSize;
         if (jumpSize < distance) {
@@ -131,9 +129,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return false;
     }
 
-    public getPossiblesMoves(state: SquarzState, coord: Coord, config: SquarzConfig)
-    : SquarzMove[]
-    {
+    public getPossiblesMoves(state: SquarzState, coord: Coord, config: SquarzConfig): SquarzMove[] {
         const moves: SquarzMove[] = [];
         const jumpSize: number = config.jumpSize;
         for (let y: number = -jumpSize; y <= jumpSize; y++) {

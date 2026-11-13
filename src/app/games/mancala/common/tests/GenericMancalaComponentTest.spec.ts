@@ -21,9 +21,7 @@ import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 
 type MancalaHouseContents = Cell<{ mainContent: string; secondaryContent?: string }>;
 
-export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
-                                       R extends MancalaRules>
-{
+export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends MancalaRules> {
 
     public constructor(
         public readonly testUtils: ComponentTestUtils<C>,
@@ -59,10 +57,12 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
             while (seedDropResult.seedsInHand > 0) {
                 ({ seedDropResult, awaitedTime } =
-                    this.showSeedDrop(seedDropResult,
-                                      config,
-                                      initial,
-                                      awaitedTime)
+                    this.showSeedDrop(
+                        seedDropResult,
+                        config,
+                        initial,
+                        awaitedTime,
+                    )
                 );
             }
             if (seedDropResult.currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
@@ -79,18 +79,20 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         return awaitedTime;
     }
 
-    private showSeedDrop(seedDropResult: SeedDropResult,
-                         config: MancalaConfig,
-                         initial: Coord,
-                         awaitedTime: number)
-    : { seedDropResult: SeedDropResult; awaitedTime: number }
-    {
+    private showSeedDrop(
+        seedDropResult: SeedDropResult,
+        config: MancalaConfig,
+        initial: Coord,
+        awaitedTime: number,
+    ): { seedDropResult: SeedDropResult; awaitedTime: number } {
         const component: C = this.testUtils.getGameComponent();
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();
-        const nextCoord: MGPOptional<Coord> = component.rules.getNextCoord(seedDropResult.houseToDistribute,
-                                                                           seedDropResult.currentDropIsStore,
-                                                                           seedDropResult.resultingState,
-                                                                           config);
+        const nextCoord: MGPOptional<Coord> = component.rules.getNextCoord(
+            seedDropResult.houseToDistribute,
+            seedDropResult.currentDropIsStore,
+            seedDropResult.resultingState,
+            config,
+        );
         const nextSeedDropResult: SeedDropResult = {
             ...seedDropResult,
             currentDropIsStore: nextCoord.isAbsent(),
@@ -102,10 +104,11 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             nextSeedDropResult.houseToDistribute = nextCoord.get();
             if (initial.equals(nextSeedDropResult.houseToDistribute) === false || config.feedOriginalHouse) {
                 // not to distribute on our starting space
-                const feedResult: MancalaDropResult =
-                    component.rules.getDropResult(nextSeedDropResult.seedsInHand,
-                                                  nextSeedDropResult.resultingState,
-                                                  nextSeedDropResult.houseToDistribute);
+                const feedResult: MancalaDropResult = component.rules.getDropResult(
+                    nextSeedDropResult.seedsInHand,
+                    nextSeedDropResult.resultingState,
+                    nextSeedDropResult.houseToDistribute,
+                );
                 nextSeedDropResult.resultingState = feedResult.resultingState;
                 nextSeedDropResult.seedsInHand--; // drop in this space a piece we have in hand
             }
@@ -120,8 +123,10 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         // This function requires a string and has the same name as the one in TestUtils, to optimize greppability
         const matches: RegExpMatchArray | null = click.match(/#click-([0-9]+)-([0-9]+)/);
         Utils.assert(matches !== null, 'MancalaTestUtils.expectClickSuccess should be called with a coord string, but was called with' + click);
-        const coord: Coord = new Coord(Number(Utils.getNonNullable(matches)[1]),
-                                       Number(Utils.getNonNullable(matches)[2]));
+        const coord: Coord = new Coord(
+            Number(Utils.getNonNullable(matches)[1]),
+            Number(Utils.getNonNullable(matches)[2]),
+        );
         const pieceInHouse: number = this.testUtils.getGameComponent().constructedState.getPieceAt(coord);
         const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
         await this.testUtils.expectClickSuccess(click);
@@ -175,9 +180,11 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     public expectHouseToMatch(cell: MancalaHouseContents): void {
-        this.expectHouseToContain(new Coord(cell.x, cell.y),
-                                  cell.content.mainContent,
-                                  cell.content.secondaryContent);
+        this.expectHouseToContain(
+            new Coord(cell.x, cell.y),
+            cell.content.mainContent,
+            cell.content.secondaryContent,
+        );
     }
 
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
@@ -239,10 +246,10 @@ export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaR
     fillThenCapture: MancalaActionAndResult;
     receivedMultiDistributionAnimation?: ReceivedMultiDistributionAnimationTestEntry;
 }
-export function doMancalaComponentTests<C extends MancalaComponent<R>,
-                                        R extends MancalaRules>(entries: MancalaTestEntries<C, R>)
-: void
-{
+export function doMancalaComponentTests<C extends MancalaComponent<R>, R extends MancalaRules>(
+    entries: MancalaTestEntries<C, R>,
+): void {
+
     let mancalaTestUtils: MancalaComponentTestUtils<C, R>;
 
     const defaultConfig: MancalaConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);

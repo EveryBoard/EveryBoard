@@ -16,8 +16,10 @@ describe('PentagoMove', () => {
         function usingOutOfRangeCoord(): void {
             PentagoMove.rotationless(-1, 6);
         }
-        TestUtils.expectToThrowAndLog(usingOutOfRangeCoord,
-                                      'The board is a 6 space wide square, invalid coord: (-1, 6)');
+        TestUtils.expectToThrowAndLog(
+            usingOutOfRangeCoord,
+            'The board is a 6 space wide square, invalid coord: (-1, 6)',
+        );
     });
 
     it('should print nicely', () => {

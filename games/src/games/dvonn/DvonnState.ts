@@ -45,11 +45,12 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return DvonnState.isOnBoard(coord) === false;
     }
 
-    public constructor(board: Table<DvonnPieceStack>,
-                       turn: number,
-                       // Did a PASS move have been performed on the last turn?
-                       public readonly alreadyPassed: boolean)
-    {
+    public constructor(
+        board: Table<DvonnPieceStack>,
+        turn: number,
+        // Did a PASS move have been performed on the last turn?
+        public readonly alreadyPassed: boolean,
+    ) {
         super(turn, board, DvonnState.WIDTH, DvonnState.HEIGHT, DvonnState.EXCLUDED_SPACES, DvonnPieceStack.EMPTY);
     }
 

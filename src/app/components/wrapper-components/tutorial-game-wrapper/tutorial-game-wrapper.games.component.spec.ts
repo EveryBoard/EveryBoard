@@ -199,12 +199,14 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     GipfRules.get(),
                     gipfTutorial[4],
-                    new GipfMove(new GipfPlacement(new Coord(6, 3), MGPOptional.empty()),
-                                 [new GipfCapture([
-                                     new Coord(6, 0), new Coord(6, 1),
-                                     new Coord(6, 2), new Coord(6, 3),
-                                 ])],
-                                 []),
+                    new GipfMove(
+                        new GipfPlacement(new Coord(6, 3), MGPOptional.empty()),
+                        [new GipfCapture([
+                            new Coord(6, 0), new Coord(6, 1),
+                            new Coord(6, 2), new Coord(6, 3),
+                        ])],
+                        [],
+                    ),
                     MGPValidation.failure($localize`Failed, the best capture takes 2 of your opponent's pieces.`),
                 ], [
                     HiveRules.get(),
@@ -369,9 +371,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     YinshRules.get(),
                     yinshTutorial[4],
-                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), MGPOptional.of(new Coord(3, 2)))],
-                                  new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
-                                  []),
+                    new YinshMove(
+                        [YinshCapture.of(new Coord(5, 4), new Coord(5, 8), MGPOptional.of(new Coord(3, 2)))],
+                        new Coord(4, 1),
+                        MGPOptional.of(new Coord(6, 1)),
+                        [],
+                    ),
                     MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO()),
                 ],
             ];
@@ -408,8 +413,10 @@ describe('TutorialGameWrapperComponent (games)', () => {
 
             it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
-                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
-                                                                 TutorialGameWrapperComponent))
+                    (await ComponentTestUtils.forGameWithWrapper(
+                        gameInfo.urlName,
+                        TutorialGameWrapperComponent,
+                    ))
                         .getGameComponent();
                 const rules: SuperRules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;

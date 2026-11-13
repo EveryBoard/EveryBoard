@@ -6,9 +6,11 @@ import { MoveGenerator } from './AI';
 import { BoardValue } from './BoardValue';
 import { Heuristic, HeuristicWithBounds } from './Heuristic';
 
-export type MinimaxConfig<M extends Move,
-                          S extends GameState,
-                          C extends RulesConfig> = {
+export type MinimaxConfig<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig
+> = {
     readonly id: string;
     readonly name: string;
     readonly heuristic: () => Heuristic<M, S, BoardValue, C>;

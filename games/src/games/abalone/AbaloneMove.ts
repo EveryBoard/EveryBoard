@@ -12,7 +12,8 @@ export class AbaloneMove extends MoveCoord {
     public static encoder: Encoder<AbaloneMove> = Encoder.tuple(
         [Coord.encoder, HexaDirection.encoder, MGPOptional.getEncoder(Coord.encoder)],
         (m: AbaloneMove): AbaloneMoveFields => [m.coord, m.dir, m.lastPiece],
-        (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]));
+        (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]),
+    );
 
     public static ofSingleCoord(coord: Coord, dir: HexaDirection): AbaloneMove {
         Utils.assert(coord.isInRange(9, 9), CoordFailure.OUT_OF_RANGE(coord));
@@ -39,10 +40,11 @@ export class AbaloneMove extends MoveCoord {
         return coord.y * 9 + coord.x;
     }
 
-    private constructor(coord: Coord,
-                        public dir: HexaDirection,
-                        public lastPiece: MGPOptional<Coord>)
-    {
+    private constructor(
+        coord: Coord,
+        public dir: HexaDirection,
+        public lastPiece: MGPOptional<Coord>,
+    ) {
         super(coord.x, coord.y);
     }
 

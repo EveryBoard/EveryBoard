@@ -231,10 +231,13 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click-3-3');
-            const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
-                                                [new GipfCapture([
-                                                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
-                                                ])], []);
+            const move: GipfMove = new GipfMove(
+                new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
+                [new GipfCapture([
+                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
+                ])],
+                [],
+            );
             await testUtils.expectMoveSuccess('#click-0-4', move);
         }));
 
@@ -275,10 +278,13 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click-3-3');
-            const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
-                                                [new GipfCapture([
-                                                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
-                                                ])], []);
+            const move: GipfMove = new GipfMove(
+                new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
+                [new GipfCapture([
+                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
+                ])],
+                [],
+            );
 
             await testUtils.expectMoveSuccess('#click-0-4', move);
 
@@ -302,10 +308,13 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click-3-3');
-            const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
-                                                [new GipfCapture([
-                                                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
-                                                ])], []);
+            const move: GipfMove = new GipfMove(
+                new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
+                [new GipfCapture([
+                    new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
+                ])],
+                [],
+            );
 
             await testUtils.expectMoveSuccess('#click-0-4', move);
 
@@ -419,18 +428,23 @@ describe('GipfComponent', () => {
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
-            const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(6, 3),
-                                                                  MGPOptional.empty()),
-                                                [
-                                                    new GipfCapture([
-                                                        new Coord(4, 4), new Coord(4, 3),
-                                                        new Coord(4, 2), new Coord(4, 1),
-                                                    ]),
-                                                    new GipfCapture([
-                                                        new Coord(2, 4), new Coord(2, 3),
-                                                        new Coord(2, 2), new Coord(2, 1),
-                                                    ]),
-                                                ], []);
+            const move: GipfMove = new GipfMove(
+                new GipfPlacement(
+                    new Coord(6, 3),
+                    MGPOptional.empty(),
+                ),
+                [
+                    new GipfCapture([
+                        new Coord(4, 4), new Coord(4, 3),
+                        new Coord(4, 2), new Coord(4, 1),
+                    ]),
+                    new GipfCapture([
+                        new Coord(2, 4), new Coord(2, 3),
+                        new Coord(2, 2), new Coord(2, 1),
+                    ]),
+                ],
+                [],
+            );
 
             await testUtils.expectClickSuccess('#click-4-4');
             await testUtils.expectClickSuccess('#click-2-4');
@@ -473,19 +487,23 @@ describe('GipfComponent', () => {
         const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
-        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
-                                                              MGPOptional.of(HexaDirection.LEFT)),
-                                            [],
-                                            [
-                                                new GipfCapture([
-                                                    new Coord(4, 4), new Coord(4, 3),
-                                                    new Coord(4, 2), new Coord(4, 1),
-                                                ]),
-                                                new GipfCapture([
-                                                    new Coord(2, 4), new Coord(2, 3),
-                                                    new Coord(2, 2), new Coord(2, 1),
-                                                ]),
-                                            ]);
+        const move: GipfMove = new GipfMove(
+            new GipfPlacement(
+                new Coord(5, 4),
+                MGPOptional.of(HexaDirection.LEFT),
+            ),
+            [],
+            [
+                new GipfCapture([
+                    new Coord(4, 4), new Coord(4, 3),
+                    new Coord(4, 2), new Coord(4, 1),
+                ]),
+                new GipfCapture([
+                    new Coord(2, 4), new Coord(2, 3),
+                    new Coord(2, 2), new Coord(2, 1),
+                ]),
+            ],
+        );
 
         await testUtils.expectClickSuccess('#click-5-4'); // select placement coord
         await testUtils.expectClickSuccess('#click-4-4'); // select direction

@@ -13,10 +13,11 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
         return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
     }
 
-    public constructor(board: Table<PlayerOrNone>,
-                       turn: number,
-                       public readonly castles: PlayerMap<MGPOptional<Coord>>)
-    {
+    public constructor(
+        board: Table<PlayerOrNone>,
+        turn: number,
+        public readonly castles: PlayerMap<MGPOptional<Coord>>,
+    ) {
         super(board, turn);
         this.castles.makeImmutable();
     }
@@ -26,10 +27,12 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
     }
 
     public setPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             QuebecCastlesState.of);
+        return GameStateWithTable.setPieceAt(
+            this,
+            coord,
+            value,
+            QuebecCastlesState.of,
+        );
     }
 
     public isCastleAt(coord: Coord): boolean {

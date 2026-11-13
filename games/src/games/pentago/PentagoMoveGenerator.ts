@@ -26,13 +26,17 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
         for (const legalDrop of legalDrops) {
             const drop: PentagoMove = PentagoMove.rotationless(legalDrop.x, legalDrop.y);
             const stateAfterDrop: PentagoState = node.gameState.applyLegalDrop(drop);
-            const legalRotations: [number, boolean][] = this.getLegalRotations(stateAfterDrop,
-                                                                               preDropNeutralBlocks);
+            const legalRotations: [number, boolean][] = this.getLegalRotations(
+                stateAfterDrop,
+                preDropNeutralBlocks,
+            );
             for (const legalRotation of legalRotations) {
-                moves.push(PentagoMove.withRotation(legalDrop.x,
-                                                    legalDrop.y,
-                                                    legalRotation[0],
-                                                    legalRotation[1]));
+                moves.push(PentagoMove.withRotation(
+                    legalDrop.x,
+                    legalDrop.y,
+                    legalRotation[0],
+                    legalRotation[1],
+                ));
             }
             const mustRotate: boolean = stateAfterDrop.neutralBlocks.length === 0;
             if (mustRotate === false) {

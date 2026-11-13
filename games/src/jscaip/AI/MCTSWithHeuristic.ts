@@ -16,39 +16,44 @@ import { MCTS } from './MCTS';
 /**
  * Like MCTS, but uses a heuristic function to evaluate non-terminated states.
  */
-export class MCTSWithHeuristic<M extends Move,
-                               S extends GameState,
-                               C extends RulesConfig = EmptyRulesConfig,
-                               B extends BoardValue = BoardValue,
-                               L = void>
-    extends MCTS<M, S, C, L>
-{
+export class MCTSWithHeuristic<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig,
+    B extends BoardValue = BoardValue,
+    L = void
+> extends MCTS<M, S, C, L> {
 
-    public constructor(name: string,
-                       moveGenerator: MoveGenerator<M, S, C>,
-                       rules: SuperRules<M, S, C, L>,
-                       private readonly heuristic: HeuristicWithBounds<M, S, B, C>)
-    {
+    public constructor(
+        name: string,
+        moveGenerator: MoveGenerator<M, S, C>,
+        rules: SuperRules<M, S, C, L>,
+        private readonly heuristic: HeuristicWithBounds<M, S, B, C>,
+    ) {
         super(name, moveGenerator, rules);
     }
 
     /**
      * Return a score which is the average of all metrics
      */
-    protected override score(node: GameNode<M, S>,
-                             config: C,
-                             gameStatus: GameStatus,
-                             player: Player)
-    : number
-    {
+    protected override score(
+        node: GameNode<M, S>,
+        config: C,
+        gameStatus: GameStatus,
+        player: Player,
+    ): number {
         if (gameStatus === GameStatus.ONGOING) {
             const boardValue: B = this.heuristic.getBoardValue(node, config);
             const bounds: HeuristicBounds<B> = this.heuristic.getBounds(config);
-            Utils.assert(boardValue.metrics.length === bounds.player0Best.metrics.length &&
-                         boardValue.metrics.length === bounds.player1Best.metrics.length,
-                         `MCTSWithHeuristic ${this.name}: metrics and bound values should have the same shape`);
+            const boardMetrics: number = boardValue.metrics.length;
+            const player0Metrics: number = bounds.player0Best.metrics.length;
+            const player1Metrics: number = bounds.player1Best.metrics.length;
+            Utils.assert(
+                boardMetrics === player0Metrics && boardMetrics === player1Metrics,
+                `MCTSWithHeuristic ${this.name}: metrics and bound values should have the same shape`,
+            );
             let value: number = 0;
-            for (let i: number = 0; i < boardValue.metrics.length; i++) {
+            for (let i: number = 0; i < boardMetrics; i++) {
                 const player0Best: number = bounds.player0Best.metrics[i];
                 const metric: number = boardValue.metrics[i];
                 const player1Best: number = bounds.player1Best.metrics[i];
@@ -70,7 +75,7 @@ export class MCTSWithHeuristic<M extends Move,
                     value += (boundedMetric - player0Best) / denom;
                 }
             }
-            value = value / boardValue.metrics.length;
+            value = value / boardMetrics;
             Utils.assert(0 <= value && value <= 1, `MCTSWithHeuristic ${this.name} got a value outside of [0,1]`);
             if (player === Player.ONE) {
                 return value;

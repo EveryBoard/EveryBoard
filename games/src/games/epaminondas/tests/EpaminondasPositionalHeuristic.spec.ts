@@ -54,11 +54,15 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               lesserState, MGPOptional.empty(),
-                                                               greaterState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            lesserState,
+            MGPOptional.empty(),
+            greaterState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
     it('should prefer to have aligned piece than higher piece', () => {
@@ -92,11 +96,15 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               lesserState, MGPOptional.empty(),
-                                                               greaterState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            lesserState,
+            MGPOptional.empty(),
+            greaterState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
     it('should prefer capture outcomes over quiet moves', () => {
@@ -131,11 +139,15 @@ describe('EpaminondasPositionalHeuristic', () => {
         const weakState: EpaminondasState = rules.choose(node, weakMove, defaultConfig).get().gameState;
         const strongState: EpaminondasState = rules.choose(node, strongMove, defaultConfig).get().gameState;
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.of(weakMove),
-                                                               strongState, MGPOptional.of(strongMove),
-                                                               state.getCurrentPlayer(),
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.of(weakMove),
+            strongState,
+            MGPOptional.of(strongMove),
+            state.getCurrentPlayer(),
+            defaultConfig,
+        );
     });
 
 });

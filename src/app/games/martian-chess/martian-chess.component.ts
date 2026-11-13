@@ -56,13 +56,14 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass, MartianChessPawnComponent, MartianChessDroneComponent, MartianChessQueenComponent],
 })
-export class MartianChessComponent extends RectangularGameComponent<MartianChessRules,
-                                                                    MartianChessMove,
-                                                                    MartianChessState,
-                                                                    MartianChessPiece,
-                                                                    EmptyRulesConfig,
-                                                                    MartianChessMoveResult>
-{
+export class MartianChessComponent extends RectangularGameComponent<
+    MartianChessRules,
+    MartianChessMove,
+    MartianChessState,
+    MartianChessPiece,
+    EmptyRulesConfig,
+    MartianChessMoveResult
+> {
     public INDICATOR_SIZE: number = 20;
     public readonly HORIZONTAL_CENTER: number = 0.5 * MartianChessState.WIDTH * MartianChessComponentUtils.SPACE_SIZE;
     private readonly UNSTROKED_HEIGHT: number = MartianChessState.HEIGHT * MartianChessComponentUtils.SPACE_SIZE;

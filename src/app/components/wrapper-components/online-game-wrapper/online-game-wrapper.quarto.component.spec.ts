@@ -45,10 +45,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         username: 'jeanJaja',
         verified: true,
     };
-    const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
-                                                 MGPOptional.ofNullable(OBSERVER.username),
-                                                 MGPOptional.of('observer@home'),
-                                                 true);
+    const USER_OBSERVER: AuthUser = new AuthUser(
+        'obs3rv3eDu8012',
+        MGPOptional.ofNullable(OBSERVER.username),
+        MGPOptional.of('observer@home'),
+        true,
+    );
 
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
     const SECOND_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
@@ -89,11 +91,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
     }
 
-    async function receiveReply(player: Player,
-                                accept: boolean,
-                                request: RequestType,
-                                data?: JSONValue)
-    : Promise<void> {
+    async function receiveReply(
+        player: Player,
+        accept: boolean,
+        request: RequestType,
+        data?: JSONValue,
+    ): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Reply',
             timestamp: 1,
@@ -174,10 +177,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
 
-    async function prepareTestUtilsFor(authUser: AuthUser,
-                                       options?: PreparationOptions)
-    : Promise<void>
-    {
+    async function prepareTestUtilsFor(
+        authUser: AuthUser,
+        options?: PreparationOptions,
+    ): Promise<void> {
         const preparationResult: PreparationResult<QuartoComponent> =
             await prepareStartedGameFor<QuartoComponent>(authUser, 'Quarto', options);
         testUtils = preparationResult.testUtils;
@@ -308,7 +311,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             'Unexpected error from backend: unknown-message',
             async() => {
                 await receiveError('unknown-message');
-            });
+            },
+        );
     }));
 
     describe('Animation', () => {

@@ -27,13 +27,14 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     imports: [NgClass],
 })
 
-export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
-                                                                 DiaballikMove,
-                                                                 DiaballikState,
-                                                                 DiaballikPiece,
-                                                                 EmptyRulesConfig,
-                                                                 DiaballikState>
-{
+export class DiaballikComponent extends RectangularGameComponent<
+    DiaballikRules,
+    DiaballikMove,
+    DiaballikState,
+    DiaballikPiece,
+    EmptyRulesConfig,
+    DiaballikState
+> {
 
     public stateInConstruction: DiaballikState;
 

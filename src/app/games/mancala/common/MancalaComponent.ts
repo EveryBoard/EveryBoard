@@ -264,9 +264,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return this.getSimpleDistributionResult(distribution, true);
     }
 
-    private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean)
-    : Promise<MancalaDistributionResult>
-    {
+    private async getSimpleDistributionResult(
+        distribution: MancalaDistribution,
+        showSeedBySeed: boolean,
+    ): Promise<MancalaDistributionResult> {
         const state: MancalaState = this.constructedState;
         const coord: Coord = distribution.coord;
         this.lastDistributedHouses.push(coord);
@@ -301,9 +302,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
             this.changeVisibleState(seedDropResult.resultingState);
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             while (seedDropResult.seedsInHand > 0) {
-                seedDropResult = await this.showSeedDrop(seedDropResult,
-                                                         config,
-                                                         initial);
+                seedDropResult = await this.showSeedDrop(
+                    seedDropResult,
+                    config,
+                    initial,
+                );
             }
             if (seedDropResult.currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
                 mustDoOneMoreLap = false;
@@ -465,9 +468,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.cdr.detectChanges();
     }
 
-    protected createAIConfig(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
-    : AIConfig<MancalaMove, MancalaState, MancalaConfig>
-    {
+    protected createAIConfig(
+        moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>,
+    ): AIConfig<MancalaMove, MancalaState, MancalaConfig> {
         return {
             minimax: [{
                 id: 'score',

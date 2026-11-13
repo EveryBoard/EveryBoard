@@ -29,9 +29,11 @@ describe('AwaleScoreMinimax', () => {
     it('should not throw at first choice', () => {
         const node: MancalaNode = rules.getInitialNode(defaultConfig);
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
-        const legality: MGPValidation = rules.isLegal(bestMove,
-                                                      node.gameState,
-                                                      defaultConfig);
+        const legality: MGPValidation = rules.isLegal(
+            bestMove,
+            node.gameState,
+            defaultConfig,
+        );
         expect(legality.isSuccess()).toBeTrue();
     });
 

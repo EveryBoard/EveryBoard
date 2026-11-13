@@ -14,8 +14,10 @@ describe('P4Move', () => {
         });
 
         it('should throw when creating negative x indices', () => {
-            TestUtils.expectToThrowAndLog(() => P4Move.of(-1),
-                                          'P4Move should be a positive integer!');
+            TestUtils.expectToThrowAndLog(
+                () => P4Move.of(-1),
+                'P4Move should be a positive integer!',
+            );
         });
 
     });
