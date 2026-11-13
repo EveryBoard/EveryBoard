@@ -55,11 +55,13 @@ describe('QuartoHeuristic', () => {
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
 
         // Then the heuristic should detect the previctory
-        HeuristicUtils.expectStateToBePreVictory(state,
-                                                 new QuartoMove(1, 0, AAAA),
-                                                 Player.ONE,
-                                                 [heuristic],
-                                                 defaultConfig);
+        HeuristicUtils.expectStateToBePreVictory(
+            state,
+            new QuartoMove(1, 0, AAAA),
+            Player.ONE,
+            [heuristic],
+            defaultConfig,
+        );
     });
 
     it('should recognize "3 3" as pre-victory', () => {

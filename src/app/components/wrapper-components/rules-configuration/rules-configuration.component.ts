@@ -283,7 +283,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         const matchingConfigs: NamedRulesConfig<RulesConfig>[] = defaultConfigs.filter(
             (nameConfig: NamedRulesConfig<RulesConfig>) => {
                 return comparableEquals(nameConfig.config, currentConfig);
-            });
+            },
+        );
         if (matchingConfigs.length === 1) {
             return matchingConfigs[0].name();
         } else {

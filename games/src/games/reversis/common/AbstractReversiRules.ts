@@ -20,8 +20,9 @@ export type ReversiLegalityInformation = Coord[];
 
 export class ReversiMoveWithSwitched {
 
-    public constructor(public readonly move: ReversiMove,
-                       public readonly switched: number,
+    public constructor(
+        public readonly move: ReversiMove,
+        public readonly switched: number,
     ) {
     }
 }
@@ -60,11 +61,12 @@ class ToricBoardMode implements BoardMode {
 }
 
 @Debug.log
-export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove,
-                                                                     ReversiState,
-                                                                     ReversiConfig,
-                                                                     ReversiLegalityInformation>
-{
+export abstract class AbstractReversiRules extends ConfigurableRules<
+    ReversiMove,
+    ReversiState,
+    ReversiConfig,
+    ReversiLegalityInformation
+> {
 
     private readonly toricBoardMode: BoardMode = new ToricBoardMode();
 
@@ -88,12 +90,12 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         return new ReversiState(board, 0);
     }
 
-    public override applyLegalMove(move: ReversiMove,
-                                   state: ReversiState,
-                                   _: ReversiConfig,
-                                   info: ReversiLegalityInformation)
-    : ReversiState
-    {
+    public override applyLegalMove(
+        move: ReversiMove,
+        state: ReversiState,
+        _: ReversiConfig,
+        info: ReversiLegalityInformation,
+    ): ReversiState {
         const turn: number = state.turn;
         const player: Player = state.getCurrentPlayer();
         const board: PlayerOrNone[][] = state.getCopiedBoard();
@@ -134,11 +136,12 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         return switcheds;
     }
 
-    public getSandwicheds(capturer: Player,
-                          direction: Ordinal,
-                          start: Coord,
-                          state: ReversiState,
-                          config: ReversiConfig,
+    public getSandwicheds(
+        capturer: Player,
+        direction: Ordinal,
+        start: Coord,
+        state: ReversiState,
+        config: ReversiConfig,
     ) : Coord[] {
         /**
           * expected that 'start' is in range, and is captured
@@ -233,9 +236,11 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState, config: ReversiConfig)
-    : MGPFallible<ReversiLegalityInformation>
-    {
+    public override isLegal(
+        move: ReversiMove,
+        state: ReversiState,
+        config: ReversiConfig,
+    ): MGPFallible<ReversiLegalityInformation> {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!

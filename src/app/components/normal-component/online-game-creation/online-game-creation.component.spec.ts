@@ -21,8 +21,10 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a creation of a game that does not exist
         const testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent> =
-            await SimpleComponentTestUtils.create(OnlineGameCreationComponent,
-                                                  new ActivatedRouteStub('invalid-game'));
+            await SimpleComponentTestUtils.create(
+                OnlineGameCreationComponent,
+                new ActivatedRouteStub('invalid-game'),
+            );
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
 
@@ -43,8 +45,10 @@ describe('OnlineGameCreationComponent', () => {
 
     const game: string = 'P4';
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(OnlineGameCreationComponent,
-                                                          new ActivatedRouteStub(game));
+        testUtils = await SimpleComponentTestUtils.create(
+            OnlineGameCreationComponent,
+            new ActivatedRouteStub(game),
+        );
     }));
 
     it('should create and redirect to the game upon success', fakeAsync(async() => {

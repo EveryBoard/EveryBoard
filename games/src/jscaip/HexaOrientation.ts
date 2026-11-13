@@ -58,9 +58,10 @@ export class FlatHexaOrientation extends HexaOrientation {
         return coord.x === 0;
     }
 
-    public isOnBottomLeftBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord)
-    : boolean
-    {
+    public isOnBottomLeftBorder<T extends NonNullable<Comparable>>(
+        board: HexagonalGameState<T>,
+        coord: Coord,
+    ): boolean {
         return coord.y === board.height-1;
     }
 
@@ -74,9 +75,10 @@ export class FlatHexaOrientation extends HexaOrientation {
         }
     }
 
-    public isOnBottomRightBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord)
-    : boolean
-    {
+    public isOnBottomRightBorder<T extends NonNullable<Comparable>>(
+        board: HexagonalGameState<T>,
+        coord: Coord,
+    ): boolean {
         if (board.excludedSpaces[board.height-1 - coord.y] != null) {
             return board.width-1 - coord.x === board.excludedSpaces[board.height-1 - coord.y];
         } else if (board.height-1 - coord.y === board.excludedSpaces.length) {

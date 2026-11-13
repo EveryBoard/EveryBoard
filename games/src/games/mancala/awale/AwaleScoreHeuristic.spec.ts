@@ -36,10 +36,14 @@ describe('AwaleScoreHeuristic', () => {
         const weakState: MancalaState = rules.choose(node, weakMove, defaultConfig).get().gameState;
         const strongState: MancalaState = rules.choose(node, strongMove, defaultConfig).get().gameState;
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(mancalaHeuristic,
-                                                               weakState, MGPOptional.of(weakMove),
-                                                               strongState, MGPOptional.of(strongMove),
-                                                               state.getCurrentPlayer(),
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            mancalaHeuristic,
+            weakState,
+            MGPOptional.of(weakMove),
+            strongState,
+            MGPOptional.of(strongMove),
+            state.getCurrentPlayer(),
+            defaultConfig,
+        );
     });
 });

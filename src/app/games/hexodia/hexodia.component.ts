@@ -25,12 +25,13 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
-                                                             HexodiaMove,
-                                                             FourStatePieceGameStateWithTable,
-                                                             FourStatePiece,
-                                                             HexodiaConfig>
-{
+export class HexodiaComponent extends HexagonalGameComponent<
+    HexodiaRules,
+    HexodiaMove,
+    FourStatePieceGameStateWithTable,
+    FourStatePiece,
+    HexodiaConfig
+> {
     public droppedCoords: Coord[] = [];
 
     public lastMoved: Coord[] = [];
@@ -64,9 +65,11 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
             (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
         const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
         const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
-                                         hexaLayoutStartingCoord,
-                                         PointyHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE,
+            hexaLayoutStartingCoord,
+            PointyHexaOrientation.INSTANCE,
+        );
     }
 
     protected override computeViewBox(): ViewBox {
@@ -85,7 +88,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         const state: FourStatePieceGameStateWithTable = this.state();
         this.hexaBoard = state.getCopiedBoard();
         const config: HexodiaConfig = this.config();
-        this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
+        this.victoryCoords = HexodiaRules.getVictoriousSpaces(state, config);
     }
 
     protected override async showLastMove(move: HexodiaMove): Promise<void> {

@@ -11,18 +11,24 @@ describe('DiaballikMove', () => {
     it('should reject move with more than one pass', () => {
         const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
         const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
-        TestUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(pass), MGPOptional.empty()),
-                                      'DiaballikMove should have at most one pass');
-        TestUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(translation), MGPOptional.of(pass)),
-                                      'DiaballikMove should have at most one pass');
+        TestUtils.expectToThrowAndLog(
+            () => new DiaballikMove(pass, MGPOptional.of(pass), MGPOptional.empty()),
+            'DiaballikMove should have at most one pass',
+        );
+        TestUtils.expectToThrowAndLog(
+            () => new DiaballikMove(pass, MGPOptional.of(translation), MGPOptional.of(pass)),
+            'DiaballikMove should have at most one pass',
+        );
     });
 
     it('should reject move with three translations', () => {
         const first: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(0, 1)).get();
         const second: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
         const third: DiaballikTranslation = DiaballikTranslation.from(new Coord(1, 1), new Coord(2, 1)).get();
-        TestUtils.expectToThrowAndLog(() => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
-                                      'DiaballikMove should have at most two translations');
+        TestUtils.expectToThrowAndLog(
+            () => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
+            'DiaballikMove should have at most two translations',
+        );
     });
 
     it('should reject move that translate by more than one orthogonal space', () => {
@@ -83,18 +89,26 @@ describe('DiaballikMove', () => {
                 DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
             // A pass that happens to have the same coords as one of the translations (on purpose)
             const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
-            const fullMove: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                              MGPOptional.of(secondTranslation),
-                                                              MGPOptional.of(pass));
-            const otherFullMove: DiaballikMove = new DiaballikMove(secondTranslation,
-                                                                   MGPOptional.of(firstTranslation),
-                                                                   MGPOptional.of(pass));
-            const yetAnotherFullMove: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                                        MGPOptional.of(pass),
-                                                                        MGPOptional.of(secondTranslation));
-            const moveWithoutPass: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                                     MGPOptional.of(secondTranslation),
-                                                                     MGPOptional.empty());
+            const fullMove: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(secondTranslation),
+                MGPOptional.of(pass),
+            );
+            const otherFullMove: DiaballikMove = new DiaballikMove(
+                secondTranslation,
+                MGPOptional.of(firstTranslation),
+                MGPOptional.of(pass),
+            );
+            const yetAnotherFullMove: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(pass),
+                MGPOptional.of(secondTranslation),
+            );
+            const moveWithoutPass: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(secondTranslation),
+                MGPOptional.empty(),
+            );
             expect(fullMove.equals(fullMove)).toBeTrue();
             expect(fullMove.equals(otherFullMove)).toBeFalse();
             expect(fullMove.equals(yetAnotherFullMove)).toBeFalse();
@@ -112,18 +126,26 @@ describe('DiaballikMove', () => {
                 DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
             // A pass that happens to have the same coords as one of the translations (on purpose)
             const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
-            const fullMove: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                              MGPOptional.of(secondTranslation),
-                                                              MGPOptional.of(pass));
-            const otherFullMove: DiaballikMove = new DiaballikMove(secondTranslation,
-                                                                   MGPOptional.of(firstTranslation),
-                                                                   MGPOptional.of(pass));
-            const yetAnotherFullMove: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                                        MGPOptional.of(pass),
-                                                                        MGPOptional.of(secondTranslation));
-            const moveWithoutPass: DiaballikMove = new DiaballikMove(firstTranslation,
-                                                                     MGPOptional.of(secondTranslation),
-                                                                     MGPOptional.empty());
+            const fullMove: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(secondTranslation),
+                MGPOptional.of(pass),
+            );
+            const otherFullMove: DiaballikMove = new DiaballikMove(
+                secondTranslation,
+                MGPOptional.of(firstTranslation),
+                MGPOptional.of(pass),
+            );
+            const yetAnotherFullMove: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(pass),
+                MGPOptional.of(secondTranslation),
+            );
+            const moveWithoutPass: DiaballikMove = new DiaballikMove(
+                firstTranslation,
+                MGPOptional.of(secondTranslation),
+                MGPOptional.empty(),
+            );
             const moves: DiaballikMove[] = [
                 fullMove,
                 otherFullMove,

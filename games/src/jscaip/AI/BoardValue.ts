@@ -62,10 +62,11 @@ export class BoardValue {
      * @param playerZeroScores the positive score list of player zero
      * @param playerOneScores the positive score list of player one
      */
-    public static ofMultiple(playerZeroScores: ReadonlyArray<number>, playerOneScores: ReadonlyArray<number>)
-    : BoardValue
-    {
-        Utils.assert(playerZeroScores.length === playerOneScores.length, 'both player should have the same number of metric');
+    public static ofMultiple(
+        playerZeroScores: ReadonlyArray<number>,
+        playerOneScores: ReadonlyArray<number>,
+    ): BoardValue {
+        Utils.assert(playerZeroScores.length === playerOneScores.length, 'both players should have the same number of metric');
         Utils.assert(playerZeroScores.length !== 0, 'scores list should not be empty');
         const subValues: number[] = [];
         for (let i: number = 0; i < playerZeroScores.length; i++) {

@@ -262,9 +262,11 @@ describe('CurrentGameService', () => {
 
     describe('canUserJoin', () => {
 
-        async function shouldAllowToJoinGame(currentGame: CurrentGame, gameToJoin: string, gameStarted: boolean)
-        : Promise<void>
-        {
+        async function shouldAllowToJoinGame(
+            currentGame: CurrentGame,
+            gameToJoin: string,
+            gameStarted: boolean,
+        ): Promise<void> {
             updateCurrentGame(currentGame);
 
             // When asking if you can join that specific part again
@@ -275,12 +277,12 @@ describe('CurrentGameService', () => {
                 .withContext('validation should be a success')
                 .toBeTrue();
         }
-        async function shouldForbidToJoinGame(currentGame: CurrentGame,
-                                              partToJoin: string,
-                                              gameStarted: boolean,
-                                              reason: string)
-        : Promise<void>
-        {
+        async function shouldForbidToJoinGame(
+            currentGame: CurrentGame,
+            partToJoin: string,
+            gameStarted: boolean,
+            reason: string,
+        ): Promise<void> {
             updateCurrentGame(currentGame);
 
             // When asking if you can join that specific part again

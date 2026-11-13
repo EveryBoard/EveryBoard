@@ -36,13 +36,13 @@ import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './Clic
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
 @Debug.log
-export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    C extends RulesConfig = EmptyRulesConfig,
-                                    L = void>
-    extends BaseGameComponent
-{
+export abstract class GameComponent<
+    R extends SuperRules<M, S, C, L>,
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void
+> extends BaseGameComponent {
 
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 

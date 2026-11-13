@@ -51,11 +51,15 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.empty(),
-                                                               strongerState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakerState,
+            MGPOptional.empty(),
+            strongerState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
     it('should consider two neighbor piece better than two separated piece', () => {
@@ -87,11 +91,15 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.empty(),
-                                                               strongerState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakerState,
+            MGPOptional.empty(),
+            strongerState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
     it('should prefer capture outcomes over quiet moves', () => {
@@ -126,11 +134,15 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
         const weakState: EpaminondasState = rules.choose(node, weakMove, defaultConfig).get().gameState;
         const strongState: EpaminondasState = rules.choose(node, strongMove, defaultConfig).get().gameState;
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.of(weakMove),
-                                                               strongState, MGPOptional.of(strongMove),
-                                                               state.getCurrentPlayer(),
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.of(weakMove),
+            strongState,
+            MGPOptional.of(strongMove),
+            state.getCurrentPlayer(),
+            defaultConfig,
+        );
     });
 
 });

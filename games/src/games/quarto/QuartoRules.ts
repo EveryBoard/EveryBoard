@@ -142,9 +142,10 @@ interface PatternInfos {
 
 export abstract class VictoryPattern {
 
-    public constructor(public readonly level: number,
-                       public readonly coordPattern: CoordSet,
-                       public readonly initialCoord: Coord,
+    public constructor(
+        public readonly level: number,
+        public readonly coordPattern: CoordSet,
+        public readonly initialCoord: Coord,
     ) {}
 
     public getCoords(): Set<Coord> {
@@ -164,9 +165,11 @@ class VerticalVictoryPattern extends VictoryPattern {
     ]);
 
     public constructor(initialCoord: Coord) {
-        super(1,
-              VerticalVictoryPattern.VERTICAL,
-              initialCoord);
+        super(
+            1,
+            VerticalVictoryPattern.VERTICAL,
+            initialCoord,
+        );
     }
 
     public override getAllPatterns(state: QuartoState): VerticalVictoryPattern[] {
@@ -190,9 +193,11 @@ class HorizontalVictoryPattern extends VictoryPattern {
     ]);
 
     public constructor(initialCoord: Coord) {
-        super(1,
-              HorizontalVictoryPattern.HORIZONTAL,
-              initialCoord);
+        super(
+            1,
+            HorizontalVictoryPattern.HORIZONTAL,
+            initialCoord,
+        );
     }
 
     public override getAllPatterns(state: QuartoState): HorizontalVictoryPattern[] {
@@ -216,9 +221,11 @@ class DescendingDiagonalVictoryPattern extends VictoryPattern {
     ]);
 
     public constructor(initialCoord: Coord) {
-        super(1,
-              DescendingDiagonalVictoryPattern.DESCENDING_DIAGONAL,
-              initialCoord);
+        super(
+            1,
+            DescendingDiagonalVictoryPattern.DESCENDING_DIAGONAL,
+            initialCoord,
+        );
     }
 
     public override getAllPatterns(state: QuartoState): DescendingDiagonalVictoryPattern[] {
@@ -243,9 +250,11 @@ class AscendingDiagonalVictoryPattern extends VictoryPattern {
     ]);
 
     public constructor(initialCoord: Coord) {
-        super(1,
-              AscendingDiagonalVictoryPattern.ASCENDING_DIAGONAL,
-              initialCoord);
+        super(
+            1,
+            AscendingDiagonalVictoryPattern.ASCENDING_DIAGONAL,
+            initialCoord,
+        );
     }
 
     public override getAllPatterns(state: QuartoState): AscendingDiagonalVictoryPattern[] {
@@ -271,9 +280,11 @@ class SquareVictoryPattern extends VictoryPattern {
     ]);
 
     public constructor(initialCoord: Coord) {
-        super(2,
-              SquareVictoryPattern.SQUARE,
-              initialCoord);
+        super(
+            2,
+            SquareVictoryPattern.SQUARE,
+            initialCoord,
+        );
     }
 
     public override getAllPatterns(state: QuartoState): SquareVictoryPattern[] {
@@ -353,12 +364,12 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: QuartoMove,
-                                   state: QuartoState,
-                                   _config: QuartoConfig,
-                                   _info: void)
-    : QuartoState
-    {
+    public override applyLegalMove(
+        move: QuartoMove,
+        state: QuartoState,
+        _config: QuartoConfig,
+        _info: void,
+    ): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);
@@ -409,11 +420,11 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         }
     }
 
-    private searchForVictoryOrPreVictoryInPattern(pattern: VictoryPattern,
-                                                  state: QuartoState,
-                                                  boardStatus: BoardStatus)
-    : BoardStatusUpdate
-    {
+    private searchForVictoryOrPreVictoryInPattern(
+        pattern: VictoryPattern,
+        state: QuartoState,
+        boardStatus: BoardStatus,
+    ): BoardStatusUpdate {
         // we're looking for a victory, pre-victory
         const patternInfos: PatternInfos = this.getPatternInfos(pattern, state, boardStatus);
         if (patternInfos.boardStatus.isPresent()) {
@@ -550,7 +561,7 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return initialPatterns.flatMap((pattern: VictoryPattern) => pattern.getAllPatterns(state));
     }
 
-    public getVictoriousCoords(state: QuartoState, config: QuartoConfig): Set<Coord> {
+    public getVictoriousSpaces(state: QuartoState, config: QuartoConfig): Set<Coord> {
         const maxPatternLevel: number = Math.max(config.playerZeroLevel, config.playerOneLevel);
         const patterns: VictoryPattern[] = this.getPatterns(maxPatternLevel, state);
         for (const pattern of patterns) {

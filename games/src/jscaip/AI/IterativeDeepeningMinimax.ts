@@ -11,19 +11,22 @@ import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
 
-export class IterativeDeepeningMinimax<M extends Move,
-                                       S extends GameState,
-                                       C extends RulesConfig = EmptyRulesConfig,
-                                       L = void>
-    extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
+export class IterativeDeepeningMinimax<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void
+> extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
 
     private readonly MAX_MINIMAX_LEVEL: number = 10;
 
-    public constructor(name: string,
-                       rules: SuperRules<M, S, C, L>,
-                       heuristic: Heuristic<M, S, BoardValue, C>,
-                       moveGenerator: MoveGenerator<M, S, C>,
-                       hash?: MinimaxHashFunction<S>) {
+    public constructor(
+        name: string,
+        rules: SuperRules<M, S, C, L>,
+        heuristic: Heuristic<M, S, BoardValue, C>,
+        moveGenerator: MoveGenerator<M, S, C>,
+        hash?: MinimaxHashFunction<S>,
+    ) {
         super(name, rules, heuristic, moveGenerator, hash);
         for (let i: number = 1; i < this.MAX_MINIMAX_LEVEL; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
@@ -31,8 +34,10 @@ export class IterativeDeepeningMinimax<M extends Move,
     }
 
     public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: C): M {
-        Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
-                     'Minimax has been asked to choose a move from a finished game');
+        Utils.assert(
+            this.rules.getGameStatus(node, config).isEndGame === false,
+            'Minimax has been asked to choose a move from a finished game',
+        );
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
 
         const start: number = Date.now();

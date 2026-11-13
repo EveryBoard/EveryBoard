@@ -46,6 +46,7 @@ type AIChoice = {
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnDestroy {
+
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly aiInstances: AIInstanceRegistry = new AIInstanceRegistry();
@@ -71,8 +72,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public constructor()
     {
         super();
-        this.players = PlayerMap.ofValues(MGPOptional.of(this.playerSelection.get(Player.ZERO)),
-                                          MGPOptional.of(this.playerSelection.get(Player.ONE)));
+        this.players = PlayerMap.ofValues(
+            MGPOptional.of(this.playerSelection.get(Player.ZERO)),
+            MGPOptional.of(this.playerSelection.get(Player.ONE)),
+        );
         this.role = Player.ZERO; // The user is playing, not observing
     }
 
@@ -110,9 +113,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
 
-    protected override async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>)
-    : Promise<void>
-    {
+    protected override async createGameComponentAndSetConfig(
+        componentType: Type<AbstractGameComponent>,
+    ): Promise<void> {
         await this.setConfigFromParams();
         await super.createGameComponentAndSetConfig(componentType);
     }
@@ -170,9 +173,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    private areGlobalValidatorsValid(rulesConfigDescription: RulesConfigDescription<RulesConfig>, config: RulesConfig)
-    : boolean
-    {
+    private areGlobalValidatorsValid(
+        rulesConfigDescription: RulesConfigDescription<RulesConfig>,
+        config: RulesConfig,
+    ): boolean {
         const validators: ((config: RulesConfig) => MGPValidation)[] =
             rulesConfigDescription.defaultConfigDescription.validators ?? [];
         for (const validator of validators) {
@@ -384,7 +388,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const profileId: string = this.aiProfiles.get(player);
         const optionName: string = this.aiOptions.get(player);
         const options: MGPOptional<AIOptions> = MGPOptional.ofNullable(
-            this.availableAIOptions(player).find((option: AIOptions) => option.name === optionName));
+            this.availableAIOptions(player).find((option: AIOptions) => option.name === optionName),
+        );
         if (options.isAbsent()) {
             return MGPOptional.empty();
         }
@@ -410,7 +415,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return MGPOptional.ofNullable(
             this.getMinimaxConfigs().find((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
                 return config.id === id;
-            }));
+            }),
+        );
     }
 
     private getMCTSConfig(id: string): MGPOptional<MCTSConfig<Move, GameState, RulesConfig>> {
@@ -423,17 +429,17 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.gameComponent.aiConfig.minimax;
     }
 
-    private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
-    : Minimax<Move, GameState, RulesConfig, unknown>
-    {
+    private createMinimax(
+        config: MinimaxConfig<Move, GameState, RulesConfig>,
+    ): Minimax<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(config, 'minimax', (): Minimax<Move, GameState, RulesConfig, unknown> => {
             return createMinimaxFromConfig(this.gameComponent.rules, config);
         });
     }
 
-    private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
-    : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown>
-    {
+    private createIterativeMinimax(
+        config: MinimaxConfig<Move, GameState, RulesConfig>,
+    ): IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(
             config,
             'iterative-deepening',
@@ -447,9 +453,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.gameComponent.aiConfig.mcts;
     }
 
-    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)
-    : MCTS<Move, GameState, RulesConfig, unknown>
-    {
+    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>): MCTS<Move, GameState, RulesConfig, unknown> {
         return this.aiInstances.getOrCreate(config, 'mcts', (): MCTS<Move, GameState, RulesConfig, unknown> => {
             return createMCTSFromConfig(this.gameComponent.rules, config);
         });
@@ -557,8 +561,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         let oldNode: AbstractNode = this.gameComponent.node();
         this.gameComponent.node.set(oldNode.parent.get());
         if (this.isTurnOfPlayingAI()) {
-            Utils.assert(this.gameComponent.node().parent.isPresent(),
-                         'Cannot take back in first turn when AI is Player.ZERO');
+            Utils.assert(
+                this.gameComponent.node().parent.isPresent(),
+                'Cannot take back in first turn when AI is Player.ZERO',
+            );
             oldNode = this.gameComponent.node();
             this.gameComponent.node.set(oldNode.parent.get());
         }

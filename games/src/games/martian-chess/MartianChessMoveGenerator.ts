@@ -49,11 +49,11 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
         }
         return this.addLegalMoves(state, coord, landingCoords);
     }
-    private addLegalMoves(state: MartianChessState,
-                          startingCoord: Coord,
-                          validLandingCoords: Coord[])
-    : MartianChessMove[]
-    {
+    private addLegalMoves(
+        state: MartianChessState,
+        startingCoord: Coord,
+        validLandingCoords: Coord[],
+    ): MartianChessMove[] {
         const moves: MartianChessMove[] = [];
         const firstPiece: MartianChessPiece = state.getPieceAt(startingCoord);
         const canPromoteDrone: boolean = state.isTherePieceOnPlayerSide(MartianChessPiece.DRONE) === false;
@@ -83,11 +83,11 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
         }
         return moves;
     }
-    private add(moves: MartianChessMove[],
-                move: MartianChessMove,
-                last: MGPOptional<MartianChessMove>)
-    : void
-    {
+    private add(
+        moves: MartianChessMove[],
+        move: MartianChessMove,
+        last: MGPOptional<MartianChessMove>,
+    ): void {
         const isCancelingLastMove: boolean = move.isUndoneBy(last);
         if (isCancelingLastMove === false) {
             moves.push(move);

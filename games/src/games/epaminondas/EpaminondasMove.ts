@@ -14,19 +14,23 @@ export class EpaminondasMove extends MoveCoord {
         [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), Ordinal.encoder],
         (m: EpaminondasMove): EpaminondasMoveFields => [m.coord, m.phalanxSize, m.stepSize, m.direction],
         (fields: EpaminondasMoveFields): EpaminondasMove =>
-            new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]));
+            new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]),
+    );
 
-    public constructor(x: number,
-                       y: number,
-                       public readonly phalanxSize: number,
-                       public readonly stepSize: number,
-                       public readonly direction: Ordinal)
-    {
+    public constructor(
+        x: number,
+        y: number,
+        public readonly phalanxSize: number,
+        public readonly stepSize: number,
+        public readonly direction: Ordinal,
+    ) {
         super(x, y);
         Utils.assert(phalanxSize > 0, 'Must select minimum one piece (got ' + phalanxSize + ').');
         Utils.assert(stepSize > 0, 'Step size must be minimum one (got ' + stepSize + ').');
-        Utils.assert(stepSize <= phalanxSize,
-                     EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(stepSize, phalanxSize));
+        Utils.assert(
+            stepSize <= phalanxSize,
+            EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(stepSize, phalanxSize),
+        );
     }
 
     public toString(): string {

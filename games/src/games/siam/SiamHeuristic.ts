@@ -16,9 +16,10 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, Si
         return BoardValue.of(boardValueInfo.boardValue);
     }
 
-    private getBoardValueInfo(state: SiamState, config: SiamConfig)
-    : { shortestZero: number; shortestOne: number; boardValue: number }
-    {
+    private getBoardValueInfo(
+        state: SiamState,
+        config: SiamConfig,
+    ): { shortestZero: number; shortestOne: number; boardValue: number } {
         const mountainsInfo: { rows: number[]; columns: number[]; nbMountain: number } =
             SiamRules.get().getMountainsRowsAndColumns(state);
         const mountainsRow: number[] = mountainsInfo.rows;

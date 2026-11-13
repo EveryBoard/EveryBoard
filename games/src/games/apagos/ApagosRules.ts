@@ -74,12 +74,12 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         ], numberOfPieces, numberOfPieces);
     }
 
-    public override applyLegalMove(move: ApagosMove,
-                                   state: ApagosState,
-                                   config: ApagosConfig,
-                                   _info: void)
-    : ApagosState
-    {
+    public override applyLegalMove(
+        move: ApagosMove,
+        state: ApagosState,
+        config: ApagosConfig,
+        _info: void,
+    ): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state, config);
         } else {

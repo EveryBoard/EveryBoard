@@ -154,14 +154,16 @@ describe('KalahRules', () => {
 
             // When doing that complex move
             const move: MancalaMove =
-            MancalaMove.of(MancalaDistribution.of(0, 1),
-                           [
-                               MancalaDistribution.of(4, 1),
-                               MancalaDistribution.of(0, 1),
-                               MancalaDistribution.of(1, 1),
-                               MancalaDistribution.of(0, 1),
-                               MancalaDistribution.of(5, 1),
-                           ]);
+                MancalaMove.of(
+                    MancalaDistribution.of(0, 1),
+                    [
+                        MancalaDistribution.of(4, 1),
+                        MancalaDistribution.of(0, 1),
+                        MancalaDistribution.of(1, 1),
+                        MancalaDistribution.of(0, 1),
+                        MancalaDistribution.of(5, 1),
+                    ],
+                );
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
@@ -248,9 +250,11 @@ describe('KalahRules', () => {
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(25, 23));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: MancalaNode = new MancalaNode(expectedState,
-                                                      MGPOptional.empty(),
-                                                      MGPOptional.of(move));
+            const node: MancalaNode = new MancalaNode(
+                expectedState,
+                MGPOptional.empty(),
+                MGPOptional.of(move),
+            );
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -327,14 +331,16 @@ describe('KalahRules', () => {
 
             // When doing that complex move
             const move: MancalaMove =
-            MancalaMove.of(MancalaDistribution.of(0, 1),
-                           [
-                               MancalaDistribution.of(1, 1),
-                               MancalaDistribution.of(0, 1),
-                               MancalaDistribution.of(2, 1),
-                               MancalaDistribution.of(0, 1),
-                               MancalaDistribution.of(1, 1),
-                           ]);
+                MancalaMove.of(
+                    MancalaDistribution.of(0, 1),
+                    [
+                        MancalaDistribution.of(1, 1),
+                        MancalaDistribution.of(0, 1),
+                        MancalaDistribution.of(2, 1),
+                        MancalaDistribution.of(0, 1),
+                        MancalaDistribution.of(1, 1),
+                    ],
+                );
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([

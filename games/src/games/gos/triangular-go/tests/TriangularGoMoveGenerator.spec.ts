@@ -73,11 +73,13 @@ describe('TriangularGoMoveGenerator', () => {
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
             // Given a board in counting phase when minimax agrees with the result
             const initialBoard: GoPiece[][] = TriangularGoRules.get().getInitialState(config).getCopiedBoard();
-            const state: GoState = new GoState(initialBoard,
-                                               PlayerNumberMap.of(0, 0),
-                                               0,
-                                               MGPOptional.empty(),
-                                               GoPhase.COUNTING);
+            const state: GoState = new GoState(
+                initialBoard,
+                PlayerNumberMap.of(0, 0),
+                0,
+                MGPOptional.empty(),
+                GoPhase.COUNTING,
+            );
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
 

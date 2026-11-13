@@ -13,8 +13,7 @@ import { DiaballikState } from '../DiaballikState';
 
 class DiaballikDistanceMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
     public constructor(name: string, moveGenerator: MoveGenerator<DiaballikMove, DiaballikState>) {
-        super(name, DiaballikRules.get(), new DiaballikDistanceHeuristic(), moveGenerator,
-        );
+        super(name, DiaballikRules.get(), new DiaballikDistanceHeuristic(), moveGenerator);
     }
 }
 

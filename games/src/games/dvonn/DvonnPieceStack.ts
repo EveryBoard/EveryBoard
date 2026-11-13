@@ -9,7 +9,8 @@ export class DvonnPieceStack {
         (stack: DvonnPieceStack): [boolean, PlayerOrNone, number] => [stack.source, stack.owner, stack.size],
         (fields: [boolean, Player, number]): DvonnPieceStack => {
             return new DvonnPieceStack(fields[1], fields[2], fields[0]);
-        });
+        },
+    );
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, 0, false);
     public static UNREACHABLE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, -1, false);
@@ -21,10 +22,11 @@ export class DvonnPieceStack {
         return new DvonnPieceStack(stack1.owner, stack1.size + stack2.size, stack1.source || stack2.source);
     }
 
-    public constructor(public readonly owner: PlayerOrNone,
-                       public readonly size: number,
-                       public readonly source: boolean)
-    {
+    public constructor(
+        public readonly owner: PlayerOrNone,
+        public readonly size: number,
+        public readonly source: boolean,
+    ) {
     }
     public getOwner(): PlayerOrNone {
         return this.owner;

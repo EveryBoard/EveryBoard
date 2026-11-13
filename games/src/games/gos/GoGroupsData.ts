@@ -7,13 +7,14 @@ import { GoPiece } from './GoPiece';
 
 export class GoGroupData extends GroupData<GoPiece> {
 
-    public constructor(color: GoPiece,
-                       public emptyCoords: Coord[],
-                       public darkCoords: Coord[],
-                       public lightCoords: Coord[],
-                       public deadDarkCoords: Coord[],
-                       public deadLightCoords: Coord[],
-                       public unreachableCoords: Coord[],
+    public constructor(
+        color: GoPiece,
+        public emptyCoords: Coord[],
+        public darkCoords: Coord[],
+        public lightCoords: Coord[],
+        public deadDarkCoords: Coord[],
+        public deadLightCoords: Coord[],
+        public unreachableCoords: Coord[],
     ) {
         super(color);
     }
@@ -94,8 +95,10 @@ export class GoGroupData extends GroupData<GoPiece> {
         wrapperSizes.put(this.color.nonTerritory(), 0);
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
-        Utils.assert(nonEmptyWrapper.size() === 1,
-                     `Can't call getWrapper on non-mono-wrapped group`);
+        Utils.assert(
+            nonEmptyWrapper.size() === 1,
+            `Can't call getWrapper on non-mono-wrapped group`,
+        );
         return nonEmptyWrapper.getAnyPair().get().key;
     }
 

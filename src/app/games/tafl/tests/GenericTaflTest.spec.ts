@@ -30,11 +30,9 @@ export type TaflTestEntries<C extends TaflComponent<R, M>, R extends TaflRules<M
     jumpOver: M; // An illegal move on stateReadyForJumpOver, that could make a piece jump over another
 }
 
-export function DoTaflTests<C extends TaflComponent<R, M>,
-                            R extends TaflRules<M>,
-                            M extends TaflMove>(entries: TaflTestEntries<C, R, M>)
-    : void
-{
+export function DoTaflTests<C extends TaflComponent<R, M>, R extends TaflRules<M>, M extends TaflMove>(
+    entries: TaflTestEntries<C, R, M>,
+): void {
 
     let testUtils: ComponentTestUtils<C>;
 

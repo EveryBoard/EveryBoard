@@ -33,13 +33,13 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         return moves;
     }
 
-    private getPossibleMoveContinuations(state: MancalaState,
-                                         x: number,
-                                         y: number,
-                                         currentMove: MancalaMove,
-                                         config: MancalaConfig)
-    : MancalaMove[]
-    {
+    private getPossibleMoveContinuations(
+        state: MancalaState,
+        x: number,
+        y: number,
+        currentMove: MancalaMove,
+        config: MancalaConfig,
+    ): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const previousDistributionResult: MancalaDistributionResult =
             MancalaRules.getEmptyDistributionResult(state);

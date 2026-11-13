@@ -23,12 +23,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class SquarzComponent extends RectangularGameComponent<SquarzRules,
-                                                                 SquarzMove,
-                                                                 SquarzState,
-                                                                 PlayerOrNone,
-                                                                 SquarzConfig>
-{
+export class SquarzComponent extends RectangularGameComponent<
+    SquarzRules,
+    SquarzMove,
+    SquarzState,
+    PlayerOrNone,
+    SquarzConfig
+> {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
 
     private movedSpaces: Coord[] = [];

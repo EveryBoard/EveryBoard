@@ -31,11 +31,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     public override getInitialState(): KamisadoState {
-        return new KamisadoState(0,
-                                 KamisadoColor.ANY,
-                                 MGPOptional.empty(),
-                                 false,
-                                 KamisadoBoard.INITIAL);
+        return new KamisadoState(
+            0,
+            KamisadoColor.ANY,
+            MGPOptional.empty(),
+            false,
+            KamisadoBoard.INITIAL,
+        );
     }
 
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
@@ -177,9 +179,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     // Apply the move by only relying on tryMove
-    public override applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: EmptyRulesConfig, _info: void)
-    : KamisadoState
-    {
+    public override applyLegalMove(
+        move: KamisadoMove,
+        state: KamisadoState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): KamisadoState {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();

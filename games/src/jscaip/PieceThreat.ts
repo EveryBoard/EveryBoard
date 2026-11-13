@@ -5,8 +5,10 @@ import { CoordSet } from './CoordSet';
 
 export class PieceThreat implements ComparableObject {
 
-    public constructor(public readonly directThreats: CoordSet,
-                       public readonly mover: CoordSet) {
+    public constructor(
+        public readonly directThreats: CoordSet,
+        public readonly mover: CoordSet,
+    ) {
     }
 
     public equals(other: PieceThreat): boolean {
