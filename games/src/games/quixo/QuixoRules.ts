@@ -80,7 +80,8 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
                 { key: 'rows', value: new NumberMap<number>() },
                 { key: 'ascendingDiagonal', value: new NumberMap<number>() },
                 { key: 'descendingDiagonal', value: new NumberMap<number>() },
-            ]));
+            ]),
+        );
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const content: Player = coordAndContent.content;
             const x: number = coordAndContent.coord.x;
@@ -138,9 +139,11 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public override getInitialState(config: QuixoConfig): QuixoState {
-        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                                 config.height,
-                                                                 PlayerOrNone.NONE);
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(
+            config.width,
+            config.height,
+            PlayerOrNone.NONE,
+        );
         return new QuixoState(initialBoard, 0);
     }
 
@@ -154,8 +157,10 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public isValidCoord(state: QuixoState, coord: Coord): MGPValidation {
-        Utils.assert(state.isOnBoard(coord),
-                     'Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
+        Utils.assert(
+            state.isOnBoard(coord),
+            'Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.',
+        );
         if (coord.x !== 0 &&
             coord.x !== (state.getWidth() - 1) &&
             coord.y !== 0 &&
@@ -170,19 +175,30 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         const x: number = move.coord.x;
         const y: number = move.coord.y;
         const direction: Orthogonal = move.direction;
-        Utils.assert(x !== (state.getWidth() - 1) || direction !== Orthogonal.RIGHT,
-                     `Invalid direction: piece on the right side can't be moved to the right.`);
-        Utils.assert(y !== (state.getHeight() - 1) || direction !== Orthogonal.DOWN,
-                     `Invalid direction: piece on the bottom side can't be moved down.`);
-        Utils.assert(x !== 0 || direction !== Orthogonal.LEFT,
-                     `Invalid direction: piece on the left side can't be moved to the left.`);
-        Utils.assert(y !== 0 || direction !== Orthogonal.UP,
-                     `Invalid direction: piece on the top side can't be moved up.`);
+        Utils.assert(
+            x !== (state.getWidth() - 1) || direction !== Orthogonal.RIGHT,
+            `Invalid direction: piece on the right side can't be moved to the right.`,
+        );
+        Utils.assert(
+            y !== (state.getHeight() - 1) || direction !== Orthogonal.DOWN,
+            `Invalid direction: piece on the bottom side can't be moved down.`,
+        );
+        Utils.assert(
+            x !== 0 || direction !== Orthogonal.LEFT,
+            `Invalid direction: piece on the left side can't be moved to the left.`,
+        );
+        Utils.assert(
+            y !== 0 || direction !== Orthogonal.UP,
+            `Invalid direction: piece on the top side can't be moved up.`,
+        );
     }
 
-    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: QuixoConfig, _info: void)
-    : QuixoState
-    {
+    public override applyLegalMove(
+        move: QuixoMove,
+        state: QuixoState,
+        _config: QuixoConfig,
+        _info: void,
+    ): QuixoState {
         return state.applyLegalMove(move);
     }
 

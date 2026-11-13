@@ -50,14 +50,16 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>) => {
                 this.activeConfigRooms = rooms;
-            });
+            },
+        );
         this.currentGameSubscription = this.currentGameService.subscribeToCurrentGame(
             (observed: MGPOptional<CurrentGame>) => {
                 this.createTabClasses = [];
                 if (observed.isPresent()) {
                     this.createTabClasses = ['disabled-tab'];
                 }
-            });
+            },
+        );
 
         this.lobbySubscription = await this.backendService.subscribeToLobby();
         this.errorSubscription = this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {

@@ -22,13 +22,17 @@ describe('TaflMove', () => {
         });
 
         it('should throw with out of range start coord', () => {
-            TestUtils.expectToThrowAndLog(() => MyTaflMove.from(outOfRange, inRange),
-                                          'Starting coord of TaflMove must be on the board, not at (-1, -1).');
+            TestUtils.expectToThrowAndLog(
+                () => MyTaflMove.from(outOfRange, inRange),
+                'Starting coord of TaflMove must be on the board, not at (-1, -1).',
+            );
         });
 
         it('should throw with out of range end coord', () => {
-            TestUtils.expectToThrowAndLog(() => MyTaflMove.from(inRange, outOfRange),
-                                          'Landing coord of TaflMove must be on the board, not at (-1, -1).');
+            TestUtils.expectToThrowAndLog(
+                () => MyTaflMove.from(inRange, outOfRange),
+                'Landing coord of TaflMove must be on the board, not at (-1, -1).',
+            );
         });
 
     });

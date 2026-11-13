@@ -45,12 +45,12 @@ export interface BoardInfo {
     sum: number;
 }
 
-export abstract class AlignmentHeuristic<M extends Move,
-                                         S extends GameState,
-                                         V,
-                                         C extends RulesConfig = EmptyRulesConfig>
-    extends Heuristic<M, S, BoardValue, C>
-{
+export abstract class AlignmentHeuristic<
+    M extends Move,
+    S extends GameState,
+    V,
+    C extends RulesConfig = EmptyRulesConfig
+> extends Heuristic<M, S, BoardValue, C> {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {
         this.startSearchingVictorySources();

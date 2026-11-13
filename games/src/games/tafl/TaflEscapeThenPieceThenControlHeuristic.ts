@@ -40,12 +40,12 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
 
-    private _getStepForEscape(state: TaflState,
-                              step: number,
-                              previousGen: Coord[],
-                              handledCoords: Coord[])
-    : MGPOptional<number>
-    {
+    private _getStepForEscape(
+        state: TaflState,
+        step: number,
+        previousGen: Coord[],
+        handledCoords: Coord[],
+    ): MGPOptional<number> {
         const nextGen: Coord[] = this.getNextGen(state, previousGen, handledCoords);
 
         if (nextGen.length === 0) {

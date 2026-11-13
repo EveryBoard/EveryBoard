@@ -102,11 +102,11 @@ export class SimpleComponentTestUtils<T> {
     private criticalMessageSpy: jasmine.Spy;
     protected gameMessageSpy: jasmine.Spy;
 
-    public static async create<U>(componentType: Type<U>,
-                                  activatedRouteStub?: ActivatedRouteStub,
-                                  configureTestModule: boolean = true)
-    : Promise<SimpleComponentTestUtils<U>>
-    {
+    public static async create<U>(
+        componentType: Type<U>,
+        activatedRouteStub?: ActivatedRouteStub,
+        configureTestModule: boolean = true,
+    ): Promise<SimpleComponentTestUtils<U>> {
         if (configureTestModule) {
             await ConfigureTestingModuleUtils.configureTestingModule(activatedRouteStub);
         }
@@ -371,28 +371,28 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public static async forGame<Component extends AbstractGameComponent>(
         game: string,
-        configureTestingModule: boolean = true)
-    : Promise<ComponentTestUtils<Component>>
-    {
+        configureTestingModule: boolean = true,
+    ): Promise<ComponentTestUtils<Component>> {
         const gameInfos: GameInfo[] = GameInfo.getAllGames();
         const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
         const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
             throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in GameInfo.ts)');
         }
-        return ComponentTestUtils.forGameWithWrapper(game,
-                                                     LocalGameWrapperComponent,
-                                                     AuthUser.NOT_CONNECTED,
-                                                     configureTestingModule);
+        return ComponentTestUtils.forGameWithWrapper(
+            game,
+            LocalGameWrapperComponent,
+            AuthUser.NOT_CONNECTED,
+            configureTestingModule,
+        );
     }
 
     public static async forGameWithWrapper<Component extends AbstractGameComponent, Actor extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<Actor>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
-        configureTestingModule: boolean = true)
-    : Promise<ComponentTestUtils<Component, Actor>>
-    {
+        configureTestingModule: boolean = true,
+    ): Promise<ComponentTestUtils<Component, Actor>> {
         const testUtils: ComponentTestUtils<Component, Actor> =
             await ComponentTestUtils.basic(game, configureTestingModule);
         ConnectedUserServiceMock.setUser(user);
@@ -406,9 +406,8 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public static async basic<Component extends AbstractGameComponent, Actor extends Comparable>(
         game: string,
-        configureTestingModule: boolean = true)
-    : Promise<ComponentTestUtils<Component, Actor>>
-    {
+        configureTestingModule: boolean = true,
+    ): Promise<ComponentTestUtils<Component, Actor>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestingModule) {
             await ConfigureTestingModuleUtils.configureTestingModuleForGame(activatedRouteStub);
@@ -456,10 +455,13 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         super.forceChangeDetection();
     }
 
-    public async setupState(state: GameState,
-                            params: { previousState?: GameState;
-                                      previousMove?: Move;
-                                      config?: RulesConfig; } = {},
+    public async setupState(
+        state: GameState,
+        params: {
+            previousState?: GameState;
+            previousMove?: Move;
+            config?: RulesConfig;
+        } = {},
     ): Promise<void> {
         const config: RulesConfig = this.getConfigFrom(params.config);
         if (Object.keys(config).length > 0) {
@@ -512,11 +514,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
      */
-    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string,
-                                                        nameInFunction: string,
-                                                        context?: string)
-    : Promise<void>
-    {
+    public async expectClickSuccessWithAsymmetricNaming(
+        nameInHtml: string,
+        nameInFunction: string,
+        context?: string,
+    ): Promise<void> {
         await this.expectInterfaceClickSuccess(nameInHtml, context);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
@@ -553,11 +555,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
      * @param nameInFunction name of the element inside the TS file
      * @param reason the toasted error message
      */
-    public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
-                                                        nameInFunction: string,
-                                                        reason?: string)
-    : Promise<void>
-    {
+    public async expectClickFailureWithAsymmetricNaming(
+        nameInHtml: string,
+        nameInFunction: string,
+        reason?: string,
+    ): Promise<void> {
         if (reason == null) {
             await this.clickElement(nameInHtml);
         } else {
@@ -597,20 +599,20 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.cancelMoveSpy.calls.reset();
     }
 
-    public async expectMoveSuccess(elementName: string,
-                                   move: Move,
-                                   clickAnimationDuration?: number,
-    ): Promise<void>
-    {
+    public async expectMoveSuccess(
+        elementName: string,
+        move: Move,
+        clickAnimationDuration?: number,
+    ): Promise<void> {
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }
 
-    public async expectMoveSuccessWithAsymmetricNaming(nameInHtml: string,
-                                                       nameInFunction: string,
-                                                       move: Move,
-                                                       clickAnimationDuration?: number)
-    : Promise<void>
-    {
+    public async expectMoveSuccessWithAsymmetricNaming(
+        nameInHtml: string,
+        nameInFunction: string,
+        move: Move,
+        clickAnimationDuration?: number,
+    ): Promise<void> {
         await this.clickElement(nameInHtml);
         if (clickAnimationDuration === undefined) {
             tick(0);
@@ -712,9 +714,7 @@ export class ConfigureTestingModuleUtils {
         }).compileComponents();
     }
 
-    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub)
-    : Promise<void>
-    {
+    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [],
             providers: [
@@ -770,14 +770,14 @@ function getComponentClassName(component: Type<any>): string {
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.
  */
-export async function expectValidRouting(router: Router,
-                                         path: string[],
-                                         component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                         options?: { otherRoutes?: boolean;
-                                                     skipLocationChange?: boolean;
-                                                     queryParams?: Record<string, string>; })
-: Promise<void>
-{
+export async function expectValidRouting(
+    router: Router,
+    path: string[],
+    component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    options?: { otherRoutes?: boolean;
+        skipLocationChange?: boolean;
+        queryParams?: Record<string, string>; },
+): Promise<void> {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
     if (!(path.length === 1 && path[0] === '/')) {
         // Unless the path is / (in which case, it must finish by /), we need to ensure the presence of /
@@ -816,8 +816,7 @@ export async function expectValidRouting(router: Router,
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
 export async function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>)
-  : Promise<void>
-{
+: Promise<void> {
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();

@@ -22,12 +22,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class QuixoComponent extends RectangularGameComponent<QuixoRules,
-                                                             QuixoMove,
-                                                             QuixoState,
-                                                             PlayerOrNone,
-                                                             QuixoConfig>
-{
+export class QuixoComponent extends RectangularGameComponent<
+    QuixoRules,
+    QuixoMove,
+    QuixoState,
+    PlayerOrNone,
+    QuixoConfig
+> {
 
     public QuixoState: typeof QuixoState = QuixoState;
 
@@ -134,9 +135,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     public async tryMove(): Promise<MGPValidation> {
         const chosenCoord: Coord = this.chosenCoord.get();
-        const move: QuixoMove = new QuixoMove(chosenCoord.x,
-                                              chosenCoord.y,
-                                              this.chosenDirection);
+        const move: QuixoMove = new QuixoMove(
+            chosenCoord.x,
+            chosenCoord.y,
+            this.chosenDirection,
+        );
         return this.chooseMove(move);
     }
 

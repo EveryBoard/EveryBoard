@@ -40,15 +40,21 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         new RulesConfigDescription<HexodiaConfig>({
             name: (): string => $localize`Hexodia`,
             config: {
-                size: new NumberConfig(12,
-                                       RulesConfigDescriptionLocalizable.SIZE,
-                                       MGPValidators.range(1, 99)),
-                nInARow: new NumberConfig(6,
-                                          RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
-                                          MGPValidators.range(1, 99)),
-                numberOfDrops: new NumberConfig(2,
-                                                RulesConfigDescriptionLocalizable.NUMBER_OF_DROPS,
-                                                MGPValidators.range(1, 99)),
+                size: new NumberConfig(
+                    12,
+                    RulesConfigDescriptionLocalizable.SIZE,
+                    MGPValidators.range(1, 99),
+                ),
+                nInARow: new NumberConfig(
+                    6,
+                    RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
+                    MGPValidators.range(1, 99),
+                ),
+                numberOfDrops: new NumberConfig(
+                    2,
+                    RulesConfigDescriptionLocalizable.NUMBER_OF_DROPS,
+                    MGPValidators.range(1, 99),
+                ),
             },
         });
 
@@ -100,10 +106,10 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         return new FourStatePieceGameStateWithTable(board, 0);
     }
 
-    public override applyLegalMove(move: HexodiaMove,
-                                   state: FourStatePieceGameStateWithTable)
-    : FourStatePieceGameStateWithTable
-    {
+    public override applyLegalMove(
+        move: HexodiaMove,
+        state: FourStatePieceGameStateWithTable,
+    ): FourStatePieceGameStateWithTable {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         for (const coord of move.coords) {
@@ -123,8 +129,10 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         } else {
             const remainingSpaces: number = TableUtils.count(state.board, FourStatePiece.EMPTY);
             const requiredDrop: number = Math.min(remainingSpaces, config.numberOfDrops);
-            Utils.assert(numberOfDrops === requiredDrop,
-                         'HexodiaMove should have exactly ' + config.numberOfDrops+ ' drops (got ' + numberOfDrops + ')');
+            Utils.assert(
+                numberOfDrops === requiredDrop,
+                'HexodiaMove should have exactly ' + config.numberOfDrops+ ' drops (got ' + numberOfDrops + ')',
+            );
         }
         return this.isLegalDrop(move, state);
     }

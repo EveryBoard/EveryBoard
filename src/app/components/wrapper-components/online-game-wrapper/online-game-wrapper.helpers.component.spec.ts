@@ -73,9 +73,8 @@ export namespace PreparationOptions {
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     game: string,
-    preparationOptions: PreparationOptions = PreparationOptions.defaultOptions)
-: Promise<PreparationResult<T>>
-{
+    preparationOptions: PreparationOptions = PreparationOptions.defaultOptions,
+): Promise<PreparationResult<T>> {
     const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game);
     const rulesConfig: RulesConfig = preparationOptions.config.getOrElse(defaultConfig);
     const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);

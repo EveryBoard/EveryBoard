@@ -41,11 +41,12 @@ export class ViewBox {
         return { minX, minY, maxX, maxY };
     }
 
-    public constructor(public readonly left: number,
-                       public readonly up: number,
-                       public readonly width: number,
-                       public readonly height: number)
-    {
+    public constructor(
+        public readonly left: number,
+        public readonly up: number,
+        public readonly width: number,
+        public readonly height: number,
+    ) {
     }
 
     public center(): Coord {

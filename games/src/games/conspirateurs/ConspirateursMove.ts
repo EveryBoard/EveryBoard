@@ -162,5 +162,6 @@ export namespace ConspirateursMove {
     export const encoder: Encoder<ConspirateursMove> =
         Encoder.disjunction(
             [ConspirateursMove.isDrop, ConspirateursMove.isSimple, ConspirateursMove.isJump],
-            [ConspirateursMoveDrop.encoder, ConspirateursMoveSimple.encoder, ConspirateursMoveJump.encoder]);
+            [ConspirateursMoveDrop.encoder, ConspirateursMoveSimple.encoder, ConspirateursMoveJump.encoder],
+        );
 }

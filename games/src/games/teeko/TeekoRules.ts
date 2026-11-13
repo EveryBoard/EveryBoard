@@ -36,18 +36,17 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     }
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TeekoConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Standard Teeko`,
-                config: {
-                    teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
-                },
-            }, [{
-                name: (): string => $localize`Teleport Teeko`,
-                config: {
-                    teleport: true,
-                },
-            }]);
+        new RulesConfigDescription({
+            name: (): string => $localize`Standard Teeko`,
+            config: {
+                teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
+            },
+        }, [{
+            name: (): string => $localize`Teleport Teeko`,
+            config: {
+                teleport: true,
+            },
+        }]);
 
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 4);
@@ -57,15 +56,15 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     }
 
     public override getInitialState(): TeekoState {
-        const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH,
-                                                             TeekoState.WIDTH,
-                                                             PlayerOrNone.NONE);
+        const board: Table<PlayerOrNone> = TableUtils.create(
+            TeekoState.WIDTH,
+            TeekoState.WIDTH,
+            PlayerOrNone.NONE,
+        );
         return new TeekoState(board, 0);
     }
 
-    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig): MGPValidation {
         if (state.isInDropPhase()) {
             Utils.assert(move instanceof TeekoDropMove, 'Cannot translate in dropping phase !');
             return this.isLegalDrop(move as TeekoDropMove, state);
@@ -109,9 +108,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void)
-    : TeekoState
-    {
+    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void): TeekoState {
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {

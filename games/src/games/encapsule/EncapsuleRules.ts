@@ -40,11 +40,12 @@ export type EncapsuleLegalityInformation = EncapsuleSpace;
 export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
-export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
-                                                      EncapsuleState,
-                                                      EncapsuleConfig,
-                                                      EncapsuleLegalityInformation>
-{
+export class EncapsuleRules extends ConfigurableRules<
+    EncapsuleMove,
+    EncapsuleState,
+    EncapsuleConfig,
+    EncapsuleLegalityInformation
+> {
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
     private static readonly helpers: MGPMap<number, NInARowHelper<EncapsuleSpace>> = new MGPMap();
@@ -90,9 +91,10 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return this.getEncapsulePieceMapFrom(playerZeroPiecesNumber, playerOnePiecesNumber);
     }
 
-    public getEncapsulePieceMapFrom(playerZeroPiecesNumber: number[], playerOnePiecesNumber: number[])
-    : EncapsuleRemainingPieces
-    {
+    public getEncapsulePieceMapFrom(
+        playerZeroPiecesNumber: number[],
+        playerOnePiecesNumber: number[],
+    ): EncapsuleRemainingPieces {
         const playerZero: EncapsuleSizeToNumberMap = this.getSizeToNumberMap(playerZeroPiecesNumber);
         const playerOne: EncapsuleSizeToNumberMap = this.getSizeToNumberMap(playerOnePiecesNumber);
         return PlayerMap.ofValues(playerZero, playerOne);
@@ -194,12 +196,12 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return MGPFallible.failure(EncapsuleFailure.INVALID_PLACEMENT());
     }
 
-    public override applyLegalMove(move: EncapsuleMove,
-                                   state: EncapsuleState,
-                                   _config: EncapsuleConfig,
-                                   newLandingSpace: EncapsuleLegalityInformation)
-    : EncapsuleState
-    {
+    public override applyLegalMove(
+        move: EncapsuleMove,
+        state: EncapsuleState,
+        _config: EncapsuleConfig,
+        newLandingSpace: EncapsuleLegalityInformation,
+    ): EncapsuleState {
         const newBoard: EncapsuleSpace[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         const newRemainingPiecesMap: EncapsuleRemainingPieces = state.getRemainingPiecesCopy();

@@ -147,9 +147,11 @@ describe('DvonnMoveGenerator', () => {
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
         const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 4)).get();
-        const node: DvonnNode = new DvonnNode(state,
-                                              MGPOptional.empty(),
-                                              MGPOptional.of(move));
+        const node: DvonnNode = new DvonnNode(
+            state,
+            MGPOptional.empty(),
+            MGPOptional.of(move),
+        );
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(1);
     });
 

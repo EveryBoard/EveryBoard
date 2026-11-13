@@ -22,12 +22,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class QuartoComponent extends RectangularGameComponent<QuartoRules,
-                                                              QuartoMove,
-                                                              QuartoState,
-                                                              QuartoPiece,
-                                                              QuartoConfig>
-{
+export class QuartoComponent extends RectangularGameComponent<
+    QuartoRules,
+    QuartoMove,
+    QuartoState,
+    QuartoPiece,
+    QuartoConfig
+> {
     public EMPTY: QuartoPiece = QuartoPiece.EMPTY;
     public QuartoPiece: typeof QuartoPiece = QuartoPiece;
 

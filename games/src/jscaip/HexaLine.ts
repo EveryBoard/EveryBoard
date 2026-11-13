@@ -41,9 +41,10 @@ export class HexaLine {
         }
         return true;
     }
-    private constructor(public readonly offset: number,
-                        public readonly constant: 'q' | 'r' | 's')
-    {
+    private constructor(
+        public readonly offset: number,
+        public readonly constant: 'q' | 'r' | 's',
+    ) {
     }
     public toString(): string {
         return `Line(${this.constant}, ${this.offset})`;

@@ -22,11 +22,12 @@ import { BlankGobanComponent } from '../../components/game-components/goban-game
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [BlankGobanComponent, NgClass],
 })
-export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
-                                                            ConnectSixMove,
-                                                            ConnectSixState,
-                                                            PlayerOrNone>
-{
+export class ConnectSixComponent extends GobanGameComponent<
+    ConnectSixRules,
+    ConnectSixMove,
+    ConnectSixState,
+    PlayerOrNone
+> {
 
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 

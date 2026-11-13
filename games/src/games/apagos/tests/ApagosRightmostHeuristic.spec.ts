@@ -31,11 +31,15 @@ describe('ApagosRightmostHeuristic', () => {
 
         // When computing the value of the boards
         // Then the second state should be deemed advantageous for the current player
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.empty(),
-                                                               strongerState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakerState,
+            MGPOptional.empty(),
+            strongerState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
 
     });
 

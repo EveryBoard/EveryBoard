@@ -74,12 +74,12 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @param info the info that had been returned by `isLegal`
      * @returns the resulting state, i.e., the state on which move has been applied
      */
-    public override applyLegalMove(_move: NewGameMove,
-                                   state: NewGameState,
-                                   _config: EmptyRulesConfig,
-                                   _info: NewGameLegalityInfo)
-    : NewGameState
-    {
+    public override applyLegalMove(
+        _move: NewGameMove,
+        state: NewGameState,
+        _config: EmptyRulesConfig,
+        _info: NewGameLegalityInfo,
+    ): NewGameState {
         return new NewGameState(state.turn + 1);
     }
 

@@ -29,14 +29,17 @@ export class SixMove extends Move {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.of(keep));
     }
 
-    private constructor(public readonly start: MGPOptional<Coord>,
-                        public readonly landing: Coord,
-                        public readonly keep: MGPOptional<Coord>)
-    {
+    private constructor(
+        public readonly start: MGPOptional<Coord>,
+        public readonly landing: Coord,
+        public readonly keep: MGPOptional<Coord>,
+    ) {
         super();
         Utils.assert(start.equalsValue(landing) === false, 'Translation cannot be static!');
-        Utils.assert(start.isAbsent() || start.equals(keep) === false,
-                     'Cannot keep starting coord, since it will always be empty after move!');
+        Utils.assert(
+            start.isAbsent() || start.equals(keep) === false,
+            'Cannot keep starting coord, since it will always be empty after move!',
+        );
     }
 
     public isDrop(): boolean {
