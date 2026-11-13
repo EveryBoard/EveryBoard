@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OutputEmitterRef, Signal, WritableSignal, inject, output, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ThemeService } from '../../../services/ThemeService';
-import { UserSettingsService } from '../../../services/UserSettingsService';
+import { Theme, ThemeService } from '../../../services/ThemeService';
+import { Language, UserSettingsService } from '../../../services/UserSettingsService';
 
-type SettingOption = { value: string; name: string }
+type SettingOption<T> = { value: T; name: string }
 
 @Component({
     selector: 'app-settings',
@@ -14,31 +14,62 @@ type SettingOption = { value: string; name: string }
 export class SettingsComponent {
 
     private readonly userSettingsService: UserSettingsService = inject(UserSettingsService);
+    private readonly themeService: ThemeService = inject(ThemeService);
 
-    public readonly availableLanguages: SettingOption[] = [
+    public readonly availableLanguages: SettingOption<Language>[] = [
         { value: 'fr', name: 'Français' },
         { value: 'en', name: 'English' },
     ];
-    public readonly availableThemes: SettingOption[] = [
+    public readonly availableThemes: SettingOption<Theme>[] = [
         { value: 'light', name: $localize`Light` },
         { value: 'dark', name: $localize`Dark` },
     ];
-    public currentTheme: string;
-    public currentLanguage: string;
+    public readonly currentTheme: Signal<Theme> = this.themeService.theme;
+    public readonly currentLanguage: Language;
+    public readonly candidateLanguage: WritableSignal<Language | null> = signal(null);
+    public readonly settingsClosed: OutputEmitterRef<void> = output();
 
     public constructor() {
-        this.currentTheme = inject(ThemeService).getTheme();
         this.currentLanguage = this.userSettingsService.getLanguage();
     }
     public changeLanguage(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.userSettingsService.changeLanguage(target.value);
-        this.reload();
+        const selectedLanguage: SettingOption<Language> | undefined =
+            this.availableLanguages.find(
+                (language: SettingOption<Language>): boolean => language.value === target.value,
+            );
+        if (selectedLanguage != null && selectedLanguage.value !== this.currentLanguage) {
+            this.candidateLanguage.set(selectedLanguage.value);
+        } else {
+            this.candidateLanguage.set(null);
+        }
+    }
+    public reloadWithCandidateLanguage(): void {
+        const candidateLanguage: Language | null = this.candidateLanguage();
+        if (candidateLanguage != null) {
+            this.userSettingsService.activateLanguage(candidateLanguage);
+            this.reload();
+        }
+    }
+    public applyCandidateLanguageNextTime(): void {
+        const candidateLanguage: Language | null = this.candidateLanguage();
+        if (candidateLanguage != null) {
+            this.userSettingsService.scheduleLanguageChange(candidateLanguage);
+            this.candidateLanguage.set(null);
+            this.settingsClosed.emit();
+        }
+    }
+    public cancelLanguageChange(): void {
+        this.candidateLanguage.set(null);
     }
     public changeTheme(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.userSettingsService.changeTheme(target.value);
-        this.reload();
+        const selectedTheme: SettingOption<Theme> | undefined =
+            this.availableThemes.find((theme: SettingOption<Theme>): boolean => theme.value === target.value);
+        if (selectedTheme != null) {
+            this.userSettingsService.changeTheme(selectedTheme.value);
+            this.themeService.loadTheme(selectedTheme.value);
+        }
     }
     private reload(): void {
         // Reload app to apply changes

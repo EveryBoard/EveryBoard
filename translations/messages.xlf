@@ -1004,6 +1004,9 @@
       <trans-unit id="1735231057781616406" datatype="html">
         <source>Number of columns: </source>
       </trans-unit>
+      <trans-unit id="2102825898069375693" datatype="html">
+        <source>Menu</source>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
       </trans-unit>
@@ -1036,6 +1039,9 @@
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
+      </trans-unit>
+      <trans-unit id="6158176952588553376" datatype="html">
+        <source>Close settings</source>
       </trans-unit>
       <trans-unit id="8268057237378615671" datatype="html">
         <source><x id="PH" equiv-text="gameName"/> by <x id="PH_1" equiv-text="currentGame.creator.name"/></source>
@@ -1351,6 +1357,21 @@
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
         <source>Language</source>
+      </trans-unit>
+      <trans-unit id="7305206414427808284" datatype="html">
+        <source>Reload required</source>
+      </trans-unit>
+      <trans-unit id="6859823052725287737" datatype="html">
+        <source> Changing the language requires reloading EveryBoard. Your current local game may be lost. </source>
+      </trans-unit>
+      <trans-unit id="8491974984518503778" datatype="html">
+        <source>Reload now</source>
+      </trans-unit>
+      <trans-unit id="6011903198155615984" datatype="html">
+        <source>Apply next time</source>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
       </trans-unit>
       <trans-unit id="413116577994876478" datatype="html">
         <source>Light</source>
@@ -1702,9 +1723,6 @@
       </trans-unit>
       <trans-unit id="593989397325904316" datatype="html">
         <source>Are you sure you want to resign from this game?</source>
-      </trans-unit>
-      <trans-unit id="2159130950882492111" datatype="html">
-        <source>Cancel</source>
       </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>

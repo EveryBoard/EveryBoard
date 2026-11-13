@@ -12,6 +12,7 @@ import { UserMocks } from '../../../domain/UserMocks.spec';
 import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
+import { Language, UserSettingsService } from '../../../services/UserSettingsService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameServiceMock.spec';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
@@ -29,6 +30,10 @@ describe('HeaderComponent', () => {
         const userDAO: UserDAO = TestBed.inject(UserDAO);
         await userDAO.set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
     }));
+    afterEach(() => {
+        localStorage.removeItem('locale');
+        localStorage.removeItem('pendingLocale');
+    });
 
     it('should create', fakeAsync(() => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -61,6 +66,96 @@ describe('HeaderComponent', () => {
         const button: DebugElement = testUtils.findElement('#account');
         await expectValidRoutingLink(button, '/account', AccountComponent);
     }));
+
+    describe('settings', () => {
+        it('should open and close settings without navigating', fakeAsync(async() => {
+            // Given a header with closed settings
+            testUtils.detectChanges();
+            testUtils.expectElementNotToExist('#settings-modal');
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate');
+
+            // When clicking the settings cog
+            await testUtils.clickElement('#settings');
+
+            // Then settings are displayed without navigating
+            testUtils.expectElementToExist('#settings-modal');
+            expect(router.navigate).not.toHaveBeenCalled();
+
+            // When clicking the settings cog again
+            await testUtils.clickElement('#settings');
+
+            // Then settings are closed without navigating
+            testUtils.expectElementNotToExist('#settings-modal');
+            expect(router.navigate).not.toHaveBeenCalled();
+        }));
+
+        it('should close settings from its close button', fakeAsync(async() => {
+            // Given a header with open settings
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            testUtils.expectElementToExist('#settings-modal');
+
+            // When clicking the close button
+            await testUtils.clickElement('#close-settings');
+
+            // Then settings are closed
+            testUtils.expectElementNotToExist('#settings-modal');
+        }));
+
+        it('should close settings from its backdrop', fakeAsync(async() => {
+            // Given a header with open settings
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            testUtils.expectElementToExist('#settings-modal');
+
+            // When clicking the backdrop
+            await testUtils.clickElement('#close-settings-backdrop');
+
+            // Then settings are closed
+            testUtils.expectElementNotToExist('#settings-modal');
+        }));
+
+        it('should not persist a candidate language when settings are closed', fakeAsync(async() => {
+            // Given settings are open with a candidate language awaiting confirmation
+            const userSettingsService: UserSettingsService = TestBed.inject(UserSettingsService);
+            spyOn(userSettingsService, 'activateLanguage').and.callThrough();
+            spyOn(userSettingsService, 'scheduleLanguageChange').and.callThrough();
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            const activeLanguage: Language = userSettingsService.getLanguage();
+            const candidateLanguage: Language = activeLanguage === 'en' ? 'fr' : 'en';
+            await testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
+            testUtils.expectElementToExist('#language-change-warning');
+
+            // When closing settings without choosing a warning action
+            await testUtils.clickElement('#close-settings-backdrop');
+
+            // Then settings close without persisting the candidate
+            testUtils.expectElementNotToExist('#settings-modal');
+            expect(userSettingsService.activateLanguage).not.toHaveBeenCalled();
+            expect(userSettingsService.scheduleLanguageChange).not.toHaveBeenCalled();
+        }));
+
+        it('should close settings when applying a language next time', fakeAsync(async() => {
+            // Given settings are open with a candidate language awaiting confirmation
+            const userSettingsService: UserSettingsService = TestBed.inject(UserSettingsService);
+            spyOn(userSettingsService, 'scheduleLanguageChange').and.callThrough();
+            testUtils.detectChanges();
+            await testUtils.clickElement('#settings');
+            const activeLanguage: Language = userSettingsService.getLanguage();
+            const candidateLanguage: Language = activeLanguage === 'en' ? 'fr' : 'en';
+            await testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
+
+            // When choosing to apply the language next time
+            await testUtils.clickElement('#apply-language-next-time');
+
+            // Then the candidate is deferred and settings close, returning to the current page
+            expect(userSettingsService.scheduleLanguageChange).toHaveBeenCalledOnceWith(candidateLanguage);
+            expect(localStorage.getItem('pendingLocale')).toBe(candidateLanguage);
+            testUtils.expectElementNotToExist('#settings-modal');
+        }));
+    });
 
     describe('disconnection', () => {
         it('should disconnect when connected user clicks on the logout button', fakeAsync(async() => {

@@ -1,10 +1,10 @@
-import { Injectable, DOCUMENT, inject } from '@angular/core';
+import { DOCUMENT, Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
 import { UserSettingsService } from './UserSettingsService';
 
-type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light';
 
 @Injectable({
     providedIn: 'root',
@@ -14,8 +14,10 @@ export class ThemeService {
     private readonly document: Document = inject<Document>(DOCUMENT);
     private readonly userSettingsService: UserSettingsService = inject(UserSettingsService);
 
-    private theme: Theme;
+    private readonly themeState: WritableSignal<Theme> = signal('dark');
     private readonly availableThemes: Theme[] = ['dark', 'light'];
+
+    public readonly theme: Signal<Theme> = this.themeState.asReadonly();
 
     public constructor()
     {
@@ -46,7 +48,7 @@ export class ThemeService {
         htmlElement.setAttribute('data-theme', theme);
         // And we also need to load our own CSS for our game colors
         this.loadStyle(theme + '.css');
-        this.theme = theme;
+        this.themeState.set(theme);
     }
     private loadStyle(styleName: string): void {
         const head: HTMLHeadElement = this.document.getElementsByTagName('head')[0];
@@ -62,8 +64,5 @@ export class ThemeService {
 
             head.appendChild(style);
         }
-    }
-    public getTheme(): Theme {
-        return this.theme;
     }
 }
