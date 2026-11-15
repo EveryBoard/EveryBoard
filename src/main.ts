@@ -44,24 +44,22 @@ function bootstrapApp(locale: Locale): void {
 const runtimeTranslations: boolean = true;
 const localeBootstrap: LocaleBootstrapConfiguration = prepareLocaleBootstrap(environment.root, runtimeTranslations);
 
-if (localeBootstrap.translationUrl != null) {
-    fetch(localeBootstrap.translationUrl)
-        .then((response: Response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return { 'locale': 'en', 'translations': {} };
-            }
-        })
-        .then((json: { locale: string; translations: Record<string, string> }) => {
+async function bootstrap(): Promise<void> {
+    try {
+        if (localeBootstrap.translationUrl != null) {
+            const response: Response = await fetch(localeBootstrap.translationUrl);
+            const json: { locale: string; translations: Record<string, string> } = response.ok ?
+                await response.json() :
+                { 'locale': 'en', 'translations': {} };
+
             loadTranslations(json.translations);
             $localize.locale = json.locale;
+        }
 
-            bootstrapApp(localeBootstrap.locale);
-        })
-        .catch(function(err: Error) {
-            console.log(err);
-        });
-} else {
-    bootstrapApp(localeBootstrap.locale);
+        bootstrapApp(localeBootstrap.locale);
+    } catch (err: unknown) {
+        console.log(err);
+    }
 }
+
+void bootstrap();

@@ -1,6 +1,8 @@
 import { Component, OutputEmitterRef, Signal, WritableSignal, inject, output, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { Theme, ThemeService } from '../../../services/ThemeService';
 import { Language, UserSettingsService } from '../../../services/UserSettingsService';
 
@@ -26,7 +28,7 @@ export class SettingsComponent {
     ];
     public readonly currentTheme: Signal<Theme> = this.themeService.theme;
     public readonly currentLanguage: Language;
-    public readonly candidateLanguage: WritableSignal<Language | null> = signal(null);
+    public readonly candidateLanguage: WritableSignal<MGPOptional<Language>> = signal(MGPOptional.empty());
     public readonly settingsClosed: OutputEmitterRef<void> = output();
 
     public constructor() {
@@ -34,41 +36,43 @@ export class SettingsComponent {
     }
     public changeLanguage(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        const selectedLanguage: SettingOption<Language> | undefined =
-            this.availableLanguages.find(
-                (language: SettingOption<Language>): boolean => language.value === target.value,
-            );
-        if (selectedLanguage != null && selectedLanguage.value !== this.currentLanguage) {
-            this.candidateLanguage.set(selectedLanguage.value);
+        const selectedLanguage: MGPOptional<SettingOption<Language>> = ArrayUtils.find(
+            this.availableLanguages,
+            (language: SettingOption<Language>): boolean => language.value === target.value,
+        );
+        if (selectedLanguage.isPresent() && selectedLanguage.get().value !== this.currentLanguage) {
+            this.candidateLanguage.set(MGPOptional.of(selectedLanguage.get().value));
         } else {
-            this.candidateLanguage.set(null);
+            this.candidateLanguage.set(MGPOptional.empty());
         }
     }
     public reloadWithCandidateLanguage(): void {
-        const candidateLanguage: Language | null = this.candidateLanguage();
-        if (candidateLanguage != null) {
-            this.userSettingsService.activateLanguage(candidateLanguage);
+        const candidateLanguage: MGPOptional<Language> = this.candidateLanguage();
+        if (candidateLanguage.isPresent()) {
+            this.userSettingsService.activateLanguage(candidateLanguage.get());
             this.reload();
         }
     }
     public applyCandidateLanguageNextTime(): void {
-        const candidateLanguage: Language | null = this.candidateLanguage();
-        if (candidateLanguage != null) {
-            this.userSettingsService.scheduleLanguageChange(candidateLanguage);
-            this.candidateLanguage.set(null);
+        const candidateLanguage: MGPOptional<Language> = this.candidateLanguage();
+        if (candidateLanguage.isPresent()) {
+            this.userSettingsService.scheduleLanguageChange(candidateLanguage.get());
+            this.candidateLanguage.set(MGPOptional.empty());
             this.settingsClosed.emit();
         }
     }
     public cancelLanguageChange(): void {
-        this.candidateLanguage.set(null);
+        this.candidateLanguage.set(MGPOptional.empty());
     }
     public changeTheme(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        const selectedTheme: SettingOption<Theme> | undefined =
-            this.availableThemes.find((theme: SettingOption<Theme>): boolean => theme.value === target.value);
-        if (selectedTheme != null) {
-            this.userSettingsService.changeTheme(selectedTheme.value);
-            this.themeService.loadTheme(selectedTheme.value);
+        const selectedTheme: MGPOptional<SettingOption<Theme>> = ArrayUtils.find(
+            this.availableThemes,
+            (theme: SettingOption<Theme>): boolean => theme.value === target.value,
+        );
+        if (selectedTheme.isPresent()) {
+            this.userSettingsService.changeTheme(selectedTheme.get().value);
+            this.themeService.loadTheme(selectedTheme.get().value);
         }
     }
     private reload(): void {

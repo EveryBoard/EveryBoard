@@ -1,5 +1,6 @@
 import { Comparable, comparableEquals } from './Comparable';
 import { Utils } from './Utils';
+import { MGPOptional } from './MGPOptional';
 
 export class ArrayUtils {
 
@@ -179,6 +180,15 @@ export class ArrayUtils {
             result.push(mapper(element));
         }
         return result;
+    }
+
+    public static find<T>(list: ReadonlyArray<T>, predicate: (element: T) => boolean): MGPOptional<T> {
+        const element: T | undefined = list.find(predicate);
+        if (element != null) {
+            return MGPOptional.of(element);
+        } else {
+            return MGPOptional.empty();
+        }
     }
 
 }

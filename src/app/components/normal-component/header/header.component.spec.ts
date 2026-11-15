@@ -109,7 +109,7 @@ describe('HeaderComponent', () => {
             await testUtils.clickElement('#settings');
             testUtils.expectElementToExist('#settings-modal');
 
-            // When clicking the backdrop
+            // When clicking the backdrop (the greyed background outside of the modal)
             await testUtils.clickElement('#close-settings-backdrop');
 
             // Then settings are closed
@@ -125,7 +125,7 @@ describe('HeaderComponent', () => {
             await testUtils.clickElement('#settings');
             const activeLanguage: Language = userSettingsService.getLanguage();
             const candidateLanguage: Language = activeLanguage === 'en' ? 'fr' : 'en';
-            await testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
+            testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
             testUtils.expectElementToExist('#language-change-warning');
 
             // When closing settings without choosing a warning action
@@ -145,7 +145,7 @@ describe('HeaderComponent', () => {
             await testUtils.clickElement('#settings');
             const activeLanguage: Language = userSettingsService.getLanguage();
             const candidateLanguage: Language = activeLanguage === 'en' ? 'fr' : 'en';
-            await testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
+            testUtils.selectChildElementOfDropDown('#language', 'language_' + candidateLanguage);
 
             // When choosing to apply the language next time
             await testUtils.clickElement('#apply-language-next-time');
