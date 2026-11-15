@@ -5318,9 +5318,9 @@
         <source>Reload required</source>
         <target>Rechargement nécessaire</target>
       </trans-unit>
-      <trans-unit id="6859823052725287737" datatype="html">
-        <source> Changing the language requires reloading EveryBoard. Your current local game may be lost. </source>
-        <target> Changer la langue nécessite de recharger EveryBoard. Votre partie locale en cours pourrait être perdue. </target>
+      <trans-unit id="4581675383302743506" datatype="html">
+        <source>Changing the language requires reloading the page. Your current local game will be lost.</source>
+        <target>Changer la langue nécessite de recharger la page. Votre partie locale en cours va être perdue.</target>
       </trans-unit>
       <trans-unit id="8491974984518503778" datatype="html">
         <source>Reload now</source>

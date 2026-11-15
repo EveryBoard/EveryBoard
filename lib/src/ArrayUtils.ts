@@ -1,6 +1,6 @@
 import { Comparable, comparableEquals } from './Comparable';
-import { Utils } from './Utils';
 import { MGPOptional } from './MGPOptional';
+import { Utils } from './Utils';
 
 export class ArrayUtils {
 
@@ -182,6 +182,9 @@ export class ArrayUtils {
         return result;
     }
 
+    /**
+     * Finds an element in the array. Like array.find, but wraps the result in an optional instead of a nullable
+    */
     public static find<T>(list: ReadonlyArray<T>, predicate: (element: T) => boolean): MGPOptional<T> {
         const element: T | undefined = list.find(predicate);
         if (element != null) {

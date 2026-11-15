@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ArrayUtils } from '../ArrayUtils';
+import { MGPOptional } from '../MGPOptional';
 import { Utils } from '../Utils';
 
 import { TestUtils } from './TestUtils';
@@ -298,6 +299,37 @@ describe('ArrayUtils', () => {
 
             // Then it should take the smallest
             expect(result).toEqual(greater);
+        });
+    });
+
+    describe('find', () => {
+        it('should return the result wrapped in MGPOptional there is a match', () => {
+            // Given an array
+            const array: number[] = [1, 2, 3];
+
+            // When finding an element that is present in the array
+            const result: MGPOptional<number> = ArrayUtils.find(
+                array,
+                (n: number): boolean => n === 2,
+            );
+
+            // Then it should return the element wrapped in an MGPOptional
+            expect(result.isPresent()).toBeTrue();
+            expect(result.get()).toBe(2);
+        });
+
+        it('should return MGPOptional.empty when no result match', () => {
+            // Given an array
+            const array: number[] = [1, 2, 3];
+
+            // When finding an element that is not present in the array
+            const result: MGPOptional<number> = ArrayUtils.find(
+                array,
+                (n: number): boolean => n > 4,
+            );
+
+            // Then it should return MGPOptional.empty
+            expect(result.isAbsent()).toBeTrue();
         });
     });
 
