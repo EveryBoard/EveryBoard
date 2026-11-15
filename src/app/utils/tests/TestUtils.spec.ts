@@ -630,8 +630,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }
 
-    public expectMoveSuccessAfter(elementName: string, move: Move, action: () => void): void {
-        action();
+    public expectMoveToHaveSucceeded(elementName: string, move: Move): void {
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);

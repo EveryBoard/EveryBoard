@@ -35,9 +35,8 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>, R extends 
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
-        this.testUtils.expectMoveSuccessAfter(click, move, () => {
-            this.testUtils.clickElementAndAdvanceTime(click, moveDuration);
-        });
+        this.testUtils.clickElementAndAdvanceTime(click, moveDuration);
+        this.testUtils.expectMoveToHaveSucceeded(click, move);
     }
 
     private showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): number {
