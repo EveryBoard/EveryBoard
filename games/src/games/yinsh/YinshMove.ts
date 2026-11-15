@@ -15,11 +15,11 @@ export class YinshCapture extends GipfCapture {
         (fields: [Array<Coord>, MGPOptional<Coord>]) => new YinshCapture(fields[0], fields[1]),
     );
 
-    public static of(start: Coord,
-                     end: Coord,
-                     ringTaken: MGPOptional<Coord> = MGPOptional.empty())
-    : YinshCapture
-    {
+    public static of(
+        start: Coord,
+        end: Coord,
+        ringTaken: MGPOptional<Coord> = MGPOptional.empty(),
+    ): YinshCapture {
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
@@ -31,9 +31,10 @@ export class YinshCapture extends GipfCapture {
 
     public readonly ringTaken: MGPOptional<Coord>;
 
-    public constructor(captured: ReadonlyArray<Coord>,
-                       ringTaken: MGPOptional<Coord> = MGPOptional.empty())
-    {
+    public constructor(
+        captured: ReadonlyArray<Coord>,
+        ringTaken: MGPOptional<Coord> = MGPOptional.empty(),
+    ) {
         super(captured);
         if (captured.length !== 5) {
             throw new Error('YinshCapture must capture exactly 5 pieces');
@@ -68,11 +69,12 @@ export class YinshMove extends Move {
         (fields: YinshFields) => new YinshMove(fields[0], fields[1], fields[2], fields[3]),
     );
 
-    public constructor(public readonly initialCaptures: ReadonlyArray<YinshCapture>,
-                       public readonly start: Coord,
-                       public readonly end: MGPOptional<Coord>,
-                       public readonly finalCaptures: ReadonlyArray<YinshCapture>)
-    {
+    public constructor(
+        public readonly initialCaptures: ReadonlyArray<YinshCapture>,
+        public readonly start: Coord,
+        public readonly end: MGPOptional<Coord>,
+        public readonly finalCaptures: ReadonlyArray<YinshCapture>,
+    ) {
         super();
     }
 

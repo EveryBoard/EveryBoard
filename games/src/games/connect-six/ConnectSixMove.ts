@@ -58,6 +58,8 @@ export namespace ConnectSixMove {
         return move instanceof ConnectSixDrops;
     }
     export const encoder: Encoder<ConnectSixMove> =
-        Encoder.disjunction([ConnectSixMove.isFirstMove, ConnectSixMove.isDrop],
-                            [ConnectSixFirstMove.encoder, ConnectSixDrops.encoder]);
+        Encoder.disjunction(
+            [ConnectSixMove.isFirstMove, ConnectSixMove.isDrop],
+            [ConnectSixFirstMove.encoder, ConnectSixDrops.encoder],
+        );
 }

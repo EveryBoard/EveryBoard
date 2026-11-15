@@ -22,11 +22,12 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
-                                                                     LinesOfActionMove,
-                                                                     LinesOfActionState,
-                                                                     PlayerOrNone>
-{
+export class LinesOfActionComponent extends RectangularGameComponent<
+    LinesOfActionRules,
+    LinesOfActionMove,
+    LinesOfActionState,
+    PlayerOrNone
+> {
     public INDICATOR_SIZE: number = 20;
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public targets: Coord[] = [];

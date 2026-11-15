@@ -229,7 +229,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.userIsCreator = this.userIsCreator(configRoom);
         this.viewInfo.userIsChosenOpponent = authUser.id === configRoom.chosenOpponent?.user.id;
         this.viewInfo.userIsObserver =
-                this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
+            this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
@@ -305,7 +305,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private getUserFromName(username: string): MinimalUser {
         const candidate: Candidate | undefined = this.candidates.find(
-            (c: Candidate) => c.user.name === username);
+            (c: Candidate) => c.user.name === username,
+        );
         return Utils.getNonNullable(candidate).user;
     }
 

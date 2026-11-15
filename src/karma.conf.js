@@ -20,7 +20,7 @@ module.exports = function(config) {
         coverageReporter: {
             dir: path.resolve(__dirname, '../coverage/'),
             reporters: [
-                { type: 'text' },
+                { type: 'text', maxCols: process.stdout.columns || 160, skipFull: true },
                 { type: 'html', subdir: '.' },
                 { type: 'text-summary' },
             ],
@@ -45,9 +45,6 @@ module.exports = function(config) {
             ChromeHeadlessCustom: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox', '--disable-gpu'],
-                browserNoActivityTimeout: 20000,
-                browserDisconnectTimeout: 20000,
-                pingTimeout: 20000
             },
         },
 

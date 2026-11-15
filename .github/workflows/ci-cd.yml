@@ -1,7 +1,7 @@
 name: CI/CD On Action
 
 env:
-  GO_VERSION: 1.26.10
+  GO_VERSION: 1.27.4
   NODE_VERSION: 24
   PYTHON_VERSION: 3.13
 

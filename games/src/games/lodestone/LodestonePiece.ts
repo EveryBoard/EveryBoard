@@ -123,15 +123,17 @@ export class LodestonePieceLodestone {
         },
     };
 
-    private constructor(public readonly owner: Player,
-                        public readonly direction: LodestoneDirection,
-                        public readonly orientation: LodestoneOrientation)
-    {
+    private constructor(
+        public readonly owner: Player,
+        public readonly direction: LodestoneDirection,
+        public readonly orientation: LodestoneOrientation,
+    ) {
     }
 
-    public static of(player: Player, description: LodestoneDescription)
-    : LodestonePieceLodestone
-    {
+    public static of(
+        player: Player,
+        description: LodestoneDescription,
+    ): LodestonePieceLodestone {
         return LodestonePieceLodestone.LODESTONES[player.getValue()][description.direction][description.orientation];
     }
 

@@ -14,7 +14,8 @@ describe('AbaloneMove', () => {
         const coord: Coord = new Coord(9, 9);
         TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofSingleCoord(coord, HexaDirection.DOWN),
-            CoordFailure.OUT_OF_RANGE(coord));
+            CoordFailure.OUT_OF_RANGE(coord),
+        );
     });
 
     it('should map false double coord to single coord', () => {
@@ -57,7 +58,8 @@ describe('AbaloneMove', () => {
     it('should not construct when creating move with no HexaDirectionnal alignment', () => {
         TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP),
-            'Invalid direction');
+            'Invalid direction',
+        );
     });
 
     it('should have a bijective encoder', () => {
@@ -79,7 +81,8 @@ describe('AbaloneMove', () => {
             const move: AbaloneMove = AbaloneMove.ofDoubleCoord(
                 firstCoord,
                 firstCoord.getNext(direction, 2),
-                direction);
+                direction,
+            );
             expect(move.isTranslation()).toBeFalse();
         });
 
@@ -90,7 +93,8 @@ describe('AbaloneMove', () => {
             const move: AbaloneMove = AbaloneMove.ofDoubleCoord(
                 firstCoord,
                 firstCoord.getNext(direction, 2),
-                otherDirection);
+                otherDirection,
+            );
             expect(move.isTranslation()).toBeTrue();
         });
 

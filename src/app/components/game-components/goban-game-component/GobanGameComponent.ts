@@ -12,14 +12,14 @@ import { RectangularGameComponent } from '../rectangular-game-component/Rectangu
  * This component is used for games that are played on a Goban.
  * It helps displaying hoshis.
  */
-export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
-                                         M extends Move,
-                                         S extends GameStateWithTable<P>,
-                                         P extends NonNullable<Comparable>,
-                                         C extends GobanConfig = GobanConfig,
-                                         L = void>
-    extends RectangularGameComponent<R, M, S, P, C, L>
-{
+export abstract class GobanGameComponent<
+    R extends SuperRules<M, S, C, L>,
+    M extends Move,
+    S extends GameStateWithTable<P>,
+    P extends NonNullable<Comparable>,
+    C extends GobanConfig = GobanConfig,
+    L = void
+> extends RectangularGameComponent<R, M, S, P, C, L> {
 
     public constructor(urlName: string) {
         super(urlName);

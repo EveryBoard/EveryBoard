@@ -84,7 +84,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: P4State = this.state();
 
-        this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
+        this.victoryCoords = P4Rules.get().getVictoriousSpaces(state);
         this.board = state.board;
     }
 

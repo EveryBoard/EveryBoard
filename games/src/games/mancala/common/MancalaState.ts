@@ -7,31 +7,38 @@ import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 export class MancalaState extends GameStateWithTable<number> {
 
     public static of(state: MancalaState, board: Table<number>): MancalaState {
-        return new MancalaState(board,
-                                state.turn,
-                                state.getScoresCopy());
+        return new MancalaState(
+            board,
+            state.turn,
+            state.getScoresCopy(),
+        );
     }
 
-    public constructor(b: Table<number>,
-                       turn: number,
-                       public readonly scores: PlayerNumberMap)
-    {
+    public constructor(
+        b: Table<number>,
+        turn: number,
+        public readonly scores: PlayerNumberMap,
+    ) {
         super(b, turn);
     }
 
     public setPieceAt(coord: Coord, value: number): MancalaState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             MancalaState.of);
+        return GameStateWithTable.setPieceAt(
+            this,
+            coord,
+            value,
+            MancalaState.of,
+        );
     }
 
     public feedStore(player: Player): MancalaState {
         const newScore: PlayerNumberMap = this.getScoresCopy();
         newScore.add(player, 1);
-        return new MancalaState(this.getCopiedBoard(),
-                                this.turn,
-                                newScore);
+        return new MancalaState(
+            this.getCopiedBoard(),
+            this.turn,
+            newScore,
+        );
     }
 
     public feed(coord: Coord): MancalaState {
@@ -60,9 +67,11 @@ export class MancalaState extends GameStateWithTable<number> {
         const capturedSeeds: number = this.getPieceAt(coord);
         const newScores: PlayerNumberMap = this.getScoresCopy();
         newScores.add(player, capturedSeeds);
-        const result: MancalaState = new MancalaState(this.getCopiedBoard(),
-                                                      this.turn,
-                                                      newScores);
+        const result: MancalaState = new MancalaState(
+            this.getCopiedBoard(),
+            this.turn,
+            newScores,
+        );
         return result.setPieceAt(coord, 0);
     }
 

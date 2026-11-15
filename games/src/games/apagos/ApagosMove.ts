@@ -16,7 +16,8 @@ export class ApagosMove extends Move {
             MGPOptional.getEncoder(Encoder.identity<number>()),
         ],
         (m: ApagosMove): ApagosMoveFields => [m.landing, m.piece, m.starting],
-        (fields: ApagosMoveFields): ApagosMove => new ApagosMove(fields[0], fields[1], fields[2]));
+        (fields: ApagosMoveFields): ApagosMove => new ApagosMove(fields[0], fields[1], fields[2]),
+    );
 
     public static drop(x: number, piece: Player): ApagosMove {
         return new ApagosMove(x, MGPOptional.of(piece), MGPOptional.empty());
@@ -30,10 +31,11 @@ export class ApagosMove extends Move {
         return MGPFallible.success(slideDown);
     }
 
-    private constructor(public readonly landing: number,
-                        public readonly piece: MGPOptional<Player>,
-                        public readonly starting: MGPOptional<number>)
-    {
+    private constructor(
+        public readonly landing: number,
+        public readonly piece: MGPOptional<Player>,
+        public readonly starting: MGPOptional<number>,
+    ) {
         super();
     }
 

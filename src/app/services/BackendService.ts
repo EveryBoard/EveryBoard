@@ -9,8 +9,10 @@ import { ConnectedUserService } from './ConnectedUserService';
 import { MessageDisplayer } from './MessageDisplayer';
 
 export class BackendMessage {
-    public constructor(public readonly tag: string,
-                       private readonly args: JSONValue) {
+    public constructor(
+        public readonly tag: string,
+        private readonly args: JSONValue,
+    ) {
     }
 
     public getArgument<T>(name: string): T {
@@ -159,7 +161,8 @@ export class BackendService extends AbstractBackendService implements OnDestroy 
                         const subscription: Subscription = await this.connect();
                         resolve(subscription);
                     },
-                    this.nextConnectionAttemptTime * 1000));
+                    this.nextConnectionAttemptTime * 1000,
+                ));
                 this.nextConnectionAttemptTime *= 2; // exponential backoff: wait twice as long at every new attempt
             };
 
@@ -199,12 +202,16 @@ export class BackendService extends AbstractBackendService implements OnDestroy 
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
                 Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
                 const json: NonNullable<JSONValue> = Utils.getNonNullable(JSON.parse(ev.data as string));
-                Utils.assert(typeof(json) === 'object', // i.e., an array
-                             `Received malformed WebSocket message (not an object): ${JSON.stringify(json)}`);
+                Utils.assert(
+                    typeof(json) === 'object', // i.e., an array
+                    `Received malformed WebSocket message (not an object): ${JSON.stringify(json)}`,
+                );
                 const tag: unknown = json[0]; // the tag is the first element of the array
                 const args: JSONValue = json[1]; // the arguments is an object being the second element
-                Utils.assert(tag != null && typeof(tag) === 'string',
-                             `Received malformed WebSocket message (missing tag): ${JSON.stringify(json)}`);
+                Utils.assert(
+                    tag != null && typeof(tag) === 'string',
+                    `Received malformed WebSocket message (missing tag): ${JSON.stringify(json)}`,
+                );
                 // each callback is associated to a tag
                 this.receive(new BackendMessage(tag as string, args));
             };

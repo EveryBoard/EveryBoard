@@ -85,18 +85,16 @@ describe('RulesConfigurationComponent', () => {
     const secondConfig: TestRulesConfig = { nombre: 42, canailleDeBoule: 42 };
 
     const rulesConfigDescriptionWithNumber: RulesConfigDescription<TestRulesConfig> =
-        new RulesConfigDescription<TestRulesConfig>(
-            {
-                name: (): string => 'the_default_config_name',
-                config: {
-                    nombre: new NumberConfig(5, () => 'nombre', MGPValidators.range(1, 99)),
-                    canailleDeBoule: new NumberConfig(12, () => 'canaille', MGPValidators.range(1, 99)),
-                },
-            }, [{
-                name: (): string => 'the_other_config_name',
-                config: secondConfig,
-            }],
-        );
+        new RulesConfigDescription<TestRulesConfig>({
+            name: (): string => 'the_default_config_name',
+            config: {
+                nombre: new NumberConfig(5, () => 'nombre', MGPValidators.range(1, 99)),
+                canailleDeBoule: new NumberConfig(12, () => 'canaille', MGPValidators.range(1, 99)),
+            },
+        }, [{
+            name: (): string => 'the_other_config_name',
+            config: secondConfig,
+        }]);
 
     const rulesConfigDescriptionWithBooleans: RulesConfigDescription<RulesConfig> = new RulesConfigDescription(
         {
@@ -432,27 +430,25 @@ describe('RulesConfigurationComponent', () => {
             describe('multi-field change', () => {
 
                 const rulesConfigDescriptionWithMultiFieldValidation: RulesConfigDescription<TestRulesConfig> =
-                    new RulesConfigDescription(
-                        {
-                            name: (): string => 'config name',
-                            config: {
-                                nombre: new NumberConfig(40, () => 'nombre', MGPValidators.range(1, 99)),
-                                canailleDeBoule: new NumberConfig(50, () => 'canaille', MGPValidators.range(1, 99)),
+                    new RulesConfigDescription({
+                        name: (): string => 'config name',
+                        config: {
+                            nombre: new NumberConfig(40, () => 'nombre', MGPValidators.range(1, 99)),
+                            canailleDeBoule: new NumberConfig(50, () => 'canaille', MGPValidators.range(1, 99)),
+                        },
+                        validators: [
+                            (config: TestRulesConfig): MGPValidation => {
+                                if ((config.nombre + config.canailleDeBoule) > 100) {
+                                    return MGPValidation.failure('The sum of both fields must be <= 100');
+                                } else {
+                                    return MGPValidation.SUCCESS;
+                                }
                             },
-                            validators: [
-                                (config: TestRulesConfig): MGPValidation => {
-                                    if ((config.nombre + config.canailleDeBoule) > 100) {
-                                        return MGPValidation.failure('The sum of both fields must be <= 100');
-                                    } else {
-                                        return MGPValidation.SUCCESS;
-                                    }
-                                },
-                            ],
-                        }, [{
-                            name: (): string => 'the_other_config_name',
-                            config: { nombre: 42, canailleDeBoule: 42 },
-                        }],
-                    );
+                        ],
+                    }, [{
+                        name: (): string => 'the_other_config_name',
+                        config: { nombre: 42, canailleDeBoule: 42 },
+                    }]);
 
                 it('should not emit when a multiple field validator fails', fakeAsync(async() => {
                     // Given a rules config description with two number fields whose sum must be <= 100

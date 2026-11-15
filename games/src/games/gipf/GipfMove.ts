@@ -14,8 +14,10 @@ export class GipfPlacement {
         (placement: GipfPlacement): GipfPlacementFields => [placement.coord, placement.direction],
         (fields: GipfPlacementFields): GipfPlacement => new GipfPlacement(fields[0], fields[1]),
     );
-    public constructor(public readonly coord: Coord,
-                       public readonly direction: MGPOptional<HexaDirection>) {
+    public constructor(
+        public readonly coord: Coord,
+        public readonly direction: MGPOptional<HexaDirection>,
+    ) {
     }
     public toString(): string {
         if (this.direction.isPresent()) {
@@ -41,9 +43,11 @@ export class GipfMove extends Move {
         (move: GipfMove) => [move.placement, move.initialCaptures, move.finalCaptures],
         (fields: GipfMoveFields) => new GipfMove(fields[0], fields[1], fields[2]),
     );
-    public constructor(public readonly placement: GipfPlacement,
-                       public readonly initialCaptures: ReadonlyArray<GipfCapture>,
-                       public readonly finalCaptures: ReadonlyArray<GipfCapture>) {
+    public constructor(
+        public readonly placement: GipfPlacement,
+        public readonly initialCaptures: ReadonlyArray<GipfCapture>,
+        public readonly finalCaptures: ReadonlyArray<GipfCapture>,
+    ) {
         super();
     }
     public toString(): string {
