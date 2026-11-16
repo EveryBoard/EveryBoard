@@ -146,11 +146,11 @@ describe('AwaleComponent', () => {
             };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
-            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 2);
             await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
 
             // When doing second turn
-            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveOne, customConfig);
 
             // Then the capture of last turn should be hidden

@@ -1,6 +1,6 @@
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { MoveGenerator } from '@everyboard/games';
+import { MoveGenerator, Ordinal, Vector } from '@everyboard/games';
 import { AIConfig } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
@@ -25,11 +25,18 @@ import { ClickHandler } from '../../../components/game-components/game-component
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 export type SeedDropResult = {
-    direction: MancalaDistributionDirection;
-    houseToDistribute: Coord;
-    currentDropIsStore: boolean;
-    seedsInHand: number;
-    resultingState: MancalaState;
+    readonly direction: MancalaDistributionDirection;
+    readonly houseToDistribute: Coord;
+    readonly currentDropIsStore: boolean;
+    readonly seedsInHand: number;
+    readonly resultingState: MancalaState;
+};
+
+type DirectionInfos = {
+    readonly id: string;
+    readonly direction: MancalaDistributionDirection;
+    readonly translate: string;
+    readonly rotate: string;
 };
 
 export abstract class MancalaComponent<R extends MancalaRules>
@@ -58,9 +65,49 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     protected filledCoords: Coord[] = [];
 
-    protected constructedState: MancalaState;
+    public constructedState: MancalaState;
 
     private opponentMoveIsBeingAnimated: boolean = false;
+
+    protected availableDirections: Signal<ReadonlyArray<DirectionInfos>> = computed(() => {
+        const optionalSelected: MGPOptional<Coord> = this.selectedSpace();
+        if (optionalSelected.isAbsent()) {
+            return [];
+        }
+        const config: MancalaConfig = this.config();
+        const abstractSelected: Coord = optionalSelected.get();
+        const cx: number = this.getPieceCx(abstractSelected.x);
+        const cy: number = this.getPieceCy(abstractSelected.y);
+        const selected: Coord = new Coord(cx, cy);
+        const directions: DirectionInfos[] = [];
+        if (this.rules.getSpaceOwner(abstractSelected, config).equals(Player.ZERO)) {
+            const left: Coord = selected.getNext(new Vector( - 150, - 50));
+            directions.push({
+                id: '#left-arrow',
+                direction: 'CLOCKWISE',
+                translate: this.getSVGTranslation(left.x, left.y),
+                rotate: `rotate(0)`,
+            });
+        } else {
+            const right: Coord = selected.getNext(new Vector(150, 50));
+            directions.push({
+                id: '#left-right',
+                direction: 'CLOCKWISE',
+                translate: this.getSVGTranslation(right.x, right.y),
+                rotate: `rotate(180)`,
+            });
+        }
+        if (config.verticalSowing) {
+            const up: Coord = selected.getNext(new Vector( + 50, - 150));
+            directions.push({
+                id: '#left-up',
+                direction: 'UP',
+                translate: this.getSVGTranslation(up.x, up.y),
+                rotate: 'rotate(90)',
+            });
+        }
+        return directions;
+    });
 
     protected constructor(urlName: string) {
         super(urlName);
@@ -109,7 +156,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     protected getPieceCx(x: number): number {
-        return 80 + 100 * (x + 1);
+        return 80 + this.SPACE_SIZE * (x + 1);
     }
 
     protected getPieceCy(y: number): number {
@@ -176,8 +223,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    protected async onLegalClick(x: number, y: number): Promise<MGPValidation> {
-        // TODO: make it private and don't call it in tests
+    // TODO: make it private and don't call it in tests
+    public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         const config: MancalaConfig = this.config();
         if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.state().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
@@ -294,10 +341,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
             seedsInHand: 0,
         };
         while (mustDoOneMoreLap) {
-            seedDropResult.seedsInHand =
+            const seedsInHand: number =
                 seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
-            seedDropResult.resultingState =
+            const resultingState: MancalaState =
                 seedDropResult.resultingState.setPieceAt(seedDropResult.houseToDistribute, 0);
+            seedDropResult = { ...seedDropResult, seedsInHand, resultingState };
             // Changing immediately the chosen house
             this.changeVisibleState(seedDropResult.resultingState);
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
@@ -321,9 +369,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    private async showSeedDrop(seedDropResult: SeedDropResult,
-                               config: MancalaConfig,
-                               initial: Coord,
+    private async showSeedDrop(
+        seedDropResult: SeedDropResult,
+        config: MancalaConfig,
+        initial: Coord,
     ): Promise<SeedDropResult> {
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();
         const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(
@@ -512,7 +561,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    protected generateMove(direction: MancalaDistributionDirection, x: number, y: number): MancalaMove {
+    // TODO: make private and don't call it in tests
+    public generateMove(direction: MancalaDistributionDirection, x: number, y: number): MancalaMove {
         return MancalaMove.of(MancalaDistribution.of(direction, x, y));
     }
 

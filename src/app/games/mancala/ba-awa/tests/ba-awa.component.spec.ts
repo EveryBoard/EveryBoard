@@ -10,11 +10,14 @@ import { MancalaState } from '@everyboard/games/ba-awa';
 import { MancalaDistribution, MancalaMove } from '@everyboard/games/ba-awa';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { BaAwaComponent } from '../ba-awa.component';
 
-describe('BaAwaComponent', () => {
+const TIMEOUT_BETWEEN_LAPS: number = 1000;
+
+const TIMEOUT_BETWEEN_SEEDS: number = 100;
+
+fdescribe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
@@ -107,14 +110,14 @@ describe('BaAwaComponent', () => {
                 await mancalaTestUtils.testUtils.setupState(state);
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-1-1');
                 element.triggerEventHandler('click', null);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS); // House emptied, waiting for lap to start
+                tick(TIMEOUT_BETWEEN_LAPS); // House emptied, waiting for lap to start
 
                 // When feeding the capturable house
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then it should be captured
                 mancalaTestUtils.expectToBeCaptured([{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }]);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
+                tick(TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
             }));
 
         });

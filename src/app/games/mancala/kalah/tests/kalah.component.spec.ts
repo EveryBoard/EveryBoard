@@ -19,9 +19,12 @@ import { KalahMoveGenerator } from '@everyboard/games/kalah';
 
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { MancalaComponent } from '../../common/MancalaComponent';
 import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { KalahComponent } from '../kalah.component';
+
+const TIMEOUT_BETWEEN_LAPS: number = 1000;
+
+const TIMEOUT_BETWEEN_SEEDS: number = 100;
 
 describe('KalahComponent', () => {
 
@@ -127,16 +130,16 @@ describe('KalahComponent', () => {
                 // Given a board where a distribution pass by the Kalah
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-1-1');
                 element.triggerEventHandler('click', null);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 0 ');
 
                 // When passing right after the leftmost house in player's territory
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then the next fed house should be the Kalah
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
                 mancalaTestUtils.testUtils.expectElementToHaveClass('#circle--1--1', 'moved-stroke');
-                tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(3 * TIMEOUT_BETWEEN_SEEDS);
             }));
 
             it('should feed the Kalah twice during animation of double-distribution-move', fakeAsync(async() => {
@@ -147,11 +150,11 @@ describe('KalahComponent', () => {
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
                 // When waiting for the first sub-move (in Kalah) to happen
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then the Kalah should be fed a second time
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 2 ', ' +2 ');
-                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(5 * TIMEOUT_BETWEEN_SEEDS);
             }));
 
             it('should wait TIMEOUT_BETWEEN_LAPS between each sub-distribution when receiving move', fakeAsync(async() => {
@@ -163,20 +166,20 @@ describe('KalahComponent', () => {
                 await localGameWrapper.doAIMove(ai, { name: 'noOption' });
 
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
-                tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(4 * TIMEOUT_BETWEEN_SEEDS);
 
                 // Then second turn start, pause that this test is about
-                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                tick(TIMEOUT_BETWEEN_LAPS);
                 // and to optimize gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then 5 * TIMEOUT_BETWEEN_SEED ms to sow the final 5 seeds
-                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(5 * TIMEOUT_BETWEEN_SEEDS);
             }));
 
             it('should feed the original house during animation', fakeAsync(async() => {
@@ -190,16 +193,16 @@ describe('KalahComponent', () => {
                 // When distributing the house
                 mancalaTestUtils.testUtils.findElement('#click-2-1').triggerEventHandler('click', null);
                 // and waiting for the time where the seed is to be dropped in the original house
-                tick(13 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(13 * TIMEOUT_BETWEEN_SEEDS);
 
                 // Then the initial house should have been fed
                 mancalaTestUtils.expectHouseToContain(new Coord(2, 1), ' 1 ', ' -13 ');
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
             }));
 
             it('should hide capture of previous turn in opponent store (animation)', fakeAsync(async() => {
                 // Given a state where there has been a point-won last turn
-                const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+                const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 1);
                 await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
@@ -210,7 +213,7 @@ describe('KalahComponent', () => {
 
                 // Then the capture of last turn should be hidden
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
-                tick(6 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(6 * TIMEOUT_BETWEEN_SEEDS);
             }));
 
         });
@@ -366,7 +369,7 @@ describe('KalahComponent', () => {
                 mancalaTestUtils.testUtils.getComponent() as LocalGameWrapperComponent;
             await localGameWrapper.doAIMove(ai, { name: 'noOption' });
             // time for the distribution
-            tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            tick(5 * TIMEOUT_BETWEEN_SEEDS);
 
             // Then the " +1 " in Kalah secondary message should have disappeared
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
@@ -389,12 +392,12 @@ describe('KalahComponent', () => {
 
         it('should hide capture of previous turn in opponent store (move)', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn
-            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig);
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
             // When doing second turn
-            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 0);
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 0);
             await mancalaTestUtils.expectMoveSuccess('#click-0-0', moveOne, defaultConfig);
 
             // Then the capture of last turn should be hidden
@@ -410,11 +413,11 @@ describe('KalahComponent', () => {
             };
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
             await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
-            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 2);
             await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
 
             // When doing second turn
-            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove('CLOCKWISE', 0, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveOne, customConfig);
 
             // Then the emptied house should me marked as last move
