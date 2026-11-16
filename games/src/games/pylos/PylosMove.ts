@@ -20,22 +20,26 @@ export class PylosMove extends Move {
             [move.startingCoord, move.landingCoord, move.firstCapture, move.secondCapture],
         (fields: PylosFields): PylosMove => PylosMove.of(fields[0], fields[1], fields[2], fields[3]),
     );
+
     public static ofClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>;
             secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
-        const newMove: PylosMove = new PylosMove(startingCoordOpt,
-                                                 landingCoord,
-                                                 capturesOptionals.firstCapture,
-                                                 capturesOptionals.secondCapture);
+        const newMove: PylosMove = new PylosMove(
+            startingCoordOpt,
+            landingCoord,
+            capturesOptionals.firstCapture,
+            capturesOptionals.secondCapture,
+        );
         Utils.assert(landingCoord.isHigherThan(startingCoord), PylosFailure.MUST_MOVE_UPWARD());
         return newMove;
     }
-    public static checkCaptures(captures: PylosCoord[])
-    : { firstCapture: MGPOptional<PylosCoord>; secondCapture: MGPOptional<PylosCoord> }
-    {
+
+    public static checkCaptures(
+        captures: PylosCoord[],
+    ): { firstCapture: MGPOptional<PylosCoord>; secondCapture: MGPOptional<PylosCoord> } {
         let firstCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         let secondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         if (captures.length > 0) {
@@ -56,45 +60,56 @@ export class PylosMove extends Move {
         }
         return { firstCapture, secondCapture };
     }
+
     public static ofDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>;
             secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
-        return new PylosMove(startingCoord,
-                             landingCoord,
-                             capturesOptionals.firstCapture,
-                             capturesOptionals.secondCapture);
+        return new PylosMove(
+            startingCoord,
+            landingCoord,
+            capturesOptionals.firstCapture,
+            capturesOptionals.secondCapture,
+        );
     }
+
     public static changeCapture(move: PylosMove, captures: PylosCoord[]): PylosMove {
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>;
             secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
-        return new PylosMove(move.startingCoord,
-                             move.landingCoord,
-                             capturesOptionals.firstCapture,
-                             capturesOptionals.secondCapture);
+        return new PylosMove(
+            move.startingCoord,
+            move.landingCoord,
+            capturesOptionals.firstCapture,
+            capturesOptionals.secondCapture,
+        );
     }
-    private static of(startingCoord: MGPOptional<PylosCoord>,
-                      landingCoord: PylosCoord,
-                      firstCapture: MGPOptional<PylosCoord>,
-                      secondCapture: MGPOptional<PylosCoord>)
-    : PylosMove
-    {
+
+    private static of(
+        startingCoord: MGPOptional<PylosCoord>,
+        landingCoord: PylosCoord,
+        firstCapture: MGPOptional<PylosCoord>,
+        secondCapture: MGPOptional<PylosCoord>,
+    ): PylosMove {
         return new PylosMove(startingCoord, landingCoord, firstCapture, secondCapture);
     }
-    private constructor(public readonly startingCoord: MGPOptional<PylosCoord>,
-                        public readonly landingCoord: PylosCoord,
-                        public readonly firstCapture: MGPOptional<PylosCoord>,
-                        public readonly secondCapture: MGPOptional<PylosCoord>)
-    {
+
+    private constructor(
+        public readonly startingCoord: MGPOptional<PylosCoord>,
+        public readonly landingCoord: PylosCoord,
+        public readonly firstCapture: MGPOptional<PylosCoord>,
+        public readonly secondCapture: MGPOptional<PylosCoord>,
+    ) {
         super();
     }
+
     public isClimb(): boolean {
         return this.startingCoord.isPresent();
     }
+
     public override toString(): string {
         const startingCoord: string = this.startingCoord.isAbsent() ? '-' : this.startingCoord.get().toShortString();
         const firstCapture: string = this.firstCapture.isAbsent() ? '-' : this.firstCapture.get().toShortString();
@@ -106,6 +121,7 @@ export class PylosMove extends Move {
                secondCapture +
                ')';
     }
+
     public equals(other: PylosMove): boolean {
         if (other === this) return true;
         if (this.startingCoord.equals(other.startingCoord) === false) return false;
@@ -114,4 +130,5 @@ export class PylosMove extends Move {
         if (this.secondCapture.equals(other.secondCapture) === false) return false;
         return true;
     }
+
 }

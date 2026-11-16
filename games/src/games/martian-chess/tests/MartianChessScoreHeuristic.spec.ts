@@ -25,16 +25,22 @@ describe('MartianChessScoreHeuristic', () => {
         const captured: MGPMap<Player, MartianChessCapture> = weakState.captured.getCopy();
         const capturedPawn: MartianChessCapture = MartianChessCapture.of([MartianChessPiece.PAWN]);
         captured.replace(Player.ZERO, capturedPawn);
-        const strongState: MartianChessState = new MartianChessState(strongBoard,
-                                                                     0,
-                                                                     MGPOptional.empty(),
-                                                                     MGPOptional.empty(),
-                                                                     captured);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        const strongState: MartianChessState = new MartianChessState(
+            strongBoard,
+            0,
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+            captured,
+        );
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
 });

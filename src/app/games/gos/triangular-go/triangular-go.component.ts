@@ -30,13 +30,14 @@ import { TriangularGameComponent } from '../../../components/game-components/gam
     imports: [NgClass],
 })
 @Debug.log
-export class TriangularGoComponent extends TriangularGameComponent<TriangularGoRules,
-                                                                   GoMove,
-                                                                   GoState,
-                                                                   GoPiece,
-                                                                   TriangularGoConfig,
-                                                                   GoLegalityInformation>
-{
+export class TriangularGoComponent extends TriangularGameComponent<
+    TriangularGoRules,
+    GoMove,
+    GoState,
+    GoPiece,
+    TriangularGoConfig,
+    GoLegalityInformation
+> {
 
     public boardInfo: GroupData<GoPiece>;
 
@@ -138,8 +139,10 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase.isCounting() || phase.isAccept(),
-                     'TriangularGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(
+            phase.isCounting() || phase.isAccept(),
+            'TriangularGoComponent: pass() must be called only in playing, passed, counting, or accept phases',
+        );
         return this.onClick(GoMove.ACCEPT.coord);
     }
 

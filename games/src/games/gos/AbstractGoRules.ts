@@ -32,8 +32,7 @@ export type AbstractGoConfig = RulesConfig;
 
 @Debug.log
 export abstract class AbstractGoRules<C extends AbstractGoConfig>
-    extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation>
-{
+    extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation> {
 
     protected constructor(public readonly playOnIntersection: boolean) {
         super();
@@ -171,8 +170,11 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalDrop(move: GoMove, state: GoState, config: C)
-    : MGPFallible<GoLegalityInformation> {
+    private isLegalDrop(
+        move: GoMove,
+        state: GoState,
+        config: C,
+    ): MGPFallible<GoLegalityInformation> {
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
         }
@@ -363,9 +365,12 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         if (this.isPass(move)) {
             const playing: boolean = state.phase.isPlaying();
             const passed: boolean = state.phase.isPassed();
-            Debug.display('GoRules', 'isLegal',
-                          'at ' + state.phase + ((playing || passed) ? ' forbid' : ' allowed') +
-                          ' passing on ' + state.getCopiedBoard());
+            Debug.display(
+                'GoRules',
+                'isLegal',
+                'at ' + state.phase + ((playing || passed) ? ' forbid' : ' allowed') +
+                          ' passing on ' + state.getCopiedBoard(),
+            );
             if (playing || passed) {
                 return defaultSuccess;
             } else {
@@ -397,12 +402,12 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         }
     }
 
-    public override applyLegalMove(legalMove: GoMove,
-                                   state: GoState,
-                                   config: C,
-                                   infos: GoLegalityInformation)
-    : GoState
-    {
+    public override applyLegalMove(
+        legalMove: GoMove,
+        state: GoState,
+        config: C,
+        infos: GoLegalityInformation,
+    ): GoState {
         if (this.isPass(legalMove)) {
             return this.applyPass(state);
         } else if (this.isAccept(legalMove)) {

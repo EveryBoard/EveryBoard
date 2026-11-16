@@ -31,13 +31,14 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class GipfComponent extends HexagonalGameComponent<GipfRules,
-                                                          GipfMove,
-                                                          GipfState,
-                                                          FourStatePiece,
-                                                          EmptyRulesConfig,
-                                                          GipfLegalityInformation>
-{
+export class GipfComponent extends HexagonalGameComponent<
+    GipfRules,
+    GipfMove,
+    GipfState,
+    FourStatePiece,
+    EmptyRulesConfig,
+    GipfLegalityInformation
+> {
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;
     private static readonly PHASE_PLACEMENT_COORD: number = 1;
     private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
@@ -128,10 +129,12 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     private arrowToward(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
         const previous: Coord = placement.getNext(direction.getOpposite());
-        return new Arrow<HexaDirection>(previous,
-                                        placement,
-                                        direction,
-                                        (c: Coord) => this.getCenterAt(c));
+        return new Arrow<HexaDirection>(
+            previous,
+            placement,
+            direction,
+            (c: Coord) => this.getCenterAt(c),
+        );
     }
 
     private markCapture(capture: GipfCapture, constructedState: GipfState): void {
@@ -298,9 +301,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return this.selectPlacementDirection(direction.toOptional());
     }
 
-    private tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
-                    placement: GipfPlacement,
-                    finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
+    private tryMove(
+        initialCaptures: ReadonlyArray<GipfCapture>,
+        placement: GipfPlacement,
+        finalCaptures: ReadonlyArray<GipfCapture>,
+    ): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
         return this.chooseMove(move);
     }

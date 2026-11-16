@@ -26,9 +26,10 @@ export class GoPiece implements ComparableObject {
         return piece.isReachable();
     }
 
-    private constructor(public readonly player: PlayerOrNone,
-                        public readonly type: PieceType)
-    {
+    private constructor(
+        public readonly player: PlayerOrNone,
+        public readonly type: PieceType,
+    ) {
     }
 
     public equals(other: GoPiece): boolean {

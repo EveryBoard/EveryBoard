@@ -26,10 +26,12 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // Given a user that registered through google
-            const authUser: AuthUser = new AuthUser('kd5457d',
-                                                    MGPOptional.of('jeanjaja@gmail.com'),
-                                                    MGPOptional.empty(),
-                                                    true);
+            const authUser: AuthUser = new AuthUser(
+                'kd5457d',
+                MGPOptional.of('jeanjaja@gmail.com'),
+                MGPOptional.empty(),
+                true,
+            );
             ConnectedUserServiceMock.setUser(authUser);
             testUtils.detectChanges();
         });
@@ -72,10 +74,12 @@ describe('VerifyAccountComponent', () => {
     describe('email user', () => {
         beforeEach(() => {
             // Given a user that registered through its email
-            const user: AuthUser = new AuthUser('jeanjaja8946sd54q',
-                                                MGPOptional.of('jean@jaja.europe'),
-                                                MGPOptional.of('jeanjaja'),
-                                                false);
+            const user: AuthUser = new AuthUser(
+                'jeanjaja8946sd54q',
+                MGPOptional.of('jean@jaja.europe'),
+                MGPOptional.of('jeanjaja'),
+                false,
+            );
             ConnectedUserServiceMock.setUser(user);
             testUtils.detectChanges();
         });

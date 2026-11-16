@@ -16,13 +16,13 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
 class EpaminondasPositionalMinimax
-    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
-{
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation> {
     public constructor() {
-        super('Positional',
-              EpaminondasRules.get(),
-              new EpaminondasPositionalHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        super(
+            'Positional',
+            EpaminondasRules.get(),
+            new EpaminondasPositionalHeuristic(),
+            new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
         );
     }
 }

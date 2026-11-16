@@ -7,35 +7,47 @@ import { User } from './User';
 
 export class UserMocks {
 
-    public static readonly USER_WITHOUT_EMAIL: AuthUser = new AuthUser('jeanlinconnu8012',
-                                                                       MGPOptional.empty(),
-                                                                       MGPOptional.empty(),
-                                                                       false);
+    public static readonly USER_WITHOUT_EMAIL: AuthUser = new AuthUser(
+        'jeanlinconnu8012',
+        MGPOptional.empty(),
+        MGPOptional.empty(),
+        false,
+    );
 
-    public static readonly CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
-                                                                         MGPOptional.of('jean@jaja.europe'),
-                                                                         MGPOptional.of('Jean Jaja'),
-                                                                         false);
+    public static readonly CONNECTED_UNVERIFIED: AuthUser = new AuthUser(
+        'jeanjaja123',
+        MGPOptional.of('jean@jaja.europe'),
+        MGPOptional.of('Jean Jaja'),
+        false,
+    );
 
-    public static readonly CONNECTED_AUTH_USER: AuthUser = new AuthUser('creator-user-doc-id',
-                                                                        MGPOptional.of('cre@tor'),
-                                                                        MGPOptional.of('creator'),
-                                                                        true);
+    public static readonly CONNECTED_AUTH_USER: AuthUser = new AuthUser(
+        'creator-user-doc-id',
+        MGPOptional.of('cre@tor'),
+        MGPOptional.of('creator'),
+        true,
+    );
 
-    public static readonly OPPONENT_AUTH_USER: AuthUser = new AuthUser('firstCandidateUserDocId',
-                                                                       MGPOptional.of('opp@nante'),
-                                                                       MGPOptional.of('firstCandidate'),
-                                                                       true);
+    public static readonly OPPONENT_AUTH_USER: AuthUser = new AuthUser(
+        'firstCandidateUserDocId',
+        MGPOptional.of('opp@nante'),
+        MGPOptional.of('firstCandidate'),
+        true,
+    );
 
-    public static readonly OTHER_OPPONENT_AUTH_USER: AuthUser = new AuthUser('whoever73',
-                                                                             MGPOptional.of('forgotten@everywhere'),
-                                                                             MGPOptional.of('ForeverAlone'),
-                                                                             true);
+    public static readonly OTHER_OPPONENT_AUTH_USER: AuthUser = new AuthUser(
+        'whoever73',
+        MGPOptional.of('forgotten@everywhere'),
+        MGPOptional.of('ForeverAlone'),
+        true,
+    );
 
-    public static readonly CANDIDATE_AUTH_USER: AuthUser = new AuthUser('candidateDocId',
-                                                                        MGPOptional.of('candi@ate'),
-                                                                        MGPOptional.of('Candid_Hate'),
-                                                                        true);
+    public static readonly CANDIDATE_AUTH_USER: AuthUser = new AuthUser(
+        'candidateDocId',
+        MGPOptional.of('candi@ate'),
+        MGPOptional.of('Candid_Hate'),
+        true,
+    );
 
     public static readonly CREATOR_AUTH_USER: AuthUser = UserMocks.CONNECTED_AUTH_USER;
 

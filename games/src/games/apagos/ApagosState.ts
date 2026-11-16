@@ -28,10 +28,11 @@ export class ApagosState extends GameState {
         return new ApagosState(turn, squares, remaining);
     }
 
-    public constructor(turn: number,
-                       public readonly board: ReadonlyArray<ApagosSquare>,
-                       public readonly remaining: PlayerNumberMap)
-    {
+    public constructor(
+        turn: number,
+        public readonly board: ReadonlyArray<ApagosSquare>,
+        public readonly remaining: PlayerNumberMap,
+    ) {
         super(turn);
         this.remaining.makeImmutable();
     }

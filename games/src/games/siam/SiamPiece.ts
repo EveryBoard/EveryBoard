@@ -66,10 +66,11 @@ export class SiamPiece {
         }
     }
 
-    private constructor(private readonly value: number,
-                        private readonly owner: PlayerOrNone,
-                        private readonly direction: MGPOptional<Orthogonal>)
-    {
+    private constructor(
+        private readonly value: number,
+        private readonly owner: PlayerOrNone,
+        private readonly direction: MGPOptional<Orthogonal>,
+    ) {
     }
 
     public belongsTo(player: Player): boolean {

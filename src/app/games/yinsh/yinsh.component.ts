@@ -40,13 +40,14 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass, RingComponent],
 })
-export class YinshComponent extends HexagonalGameComponent<YinshRules,
-                                                           YinshMove,
-                                                           YinshState,
-                                                           YinshPiece,
-                                                           EmptyRulesConfig,
-                                                           YinshLegalityInformation>
-{
+export class YinshComponent extends HexagonalGameComponent<
+    YinshRules,
+    YinshMove,
+    YinshState,
+    YinshPiece,
+    EmptyRulesConfig,
+    YinshLegalityInformation
+> {
     protected override computeViewBox(): ViewBox {
         return new ViewBox(0, 250, 1065, 1060);
     }
@@ -116,9 +117,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.encoder = YinshMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
-        this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
-                                         new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
-                                         FlatHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            YinshComponent.RING_OUTER_SIZE * 1.50,
+            new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
+            FlatHexaOrientation.INSTANCE,
+        );
         this.constructedState = this.state();
     }
 
@@ -389,7 +392,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.constructedState = new YinshState(
             this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),
             this.constructedState.sideRings,
-            this.constructedState.turn);
+            this.constructedState.turn,
+        );
 
         if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST' ||
             this.movePhase === 'INITIAL_CAPTURE_SELECT_LAST')
@@ -452,10 +456,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private async tryMove(): Promise<MGPValidation> {
-        const move: YinshMove = new YinshMove(this.initialCaptures,
-                                              this.moveStart.get(),
-                                              this.moveEnd,
-                                              this.finalCaptures);
+        const move: YinshMove = new YinshMove(
+            this.initialCaptures,
+            this.moveStart.get(),
+            this.moveEnd,
+            this.finalCaptures,
+        );
         const validity: MGPValidation = await this.chooseMove(move);
         return validity;
     }

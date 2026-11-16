@@ -65,11 +65,15 @@ describe('HexagonalGoHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having a larger territory
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
     it('should count killed piece as two points', () => {

@@ -50,13 +50,15 @@ describe('AbaloneScoreHeuristic', () => {
 
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               new AbaloneState(boardWithLessPieces, 0),
-                                                               MGPOptional.empty(),
-                                                               new AbaloneState(boardWithMorePieces, 0),
-                                                               MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            new AbaloneState(boardWithLessPieces, 0),
+            MGPOptional.empty(),
+            new AbaloneState(boardWithMorePieces, 0),
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
 });
