@@ -457,8 +457,10 @@ export class LodestoneComponent
 
     private getCrumbledLodestoneInfo(coord: Coord): LodestoneInfo {
         const lodestone: LodestonePiece = this.getPreviousState().getPieceAt(coord);
-        Utils.assert(lodestone.isLodestone(),
-                     'getCrumbledLodestoneInfo should only be called with coord that contain crumbled lodestone!');
+        Utils.assert(
+            lodestone.isLodestone(),
+            'getCrumbledLodestoneInfo should only be called with coord that contain crumbled lodestone!',
+        );
         return this.getLodestoneInfoFromLodestone(lodestone);
     }
 

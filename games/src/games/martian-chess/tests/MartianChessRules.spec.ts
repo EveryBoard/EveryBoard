@@ -542,11 +542,13 @@ describe('MartianChessRules', () => {
                     [_, _, _, _],
                     [C, C, B, _],
                 ];
-                const state: MartianChessState = new MartianChessState(board,
-                                                                       4,
-                                                                       MGPOptional.of(move),
-                                                                       MGPOptional.empty(),
-                                                                       captured);
+                const state: MartianChessState = new MartianChessState(
+                    board,
+                    4,
+                    MGPOptional.of(move),
+                    MGPOptional.empty(),
+                    captured,
+                );
                 const node: MartianChessNode = MartianChessNode.root(state);
 
                 // When checking the game status
@@ -571,11 +573,13 @@ describe('MartianChessRules', () => {
                     [_, _, _, _],
                     [_, _, _, _],
                 ];
-                const state: MartianChessState = new MartianChessState(board,
-                                                                       3,
-                                                                       MGPOptional.of(move),
-                                                                       MGPOptional.empty(),
-                                                                       captured);
+                const state: MartianChessState = new MartianChessState(
+                    board,
+                    3,
+                    MGPOptional.of(move),
+                    MGPOptional.empty(),
+                    captured,
+                );
                 const node: MartianChessNode = MartianChessNode.root(state);
 
                 // When checking the game status

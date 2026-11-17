@@ -38,9 +38,11 @@ describe('PentagoMoveGenerator', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        const node: PentagoNode = PentagoNode.child(state,
-                                                    rules.getInitialNode(defaultConfig),
-                                                    PentagoMove.rotationless(0, 0));
+        const node: PentagoNode = PentagoNode.child(
+            state,
+            rules.getInitialNode(defaultConfig),
+            PentagoMove.rotationless(0, 0),
+        );
         /*
          * when calculating the list of moves, then there should be 105
          * so: 35 without any rotation

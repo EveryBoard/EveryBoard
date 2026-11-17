@@ -68,10 +68,11 @@ export abstract class TutorialStep {
 
     public node: GameNode<Move, GameState>;
 
-    protected constructor(public readonly title: string,
-                          public readonly instruction: string,
-                          state: GameState,
-                          public readonly config: MGPOptional<RulesConfig>,
+    protected constructor(
+        public readonly title: string,
+        public readonly instruction: string,
+        state: GameState,
+        public readonly config: MGPOptional<RulesConfig>,
     ) {
         this.node = GameNode.root(state);
     }

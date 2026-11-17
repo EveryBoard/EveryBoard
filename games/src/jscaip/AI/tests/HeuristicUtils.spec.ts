@@ -22,9 +22,8 @@ export class HeuristicUtils {
         strongState: S,
         strongMove: MGPOptional<M>,
         player: Player,
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         const weakNode: GameNode<M, S> = weakMove.isPresent() ?
             RulesUtils.nodeWithPreviousMove(weakState, weakMove.get()) :
             GameNode.root(weakState);
@@ -65,8 +64,8 @@ export class HeuristicUtils {
         heuristic: Heuristic<M, S, BoardValue, C>,
         leftState: S,
         rightState: S,
-        config: C)
-    : void {
+        config: C,
+    ): void {
         const leftNode: GameNode<M, S> = GameNode.root(leftState);
         const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).metrics;
         const rightNode: GameNode<M, S> = GameNode.root(rightState);

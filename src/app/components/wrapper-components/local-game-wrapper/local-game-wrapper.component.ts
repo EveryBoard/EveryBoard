@@ -561,8 +561,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         let oldNode: AbstractNode = this.gameComponent.node();
         this.gameComponent.node.set(oldNode.getParent());
         if (this.isTurnOfPlayingAI()) {
-            Utils.assert(this.gameComponent.node().hasParent(),
-                         'Cannot take back in first turn when AI is Player.ZERO');
+            Utils.assert(
+                this.gameComponent.node().hasParent(),
+                'Cannot take back in first turn when AI is Player.ZERO',
+            );
             oldNode = this.gameComponent.node();
             this.gameComponent.node.set(oldNode.getParent());
         }

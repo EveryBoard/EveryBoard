@@ -23,13 +23,13 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig>(rules: R,
-                                                           state: S,
-                                                           move: M,
-                                                           expectedState: S,
-                                                           config: C)
-    : void
-    {
+                                    C extends RulesConfig>(
+        rules: R,
+        state: S,
+        move: M,
+        expectedState: S,
+        config: C,
+    ): void {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());

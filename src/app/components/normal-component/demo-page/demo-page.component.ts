@@ -69,12 +69,12 @@ export class DemoPageComponent {
         return demoNodes;
     }
 
-    private getNodeFromStep(step: TutorialStep,
-                            rules: AbstractRules,
-                            defaultConfig: RulesConfig,
-                            name: string)
-    : DemoNodeInfo
-    {
+    private getNodeFromStep(
+        step: TutorialStep,
+        rules: AbstractRules,
+        defaultConfig: RulesConfig,
+        name: string,
+    ): DemoNodeInfo {
         const state: GameState = step.getState();
         const stepConfig: RulesConfig = step.config.getOrElse(defaultConfig);
         if (step.hasSolution()) {
