@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { GameStatus } from '../../GameStatus';
@@ -75,9 +75,7 @@ describe('GameNode', () => {
             config = rules.getDefaultRulesConfig();
 
             const move: MoveMock = new MoveMock(1);
-            const optionalMove: MGPOptional<MoveMock> = MGPOptional.of(move);
             const otherMove: MoveMock = new MoveMock(2);
-            const optionalOtherMove: MGPOptional<MoveMock> = MGPOptional.of(otherMove);
 
             const stateAtTurn0: GameStateMock = new GameStateMock(0);
             const stateAtTurn1: GameStateMock = new GameStateMock(1);
@@ -85,19 +83,16 @@ describe('GameNode', () => {
             const stateAtTurn3: GameStateMock = new GameStateMock(3);
 
             treeRoot = GameNode.root(stateAtTurn0);
-            const optionalTreeRoot: MGPOptional<MockNode> = MGPOptional.of(treeRoot);
-            const child: MockNode = MockNode.child(stateAtTurn1, optionalTreeRoot.get(), optionalMove.get());
+            const child: MockNode = MockNode.child(stateAtTurn1, treeRoot, move);
             treeRoot.addChild(child);
 
-            const otherChild: MockNode = MockNode.child(stateAtTurn1,
-                                                        optionalTreeRoot.get(),
-                                                        optionalOtherMove.get());
+            const otherChild: MockNode = MockNode.child(stateAtTurn1, treeRoot, otherMove);
             treeRoot.addChild(otherChild);
 
-            const grandChild: MockNode = MockNode.child(stateAtTurn2, child, optionalMove.get());
+            const grandChild: MockNode = MockNode.child(stateAtTurn2, child, move);
             child.addChild(grandChild);
 
-            terminalNode = MockNode.child(stateAtTurn3, grandChild, optionalMove.get());
+            terminalNode = MockNode.child(stateAtTurn3, grandChild, move);
             grandChild.addChild(terminalNode);
 
             getGameStatusSpy = spyOn(rules, 'getGameStatus');
