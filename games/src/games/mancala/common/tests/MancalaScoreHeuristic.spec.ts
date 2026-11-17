@@ -38,11 +38,15 @@ describe('MancalaScoreHeuristic', () => {
 
             // When comparing both
             // Then the bigger score should be better
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ZERO,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ZERO,
+                defaultConfig,
+            );
         });
 
         it('should define heuristic bounds', () => {

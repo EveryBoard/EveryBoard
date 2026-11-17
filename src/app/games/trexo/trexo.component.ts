@@ -155,7 +155,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
         this.currentPlayerClass = this.getPlayerClass(state.getCurrentPlayer());
         this.possibleMoves = this.rules.getLegalMoves(state);
-        this.victoryCoords = TrexoRules.getVictoriousCoords(state);
+        this.victoryCoords = TrexoRules.getVictoriousSpaces(state);
         this.pieceOnBoard.set(this.get3DBoard());
     }
 
@@ -213,9 +213,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
 
     private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
-            moveByCoord.push(TableUtils.create(TrexoState.SIZE,
-                                               TrexoState.SIZE,
-                                               TrexoComponent.INITIAL_PIECE_ON_BOARD));
+            moveByCoord.push(TableUtils.create(
+                TrexoState.SIZE,
+                TrexoState.SIZE,
+                TrexoComponent.INITIAL_PIECE_ON_BOARD,
+            ));
         }
         moveByCoord[height][move.getZero().y][move.getZero().x] = {
             isDroppedPiece: false,
@@ -267,9 +269,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             const pieceHeight: number = this.state().getPieceAt(clicked).getHeight();
             const pieceOnBoard: PieceOnBoard[][][] = this.pieceOnBoard();
             if (pieceOnBoard.length <= pieceHeight) {
-                pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
-                                                    TrexoState.SIZE,
-                                                    TrexoComponent.INITIAL_PIECE_ON_BOARD));
+                pieceOnBoard.push(TableUtils.create(
+                    TrexoState.SIZE,
+                    TrexoState.SIZE,
+                    TrexoComponent.INITIAL_PIECE_ON_BOARD,
+                ));
             }
             this.showDroppedPieceAndIndicators(clicked, pieceHeight);
             return MGPValidation.SUCCESS;

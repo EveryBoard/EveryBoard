@@ -8,9 +8,10 @@ import { DiaballikNode } from './DiaballikRules';
 
 export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
 
-    public constructor(public readonly moveLength: number,
-                       avoidDuplicates: boolean = true)
-    {
+    public constructor(
+        public readonly moveLength: number,
+        avoidDuplicates: boolean = true,
+    ) {
         super(avoidDuplicates);
         Utils.assert(1 <= moveLength && moveLength <= 3, 'Diaballik moves should be of length [1,3]');
     }

@@ -17,10 +17,11 @@ import { NewGameState } from '../NewGameState';
 class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
 
     public constructor() {
-        super('Dummy',
-              NewGameRules.get(),
-              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
-              new NewGameMoveGenerator(),
+        super(
+            'Dummy',
+            NewGameRules.get(),
+            new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
+            new NewGameMoveGenerator(),
         );
     }
 }

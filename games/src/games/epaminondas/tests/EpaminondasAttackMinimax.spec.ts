@@ -16,13 +16,13 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
 class EpaminondasAttackMinimax
-    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
-{
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation> {
     public constructor() {
-        super('Attack',
-              EpaminondasRules.get(),
-              new EpaminondasAttackHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        super(
+            'Attack',
+            EpaminondasRules.get(),
+            new EpaminondasAttackHeuristic(),
+            new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
         );
     }
 }

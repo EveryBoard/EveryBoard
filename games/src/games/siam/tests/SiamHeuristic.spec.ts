@@ -364,9 +364,11 @@ describe('SiamHeuristic', () => {
                     zeroShortestDistance === 0) {
                     actualValues[oneShortestDistance].push(null);
                 } else {
-                    const actualScore: number = SiamRules.get().getScoreFromShortestDistances(zeroShortestDistance,
-                                                                                              oneShortestDistance,
-                                                                                              currentPlayer);
+                    const actualScore: number = SiamRules.get().getScoreFromShortestDistances(
+                        zeroShortestDistance,
+                        oneShortestDistance,
+                        currentPlayer,
+                    );
                     actualValues[oneShortestDistance].push(actualScore);
                 }
             }

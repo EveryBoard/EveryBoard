@@ -31,12 +31,12 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         return new AbstractState([[]], 0);
     }
 
-    public override applyLegalMove(move: P4Move,
-                                   state: AbstractState,
-                                   _config: RulesConfig,
-                                   _legality: void)
-    : AbstractState
-    {
+    public override applyLegalMove(
+        move: P4Move,
+        state: AbstractState,
+        _config: RulesConfig,
+        _legality: void,
+    ): AbstractState {
         const board: readonly number[] = state.board[0];
         return new AbstractState([board.concat([move.x])], state.turn + 1);
     }

@@ -25,11 +25,12 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
-                                                                KamisadoMove,
-                                                                KamisadoState,
-                                                                KamisadoPiece>
-{
+export class KamisadoComponent extends RectangularGameComponent<
+    KamisadoRules,
+    KamisadoMove,
+    KamisadoState,
+    KamisadoPiece
+> {
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.EMPTY;
     public lastMove: MGPOptional<KamisadoMove> = MGPOptional.empty();
     public lastPieceMove: MGPOptional<KamisadoPieceMove> = MGPOptional.empty();

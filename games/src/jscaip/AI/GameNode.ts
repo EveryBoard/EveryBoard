@@ -113,14 +113,14 @@ export class GameNode<M extends Move, S extends GameState> {
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public showDot(rules: AbstractRules,
-                   config: RulesConfig,
-                   labelFn?: (node: GameNode<M, S>) => string,
-                   max?: number,
-                   level: number = 0,
-                   id: number = 0)
-    : { dot: string; nextId: number; winner: PlayerOrNone }
-    {
+    public showDot(
+        rules: AbstractRules,
+        config: RulesConfig,
+        labelFn?: (node: GameNode<M, S>) => string,
+        max?: number,
+        level: number = 0,
+        id: number = 0,
+    ): { dot: string; nextId: number; winner: PlayerOrNone } {
         let buffer: string = '';
         if (level === 0) {
             buffer += 'digraph G {\n';

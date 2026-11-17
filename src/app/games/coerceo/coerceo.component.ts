@@ -27,12 +27,13 @@ import { TriangularGameComponent } from '../../components/game-components/game-c
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
-                                                              CoerceoMove,
-                                                              CoerceoState,
-                                                              FourStatePiece,
-                                                              CoerceoConfig>
-{
+export class CoerceoComponent extends TriangularGameComponent<
+    CoerceoRules,
+    CoerceoMove,
+    CoerceoState,
+    FourStatePiece,
+    CoerceoConfig
+> {
 
     public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 

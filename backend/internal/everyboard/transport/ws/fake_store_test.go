@@ -9,15 +9,16 @@ import (
 )
 
 type FakeStore struct {
-	mu           sync.Mutex
-	ConfigRooms  map[model.GameID]*model.ConfigRoom
-	Games        map[model.GameID]*model.Game
-	Events       map[model.GameID][]model.GameEvent
-	CurrentGames map[string]*model.CurrentGame
-	Candidates   map[model.GameID][]model.Candidate
-	Elos         map[string]map[string]*model.Elo
-	Messages     map[model.GameID][]*model.Message
-	nextID       model.GameID
+	mu             sync.Mutex
+	currentGamesMu sync.RWMutex
+	ConfigRooms    map[model.GameID]*model.ConfigRoom
+	Games          map[model.GameID]*model.Game
+	Events         map[model.GameID][]model.GameEvent
+	CurrentGames   map[string]*model.CurrentGame
+	Candidates     map[model.GameID][]model.Candidate
+	Elos           map[string]map[string]*model.Elo
+	Messages       map[model.GameID][]*model.Message
+	nextID         model.GameID
 }
 
 func NewFakeStore() *FakeStore {
@@ -85,8 +86,8 @@ func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
 }
 
 func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.currentGamesMu.RLock()
+	defer s.currentGamesMu.RUnlock()
 	currentGame := s.CurrentGames[userID]
 	if currentGame == nil {
 		return nil
@@ -128,8 +129,8 @@ func (s *FakeStore) SetGameForTest(gameId model.GameID, game *model.Game) {
 }
 
 func (s *FakeStore) SetCurrentGameForTest(userID string, currentGame *model.CurrentGame) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.currentGamesMu.Lock()
+	defer s.currentGamesMu.Unlock()
 	s.CurrentGames[userID] = currentGame
 }
 
@@ -418,20 +419,28 @@ func (s *FakeStore) UpdateElos(gameName string, winner model.MinimalUser, winner
 }
 
 func (s *FakeStore) GetCurrentGame(user model.MinimalUser) (*model.CurrentGame, error) {
+	s.currentGamesMu.RLock()
+	defer s.currentGamesMu.RUnlock()
 	return s.CurrentGames[user.ID], nil
 }
 
 func (s *FakeStore) SetCurrentGame(currentGame *model.CurrentGame) error {
+	s.currentGamesMu.Lock()
+	defer s.currentGamesMu.Unlock()
 	s.CurrentGames[currentGame.User.ID] = currentGame
 	return nil
 }
 
 func (s *FakeStore) UpdateCurrentGame(user model.MinimalUser, currentGame *model.CurrentGame) error {
+	s.currentGamesMu.Lock()
+	defer s.currentGamesMu.Unlock()
 	s.CurrentGames[user.ID] = currentGame
 	return nil
 }
 
 func (s *FakeStore) RemoveCurrentGame(user model.MinimalUser) error {
+	s.currentGamesMu.Lock()
+	defer s.currentGamesMu.Unlock()
 	delete(s.CurrentGames, user.ID)
 	return nil
 }
@@ -453,11 +462,13 @@ func (s *FakeStore) ApplyToMessagesOfGame(gameId model.GameID, action func(*mode
 
 func (s *FakeStore) ApplyToObservers(gameId model.GameID, action func(model.MinimalUser) error) error {
 	var observers []model.MinimalUser
+	s.currentGamesMu.RLock()
 	for _, cg := range s.CurrentGames {
 		if cg.GameID == gameId && cg.Role == model.UserRoleObserver {
 			observers = append(observers, cg.User)
 		}
 	}
+	s.currentGamesMu.RUnlock()
 	for _, observer := range observers {
 		if err := action(observer); err != nil {
 			return err

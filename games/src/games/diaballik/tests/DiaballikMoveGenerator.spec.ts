@@ -92,10 +92,11 @@ describe('DiaballikMoveGenerator', () => {
     const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
     const _: DiaballikPiece = DiaballikPiece.NONE;
 
-    function expectToHaveOnlyOneTranslationPair(moves: DiaballikMove[],
-                                                firstTranslation: DiaballikTranslation,
-                                                secondTranslation: DiaballikTranslation): void
-    {
+    function expectToHaveOnlyOneTranslationPair(
+        moves: DiaballikMove[],
+        firstTranslation: DiaballikTranslation,
+        secondTranslation: DiaballikTranslation,
+    ): void {
         const firstOrder: DiaballikMove =
             new DiaballikMove(firstTranslation, MGPOptional.of(secondTranslation), MGPOptional.empty());
         const secondOrder: DiaballikMove =
@@ -183,12 +184,16 @@ describe('DiaballikMoveGenerator', () => {
 
         // Then it should only have one of each 2-translation option
         // We look for some specific ones here: (0,6) -> (0,5) ; (1, 6) -> (1, 5)
-        expectToHaveOnlyOneTranslationPair(moves,
-                                           DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                                           DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get());
-        expectToHaveOnlyOneTranslationPair(moves,
-                                           DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                                           DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get());
+        expectToHaveOnlyOneTranslationPair(
+            moves,
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
+        );
+        expectToHaveOnlyOneTranslationPair(
+            moves,
+            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+            DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get(),
+        );
     });
 
 });

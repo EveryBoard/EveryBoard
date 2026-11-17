@@ -37,13 +37,14 @@ export type SiamIndicatorArrow = {
     imports: [NgClass, SiamOrientationArrowComponent],
 })
 @Debug.log
-export class SiamComponent extends RectangularGameComponent<SiamRules,
-                                                            SiamMove,
-                                                            SiamState,
-                                                            SiamPiece,
-                                                            SiamConfig,
-                                                            SiamLegalityInformation>
-{
+export class SiamComponent extends RectangularGameComponent<
+    SiamRules,
+    SiamMove,
+    SiamState,
+    SiamPiece,
+    SiamConfig,
+    SiamLegalityInformation
+> {
     public SiamState: typeof SiamState = SiamState;
     public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
@@ -159,10 +160,12 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 // Select the landing
                 this.selectedLanding = MGPOptional.of(clickedCoord);
                 const moves: SiamMove[] =
-                    SiamRules.get().getMovesBetween(this.state(),
-                                                    this.state().getPieceAt(this.selectedPiece.get()),
-                                                    this.selectedPiece.get(),
-                                                    clickedCoord);
+                    SiamRules.get().getMovesBetween(
+                        this.state(),
+                        this.state().getPieceAt(this.selectedPiece.get()),
+                        this.selectedPiece.get(),
+                        clickedCoord,
+                    );
                 if (moves.length === 0) {
                     return this.changeMoveDestinationClick(clickedCoord);
                 }

@@ -23,12 +23,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastlesRules,
-                                                                     QuebecCastlesMove,
-                                                                     QuebecCastlesState,
-                                                                     PlayerOrNone,
-                                                                     QuebecCastlesConfig>
-{
+export class QuebecCastlesComponent extends RectangularGameComponent<
+    QuebecCastlesRules,
+    QuebecCastlesMove,
+    QuebecCastlesState,
+    PlayerOrNone,
+    QuebecCastlesConfig
+> {
 
     // Last Move
     private leftSquare: MGPOptional<Coord> = MGPOptional.empty();

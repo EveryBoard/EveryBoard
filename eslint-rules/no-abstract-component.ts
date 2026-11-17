@@ -3,7 +3,7 @@ import { ESLintUtils, type TSESLint, type TSESTree } from '@typescript-eslint/ut
 type MessageIds = 'abstractComponent';
 type Options = [];
 
-const noAbstractComponent: TSESLint.RuleModule<MessageIds, Options> = ESLintUtils.RuleCreator.withoutDocs({
+const noAbstractComponent: TSESLint.RuleModule<MessageIds> = ESLintUtils.RuleCreator.withoutDocs({
     meta: {
         type: 'problem',
         schema: [],
@@ -20,10 +20,12 @@ const noAbstractComponent: TSESLint.RuleModule<MessageIds, Options> = ESLintUtil
                     return;
                 }
 
-                const hasComponent: boolean = node.decorators.some((decorator: TSESTree.Decorator) =>
-                    decorator.expression.type === 'CallExpression' &&
-                    decorator.expression.callee.type === 'Identifier' &&
-                    decorator.expression.callee.name === 'Component',
+                const hasComponent: boolean = node.decorators.some(
+                    (decorator: TSESTree.Decorator) => {
+                        return decorator.expression.type === 'CallExpression' &&
+                            decorator.expression.callee.type === 'Identifier' &&
+                            decorator.expression.callee.name === 'Component';
+                    },
                 );
 
                 if (hasComponent) {

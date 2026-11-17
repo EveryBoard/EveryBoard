@@ -20,6 +20,16 @@ import { TaflState } from './TaflState';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
 
+interface SurroundingInfos {
+    backCoord: Coord;
+    back: RelativePlayer;
+    backInRange: boolean;
+    leftCoord: Coord;
+    left: RelativePlayer;
+    rightCoord: Coord;
+    right: RelativePlayer;
+}
+
 export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M, TaflState, TaflConfig> {
 
     public static readonly CAN_RETURN_TO_CASTLE: Localized = () => $localize`Central throne is left for good`;
@@ -33,9 +43,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         super();
     }
 
-    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig)
-    : MGPValidation
-    {
+    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {
@@ -85,9 +93,13 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         }
     }
 
-    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
-    : MGPOptional<Coord>
-    {
+    public tryCapture(
+        player: Player,
+        landingPawn: Coord,
+        d: Orthogonal,
+        state: TaflState,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -110,9 +122,13 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return this.capturePawn(player, landingPawn, d, state);
     }
 
-    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
-    : MGPOptional<Coord>
-    {
+    private captureKing(
+        player: Player,
+        landingPiece: Coord,
+        d: Orthogonal,
+        state: TaflState,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -133,11 +149,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return MGPOptional.empty();
     }
 
-    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState)
-    : { backCoord: Coord; back: RelativePlayer; backInRange: boolean;
-        leftCoord: Coord; left: RelativePlayer;
-        rightCoord: Coord; right: RelativePlayer; }
-    {
+    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState): SurroundingInfos {
         // the piece that just moved came from the front direction (by definition)
         const backCoord: Coord = c.getNext(d);
         const backInRange: boolean = state.isOnBoard(backCoord);
@@ -163,12 +175,12 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         };
     }
 
-    private captureKingAgainstTheWall(left: RelativePlayer,
-                                      right: RelativePlayer,
-                                      kingCoord: Coord,
-                                      config: TaflConfig)
-    : MGPOptional<Coord>
-    {
+    private captureKingAgainstTheWall(
+        left: RelativePlayer,
+        right: RelativePlayer,
+        kingCoord: Coord,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
         nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
         if (nbInvaders === 2 && config.edgesAreKingsEnnemy) { // 2
@@ -179,14 +191,14 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return MGPOptional.empty();
     }
 
-    private captureKingAgainstThrone(state: TaflState,
-                                     backCoord: Coord,
-                                     kingCoord: Coord,
-                                     left: RelativePlayer,
-                                     right: RelativePlayer,
-                                     config: TaflConfig)
-    : MGPOptional<Coord>
-    {
+    private captureKingAgainstThrone(
+        state: TaflState,
+        backCoord: Coord,
+        kingCoord: Coord,
+        left: RelativePlayer,
+        right: RelativePlayer,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         if (state.isExternalThrone(backCoord)) {
             if (config.kingFarFromHomeCanBeSandwiched) {
                 return MGPOptional.of(kingCoord);
@@ -221,41 +233,53 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         }
         if (back === RelativePlayer.NONE) {
             if (this.isThrone(state, backCoord) === false) {
-                Debug.display('TaflRules', 'capturePawn',
-                              'cannot capture a piece without an ally; ' +
+                Debug.display(
+                    'TaflRules',
+                    'capturePawn',
+                    'cannot capture a piece without an ally; ' +
                               threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
                               ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
-                              'cannot capture a piece without an ally behind');
+                              'cannot capture a piece without an ally behind',
+                );
                 return MGPOptional.empty();
             } // here, back is an empty throne
-            Debug.display('TaflRules', 'capturePawn',
-                          'piece captured by 1 opponent and 1 throne; ' +
+            Debug.display(
+                'TaflRules',
+                'capturePawn',
+                'piece captured by 1 opponent and 1 throne; ' +
                           threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
-                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')',
+            );
             return MGPOptional.of(threatenedPieceCoord); // piece captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
-            Debug.display('TaflRules', 'capturePawn',
-                          'piece captured by 2 opponents; ' + threatenedPieceCoord +
+            Debug.display(
+                'TaflRules',
+                'capturePawn',
+                'piece captured by 2 opponents; ' + threatenedPieceCoord +
                           'threatened by ' + player + `'s piece in ` + coord +
-                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')',
+            );
             return MGPOptional.of(threatenedPieceCoord); // piece captured by two opponents
         }
-        Debug.display('TaflRules', 'capturePawn',
-                      'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
-                      ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+        Debug.display(
+            'TaflRules',
+            'capturePawn',
+            'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
+                      ' coming from this direction (' + direction.x + ', ' + direction.y + ')',
+        );
         return MGPOptional.empty();
     }
 
-    private captureKingWithAtLeastASandwich(state: TaflState,
-                                            kingCoord: Coord,
-                                            left: RelativePlayer,
-                                            leftCoord: Coord,
-                                            right: RelativePlayer,
-                                            rightCoord: Coord,
-                                            config: TaflConfig)
-    : MGPOptional<Coord>
-    {
+    private captureKingWithAtLeastASandwich(
+        state: TaflState,
+        kingCoord: Coord,
+        left: RelativePlayer,
+        leftCoord: Coord,
+        right: RelativePlayer,
+        rightCoord: Coord,
+        config: TaflConfig,
+    ): MGPOptional<Coord> {
         if (this.kingTouchCentralThrone(state, kingCoord) === false &&
             config.kingFarFromHomeCanBeSandwiched)
         {
@@ -277,10 +301,12 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
 
-    public override applyLegalMove(move: TaflMove,
-                                   state: TaflState,
-                                   config: TaflConfig,
-                                   _info: void): TaflState {
+    public override applyLegalMove(
+        move: TaflMove,
+        state: TaflState,
+        config: TaflConfig,
+        _info: void,
+    ): TaflState {
         const turn: number = state.turn;
 
         const board: TaflPawn[][] = state.getCopiedBoard();

@@ -15,12 +15,16 @@ export class InternationalCheckersRules extends AbstractCheckersRules {
         new RulesConfigDescription<CheckersConfig>({
             name: (): string => $localize`International Checkers`,
             config: {
-                playerRows: new NumberConfig(4,
-                                             RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
-                                             MGPValidators.range(1, 99)),
-                emptyRows: new NumberConfig(2,
-                                            RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
-                                            MGPValidators.range(1, 99)),
+                playerRows: new NumberConfig(
+                    4,
+                    RulesConfigDescriptionLocalizable.NUMBER_OF_PIECES_ROWS,
+                    MGPValidators.range(1, 99),
+                ),
+                emptyRows: new NumberConfig(
+                    2,
+                    RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
+                    MGPValidators.range(1, 99),
+                ),
                 width:
                     new NumberConfig(10, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 99)),
                 canStackPieces:

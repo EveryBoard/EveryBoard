@@ -11,10 +11,12 @@ import { TrexoState } from '../TrexoState';
 
 class TrexoAlignmentMinimax extends Minimax<TrexoMove, TrexoState> {
     public constructor() {
-        super('Alignment',
-              TrexoRules.get(),
-              new TrexoAlignmentHeuristic(),
-              new TrexoMoveGenerator());
+        super(
+            'Alignment',
+            TrexoRules.get(),
+            new TrexoAlignmentHeuristic(),
+            new TrexoMoveGenerator(),
+        );
     }
 }
 

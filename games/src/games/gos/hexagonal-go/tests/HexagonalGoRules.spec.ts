@@ -88,11 +88,13 @@ describe('HexagonalGoRules', () => {
                 [O, O, _, _, _, _, _, _, N, N, N, N, N],
                 [_, O, _, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(1, 0),
-                                                       5,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(1, 0),
+                5,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -135,11 +137,13 @@ describe('HexagonalGoRules', () => {
                 [_, _, _, _, _, _, _, _, N, N, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 1),
-                                                       2,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 1),
+                2,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -182,11 +186,13 @@ describe('HexagonalGoRules', () => {
                 [_, _, _, _, _, X, _, _, N, N, N, N, N],
                 [_, _, _, _, _, X, _, N, N, N, N, N, N],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 3),
-                                                       2,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 3),
+                2,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -254,11 +260,13 @@ describe('HexagonalGoRules', () => {
             const move: GoMove = GoMove.PASS;
 
             // Then we should be in passed phase
-            const expectedState: GoState = new GoState(state.board,
-                                                       noCaptures,
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PASSED);
+            const expectedState: GoState = new GoState(
+                state.board,
+                noCaptures,
+                1,
+                MGPOptional.empty(),
+                GoPhase.PASSED,
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 

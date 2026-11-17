@@ -40,12 +40,12 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
         return GameStateMock.getInitialState();
     }
 
-    public override applyLegalMove(_move: MoveMock,
-                                   _state: GameStateMock,
-                                   _config: EmptyRulesConfig,
-                                   _info: void)
-    : GameStateMock
-    {
+    public override applyLegalMove(
+        _move: MoveMock,
+        _state: GameStateMock,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): GameStateMock {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
 

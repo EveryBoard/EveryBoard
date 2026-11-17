@@ -13,10 +13,11 @@ import { TablutRules } from '../tablut/TablutRules';
 
 class TaflPieceAndControlMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
     public constructor(rules: TaflRules<M>) {
-        super('Pieces > Control',
-              rules,
-              new TaflPieceAndControlHeuristic(rules),
-              new TaflMoveGenerator(rules),
+        super(
+            'Pieces > Control',
+            rules,
+            new TaflPieceAndControlHeuristic(rules),
+            new TaflMoveGenerator(rules),
         );
     }
 }

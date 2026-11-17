@@ -11,9 +11,11 @@ import { Heuristic } from '../Heuristic';
 
 export class HeuristicUtils {
 
-    public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
-                                                          S extends GameState,
-                                                          C extends RulesConfig = EmptyRulesConfig>(
+    public static expectSecondStateToBeBetterThanFirstFor<
+        M extends Move,
+        S extends GameState,
+        C extends RulesConfig = EmptyRulesConfig
+    >(
         heuristic: Heuristic<M, S, BoardValue, C>,
         weakState: S,
         weakMove: MGPOptional<M>,
@@ -47,9 +49,8 @@ export class HeuristicUtils {
         previousMove: M,
         player: Player,
         heuristics: Heuristic<M, S, BoardValue, C>[],
-        config: C)
-    : void
-    {
+        config: C,
+    ): void {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S> = RulesUtils.nodeWithPreviousMove(state, previousMove);
             for (const boardSubValue of heuristic.getBoardValue(node, config).metrics) {
