@@ -43,10 +43,10 @@ export class PentagoTutorial {
             ], 10),
         ).withPreviousMove(
             PentagoRules.get(),
-            PentagoMove.withRotation(0, 0, 0, false),
+            PentagoMove.withRotation(1, 1, 0, false),
             new PentagoState([
-                [_, O, O, O, X, _],
-                [_, X, _, _, _, _],
+                [O, O, O, O, X, _],
+                [_, _, _, _, _, _],
                 [X, _, _, _, _, _],
                 [O, _, _, _, _, X],
                 [O, _, _, _, X, _],

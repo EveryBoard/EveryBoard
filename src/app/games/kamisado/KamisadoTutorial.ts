@@ -37,7 +37,7 @@ export class KamisadoTutorial extends Tutorial {
         either by moving one of your pieces on the opponent's starting line,
         or by forcing the opponent to make a move that blocks the entire game.
         Here, Dark wins because its brown piece is on Light's starting line, on the top left.`,
-            new KamisadoState(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
+            new KamisadoState(5, KamisadoColor.ORANGE, MGPOptional.of(new Coord(3, 4)), false, [
                 [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -153,7 +153,7 @@ export class KamisadoTutorial extends Tutorial {
         You're playing Dark, analyze the board and make the winning move.`,
             new KamisadoState(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
                 [__, Bl, Pu, __, __, Re, __, __],
-                [__, __, __, Ye, __, __, __, __],
+                [Ye, __, __, __, __, __, __, __],
                 [__, __, __, Pi, __, Pu, __, __],
                 [__, __, __, ye, __, __, __, __],
                 [__, __, re, __, __, __, __, __],
@@ -169,13 +169,13 @@ export class KamisadoTutorial extends Tutorial {
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
             TutorialStepMessage.FAILED_TRY_AGAIN(),
-        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(4, 0), new Coord(3, 1)), new KamisadoState(
+        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(0, 0), new Coord(0, 1)), new KamisadoState(
             1,
             KamisadoColor.YELLOW,
-            MGPOptional.of(new Coord(4, 0)),
+            MGPOptional.of(new Coord(0, 0)),
             false,
             [
-                [__, Bl, Pu, __, Ye, Re, __, __],
+                [Ye, Bl, Pu, __, __, Re, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, Pi, __, Pu, __, __],
                 [__, __, __, ye, __, __, __, __],

@@ -95,7 +95,16 @@ export class SquarzTutorial extends Tutorial {
         ).withPreviousMove(
             SquarzRules.get(),
             SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get(),
-            initialState,
+            new SquarzState([
+                [O, _, _, _, _, _, _, X],
+                [_, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, X, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, O],
+            ], 2),
             defaultConfig,
         ),
 
