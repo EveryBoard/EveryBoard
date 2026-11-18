@@ -54,10 +54,10 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(greaterState),
             GameNode.root(lesserState),
+            GameNode.root(greaterState),
             Player.ONE,
             defaultConfig,
         );
@@ -94,10 +94,10 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(greaterState),
             GameNode.root(lesserState),
+            GameNode.root(greaterState),
             Player.ONE,
             defaultConfig,
         );
@@ -135,10 +135,10 @@ describe('EpaminondasPositionalHeuristic', () => {
         const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
         const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            strongNode,
             weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

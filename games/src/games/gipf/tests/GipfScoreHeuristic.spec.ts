@@ -43,10 +43,10 @@ describe('GipfScoreHeuristic', () => {
 
         // When computing their values
         // Then it should prefer having more captured pieces
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );
@@ -70,10 +70,10 @@ describe('GipfScoreHeuristic', () => {
 
         // When computing their minimax values
         // Then it should prefer having more pieces to place
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

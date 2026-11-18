@@ -57,10 +57,10 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
         // When comparing them
         // Then the one with more freedom should be considered better for Player.ONE
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

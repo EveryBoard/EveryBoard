@@ -58,10 +58,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );
@@ -96,10 +96,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );
@@ -134,10 +134,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );
@@ -172,10 +172,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );
@@ -212,10 +212,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );
@@ -252,10 +252,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

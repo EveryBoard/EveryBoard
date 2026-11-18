@@ -56,10 +56,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -90,10 +90,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -124,10 +124,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -158,10 +158,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -192,10 +192,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );

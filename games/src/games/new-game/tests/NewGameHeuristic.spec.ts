@@ -24,15 +24,15 @@ describe('NewGameHeuristic', () => {
     it('should have some board value', () => {
         /**
          * To test board values, most of the time you want to rely on
-         * `HeuristicUtils.expectNodeToBeBetterFor`.
+         * `HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor`.
          * Pass child nodes when the heuristic needs access to their previous moves.
          */
         const weakState: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
         const strongState: NewGameState = new NewGameState(42);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

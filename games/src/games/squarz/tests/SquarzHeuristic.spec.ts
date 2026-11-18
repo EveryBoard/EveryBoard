@@ -35,10 +35,10 @@ describe('SquarzHeuristic', () => {
 
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

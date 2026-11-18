@@ -57,10 +57,10 @@ describe('CoerceoPiecesTilesFreedomHeuristic', () => {
 
         // When comparing them
         // Then the one with more piece of Player.ONE should be deemed better for Player.ONE
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

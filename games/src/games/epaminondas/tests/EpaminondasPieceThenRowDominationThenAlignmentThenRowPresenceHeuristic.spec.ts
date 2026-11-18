@@ -51,10 +51,10 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ONE,
             defaultConfig,
         );
@@ -89,10 +89,10 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ONE,
             defaultConfig,
         );
@@ -130,10 +130,10 @@ describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic
         const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
         const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            strongNode,
             weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

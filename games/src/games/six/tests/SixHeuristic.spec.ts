@@ -125,10 +125,10 @@ describe('SixHeuristic', () => {
                 [X, _, X, X, _],
                 [O, O, _, _, _],
             ], 6);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
+                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -160,10 +160,10 @@ describe('SixHeuristic', () => {
                 [X, _, O],
                 [X, _, _],
             ], 6);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
+                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -191,10 +191,10 @@ describe('SixHeuristic', () => {
                 [_, O, _],
                 [_, X, _],
             ], 6);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
+                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -226,10 +226,10 @@ describe('SixHeuristic', () => {
                 [_, _, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 6);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
+                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
                 Player.ONE,
                 defaultConfig,
             );

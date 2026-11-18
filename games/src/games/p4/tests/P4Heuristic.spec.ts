@@ -42,10 +42,10 @@ describe('P4Heuristic', () => {
         ];
         const strongState: P4State = new P4State(strongBoard, 0);
 
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

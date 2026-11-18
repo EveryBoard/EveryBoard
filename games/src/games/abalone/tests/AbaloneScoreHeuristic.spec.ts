@@ -50,10 +50,10 @@ describe('AbaloneScoreHeuristic', () => {
 
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(new AbaloneState(boardWithMorePieces, 0)),
             GameNode.root(new AbaloneState(boardWithLessPieces, 0)),
+            GameNode.root(new AbaloneState(boardWithMorePieces, 0)),
             Player.ZERO,
             defaultConfig,
         );

@@ -33,10 +33,10 @@ describe('AwaleScoreHeuristic', () => {
         const weakNode: MancalaNode = rules.choose(node, weakMove, defaultConfig).get();
         const strongNode: MancalaNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             mancalaHeuristic,
-            strongNode,
             weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

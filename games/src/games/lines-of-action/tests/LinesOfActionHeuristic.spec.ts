@@ -44,10 +44,10 @@ describe('LinesOfActionHeuristic', () => {
 
         // When computing their values
         // Then it should prefer having less groups
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

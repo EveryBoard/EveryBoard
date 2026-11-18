@@ -99,10 +99,10 @@ describe('ReversiHeuristic', () => {
 
         // When computing the board value
         // Then the control of the corner should be preferred
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );

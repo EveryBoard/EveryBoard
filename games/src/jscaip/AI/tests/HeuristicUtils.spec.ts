@@ -10,26 +10,26 @@ import { Heuristic } from '../Heuristic';
 
 export class HeuristicUtils {
 
-    public static expectNodeToBeBetterFor<
+    public static expectSecondNodeToBeBetterThanFirstFor<
         M extends Move,
         S extends GameState,
         C extends RulesConfig = EmptyRulesConfig
     >(
         heuristic: Heuristic<M, S, BoardValue, C>,
-        betterNode: GameNode<M, S>,
-        worseNode: GameNode<M, S>,
+        weakNode: GameNode<M, S>,
+        strongNode: GameNode<M, S>,
         player: Player,
         config: C,
     ): void {
-        const betterValue: readonly number[] = heuristic.getBoardValue(betterNode, config).metrics;
-        const worseValue: readonly number[] = heuristic.getBoardValue(worseNode, config).metrics;
+        const weakValue: readonly number[] = heuristic.getBoardValue(weakNode, config).metrics;
+        const strongValue: readonly number[] = heuristic.getBoardValue(strongNode, config).metrics;
         if (player === Player.ZERO) {
-            expect(ArrayUtils.isLessThan(betterValue, worseValue))
-                .withContext(`Better node (${ betterValue }) should be < than worse node (${ worseValue })`)
+            expect(ArrayUtils.isGreaterThan(weakValue, strongValue))
+                .withContext(`First node (${ weakValue }) should be > than second node (${ strongValue })`)
                 .toBeTrue();
         } else {
-            expect(ArrayUtils.isGreaterThan(betterValue, worseValue))
-                .withContext(`Better node (${ betterValue }) should be > than worse node (${ worseValue })`)
+            expect(ArrayUtils.isLessThan(weakValue, strongValue))
+                .withContext(`First node (${ weakValue }) should be < than second node (${ strongValue })`)
                 .toBeTrue();
         }
     }

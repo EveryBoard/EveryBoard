@@ -46,10 +46,10 @@ describe('DiaballikDistanceHeuristic', () => {
         // When computing their heuristic value
 
         // Then it should prefer the one with the ball closest to opponent line
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

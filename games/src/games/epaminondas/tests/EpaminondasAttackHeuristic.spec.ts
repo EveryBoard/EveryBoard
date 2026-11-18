@@ -54,17 +54,17 @@ describe('EpaminondasAttackHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );
     });
 
     it('should prefer going into the winning territory', () => {
-        const strongerBoard: Table<PlayerOrNone> = [
+        const weakerBoard: Table<PlayerOrNone> = [
             [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -78,8 +78,8 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        const weakerBoard: Table<PlayerOrNone> = [
+        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
+        const strongerBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -93,8 +93,8 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
             GameNode.root(weakerState),
             GameNode.root(strongerState),
@@ -135,10 +135,10 @@ describe('EpaminondasAttackHeuristic', () => {
         const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
         const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            strongNode,
             weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

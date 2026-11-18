@@ -52,10 +52,10 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with mobile stacks should be considered better
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(mobileState),
                 GameNode.root(immobilizedState),
+                GameNode.root(mobileState),
                 Player.ONE,
                 defaultConfig,
             );

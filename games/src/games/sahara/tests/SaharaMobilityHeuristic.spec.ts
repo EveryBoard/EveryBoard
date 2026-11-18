@@ -46,10 +46,10 @@ describe('SaharaMobilityHeuristic', () => {
                 [N, N, O, X, _, _, _, O, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ZERO,
                 defaultConfig,
             );

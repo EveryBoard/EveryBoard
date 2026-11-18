@@ -40,10 +40,10 @@ describe('SaharaFreedomHeuristic', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 1);
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

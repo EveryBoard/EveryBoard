@@ -52,10 +52,10 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with a better score for Player.ONE should be deemer
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(oneDominatedState),
                 GameNode.root(equalityState),
+                GameNode.root(oneDominatedState),
                 Player.ONE,
                 defaultConfig,
             );

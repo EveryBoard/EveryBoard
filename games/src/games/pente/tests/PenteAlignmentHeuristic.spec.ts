@@ -67,10 +67,10 @@ describe('PenteAlignmentHeuristic', () => {
 
         // When using the minimax
         // Then it should consider the better aligned state stronger
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );

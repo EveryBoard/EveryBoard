@@ -57,10 +57,10 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape should be better for defender
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -91,10 +91,10 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape in one move should be better for defender
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );

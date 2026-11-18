@@ -55,10 +55,10 @@ describe('TaflPieceAndControlHeuristic', () => {
             const strongState: TaflState = new TaflState(strongBoard, 1);
 
             // Then the strong board should be preferred
-            HeuristicUtils.expectNodeToBeBetterFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                GameNode.root(strongState),
                 GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );

@@ -49,10 +49,10 @@ describe('GoHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having a larger territory
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

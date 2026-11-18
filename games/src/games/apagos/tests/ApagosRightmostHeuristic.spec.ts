@@ -31,10 +31,10 @@ describe('ApagosRightmostHeuristic', () => {
 
         // When computing the value of the boards
         // Then the second state should be deemed advantageous for the current player
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongerState),
             GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );

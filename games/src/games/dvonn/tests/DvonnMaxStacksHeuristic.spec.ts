@@ -44,10 +44,10 @@ describe('DvonnMaxStacksHeuristic', () => {
 
         // When computing their values
         // Then it should prefer having more stacks
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

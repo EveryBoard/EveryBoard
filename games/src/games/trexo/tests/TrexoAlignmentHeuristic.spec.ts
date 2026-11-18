@@ -50,10 +50,10 @@ describe('TrexoHeuristic', () => {
 
         // When comparing them
         // Then the second one should be deemed better
-        HeuristicUtils.expectNodeToBeBetterFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            GameNode.root(strongState),
             GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );
