@@ -264,7 +264,7 @@ describe('EpaminondasComponent', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
         const previousMove: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // When receiving a move
         const move: EpaminondasMove = new EpaminondasMove(7, 3, 2, 1, Ordinal.RIGHT);

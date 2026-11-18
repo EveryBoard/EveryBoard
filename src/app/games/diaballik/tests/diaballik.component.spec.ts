@@ -245,7 +245,7 @@ describe('DiaballikComponent', () => {
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When displaying it
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#space-0-6', 'moved-fill');
@@ -281,7 +281,7 @@ describe('DiaballikComponent', () => {
                 MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
             );
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // When starting a new move
         await testUtils.expectClickSuccess('#click-0-0');
@@ -318,7 +318,7 @@ describe('DiaballikComponent', () => {
                 MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()),
             );
         const previousState: DiaballikState = DiaballikRules.get().getInitialState();
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
         await testUtils.expectClickSuccess('#click-0-0');
 
         // When deselecting the piece

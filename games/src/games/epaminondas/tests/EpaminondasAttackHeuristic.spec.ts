@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -54,12 +54,10 @@ describe('EpaminondasAttackHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(strongerState),
+            GameNode.root(weakerState),
             Player.ZERO,
             defaultConfig,
         );
@@ -96,12 +94,10 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            strongerState,
-            MGPOptional.empty(),
-            weakerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ONE,
             defaultConfig,
         );
@@ -136,15 +132,13 @@ describe('EpaminondasAttackHeuristic', () => {
                    rules.choose(node, move, defaultConfig).get().gameState.countPieceOnBoard(Player.ZERO) ===
                    state.countPieceOnBoard(Player.ZERO);
         })!;
-        const weakState: EpaminondasState = rules.choose(node, weakMove, defaultConfig).get().gameState;
-        const strongState: EpaminondasState = rules.choose(node, strongMove, defaultConfig).get().gameState;
+        const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
+        const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.of(weakMove),
-            strongState,
-            MGPOptional.of(strongMove),
+            strongNode,
+            weakNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

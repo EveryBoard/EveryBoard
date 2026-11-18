@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+import { MGPMap, Set } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
@@ -55,12 +56,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -91,12 +90,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -127,12 +124,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -163,12 +158,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -199,12 +192,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );

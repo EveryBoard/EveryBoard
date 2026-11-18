@@ -2,7 +2,8 @@ import { GameNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { SuperRules } from '@everyboard/games';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 export type Click = string;
 
@@ -105,12 +106,25 @@ export abstract class TutorialStep {
         return false;
     }
 
-    public withPreviousMove(previousMove: Move, previousState?: GameState): this {
-        if (previousState === undefined) {
-            // User deems that the previous state is not important, so we use a dummy one (the current one)
-            previousState = this.node.gameState;
-        }
-        this.node = GameNode.child(this.node.gameState, GameNode.root(previousState), previousMove);
+    public withPreviousMove<
+        M extends Move,
+        S extends GameState,
+        C extends RulesConfig
+    >(
+        rules: SuperRules<M, S, C>,
+        previousMove: M,
+        previousState: S,
+        config: C,
+    ): this {
+        const result: MGPFallible<GameNode<M, S>> =
+            rules.choose(GameNode.root(previousState), previousMove, config);
+        Utils.assert(result.isSuccess(), 'TutorialStep.withPreviousMove: previous move must be legal');
+        const node: GameNode<M, S> = result.get();
+        Utils.assert(
+            JSON.stringify(node.gameState) === JSON.stringify(this.node.gameState),
+            'TutorialStep.withPreviousMove: previous move must lead to declared state',
+        );
+        this.node = node;
         return this;
     }
 

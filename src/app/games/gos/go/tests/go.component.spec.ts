@@ -86,7 +86,7 @@ describe('GoComponent', () => {
         };
 
         // When rendering it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should render the dead
         testUtils.expectElementToExist('.data-ko-0-0');
@@ -149,7 +149,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('.data-hoshi-3-3'); // Left Up
@@ -173,7 +173,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('.data-hoshi-2-2'); // Left Up
@@ -213,7 +213,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should not have a tengen
             testUtils.expectElementNotToExist('.data-hoshi-4-4'); // upper left potential tengen
@@ -232,7 +232,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should not have any hoshi
             testUtils.expectElementNotToExist('.data-hoshi');
@@ -252,7 +252,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying that koCoord on board (1, 1) at z=2
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             testUtils.expectElementToExist('#zoom-0');
             testUtils.expectElementToExist('#zoom-1');
@@ -299,7 +299,7 @@ describe('GoComponent', () => {
             };
 
             // When displaying that koCoord on board (1, 1) at z=2
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // Then it should be displayed at (0, 0)
             testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-0-0');
@@ -323,7 +323,7 @@ describe('GoComponent', () => {
                 zoom: 2,
                 showZooms: true,
             };
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // When clicking on one of the zooms (whose local coord is != to the one in zoom 0)
             const move: GoMove = GoMove.of(new Coord(1, 0));
@@ -359,7 +359,7 @@ describe('GoComponent', () => {
                 zoom: 3,
                 showZooms: true,
             };
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // When doing the capture
             const move: GoMove = new GoMove(0, 1);
@@ -416,7 +416,7 @@ describe('GoComponent', () => {
             };
 
             // When rendering state
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // Then the zoom = 0 ko should be correct
             testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-3-0');

@@ -15,8 +15,12 @@ export class RulesUtils {
      * Creates a node for tests where only the previous move is relevant.
      * The synthetic parent's state must not be read; use a real parent when previous-state data matters.
      */
-    public static nodeWithPreviousMove<M extends Move, S extends GameState>(state: S, previousMove: M): GameNode<M, S> {
-        return GameNode.child(state, GameNode.root(state), previousMove);
+    public static nodeWithPreviousMove<M extends Move, S extends GameState>(
+        state: S,
+        previousMove: M,
+        previousState: S,
+    ): GameNode<M, S> {
+        return GameNode.child(state, GameNode.root(previousState), previousMove);
     }
 
     public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,

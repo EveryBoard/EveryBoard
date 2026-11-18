@@ -173,7 +173,7 @@ describe('QuartoComponent', () => {
             const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then it should show last move
             testUtils.expectElementToHaveClasses('#last-move-0-0', ['base', 'no-fill', 'last-move-stroke', 'mid-stroke']);
@@ -192,7 +192,7 @@ describe('QuartoComponent', () => {
             const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then it should show last move
             testUtils.expectElementToHaveClasses('#victory-0-0', ['base', 'no-fill', 'victory-stroke']);

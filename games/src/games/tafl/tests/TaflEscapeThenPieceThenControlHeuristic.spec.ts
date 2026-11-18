@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -58,12 +57,10 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape should be better for defender
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -94,12 +91,10 @@ describe('Tafl escape/piece/control heuristic', () => {
 
             // When comparing them
             // Then the one where king can escape in one move should be better for defender
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectNodeToBeBetterFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(strongState),
+                GameNode.root(weakState),
                 Player.ONE,
                 defaultConfig,
             );

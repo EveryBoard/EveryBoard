@@ -514,7 +514,7 @@ describe('InternationalCheckersComponent', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 2);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
             await testUtils.expectClickSuccess('#coord-3-4');
 
             // When doing the move

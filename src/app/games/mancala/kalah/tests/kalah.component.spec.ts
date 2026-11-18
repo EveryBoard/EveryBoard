@@ -317,9 +317,11 @@ describe('KalahComponent', () => {
             ];
             const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
             const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 0));
-            await mancalaTestUtils.testUtils.setupState(
+            await mancalaTestUtils.testUtils.setupStateWithPreviousMove(
                 state,
-                { previousState, previousMove, config: defaultConfig },
+                previousState,
+                previousMove,
+                defaultConfig,
             );
 
             // When starting a multiple-capture move
@@ -399,7 +401,7 @@ describe('KalahComponent', () => {
                 numberOfRows: 2,
             };
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
-            await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
+            await mancalaTestUtils.testUtils.setupState(state, customConfig);
             const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
             await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
 

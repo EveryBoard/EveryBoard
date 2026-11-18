@@ -100,7 +100,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should show previousMove when set', fakeAsync(async() => {
-            // Given a certain TutorialStep with previousMove set and no previousState
+            // Given a certain TutorialStep with a previous move and state
             const tutorialPreviousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
             const tutorialState: QuartoState = new QuartoState([
                 [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
@@ -108,6 +108,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                 [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
             ], 1, QuartoPiece.BBBB);
+            const previousState: QuartoState = new QuartoState([
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ], 0, QuartoPiece.AAAA);
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -116,7 +122,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     ['#click_0_0'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
-                ).withPreviousMove(tutorialPreviousMove),
+                ).withPreviousMove(QuartoRules.get(), tutorialPreviousMove, previousState, defaultConfig),
             ];
 
             // When starting tutorial

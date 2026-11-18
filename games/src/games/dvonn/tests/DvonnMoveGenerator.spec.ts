@@ -132,7 +132,8 @@ describe('DvonnMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
-        const node: DvonnNode = RulesUtils.nodeWithPreviousMove(state, DvonnMove.PASS);
+        const previousState: DvonnState = new DvonnState(board, 9, false);
+        const node: DvonnNode = RulesUtils.nodeWithPreviousMove(state, DvonnMove.PASS, previousState);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(0);
     });
 

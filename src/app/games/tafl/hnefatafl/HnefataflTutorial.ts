@@ -49,8 +49,10 @@ export class HnefataflTutorial extends Tutorial {
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
         ).withPreviousMove(
+            HnefataflRules.get(),
             HnefataflMove.from(new Coord(3, 0), new Coord(3, 4)).get(),
             HnefataflRules.get().getInitialState(defaultConfig),
+            defaultConfig,
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier` + ' (2/2)',

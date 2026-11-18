@@ -1,7 +1,7 @@
-/* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
+
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
@@ -44,12 +44,10 @@ describe('DvonnMaxStacksHeuristic', () => {
 
         // When computing their values
         // Then it should prefer having more stacks
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );

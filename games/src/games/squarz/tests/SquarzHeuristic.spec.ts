@@ -1,5 +1,4 @@
-import { MGPOptional } from '@everyboard/lib';
-
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SquarzHeuristic } from '../SquarzHeuristic';
@@ -36,12 +35,10 @@ describe('SquarzHeuristic', () => {
 
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ZERO,
             defaultConfig,
         );

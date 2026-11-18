@@ -1,7 +1,7 @@
-/* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -32,12 +32,10 @@ describe('MartianChessScoreHeuristic', () => {
             MGPOptional.empty(),
             captured,
         );
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ZERO,
             defaultConfig,
         );

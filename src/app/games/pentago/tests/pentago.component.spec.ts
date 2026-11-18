@@ -80,7 +80,7 @@ describe('PentagoComponent', () => {
             const state: PentagoState = new PentagoState(board, 1);
             const previousMove: PentagoMove = PentagoMove.withRotation(5, 5, 3, false);
             const previousState: PentagoState = PentagoRules.get().getInitialState();
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
             testUtils.expectElementToHaveClass('#last-rotation-3-counterclockwise', 'last-move-stroke');
 
             // When clicking on a piece (and when having to click again to finish the move)
@@ -181,7 +181,7 @@ describe('PentagoComponent', () => {
             const state: PentagoState = new PentagoState(board, 1);
             const previousMove: PentagoMove = PentagoMove.rotationless(5, 5);
             const previousState: PentagoState = PentagoRules.get().getInitialState();
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
             await testUtils.expectClickSuccess('#click-0-0');
 
             // When clicking on dropped piece again
@@ -204,7 +204,7 @@ describe('PentagoComponent', () => {
         const state: PentagoState = new PentagoState(board, 1);
         const previousMove: PentagoMove = PentagoMove.rotationless(5, 5);
         const previousState: PentagoState = PentagoRules.get().getInitialState();
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#take-back');

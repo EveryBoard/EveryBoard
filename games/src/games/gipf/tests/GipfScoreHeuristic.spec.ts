@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
@@ -43,12 +43,10 @@ describe('GipfScoreHeuristic', () => {
 
         // When computing their values
         // Then it should prefer having more captured pieces
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );
@@ -72,12 +70,10 @@ describe('GipfScoreHeuristic', () => {
 
         // When computing their minimax values
         // Then it should prefer having more pieces to place
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );

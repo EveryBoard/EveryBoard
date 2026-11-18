@@ -1,7 +1,5 @@
-/* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
@@ -42,12 +40,10 @@ describe('SaharaFreedomHeuristic', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );

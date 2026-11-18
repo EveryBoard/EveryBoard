@@ -124,7 +124,27 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40);
-            await testUtils.setupState(state, { previousMove: ConspirateursMoveDrop.of(new Coord(5, 5)) });
+            const previousMove: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(5, 5));
+            const previousState: ConspirateursState = new ConspirateursState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 39);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
         });
 
         it('should cancel jump when clicking on another piece of the player', fakeAsync(async() => {

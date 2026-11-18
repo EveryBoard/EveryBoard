@@ -1,6 +1,6 @@
-/* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
@@ -50,12 +50,10 @@ describe('AbaloneScoreHeuristic', () => {
 
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            new AbaloneState(boardWithLessPieces, 0),
-            MGPOptional.empty(),
-            new AbaloneState(boardWithMorePieces, 0),
-            MGPOptional.empty(),
+            GameNode.root(new AbaloneState(boardWithMorePieces, 0)),
+            GameNode.root(new AbaloneState(boardWithLessPieces, 0)),
             Player.ZERO,
             defaultConfig,
         );

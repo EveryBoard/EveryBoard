@@ -141,7 +141,7 @@ describe('GipfComponent', () => {
             const previousPlacement: GipfPlacement =
                 new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN));
             const previousMove: GipfMove = new GipfMove(previousPlacement, [], []);
-            await testUtils.setupState(state, { previousMove, previousState });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When clicking a piece
             await testUtils.expectClickSuccess('#click-3-6');

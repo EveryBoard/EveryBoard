@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
@@ -57,12 +58,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );
@@ -97,12 +96,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );
@@ -137,12 +134,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );
@@ -177,12 +172,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );
@@ -219,12 +212,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ZERO,
             defaultConfig,
         );
@@ -261,12 +252,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(strongState),
+            GameNode.root(weakState),
             Player.ONE,
             defaultConfig,
         );

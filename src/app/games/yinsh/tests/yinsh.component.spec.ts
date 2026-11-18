@@ -1042,7 +1042,7 @@ describe('YinshComponent', () => {
             ], PlayerNumberMap.of(0, 0), 11);
 
             // When rendering state
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then 10 different captures should be displayed and 2 rings taken
             for (const capture of previousMove.initialCaptures) {

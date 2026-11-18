@@ -35,7 +35,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -54,7 +54,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -73,7 +73,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -94,7 +94,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
             spyOn(router, 'navigate').and.resolveTo();
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should redirect to the configuration page
             const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -113,7 +113,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
             spyOn(router, 'navigate').and.resolveTo();
 
             // When displaying it
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // Then it should redirect to the configuration page
             const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -134,7 +134,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -152,7 +152,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -173,7 +173,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
@@ -194,7 +194,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         spyOn(router, 'navigate').and.resolveTo();
 
         // When displaying it
-        await testUtils.setupState(state, { config });
+        await testUtils.setupState(state, config);
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];

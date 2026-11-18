@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -68,12 +67,10 @@ describe('PenteAlignmentHeuristic', () => {
 
         // When using the minimax
         // Then it should consider the better aligned state stronger
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(strongerState),
+            GameNode.root(weakerState),
             Player.ZERO,
             defaultConfig,
         );

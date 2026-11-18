@@ -1,6 +1,3 @@
-/* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
@@ -33,15 +30,13 @@ describe('AwaleScoreHeuristic', () => {
         const weakMove: MancalaMove = moveGenerator.getListMoves(node, defaultConfig).find((move: MancalaMove) => {
             return move.equals(strongMove) === false;
         })!;
-        const weakState: MancalaState = rules.choose(node, weakMove, defaultConfig).get().gameState;
-        const strongState: MancalaState = rules.choose(node, strongMove, defaultConfig).get().gameState;
+        const weakNode: MancalaNode = rules.choose(node, weakMove, defaultConfig).get();
+        const strongNode: MancalaNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectNodeToBeBetterFor(
             mancalaHeuristic,
-            weakState,
-            MGPOptional.of(weakMove),
-            strongState,
-            MGPOptional.of(strongMove),
+            strongNode,
+            weakNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

@@ -3,6 +3,7 @@ import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
@@ -37,7 +38,6 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
-
         // Then the heuristic should assign 0 as board value
         const boardValue: BoardValue = heuristic.getBoardValue(QuartoNode.root(state), defaultConfig);
         expect(boardValue.metrics).toEqual([0]);
@@ -53,11 +53,22 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+        const previousBoard: Table<QuartoPiece> = [
+            [____, ____, AABB, AAAB],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+        ];
+        const previousState: QuartoState = new QuartoState(previousBoard, 2, ABBB);
 
         // Then the heuristic should detect the previctory
-        HeuristicUtils.expectStateToBePreVictory(
+        const node: QuartoNode = RulesUtils.nodeWithPreviousMove(
             state,
             new QuartoMove(1, 0, AAAA),
+            previousState,
+        );
+        HeuristicUtils.expectNodeToBePreVictory(
+            node,
             Player.ONE,
             [heuristic],
             defaultConfig,
@@ -74,11 +85,24 @@ describe('QuartoHeuristic', () => {
             [____, ____, ____, ____],
         ];
         const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
+        const previousBoard: Table<QuartoPiece> = [
+            [____, ABBB, AAAB, ____],
+            [BBBB, BAAA, BBBA, ____],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+        ];
+        const previousState: QuartoState = new QuartoState(previousBoard, 9, AAAA);
 
         // When evaluating the board status
         // Then it should be evaluated as Ongoing
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-        HeuristicUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic], defaultConfig);
+        const node: QuartoNode = RulesUtils.nodeWithPreviousMove(state, move, previousState);
+        HeuristicUtils.expectNodeToBePreVictory(
+            node,
+            Player.ZERO,
+            [heuristic],
+            defaultConfig,
+        );
     });
 
 });
