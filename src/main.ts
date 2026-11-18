@@ -5,8 +5,9 @@ import { loadTranslations } from '@angular/localize';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
-import { LocaleUtils } from '@everyboard/games';
+import { Locale } from '@everyboard/games';
 
+import { LocaleBootstrapConfiguration, prepareLocaleBootstrap } from './app/LocaleBootstrap';
 import { AppComponent } from './app/app.component';
 import { initializeFirebase, routes } from './app/app.routes';
 import { ChatService } from './app/services/ChatService';
@@ -19,7 +20,7 @@ import { environment } from './environments/environment';
 
 registerLocaleData(localeFr);
 
-function bootstrapApp(): void {
+function bootstrapApp(locale: Locale): void {
     if (environment.production) {
         enableProdMode();
     }
@@ -33,7 +34,7 @@ function bootstrapApp(): void {
             UserService,
             ChatService,
             ThemeService,
-            { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
+            { provide: LOCALE_ID, useValue: locale },
             provideRouter(routes),
         ],
     })
@@ -41,26 +42,24 @@ function bootstrapApp(): void {
 }
 
 const runtimeTranslations: boolean = true;
+const localeBootstrap: LocaleBootstrapConfiguration = prepareLocaleBootstrap(environment.root, runtimeTranslations);
 
-const locale: string = LocaleUtils.getLocale();
-if (runtimeTranslations && locale !== 'en') {
-    fetch(environment.root + 'assets/' + locale + '.json')
-        .then((response: Response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return { 'locale': 'en', 'translations': {} };
-            }
-        })
-        .then((json: { locale: string; translations: Record<string, string> }) => {
+async function bootstrap(): Promise<void> {
+    try {
+        if (localeBootstrap.translationUrl != null) {
+            const response: Response = await fetch(localeBootstrap.translationUrl);
+            const json: { locale: string; translations: Record<string, string> } = response.ok ?
+                await response.json() :
+                { 'locale': 'en', 'translations': {} };
+
             loadTranslations(json.translations);
             $localize.locale = json.locale;
+        }
 
-            bootstrapApp();
-        })
-        .catch(function(err: Error) {
-            console.log(err);
-        });
-} else {
-    bootstrapApp();
+        bootstrapApp(localeBootstrap.locale);
+    } catch (err: unknown) {
+        console.log(err);
+    }
 }
+
+void bootstrap();

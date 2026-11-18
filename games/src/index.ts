@@ -62,6 +62,6 @@ export { TriangularCheckerBoard } from './jscaip/state/TriangularCheckerBoard';
 export { Cell, Table, Table3DUtils, TableUtils, TableWithPossibleNegativeIndices } from './jscaip/TableUtils';
 export { Vector } from './jscaip/Vector';
 export { Debug } from './utils/Debug';
-export { LocaleUtils, Localized } from './utils/LocaleUtils';
+export { Locale, LocaleUtils, Localized } from './utils/LocaleUtils';
 export { MGPValidators } from './utils/MGPValidator';
 export { ObservableSubject } from './utils/ObservableSubject';

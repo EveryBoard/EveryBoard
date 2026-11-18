@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MGPValidation } from '@everyboard/lib';
 
 import { CurrentGameService } from '../../../services/CurrentGameService';
+import { Theme, ThemeService } from '../../../services/ThemeService';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LocalGameConfigurationComponent } from '../../wrapper-components/local-game-configuration/local-game-configuration.component';
 import { TutorialGameWrapperComponent } from '../../wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
@@ -26,6 +27,22 @@ describe('WelcomeComponent', () => {
 
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
+    });
+
+    it('should update the selected game image when the theme changes', () => {
+        // Given a welcome page showing details for a game
+        const themeService: ThemeService = TestBed.inject(ThemeService);
+        const newTheme: Theme = themeService.theme() === 'dark' ? 'light' : 'dark';
+        testUtils.getComponent().pickGame('Awale');
+        testUtils.detectChanges();
+
+        // When the active theme changes
+        themeService.loadTheme(newTheme);
+        testUtils.detectChanges();
+
+        // Then the selected game image uses the new theme
+        const image: HTMLImageElement = testUtils.findElement('#gameInfoImage').nativeElement;
+        expect(image.getAttribute('src')).toBe(`assets/images/${newTheme}/Awale.png`);
     });
 
     it('should redirect to lobby when clicking on the corresponding button', fakeAsync(async() => {

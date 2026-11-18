@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Signal, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { ThemeService } from '../../../services/ThemeService';
+import { Theme, ThemeService } from '../../../services/ThemeService';
 import { GameInfo } from '../pick-game/GameInfo';
 import { PickGameComponent } from '../pick-game/pick-game.component';
 
@@ -24,7 +24,7 @@ export class WelcomeComponent {
 
     public readonly numberOfColumns: number = 5;
     public readonly games: GameInfo[][] = [];
-    public readonly theme: 'dark' | 'light';
+    public readonly theme: Signal<Theme> = inject(ThemeService).theme;
     public readonly iconOnlineGame: IconDefinition = faNetworkWired;
     public readonly iconLocalGame: IconDefinition = faDesktop;
     public readonly iconTutorial: IconDefinition = faBookOpen;
@@ -33,7 +33,6 @@ export class WelcomeComponent {
 
     public constructor()
     {
-        this.theme = inject(ThemeService).getTheme();
         const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {
