@@ -31,7 +31,7 @@ describe('AwaleOrderedMoveGenerator', () => {
 
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0)));
     });
 
     it('should order by captured houses, including outer-rows', () => {
@@ -55,7 +55,7 @@ describe('AwaleOrderedMoveGenerator', () => {
 
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0)));
     });
 
 });

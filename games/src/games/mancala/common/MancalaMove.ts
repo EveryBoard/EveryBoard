@@ -1,28 +1,38 @@
 import { ArrayUtils, Encoder, Utils } from '@everyboard/lib';
 
+import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
+
+export type MancalaDistributionDirection = 'CLOCKWISE' | 'UP';
 
 export class MancalaDistribution {
 
     public static encoder: Encoder<MancalaDistribution> = Encoder.tuple(
-        [Encoder.identity<number>(), Encoder.identity<number>()],
-        (distribution: MancalaDistribution) => [distribution.x, distribution.y],
-        (value: [number, number]) => MancalaDistribution.of(value[0], value[1]),
+        [Encoder.identity<number>(), Encoder.identity<number>(), Encoder.identity<number>()],
+        (distribution: MancalaDistribution) => [distribution.direction, distribution.coord.x, distribution.coord.y],
+        (value: [MancalaDistributionDirection, number, number]) => MancalaDistribution.of(value[0], value[1], value[2]),
     );
 
-    public static of(x: number, y: number): MancalaDistribution {
-        Utils.assert(0 <= x, 'MancalaDistribution.x should be a positive integer!');
-        Utils.assert(0 <= y, 'MancalaDistribution.y should be a positive integer!');
-        return new MancalaDistribution(x, y);
+    public static of(direction: MancalaDistributionDirection, x: number, y: number): MancalaDistribution {
+        Utils.assert(0 <= x, 'MancalaDistribution.coord.x should be a positive integer!');
+        Utils.assert(0 <= y, 'MancalaDistribution.coord.y should be a positive integer!');
+        return new MancalaDistribution(direction, x, y);
     }
 
-    protected constructor(public readonly x: number, public readonly y: number) {
+    public readonly coord: Coord;
+
+    protected constructor(
+        public readonly direction: MancalaDistributionDirection,
+        x: number,
+        y: number,
+    ) {
+        this.coord = new Coord(x, y);
     }
 
     public equals(other: MancalaDistribution): boolean {
         if (other === this) return true;
-        if (other.x !== this.x) return false;
-        return other.y === this.y;
+        if (other.coord.equals(this.coord) === false) return false;
+        return other.direction === this.direction;
     }
 
 }
@@ -54,7 +64,9 @@ export class MancalaMove extends Move {
     }
 
     public override toString(): string {
-        const distributions: string[] = this.distributions.map((move: MancalaDistribution) => '(' + move.x + ', ' + move.y + ')');
+        const distributions: string[] = this.distributions.map(
+            (d: MancalaDistribution) => '(' + d.direction + ', ' + d.coord.x + ', ' + d.coord.y + ')',
+        );
         return 'MancalaMove([' + distributions.join(', ') + '])';
     }
 

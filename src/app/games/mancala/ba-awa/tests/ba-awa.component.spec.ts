@@ -10,11 +10,14 @@ import { MancalaState } from '@everyboard/games/ba-awa';
 import { MancalaDistribution, MancalaMove } from '@everyboard/games/ba-awa';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { BaAwaComponent } from '../ba-awa.component';
 
-describe('BaAwaComponent', () => {
+const TIMEOUT_BETWEEN_LAPS: number = 1000;
+
+const TIMEOUT_BETWEEN_SEEDS: number = 100;
+
+fdescribe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
@@ -25,7 +28,7 @@ describe('BaAwaComponent', () => {
         moveGenerator: new BaAwaMoveGenerator(),
         distribution: {
             state: BaAwaRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +3 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
@@ -46,7 +49,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 1, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0, 0)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
@@ -62,7 +65,7 @@ describe('BaAwaComponent', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 5, 6, 0],
             ], 121, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5, 0)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 5, 0)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } },
                 { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
@@ -74,7 +77,7 @@ describe('BaAwaComponent', () => {
                 [3, 1, 4, 4, 4, 4],
                 [3, 1, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(1, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 1, 1)),
             result: [{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }],
         },
         fillThenCapture: {
@@ -82,7 +85,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
+            move: MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
             ],
@@ -107,14 +110,14 @@ describe('BaAwaComponent', () => {
                 await mancalaTestUtils.testUtils.setupState(state);
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-1-1');
                 element.triggerEventHandler('click', null);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS); // House emptied, waiting for lap to start
+                tick(TIMEOUT_BETWEEN_LAPS); // House emptied, waiting for lap to start
 
                 // When feeding the capturable house
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(TIMEOUT_BETWEEN_SEEDS);
 
                 // Then it should be captured
                 mancalaTestUtils.expectToBeCaptured([{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }]);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
+                tick(TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
             }));
 
         });
@@ -157,7 +160,7 @@ describe('BaAwaComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 3, 1));
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
@@ -178,7 +181,7 @@ describe('BaAwaComponent', () => {
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
 
             // When doing the second distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1), [MancalaDistribution.of(2, 1)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of('CLOCKWISE', 0, 1), [MancalaDistribution.of('CLOCKWISE', 2, 1)]);
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig);

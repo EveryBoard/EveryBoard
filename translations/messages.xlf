@@ -515,6 +515,9 @@
       <trans-unit id="3686980350710017232" datatype="html">
         <source>Number of rows</source>
       </trans-unit>
+      <trans-unit id="5399489507923824436" datatype="html">
+        <source>Allow vertical sowing</source>
+      </trans-unit>
       <trans-unit id="4321462166273172721" datatype="html">
         <source>Kalah</source>
       </trans-unit>

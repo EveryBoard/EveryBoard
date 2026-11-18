@@ -1,11 +1,11 @@
 export { MancalaConfig } from '../../games/mancala/common/MancalaConfig';
 export { MancalaFailure } from '../../games/mancala/common/MancalaFailure';
-export { MancalaDistribution, MancalaMove } from '../../games/mancala/common/MancalaMove';
-export {
-    MancalaCaptureResult,
-    MancalaDistributionResult,
-    MancalaDropResult,
-    MancalaRules,
-} from '../../games/mancala/common/MancalaRules';
+export { MancalaMove } from '../../games/mancala/common/MancalaMove';
+export { MancalaDistribution } from '../../games/mancala/common/MancalaMove';
+export { MancalaDistributionDirection } from '../../games/mancala/common/MancalaMove';
+export { MancalaCaptureResult } from '../../games/mancala/common/MancalaRules';
+export { MancalaDistributionResult } from '../../games/mancala/common/MancalaRules';
+export { MancalaDropResult } from '../../games/mancala/common/MancalaRules';
+export { MancalaRules } from '../../games/mancala/common/MancalaRules';
 export { MancalaScoreHeuristic } from '../../games/mancala/common/MancalaScoreHeuristic';
 export { MancalaState } from '../../games/mancala/common/MancalaState';
