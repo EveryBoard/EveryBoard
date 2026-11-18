@@ -4,7 +4,6 @@ import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
@@ -45,7 +44,7 @@ describe('SixHeuristic', () => {
                 [_, _, O, _, _],
             ];
             const previousState: SixState = SixState.ofRepresentation(previousBoard, 8);
-            const node: SixNode = RulesUtils.nodeWithPreviousMove(state, move, previousState);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), move);
 
             // When evaluation its value
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
@@ -64,7 +63,7 @@ describe('SixHeuristic', () => {
                 [_, X, X, X, X],
             ];
             const previousState: SixState = SixState.ofRepresentation(previousBoard, 1);
-            const node: SixNode = RulesUtils.nodeWithPreviousMove(state, previousMove, previousState);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), previousMove);
             HeuristicUtils.expectNodeToBePreVictory(
                 node,
                 Player.ONE,
@@ -90,7 +89,7 @@ describe('SixHeuristic', () => {
                 [O, X, X, _],
             ];
             const previousState: SixState = SixState.ofRepresentation(previousBoard, 1);
-            const node: SixNode = RulesUtils.nodeWithPreviousMove(state, previousMove, previousState);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), previousMove);
             HeuristicUtils.expectNodeToBePreVictory(
                 node,
                 Player.ONE,
@@ -127,8 +126,8 @@ describe('SixHeuristic', () => {
             ], 6);
             HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -162,8 +161,8 @@ describe('SixHeuristic', () => {
             ], 6);
             HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -193,8 +192,8 @@ describe('SixHeuristic', () => {
             ], 6);
             HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -228,8 +227,8 @@ describe('SixHeuristic', () => {
             ], 6);
             HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                RulesUtils.nodeWithPreviousMove(weakerState, move, weakerPreviousState),
-                RulesUtils.nodeWithPreviousMove(strongerState, move, strongerPreviousState),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );

@@ -3,7 +3,6 @@
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
@@ -133,7 +132,7 @@ describe('DvonnMoveGenerator', () => {
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
         const previousState: DvonnState = new DvonnState(board, 9, false);
-        const node: DvonnNode = RulesUtils.nodeWithPreviousMove(state, DvonnMove.PASS, previousState);
+        const node: DvonnNode = DvonnNode.child(state, DvonnNode.root(previousState), DvonnMove.PASS);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(0);
     });
 

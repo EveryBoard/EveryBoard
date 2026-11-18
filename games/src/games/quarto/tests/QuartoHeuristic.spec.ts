@@ -3,7 +3,6 @@ import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
@@ -62,10 +61,10 @@ describe('QuartoHeuristic', () => {
         const previousState: QuartoState = new QuartoState(previousBoard, 2, ABBB);
 
         // Then the heuristic should detect the previctory
-        const node: QuartoNode = RulesUtils.nodeWithPreviousMove(
+        const node: QuartoNode = QuartoNode.child(
             state,
+            QuartoNode.root(previousState),
             new QuartoMove(1, 0, AAAA),
-            previousState,
         );
         HeuristicUtils.expectNodeToBePreVictory(
             node,
@@ -96,7 +95,7 @@ describe('QuartoHeuristic', () => {
         // When evaluating the board status
         // Then it should be evaluated as Ongoing
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-        const node: QuartoNode = RulesUtils.nodeWithPreviousMove(state, move, previousState);
+        const node: QuartoNode = QuartoNode.child(state, QuartoNode.root(previousState), move);
         HeuristicUtils.expectNodeToBePreVictory(
             node,
             Player.ZERO,
