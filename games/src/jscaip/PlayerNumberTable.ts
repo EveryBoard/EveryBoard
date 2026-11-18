@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { Player } from './Player';
 import { PlayerMap } from './PlayerMap';
@@ -17,14 +17,10 @@ export class PlayerNumberTable extends PlayerMap<ReadonlyArray<number>> {
         return PlayerNumberTable.of([playerZero], [playerOne]);
     }
 
-    public add(player: Player, index: number, value: number): MGPOptional<readonly number[]> {
+    public add(player: Player, index: number, value: number): readonly number[] {
         const list: number[] = ArrayUtils.copy(this.get(player));
         list[index] += value;
-        return MGPOptional.of(this.put(player, list));
-    }
-
-    public override set(player: Player, value: ReadonlyArray<number>): void {
-        this.put(player, value);
+        return this.put(player, list);
     }
 
     public concat(other: PlayerNumberTable): PlayerNumberTable {

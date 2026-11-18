@@ -99,7 +99,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
             let playerScore: MartianChessCapture = captured.get(currentPlayer);
             const capturedPiece: MartianChessPiece = state.getPieceAt(move.getEnd());
             playerScore = playerScore.add(capturedPiece);
-            captured.put(currentPlayer, playerScore);
+            captured.replace(currentPlayer, playerScore);
             captured.makeImmutable();
         }
         const moveResult: MartianChessMoveResult = { finalPiece: landingPiece, score: captured };

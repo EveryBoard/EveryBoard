@@ -34,7 +34,7 @@ export class PlayerMap<T extends NonNullable<unknown>> {
     }
 
     public set(player: Player, value: T): void {
-        this.map.put(player, value);
+        this.map.set(player, value);
     }
 
     public replace(player: Player, value: T): T {

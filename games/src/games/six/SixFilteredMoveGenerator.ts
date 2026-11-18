@@ -21,7 +21,7 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
 
     private getSafelyMovablePieceOrFirstOne(state: SixState): CoordSet {
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: Set<Coord> = state.getPlayerPieces(currentPlayer);
+        const playerPieces: Set<Coord> = state.getPiecesOf(currentPlayer);
         const firstPiece: Coord = playerPieces.getAnyElement().get();
 
         const safePieces: Coord[] = [];

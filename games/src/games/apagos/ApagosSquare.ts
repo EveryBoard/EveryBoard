@@ -18,18 +18,18 @@ export class ApagosSquare {
     private constructor(private readonly containing: PlayerNumberMap,
                         private readonly capacity: number) {}
 
+    public getCapacity(): number {
+        return this.capacity;
+    }
+
     public isFull(): boolean {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
-        return this.capacity <= (nbZero + nbOne);
+        return this.getCapacity() <= (nbZero + nbOne);
     }
 
     public count(player: Player): number {
         return this.containing.get(player);
-    }
-
-    public getCapacity(): number {
-        return this.capacity;
     }
 
     public addPiece(piece: Player): ApagosSquare {

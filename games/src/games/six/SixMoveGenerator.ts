@@ -29,7 +29,7 @@ export class SixMoveGenerator extends MoveGenerator<SixMove, SixState, SixConfig
 
     protected getTranslations(state: SixState, legalLandings: Coord[]): SixMove[] {
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: Set<Coord> = state.getPlayerPieces(currentPlayer);
+        const playerPieces: Set<Coord> = state.getPiecesOf(currentPlayer);
         return this.getTranslationsFrom(state, playerPieces, legalLandings);
     }
 
