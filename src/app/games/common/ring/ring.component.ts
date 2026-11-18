@@ -1,10 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, input, InputSignal, Signal } from '@angular/core';
+import { Component, computed, input, InputSignal, Signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: '[app-ring]',
     templateUrl: './ring.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class RingComponent {

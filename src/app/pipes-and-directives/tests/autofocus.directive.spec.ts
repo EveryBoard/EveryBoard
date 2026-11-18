@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Component, CUSTOM_ELEMENTS_SCHEMA, provideZoneChangeDetection } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, provideZoneChangeDetection, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { ConnectedUserService } from '../../services/ConnectedUserService';
@@ -9,6 +9,7 @@ import { AutofocusDirective } from '../autofocus.directive';
 
 @Component({
     template: `<input type="text" autofocus />`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AutofocusDirective],
 })
 class AutofocusTestComponent {}

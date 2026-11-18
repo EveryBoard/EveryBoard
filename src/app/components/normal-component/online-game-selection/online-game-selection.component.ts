@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MGPValidation } from '@everyboard/lib';
@@ -10,6 +10,7 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-online-game-selection',
     templateUrl: './online-game-selection.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PickGameComponent],
 })
 export class OnlineGameSelectionComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ThemeService } from '../../../services/ThemeService';
@@ -9,6 +9,7 @@ type SettingOption = { value: string; name: string }
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule],
 })
 export class SettingsComponent {

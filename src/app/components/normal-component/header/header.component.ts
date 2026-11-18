@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnInit, OnDestroy, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, Signal, WritableSignal, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,7 @@ import { GameInfo } from '../pick-game/GameInfo';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink, NgClass, FaIconComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Coord3D } from '@everyboard/games';
@@ -14,6 +14,7 @@ import { ModeConfig } from '../../components/game-components/parallelogram-game-
     selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class TrexoHalfPieceComponent extends BaseGameComponent {

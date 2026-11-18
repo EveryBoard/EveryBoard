@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { AfterContentChecked, Component, input, InputSignal } from '@angular/core';
+import { AfterContentChecked, Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { HivePiece } from '@everyboard/games/hive';
@@ -11,6 +11,7 @@ import { BaseGameComponent } from '../../components/game-components/base-game-co
     selector: '[app-hive-piece]',
     templateUrl: './hive-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {

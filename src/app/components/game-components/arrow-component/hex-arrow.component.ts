@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { HexaDirection } from '@everyboard/games';
 
@@ -9,6 +9,7 @@ import { Arrow } from './Arrow';
 @Component({
     selector: '[app-hex-arrow]',
     templateUrl: './arrow.component.svg',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['../game-component/game-component.scss'],
 })
 export class HexArrowComponent extends BaseGameComponent {

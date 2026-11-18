@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -7,6 +7,7 @@ import { MGPOptional } from '@everyboard/lib';
     selector: '[app-numbered-circle]',
     templateUrl: './numbered-circle.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class NumberedCircleComponent {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
+import { Component, InputSignal, OutputEmitterRef, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
@@ -14,6 +14,7 @@ import { BaseGameComponent } from '../../components/game-components/base-game-co
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {

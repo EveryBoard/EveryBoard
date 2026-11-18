@@ -101,6 +101,7 @@ module.exports = [{
         complexity: ['error', 20],
         '@angular-eslint/no-output-rename': ['warn'],
         '@angular-eslint/component-class-suffix': ['warn'],
+        '@angular-eslint/prefer-on-push-component-change-detection': ['off'],
         '@stylistic/ts/member-delimiter-style': [
             'error',
             {

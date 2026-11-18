@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessFace } from './martian-chess.component';
@@ -8,6 +8,7 @@ import { MartianChessFace } from './martian-chess.component';
     selector: '[app-martian-chess-drone]',
     templateUrl: './martian-chess-drone.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass],
 })
 export class MartianChessDroneComponent {

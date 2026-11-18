@@ -1,4 +1,4 @@
-import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
+import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { GobanUtils } from '@everyboard/games';
@@ -10,6 +10,7 @@ import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
     selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [],
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {

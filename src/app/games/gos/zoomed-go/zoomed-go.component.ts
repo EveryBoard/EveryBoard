@@ -1,4 +1,4 @@
-import { Component, ModelSignal, model } from '@angular/core';
+import { Component, ModelSignal, model, ChangeDetectionStrategy } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
@@ -10,6 +10,7 @@ import { GoBoardComponent } from '../abstract-rectangular-go/go-board/go-board.c
     selector: 'app-zoomed-go',
     templateUrl: '../abstract-rectangular-go/abstract-rectangular-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GoBoardComponent],
 })
 export class ZoomedGoComponent extends AbstractRectangularGoComponent {

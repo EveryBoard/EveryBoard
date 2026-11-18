@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal } from '@angular/core';
+import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal, ChangeDetectionStrategy } from '@angular/core';
 
 
 import { Coord } from '@everyboard/games';
@@ -15,6 +15,7 @@ import { GoSubBoardHelper } from '../GoSubBoardHelper';
     selector: '[app-go-board]',
     templateUrl: './go-board.component.svg',
     styleUrls: ['../../../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [BlankGobanComponent, NgClass],
 })
 export class GoBoardComponent extends BaseGameComponent {

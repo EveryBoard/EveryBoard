@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +14,7 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink, FaIconComponent, PickGameComponent],
 })
 export class WelcomeComponent {
