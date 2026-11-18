@@ -67,12 +67,13 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
     public readonly captured: PlayerMap<MartianChessCapture>;
 
-    public constructor(board: Table<MartianChessPiece>,
-                       turn: number,
-                       public readonly lastMove: MGPOptional<MartianChessMove> = MGPOptional.empty(),
-                       public readonly countDown: MGPOptional<number> = MGPOptional.empty(),
-                       captured?: PlayerMap<MartianChessCapture>)
-    {
+    public constructor(
+        board: Table<MartianChessPiece>,
+        turn: number,
+        public readonly lastMove: MGPOptional<MartianChessMove> = MGPOptional.empty(),
+        public readonly countDown: MGPOptional<number> = MGPOptional.empty(),
+        captured?: PlayerMap<MartianChessCapture>,
+    ) {
         super(board, turn);
         if (captured == null) {
             captured = PlayerMap.ofValues(MartianChessCapture.of([]), MartianChessCapture.of([]));

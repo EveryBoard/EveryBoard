@@ -78,11 +78,13 @@ describe('GoState for Go', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 0),
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 0),
+                1,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             expect(expectedState).toEqual(state);
         });
 
@@ -121,11 +123,13 @@ describe('GoState for Go', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 0),
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 0),
+                1,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             expect(expectedState).toEqual(state);
         });
 
@@ -164,11 +168,13 @@ describe('GoState for Go', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 0),
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 0),
+                1,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             expect(expectedState).toEqual(state);
         });
 
@@ -207,11 +213,13 @@ describe('GoState for Go', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard,
-                                                       PlayerNumberMap.of(0, 0),
-                                                       1,
-                                                       MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+            const expectedState: GoState = new GoState(
+                expectedBoard,
+                PlayerNumberMap.of(0, 0),
+                1,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
             expect(expectedState).toEqual(state);
         });
 

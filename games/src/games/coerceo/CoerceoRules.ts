@@ -85,12 +85,12 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return CoerceoRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override applyLegalMove(move: CoerceoMove,
-                                   state: CoerceoState,
-                                   _config: CoerceoConfig,
-                                   _info: void)
-    : CoerceoState
-    {
+    public override applyLegalMove(
+        move: CoerceoMove,
+        state: CoerceoState,
+        _config: CoerceoConfig,
+        _info: void,
+    ): CoerceoState {
         if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);
         } else {
@@ -107,15 +107,19 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         newCaptures.add(currentPlayer, 1);
         const newTiles: PlayerNumberMap = state.tiles.getCopy();
         newTiles.add(currentPlayer, - 2);
-        const afterCapture: CoerceoState = new CoerceoState(newBoard,
-                                                            state.turn,
-                                                            newTiles,
-                                                            newCaptures);
+        const afterCapture: CoerceoState = new CoerceoState(
+            newBoard,
+            state.turn,
+            newTiles,
+            newCaptures,
+        );
         const afterTileRemoval: CoerceoState = afterCapture.removeTilesIfNeeded(captured, false);
-        const resultingState: CoerceoState = new CoerceoState(afterTileRemoval.getCopiedBoard(),
-                                                              afterTileRemoval.turn + 1,
-                                                              afterTileRemoval.tiles,
-                                                              afterTileRemoval.captures);
+        const resultingState: CoerceoState = new CoerceoState(
+            afterTileRemoval.getCopiedBoard(),
+            afterTileRemoval.turn + 1,
+            afterTileRemoval.tiles,
+            afterTileRemoval.captures,
+        );
         return resultingState;
     }
 
@@ -126,10 +130,12 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         const afterTilesRemoved: CoerceoState = afterMovement.removeTilesIfNeeded(move.getStart(), true);
         // removes captured pieces
         const afterCaptures: CoerceoState = afterTilesRemoved.doMovementCaptures(move);
-        const resultingState: CoerceoState = new CoerceoState(afterCaptures.board,
-                                                              state.turn + 1,
-                                                              afterCaptures.tiles,
-                                                              afterCaptures.captures);
+        const resultingState: CoerceoState = new CoerceoState(
+            afterCaptures.board,
+            state.turn + 1,
+            afterCaptures.tiles,
+            afterCaptures.captures,
+        );
         return resultingState;
     }
 
@@ -158,10 +164,14 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
     }
 
     public isLegalMovement(move: CoerceoRegularMove, state: CoerceoState): MGPValidation {
-        Utils.assert(state.getPieceAt(move.getStart()) !== FourStatePiece.UNREACHABLE,
-                     'Cannot start with a coord outside the board ' + move.getStart().toString() + '.');
-        Utils.assert(state.getPieceAt(move.getEnd()) !== FourStatePiece.UNREACHABLE,
-                     'Cannot end with a coord outside the board ' + move.getEnd().toString() + '.');
+        Utils.assert(
+            state.getPieceAt(move.getStart()) !== FourStatePiece.UNREACHABLE,
+            'Cannot start with a coord outside the board ' + move.getStart().toString() + '.',
+        );
+        Utils.assert(
+            state.getPieceAt(move.getEnd()) !== FourStatePiece.UNREACHABLE,
+            'Cannot end with a coord outside the board ' + move.getEnd().toString() + '.',
+        );
         const starter: FourStatePiece = state.getPieceAt(move.getStart());
         if (starter === FourStatePiece.EMPTY) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

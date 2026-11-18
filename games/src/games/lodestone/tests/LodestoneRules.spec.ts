@@ -35,10 +35,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneRules.get().getInitialState();
 
         // When placing a lodestone on an empty square
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 4, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'pull',
+            'orthogonal',
+            { top: 4, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should succeed
         expect(rules.isLegal(move, state).isSuccess()).toBeTrue();
@@ -169,14 +171,18 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneRules.get().getInitialState();
 
         // When placing a lodestone in 'pull' or 'push' direction
-        const pull: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 4, bottom: 0, left: 0, right: 0 });
-        const push: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 2, bottom: 0, left: 0, right: 0 });
+        const pull: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'pull',
+            'orthogonal',
+            { top: 4, bottom: 0, left: 0, right: 0 },
+        );
+        const push: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 2, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then both moves should be legal
         expect(rules.isLegal(pull, state).isSuccess()).toBeTrue();
@@ -240,10 +246,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneRules.get().getInitialState();
 
         // When placing a lodestone in a position to pull our own pieces
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 4, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'pull',
+            'orthogonal',
+            { top: 4, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should succeed and aligned player pieces should be pulled
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;
@@ -261,13 +269,15 @@ describe('LodestoneRules', () => {
             { key: Player.ZERO, value: new Coord(4, 4) },
         ]);
         const expectedState: LodestoneState =
-            new LodestoneState(expectedBoard,
-                               1,
-                               expectedLodestones,
-                               {
-                                   ...LodestoneState.INITIAL_PRESSURE_PLATES,
-                                   top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
-                               });
+            new LodestoneState(
+                expectedBoard,
+                1,
+                expectedLodestones,
+                {
+                    ...LodestoneState.INITIAL_PRESSURE_PLATES,
+                    top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
+                },
+            );
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -313,10 +323,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneRules.get().getInitialState();
 
         // When placing a lodestone to pull, such that we try to place more captures than what we actually captured
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 12, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'pull',
+            'orthogonal',
+            { top: 12, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be illegal
         const reason: string = LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES();
@@ -449,10 +461,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
 
         // When placing a lodestone to push and capture B
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 1, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should succeed, and B is pushed and captured, but not A
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -567,10 +581,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to push B
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 0, bottom: 1, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 0, bottom: 1, left: 0, right: 0 },
+        );
 
         // Then the move should be valid and B falls
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -615,10 +631,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 1, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid, and the top pressure plate crumbles
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -663,10 +681,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 1, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid, and the top pressure plate crumbles a second time
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -712,10 +732,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to capture all Bs
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 2),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 5, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 2),
+            'pull',
+            'orthogonal',
+            { top: 5, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid, and the top pressure plate crumbles *twice*
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;
@@ -760,10 +782,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to capture all Bs, trying to place all of the on the top pressure plate
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 5, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'pull',
+            'orthogonal',
+            { top: 5, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be illegal
         const reason: string = LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE();
@@ -789,10 +813,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
 
         // When placing a lodestone to push one of the B
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 1, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -841,10 +867,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
         // When placing a lodestone to push one of the B
-        const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
-                                                      'push',
-                                                      'orthogonal',
-                                                      { top: 1, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(4, 4),
+            'push',
+            'orthogonal',
+            { top: 1, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
@@ -897,10 +925,12 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
         // When performing a pull move where the piece will move to the last position of the lodestone
-        const move: LodestoneMove = new LodestoneMove(new Coord(3, 3),
-                                                      'pull',
-                                                      'orthogonal',
-                                                      { top: 0, bottom: 0, left: 0, right: 0 });
+        const move: LodestoneMove = new LodestoneMove(
+            new Coord(3, 3),
+            'pull',
+            'orthogonal',
+            { top: 0, bottom: 0, left: 0, right: 0 },
+        );
 
         // Then the move should be valid and the piece has been pulled
         const A: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;

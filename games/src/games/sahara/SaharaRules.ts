@@ -98,12 +98,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return playerFreedomsValue;
     }
 
-    public override applyLegalMove(move: SaharaMove,
-                                   state: SaharaState,
-                                   _config: EmptyRulesConfig,
-                                   _info: void)
-    : SaharaState
-    {
+    public override applyLegalMove(
+        move: SaharaMove,
+        state: SaharaState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): SaharaState {
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;

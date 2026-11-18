@@ -9,11 +9,12 @@ import { GameStatus } from './GameStatus';
 import { Move } from './Move';
 import { GameState } from './state/GameState';
 
-export abstract class SuperRules<M extends Move,
-                                 S extends GameState,
-                                 C extends RulesConfig,
-                                 L = void>
-{
+export abstract class SuperRules<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig,
+    L = void
+> {
 
     protected constructor() {}
 
@@ -44,9 +45,11 @@ export abstract class SuperRules<M extends Move,
             return MGPFallible.success(choice.get());
         }
         const resultingState: S = this.applyLegalMove(move, node.gameState, config, legality.get());
-        const child: GameNode<M, S> = new GameNode(resultingState,
-                                                   MGPOptional.of(node),
-                                                   MGPOptional.of(move));
+        const child: GameNode<M, S> = new GameNode(
+            resultingState,
+            MGPOptional.of(node),
+            MGPOptional.of(move),
+        );
         return MGPFallible.success(child);
     }
 
@@ -78,19 +81,18 @@ export abstract class SuperRules<M extends Move,
     public abstract getGameStatus(node: GameNode<M, S>, config: C): GameStatus;
 }
 
-export abstract class ConfigurableRules<M extends Move,
-                                        S extends GameState,
-                                        C extends RulesConfig,
-                                        L = void>
-    extends SuperRules<M, S, C, L>
-{
-}
+export abstract class ConfigurableRules<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig,
+    L = void
+> extends SuperRules<M, S, C, L> { }
 
-export abstract class Rules<M extends Move,
-                            S extends GameState,
-                            L = void>
-    extends SuperRules<M, S, EmptyRulesConfig, L>
-{
+export abstract class Rules<
+    M extends Move,
+    S extends GameState,
+    L = void
+> extends SuperRules<M, S, EmptyRulesConfig, L> {
 
     public override getRulesConfigDescription(): RulesConfigDescription {
         return RulesConfigDescription.EMPTY;

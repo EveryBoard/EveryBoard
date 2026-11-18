@@ -7,13 +7,13 @@ import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiState } from './ReversiState';
 
 export class ReversiMinimax<R extends AbstractReversiRules>
-    extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation>
-{
+    extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation> {
     public constructor(rules: R) {
-        super($localize`Minimax`,
-              rules,
-              new ReversiHeuristic(),
-              new ReversiMoveGenerator(rules),
+        super(
+            $localize`Minimax`,
+            rules,
+            new ReversiHeuristic(),
+            new ReversiMoveGenerator(rules),
         );
     }
 }

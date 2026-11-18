@@ -7,17 +7,18 @@ import { GoMove } from './GoMove';
 import { GoState } from './GoState';
 
 export abstract class AbstractGoMinimax<C extends AbstractGoConfig>
-    extends Minimax<GoMove, GoState, C, GoLegalityInformation>
-{
+    extends Minimax<GoMove, GoState, C, GoLegalityInformation> {
 
-    public constructor(rules: AbstractGoRules<C>,
-                       moveGenerator: AbstractGoMoveGenerator<C>,
-                       heuristic: AbstractGoHeuristic<C>,
+    public constructor(
+        rules: AbstractGoRules<C>,
+        moveGenerator: AbstractGoMoveGenerator<C>,
+        heuristic: AbstractGoHeuristic<C>,
     ) {
-        super($localize`Minimax`,
-              rules,
-              heuristic,
-              moveGenerator,
+        super(
+            $localize`Minimax`,
+            rules,
+            heuristic,
+            moveGenerator,
         );
     }
 

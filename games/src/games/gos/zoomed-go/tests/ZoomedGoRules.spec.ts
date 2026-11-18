@@ -69,11 +69,13 @@ describe('ZoomedGoRules', () => {
             [_, _, _, _, _],
             [_, _, X, _, _],
         ];
-        const expectedState: GoState = new GoState(expectedBoard,
-                                                   PlayerNumberMap.of(0, 1),
-                                                   2,
-                                                   MGPOptional.empty(),
-                                                   GoPhase.PLAYING);
+        const expectedState: GoState = new GoState(
+            expectedBoard,
+            PlayerNumberMap.of(0, 1),
+            2,
+            MGPOptional.empty(),
+            GoPhase.PLAYING,
+        );
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
     });
 
@@ -102,11 +104,13 @@ describe('ZoomedGoRules', () => {
             [_, _, X, _, _],
             [_, _, _, _, _],
         ];
-        const expectedState: GoState = new GoState(expectedBoard,
-                                                   PlayerNumberMap.of(0, 1),
-                                                   2,
-                                                   MGPOptional.empty(),
-                                                   GoPhase.PLAYING);
+        const expectedState: GoState = new GoState(
+            expectedBoard,
+            PlayerNumberMap.of(0, 1),
+            2,
+            MGPOptional.empty(),
+            GoPhase.PLAYING,
+        );
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
     });
 
@@ -183,11 +187,13 @@ describe('ZoomedGoRules', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const expectedState: GoState = new GoState(expectedBoard,
-                                                   PlayerNumberMap.of(4, 0),
-                                                   1,
-                                                   MGPOptional.empty(),
-                                                   GoPhase.PLAYING);
+        const expectedState: GoState = new GoState(
+            expectedBoard,
+            PlayerNumberMap.of(4, 0),
+            1,
+            MGPOptional.empty(),
+            GoPhase.PLAYING,
+        );
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
     });
 

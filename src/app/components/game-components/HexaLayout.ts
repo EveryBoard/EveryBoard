@@ -3,9 +3,11 @@ import { Utils } from '@everyboard/lib';
 
 export class HexaLayout {
 
-    public constructor(public readonly size: number,
-                       public readonly origin: Coord,
-                       public readonly orientation: HexaOrientation) {
+    public constructor(
+        public readonly size: number,
+        public readonly origin: Coord,
+        public readonly orientation: HexaOrientation,
+    ) {
     }
 
     public getCenterAt(coord: Coord): Coord {

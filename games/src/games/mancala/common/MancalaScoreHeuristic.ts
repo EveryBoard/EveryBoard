@@ -8,8 +8,7 @@ import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
 import { MancalaState } from './MancalaState';
 
-export class MancalaScoreHeuristic extends PlayerMetricHeuristicWithBounds<MancalaMove, MancalaState, MancalaConfig>
-{
+export class MancalaScoreHeuristic extends PlayerMetricHeuristicWithBounds<MancalaMove, MancalaState, MancalaConfig> {
 
     public override getMetrics(node: MancalaNode, _config: MancalaConfig): PlayerNumberTable {
         return node.gameState.getScoresCopy().toTable();

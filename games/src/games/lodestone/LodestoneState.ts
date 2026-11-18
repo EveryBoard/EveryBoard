@@ -82,8 +82,10 @@ export class LodestonePressurePlateGroup {
             return this;
         }
         const remainingSpaces: number = this.getGroupRemainingSpaces();
-        Utils.assert(quantity <= remainingSpaces,
-                     `should never put more pieces than the plate can support (${ remainingSpaces } > ${ quantity})`);
+        Utils.assert(
+            quantity <= remainingSpaces,
+            `should never put more pieces than the plate can support (${ remainingSpaces } > ${ quantity})`,
+        );
         const fullPlates: LodestonePressurePlate[] = this.getCrumbledPlates();
         const currentPlate: LodestonePressurePlate = this.getCurrentPlate().get();
         const nextPlates: LodestonePressurePlate[] = this.getFollowingPlates();
@@ -117,8 +119,10 @@ export class LodestonePressurePlate {
 
     public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
 
-    public constructor(public readonly width: number,
-                       private readonly pieces: readonly LodestonePiecePlayer[]) {
+    public constructor(
+        public readonly width: number,
+        private readonly pieces: readonly LodestonePiecePlayer[],
+    ) {
     }
 
     public getPieceAt(index: number): LodestonePiece {
@@ -141,8 +145,7 @@ export class LodestonePressurePlate {
 
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 
-export type LodestonePressurePlates = Record<LodestonePressurePlatePosition,
-                                             LodestonePressurePlateGroup>;
+export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, LodestonePressurePlateGroup>;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace LodestonePressurePlates {
@@ -185,11 +188,12 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     public static readonly INITIAL_PRESSURE_PLATES: LodestonePressurePlates =
         LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
 
-    public constructor(board: Table<LodestonePiece>,
-                       turn: number,
-                       public readonly lodestones: LodestonePositions,
-                       public readonly pressurePlates: LodestonePressurePlates)
-    {
+    public constructor(
+        board: Table<LodestonePiece>,
+        turn: number,
+        public readonly lodestones: LodestonePositions,
+        public readonly pressurePlates: LodestonePressurePlates,
+    ) {
         super(board, turn);
     }
 

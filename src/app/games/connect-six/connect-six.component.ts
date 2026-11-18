@@ -22,11 +22,12 @@ import { BlankGobanComponent } from '../../components/game-components/goban-game
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [BlankGobanComponent, NgClass],
 })
-export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
-                                                            ConnectSixMove,
-                                                            ConnectSixState,
-                                                            PlayerOrNone>
-{
+export class ConnectSixComponent extends GobanGameComponent<
+    ConnectSixRules,
+    ConnectSixMove,
+    ConnectSixState,
+    PlayerOrNone
+> {
 
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -55,7 +56,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.state();
         this.board = state.getCopiedBoard();
-        this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
+        this.victoryCoords = ConnectSixRules.getVictoriousSpaces(state);
         this.createHoshis();
     }
 

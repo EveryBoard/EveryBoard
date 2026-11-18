@@ -7,11 +7,12 @@ export class Arrow<T extends Direction> {
     public startCenter: Coord;
     public landingCenter: Coord;
 
-    public constructor(public readonly start: Coord,
-                       public readonly landing: Coord,
-                       public readonly dir: T,
-                       public readonly getCenterAt: (c: Coord) => Coord)
-    {
+    public constructor(
+        public readonly start: Coord,
+        public readonly landing: Coord,
+        public readonly dir: T,
+        public readonly getCenterAt: (c: Coord) => Coord,
+    ) {
         const pointedCenter: Coord = this.getCenterAt(landing);
         const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
         const angle: number = dir.getAngle() + 150;

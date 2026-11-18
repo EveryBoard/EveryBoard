@@ -30,9 +30,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     }
 
     public override getInitialState(): ConspirateursState {
-        const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
-                                                          ConspirateursState.HEIGHT,
-                                                          PlayerOrNone.NONE);
+        const board: PlayerOrNone[][] = TableUtils.create(
+            ConspirateursState.WIDTH,
+            ConspirateursState.HEIGHT,
+            PlayerOrNone.NONE,
+        );
         return new ConspirateursState(board, 0);
     }
 

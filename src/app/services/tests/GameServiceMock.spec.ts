@@ -15,11 +15,12 @@ export class GameServiceMock extends AbstractGameService {
         error: (reason: string) => void;
     }> = MGPOptional.empty();
 
-    public override async subscribeTo(_gameId: string,
-                                      gameUpdate: (game: Game) => Promise<void>,
-                                      gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-                                      error: (reason: string) => void)
-    : Promise<Subscription> {
+    public override async subscribeTo(
+        _gameId: string,
+        gameUpdate: (game: Game) => Promise<void>,
+        gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+        error: (reason: string) => void,
+    ): Promise<Subscription> {
         this.subscribedCallback = MGPOptional.of({
             gameUpdate,
             gameEvent,

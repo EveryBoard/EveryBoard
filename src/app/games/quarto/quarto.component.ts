@@ -22,12 +22,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class QuartoComponent extends RectangularGameComponent<QuartoRules,
-                                                              QuartoMove,
-                                                              QuartoState,
-                                                              QuartoPiece,
-                                                              QuartoConfig>
-{
+export class QuartoComponent extends RectangularGameComponent<
+    QuartoRules,
+    QuartoMove,
+    QuartoState,
+    QuartoPiece,
+    QuartoConfig
+> {
     public EMPTY: QuartoPiece = QuartoPiece.EMPTY;
     public QuartoPiece: typeof QuartoPiece = QuartoPiece;
 
@@ -69,7 +70,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         const config: QuartoConfig = this.config();
-        this.victoriousCoords = this.rules.getVictoriousCoords(state, config);
+        this.victoriousCoords = this.rules.getVictoriousSpaces(state, config);
     }
 
     @ClickHandler((coord: Coord) => `#click-coord-${ coord.x }-${ coord.y }`)

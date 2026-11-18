@@ -60,7 +60,8 @@ describe('LobbyComponent', () => {
                 GameActionFailure.YOU_ALREADY_HAVE_ANOTHER_TAB(),
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'already-subscribed' });
-                });
+                },
+            );
             await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
 
@@ -77,7 +78,8 @@ describe('LobbyComponent', () => {
                 GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'),
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'some-error' });
-                });
+                },
+            );
             await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
     });

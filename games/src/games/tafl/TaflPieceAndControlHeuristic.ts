@@ -32,9 +32,10 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
         ]);
     }
 
-    protected getControlScoreAndPieceScores(node: TaflNode<M>, config: TaflConfig)
-    : TaflPieceAndControlHeuristicMetrics
-    {
+    protected getControlScoreAndPieceScores(
+        node: TaflNode<M>,
+        _config: TaflConfig,
+    ): TaflPieceAndControlHeuristicMetrics {
         const state: TaflState = node.gameState;
         const pieceMap: PlayerMap<CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, Set<SandwichThreat>> = this.getThreatMap(node, pieceMap);

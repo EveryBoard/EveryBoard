@@ -70,9 +70,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state()));
 
         this.SPACE_SIZE = 30;
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
-                                         new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
-                                         PointyHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE * 1.50,
+            new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
+            PointyHexaOrientation.INSTANCE,
+        );
         this.hexaBoard = this.state().board;
     }
 
