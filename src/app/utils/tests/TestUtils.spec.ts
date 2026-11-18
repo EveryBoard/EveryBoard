@@ -19,7 +19,7 @@ import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { ConfigDescriptionType, RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
@@ -457,13 +457,31 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public async setupState(
         state: GameState,
-        params: {
-            previousState?: GameState;
-            previousMove?: Move;
-            config?: RulesConfig;
-        } = {},
+        config?: RulesConfig,
     ): Promise<void> {
-        const config: RulesConfig = this.getConfigFrom(params.config);
+        const actualConfig: RulesConfig = this.getConfigFrom(config);
+        await this.setupNode(state, GameNode.root(state), actualConfig);
+    }
+
+    public async setupStateWithPreviousMove(
+        state: GameState,
+        previousState: GameState,
+        previousMove: Move,
+        config?: RulesConfig,
+    ): Promise<void> {
+        const actualConfig: RulesConfig = this.getConfigFrom(config);
+        const parent: AbstractNode = GameNode.root(previousState);
+        const result: MGPFallible<AbstractNode> =
+            this.gameComponent.rules.choose(parent, previousMove, actualConfig);
+        expect(result.isSuccess())
+            .withContext(`previous move should be legal: ${result.getReasonOr('')}`)
+            .toBeTrue();
+        const node: AbstractNode = result.get();
+        expect(node.gameState).withContext('previous move should lead to the supplied state').toEqual(state);
+        await this.setupNode(state, node, actualConfig);
+    }
+
+    private async setupNode(state: GameState, node: AbstractNode, config: RulesConfig): Promise<void> {
         if (Object.keys(config).length > 0) {
             // If the game is configurable, set its config
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
@@ -476,15 +494,9 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             this.gameComponent.config.set(config);
             tick(0);
         }
-        const node: AbstractNode = new GameNode(
-            state,
-            MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
-                new GameNode(previousState)),
-            MGPOptional.ofNullable(params.previousMove),
-        );
         this.gameComponent.node.set(node);
         await this.gameComponent.updateBoardAndRedraw(false);
-        if (params.previousMove !== undefined) {
+        if (node.hasParent()) {
             await this.gameComponent.showLastMoveAndRedraw();
         }
         this.forceChangeDetection();

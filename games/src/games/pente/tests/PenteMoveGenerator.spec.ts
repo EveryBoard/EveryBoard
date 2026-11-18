@@ -15,7 +15,7 @@ describe('PenteMoveGenerator', () => {
 
     it('should propose exactly 360 moves at first turn', () => {
         // Given the initial state
-        const node: PenteNode = new PenteNode(PenteRules.get().getInitialState(defaultConfig));
+        const node: PenteNode = PenteNode.root(PenteRules.get().getInitialState(defaultConfig));
 
         // When listing the moves
         const moves: PenteMove[] = moveGenerator.getListMoves(node, defaultConfig);

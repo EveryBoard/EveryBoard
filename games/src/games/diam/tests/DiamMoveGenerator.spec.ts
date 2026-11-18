@@ -22,7 +22,7 @@ describe('DiamMoveGenerator', () => {
     });
 
     it('should propose 16 moves at first turn', () => {
-        const node: DiamNode = new DiamNode(DiamRules.get().getInitialState());
+        const node: DiamNode = DiamNode.root(DiamRules.get().getInitialState());
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(16);
     });
 
@@ -34,7 +34,7 @@ describe('DiamMoveGenerator', () => {
             [B1, __, __, __, __, __, __, B2],
             [A1, __, __, __, __, __, __, A2],
         ], 4);
-        const node: DiamNode = new DiamNode(state);
+        const node: DiamNode = DiamNode.root(state);
 
         // Then there are 16 + 4 move
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(20);
@@ -48,7 +48,7 @@ describe('DiamMoveGenerator', () => {
             [__, __, __, __, __, __, __, A2],
             [__, __, __, __, __, __, __, B2],
         ], 4);
-        const node: DiamNode = new DiamNode( state);
+        const node: DiamNode = DiamNode.root( state);
 
         // Then there are 14 + 4 move
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(18);

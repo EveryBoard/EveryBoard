@@ -1,7 +1,5 @@
-/* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { HiveHeuristic } from '../HiveHeuristic';
@@ -25,7 +23,7 @@ describe('HiveHeuristic', () => {
     it('should assign a 0 value if the queen is not on the board', () => {
         // Given a state without the queen
         const state: HiveState = HiveRules.get().getInitialState();
-        const node: HiveNode = new HiveNode(state);
+        const node: HiveNode = HiveNode.root(state);
 
         // When computing its value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -46,12 +44,10 @@ describe('HiveHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having more pieces (i.e., a higher score)
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

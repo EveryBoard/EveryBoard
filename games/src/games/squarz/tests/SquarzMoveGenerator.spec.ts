@@ -22,7 +22,7 @@ describe('SquarzMoveGenerator', () => {
     it('should have all move options', () => {
         // Given an initial node
         const initialState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
-        const node: SquarzNode = new SquarzNode(initialState);
+        const node: SquarzNode = SquarzNode.root(initialState);
 
         // When listing the moves
         const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -43,7 +43,7 @@ describe('SquarzMoveGenerator', () => {
             [O, X, O, X, X, X, _, X],
             [O, X, O, X, X, X, X, X],
         ], 100);
-        const node: SquarzNode = new SquarzNode(state);
+        const node: SquarzNode = SquarzNode.root(state);
 
         // When listing the moves
         const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -64,7 +64,7 @@ describe('SquarzMoveGenerator', () => {
             [O, _, O, X, X, O, _, O],
             [O, O, O, X, X, O, O, O],
         ], 100);
-        const node: SquarzNode = new SquarzNode(state);
+        const node: SquarzNode = SquarzNode.root(state);
 
         // When listing the moves
         const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);

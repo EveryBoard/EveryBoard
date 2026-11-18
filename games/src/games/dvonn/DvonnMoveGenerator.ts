@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -11,7 +9,6 @@ import { DvonnState } from './DvonnState';
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
     public override getListMoves(node: DvonnNode, _config: EmptyRulesConfig): DvonnMove[] {
-        const lastMove: MGPOptional<DvonnMove> = node.previousMove;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets
@@ -23,7 +20,8 @@ export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
             });
 
         });
-        if (moves.length === 0 && lastMove.equalsValue(DvonnMove.PASS) === false) {
+        const previousMoveWasPass: boolean = node.hasParent() && node.getPreviousMove().equals(DvonnMove.PASS);
+        if (moves.length === 0 && previousMoveWasPass === false) {
             moves.push(DvonnMove.PASS);
         }
         return moves;

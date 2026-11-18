@@ -170,10 +170,10 @@ describe('QuartoComponent', () => {
             ];
             const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
             const previousState: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
-            const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
+            const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then it should show last move
             testUtils.expectElementToHaveClasses('#last-move-0-0', ['base', 'no-fill', 'last-move-stroke', 'mid-stroke']);
@@ -188,11 +188,17 @@ describe('QuartoComponent', () => {
                 [NULL, NULL, NULL, NULL],
             ];
             const state: QuartoState = new QuartoState(board, 4, QuartoPiece.BBBB);
-            const previousState: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
-            const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
+            const previousBoard: Table<QuartoPiece> = [
+                [AAAA, AAAB, AABA, NULL],
+                [NULL, NULL, NULL, NULL],
+                [NULL, NULL, NULL, NULL],
+                [NULL, NULL, NULL, NULL],
+            ];
+            const previousState: QuartoState = new QuartoState(previousBoard, 3, QuartoPiece.AABB);
+            const previousMove: QuartoMove = new QuartoMove(3, 0, QuartoPiece.BBBB);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then it should show last move
             testUtils.expectElementToHaveClasses('#victory-0-0', ['base', 'no-fill', 'victory-stroke']);

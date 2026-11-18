@@ -24,7 +24,7 @@ describe('SixMoveGenerator', () => {
             [O, X, X, X, X, X, O],
         ];
         const state: SixState = SixState.ofRepresentation(board, 40);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);

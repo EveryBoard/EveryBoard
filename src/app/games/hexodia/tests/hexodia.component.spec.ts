@@ -17,6 +17,48 @@ describe('HexodiaComponent', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
+    const emptyBoard: FourStatePiece[][] = [
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+    ];
+    const boardAfterFirstMove: FourStatePiece[][] = [
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+    ];
 
     let testUtils: ComponentTestUtils<HexodiaComponent>;
 
@@ -50,7 +92,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, X, X, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -60,7 +102,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             await testUtils.setupState(state);
 
             // When clicking on them
@@ -112,7 +154,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, X, X, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -122,9 +164,11 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
-            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
-            await testUtils.setupState(state, { previousMove });
+            ], 2);
+            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(10, 9), new Coord(11, 9)]);
+            const previousState: FourStatePieceGameStateWithTable =
+                new FourStatePieceGameStateWithTable(boardAfterFirstMove, 1);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When doing a first click
             await testUtils.expectClickSuccess('#click-8-8');
@@ -305,7 +349,9 @@ describe('HexodiaComponent', () => {
 
             // When displaying it
             const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
-            await testUtils.setupState(state, { previousMove });
+            const previousState: FourStatePieceGameStateWithTable =
+                new FourStatePieceGameStateWithTable(emptyBoard, 0);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece-9-9', 'last-move-stroke');
@@ -333,12 +379,14 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             const previousMove: HexodiaMove =
                 HexodiaMove.of([new Coord(10, 9), new Coord(11, 9)]);
 
             // When displaying it
-            await testUtils.setupState(state, { previousMove });
+            const previousState: FourStatePieceGameStateWithTable =
+                new FourStatePieceGameStateWithTable(boardAfterFirstMove, 1);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece-10-9', 'last-move-stroke');
@@ -360,7 +408,7 @@ describe('HexodiaComponent', () => {
             const board: Table<FourStatePiece> =
                 HexodiaRules.get().getInitialState(alternativeConfig).board;
             const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 1);
-            await testUtils.setupState(state, { config: alternativeConfig });
+            await testUtils.setupState(state, alternativeConfig);
 
             // When dropping 3 stones
             await testUtils.expectClickSuccess('#click-9-9');

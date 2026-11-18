@@ -27,7 +27,7 @@ describe('TeekoHeuristic', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 6);
-        const node: TeekoNode = new TeekoNode(state);
+        const node: TeekoNode = TeekoNode.root(state);
 
         // When calculating the board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;

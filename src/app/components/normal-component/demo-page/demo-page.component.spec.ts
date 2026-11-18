@@ -28,8 +28,8 @@ describe('DemoPageComponent', () => {
     it('should not have node whose parent is themself', () => {
         const demoNodeInfos: DemoNodeInfo[] = testUtils.getComponent().getDemoNodes();
         const nodeWithParentBeingThemselvesExist: boolean = demoNodeInfos.some((demoNode: DemoNodeInfo) => {
-            return demoNode.node.parent.isPresent() &&
-                   demoNode.node.gameState.turn === demoNode.node.parent.get().gameState.turn;
+            return demoNode.node.hasParent() &&
+                   demoNode.node.gameState.turn === demoNode.node.getPreviousState().turn;
         });
         expect(nodeWithParentBeingThemselvesExist)
             .withContext('There should not be node whose parent is themself')

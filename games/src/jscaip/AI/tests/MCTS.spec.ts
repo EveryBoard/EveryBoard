@@ -69,7 +69,7 @@ describe('MCTS', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 14, QuartoPiece.BBAA);
-        const node: QuartoNode = new QuartoNode(state);
+        const node: QuartoNode = QuartoNode.root(state);
 
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);
@@ -95,7 +95,7 @@ describe('MCTS', () => {
             [QuartoPiece.AABB, QuartoPiece.ABBB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const state: QuartoState = new QuartoState(board, 12, QuartoPiece.BBBB);
-        const node: QuartoNode = new QuartoNode(state);
+        const node: QuartoNode = QuartoNode.root(state);
 
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);

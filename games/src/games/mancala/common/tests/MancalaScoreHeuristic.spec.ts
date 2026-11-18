@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../../../jscaip/AI/BoardValue';
+import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { HeuristicBounds } from '../../../../jscaip/AI/Heuristic';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
@@ -38,12 +38,10 @@ describe('MancalaScoreHeuristic', () => {
 
             // When comparing both
             // Then the bigger score should be better
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ZERO,
                 defaultConfig,
             );
@@ -67,7 +65,7 @@ describe('MancalaScoreHeuristic', () => {
                 [1, 2, 3, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(7, 5));
-            const node: MancalaNode = new MancalaNode(state);
+            const node: MancalaNode = MancalaNode.root(state);
 
             // When computing the metrics
             const metrics: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);

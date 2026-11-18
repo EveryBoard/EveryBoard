@@ -71,13 +71,16 @@ describe('KalahComponent', () => {
             ],
         },
         receivedMultiDistributionAnimation: {
-            previousState: KalahRules.get().getInitialState(defaultConfig),
+            previousState: new MancalaState([
+                [4, 4, 4, 4, 4, 4],
+                [4, 4, 4, 4, 4, 4],
+            ], 0, PlayerNumberMap.of(0, 0)),
             state: new MancalaState([
-                [4, 4, 0, 5, 5, 0],
-                [4, 4, 5, 5, 5, 5],
-            ], 1, PlayerNumberMap.of(2, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(2, 0), [MancalaDistribution.of(5, 0)]),
-            distributedSeedCountsByLap: [4, 5],
+                [4, 4, 4, 4, 4, 4],
+                [5, 6, 6, 1, 5, 0],
+            ], 1, PlayerNumberMap.of(1, 0)),
+            move: MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(5, 1)]),
+            distributedSeedCountsByLap: [4, 4],
         },
         monsoon: {
             state: new MancalaState([
@@ -308,22 +311,24 @@ describe('KalahComponent', () => {
             // Given a board where a capture has been done
             const previousBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
-                [0, 0, 0, 2, 0, 0],
+                [0, 0, 0, 0, 2, 0],
             ];
             const previousState: MancalaState = new MancalaState(previousBoard, 4, PlayerNumberMap.of(0, 0));
             const board: Table<number> = [
-                [4, 0, 4, 4, 4, 4],
-                [0, 0, 1, 0, 0, 0],
+                [4, 4, 0, 4, 4, 4],
+                [0, 0, 0, 1, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
-            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 0));
-            await mancalaTestUtils.testUtils.setupState(
+            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
+            await mancalaTestUtils.testUtils.setupStateWithPreviousMove(
                 state,
-                { previousState, previousMove, config: defaultConfig },
+                previousState,
+                previousMove,
+                defaultConfig,
             );
 
             // When starting a multiple-capture move
-            await mancalaTestUtils.expectClickSuccess('#click-2-0');
+            await mancalaTestUtils.expectClickSuccess('#click-0-0');
 
             // Then the capture should no longer be displayed
             mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle-1-1', 'captured-fill');
@@ -399,7 +404,7 @@ describe('KalahComponent', () => {
                 numberOfRows: 2,
             };
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
-            await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
+            await mancalaTestUtils.testUtils.setupState(state, customConfig);
             const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
             await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
 

@@ -54,7 +54,7 @@ describe('HexagonalGoMoveGenerator', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
 
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
@@ -72,7 +72,7 @@ describe('HexagonalGoMoveGenerator', () => {
             ];
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(3, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
 
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
@@ -91,7 +91,7 @@ describe('HexagonalGoMoveGenerator', () => {
                 MGPOptional.empty(),
                 GoPhase.COUNTING,
             );
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
 
             // When listing the moves
@@ -106,7 +106,7 @@ describe('HexagonalGoMoveGenerator', () => {
             const initialBoard: GoPiece[][] = HexagonalGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
 
             // When generating the list of move
@@ -127,7 +127,7 @@ describe('HexagonalGoMoveGenerator', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.COUNTING);
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
 
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
@@ -148,7 +148,7 @@ describe('HexagonalGoMoveGenerator', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
-            const initialNode: GoNode = new GoNode(state);
+            const initialNode: GoNode = GoNode.root(state);
 
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);

@@ -96,7 +96,7 @@ describe('SaharaRules', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const state: SaharaState = new SaharaState(board, 4);
-        const node: SaharaNode = new SaharaNode(state);
+        const node: SaharaNode = SaharaNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ONE

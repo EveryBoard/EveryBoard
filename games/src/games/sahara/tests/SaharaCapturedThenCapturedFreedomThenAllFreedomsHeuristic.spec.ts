@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
@@ -46,12 +45,10 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, O, X, _, _, _, O, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ZERO,
                 defaultConfig,
             );
@@ -78,12 +75,10 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, X, O, _, _, _, X, O, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -110,12 +105,10 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, O, X, _, _, O, _, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ZERO,
                 defaultConfig,
             );

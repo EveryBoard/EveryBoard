@@ -12,7 +12,6 @@ export { EpaminondasPositionalHeuristic } from '../games/epaminondas/Epaminondas
 export {
     EpaminondasConfig,
     EpaminondasLegalityInformation,
-    EpaminondasNode,
     EpaminondasRules,
 } from '../games/epaminondas/EpaminondasRules';
 export { EpaminondasState } from '../games/epaminondas/EpaminondasState';

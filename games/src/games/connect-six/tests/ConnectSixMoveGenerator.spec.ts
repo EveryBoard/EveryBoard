@@ -26,7 +26,7 @@ describe('ConnectSixMoveGenerator', () => {
         const width: number = defaultConfig.width;
         const height: number = defaultConfig.height;
         const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
-        const node: ConnectSixNode = new ConnectSixNode(state);
+        const node: ConnectSixNode = ConnectSixNode.root(state);
 
         // When listing the moves
         const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -64,7 +64,7 @@ describe('ConnectSixMoveGenerator', () => {
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: ConnectSixState = new ConnectSixState(board, 3);
-        const node: ConnectSixNode = new ConnectSixNode(state);
+        const node: ConnectSixNode = ConnectSixNode.root(state);
 
         // When listing the moves
         const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);

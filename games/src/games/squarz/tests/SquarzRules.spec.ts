@@ -186,7 +186,7 @@ describe('SquarzRules', () => {
                 [O, O, O, O, O, O, X, X],
                 [O, O, O, O, O, O, X, X],
             ], 64);
-            const node: SquarzNode = new SquarzNode(state);
+            const node: SquarzNode = SquarzNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -205,7 +205,7 @@ describe('SquarzRules', () => {
                 [_, _, _, X, X, X, O, O],
                 [_, _, _, X, X, X, O, O],
             ], 64);
-            const node: SquarzNode = new SquarzNode(state);
+            const node: SquarzNode = SquarzNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -224,7 +224,7 @@ describe('SquarzRules', () => {
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
             ], 64);
-            const node: SquarzNode = new SquarzNode(state);
+            const node: SquarzNode = SquarzNode.root(state);
 
             // When checking the game status
             // Then it should be a draw
@@ -243,7 +243,7 @@ describe('SquarzRules', () => {
                 [O, X, O, X, X, X, _, X],
                 [O, X, O, X, X, X, X, X],
             ], 100);
-            const node: SquarzNode = new SquarzNode(state);
+            const node: SquarzNode = SquarzNode.root(state);
 
             // When evaluating if it's an ongoing game or not
             // Then yes, it is !

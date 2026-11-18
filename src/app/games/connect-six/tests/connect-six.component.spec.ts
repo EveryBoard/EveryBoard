@@ -15,6 +15,48 @@ describe('ConnectSixComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
+    const emptyBoard: PlayerOrNone[][] = [
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+    ];
+    const boardAfterFirstMove: PlayerOrNone[][] = [
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+    ];
 
     let testUtils: ComponentTestUtils<ConnectSixComponent>;
 
@@ -58,7 +100,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             await testUtils.setupState(state);
 
             // When clicking on them
@@ -122,7 +164,8 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
-            await testUtils.setupState(state, { previousMove });
+            const previousState: ConnectSixState = new ConnectSixState(emptyBoard, 0);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When doing a first click
             await testUtils.expectClickSuccess('.space-8-8');
@@ -303,7 +346,8 @@ describe('ConnectSixComponent', () => {
 
             // When displaying it
             const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
-            await testUtils.setupState(state, { previousMove });
+            const previousState: ConnectSixState = new ConnectSixState(emptyBoard, 0);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece-9-9', 'last-move-stroke');
@@ -331,11 +375,12 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             const previousMove: ConnectSixMove = ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9));
 
             // When displaying it
-            await testUtils.setupState(state, { previousMove });
+            const previousState: ConnectSixState = new ConnectSixState(boardAfterFirstMove, 1);
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece-10-9', 'last-move-stroke');

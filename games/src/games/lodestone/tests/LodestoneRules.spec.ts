@@ -1000,7 +1000,7 @@ describe('LodestoneRules', () => {
     it('should not consider victory if there are pieces left', () => {
         // Given a state with pieces of both players
         const state: LodestoneState = LodestoneRules.get().getInitialState();
-        const node: LodestoneNode = new LodestoneNode(state);
+        const node: LodestoneNode = LodestoneNode.root(state);
 
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -1021,7 +1021,7 @@ describe('LodestoneRules', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
-            const node: LodestoneNode = new LodestoneNode(state);
+            const node: LodestoneNode = LodestoneNode.root(state);
 
             // Then it should be a victory for that player
             RulesUtils.expectToBeVictoryFor(rules, node, player, defaultConfig);
@@ -1041,7 +1041,7 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
-        const node: LodestoneNode = new LodestoneNode(state);
+        const node: LodestoneNode = LodestoneNode.root(state);
 
         // When checking the game status
         // Then it should be a draw

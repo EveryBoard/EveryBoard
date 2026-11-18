@@ -37,7 +37,7 @@ export class KamisadoTutorial extends Tutorial {
         either by moving one of your pieces on the opponent's starting line,
         or by forcing the opponent to make a move that blocks the entire game.
         Here, Dark wins because its brown piece is on Light's starting line, on the top left.`,
-            new KamisadoState(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
+            new KamisadoState(5, KamisadoColor.ORANGE, MGPOptional.of(new Coord(3, 4)), false, [
                 [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -47,7 +47,22 @@ export class KamisadoTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, gr, re, ye, pi, pu, bl, or],
             ]),
-        ).withPreviousMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 0))),
+        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(0, 7), new Coord(0, 0)), new KamisadoState(
+            4,
+            KamisadoColor.BROWN,
+            MGPOptional.of(new Coord(0, 7)),
+            false,
+            [
+                [__, Bl, Pu, Pi, Ye, Re, Gr, Br],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, Or, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [br, gr, re, ye, pi, pu, bl, or],
+            ],
+        ), {}),
         TutorialStep.anyMove(
             $localize`Initial board and initial move`,
             $localize`Here is the initial board.
@@ -82,7 +97,22 @@ export class KamisadoTutorial extends Tutorial {
             ],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You have not moved your pink piece on a blue square!`,
-        ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
+        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(6, 7), new Coord(6, 5)), new KamisadoState(
+            0,
+            KamisadoColor.BLUE,
+            MGPOptional.of(new Coord(6, 7)),
+            false,
+            [
+                [Or, Bl, Pu, Pi, Ye, Re, Gr, Br],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [br, gr, re, ye, pi, pu, bl, or],
+            ],
+        ), {}),
         TutorialStep.informational(
             $localize`Stuck situation`,
             $localize`Dark moved to another pink square, hence you have to move your pink piece again.
@@ -98,7 +128,22 @@ export class KamisadoTutorial extends Tutorial {
                 [__, __, __, Pi, __, __, __, __],
                 [br, gr, re, ye, pi, pu, __, or],
             ]),
-        ).withPreviousMove(KamisadoMove.of(new Coord(6, 5), new Coord(7, 4))),
+        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(6, 5), new Coord(7, 4)), new KamisadoState(
+            0,
+            KamisadoColor.BLUE,
+            MGPOptional.of(new Coord(6, 5)),
+            false,
+            [
+                [Or, Bl, Pu, __, Ye, Re, Gr, Br],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, bl, __],
+                [__, __, __, Pi, __, __, __, __],
+                [br, gr, re, ye, pi, pu, __, or],
+            ],
+        ), {}),
         TutorialStep.fromMove(
             $localize`Victory by blocking`,
             $localize`At any time, if a player blocks the entire game, that player loses.
@@ -108,7 +153,7 @@ export class KamisadoTutorial extends Tutorial {
         You're playing Dark, analyze the board and make the winning move.`,
             new KamisadoState(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
                 [__, Bl, Pu, __, __, Re, __, __],
-                [__, __, __, Ye, __, __, __, __],
+                [Ye, __, __, __, __, __, __, __],
                 [__, __, __, Pi, __, Pu, __, __],
                 [__, __, __, ye, __, __, __, __],
                 [__, __, re, __, __, __, __, __],
@@ -124,6 +169,21 @@ export class KamisadoTutorial extends Tutorial {
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
             TutorialStepMessage.FAILED_TRY_AGAIN(),
-        ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
+        ).withPreviousMove(KamisadoRules.get(), KamisadoMove.of(new Coord(0, 0), new Coord(0, 1)), new KamisadoState(
+            1,
+            KamisadoColor.YELLOW,
+            MGPOptional.of(new Coord(0, 0)),
+            false,
+            [
+                [Ye, Bl, Pu, __, __, Re, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, Pi, __, Pu, __, __],
+                [__, __, __, ye, __, __, __, __],
+                [__, __, re, __, __, __, __, __],
+                [__, __, __, __, __, __, Gr, __],
+                [Or, __, __, __, __, pi, __, Br],
+                [br, gr, __, __, __, __, bl, or],
+            ],
+        ), {}),
     ];
 }

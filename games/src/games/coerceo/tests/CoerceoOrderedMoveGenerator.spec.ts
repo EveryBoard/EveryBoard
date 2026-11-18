@@ -33,7 +33,7 @@ describe('CoerceoOrderedMoveGenerator', () => {
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
         const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(2, 0), PlayerNumberMap.of(0, 0));
-        const node: CoerceoNode = new CoerceoNode(state);
+        const node: CoerceoNode = CoerceoNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(3);
     });
 
@@ -51,7 +51,7 @@ describe('CoerceoOrderedMoveGenerator', () => {
             [N, N, N, N, N, N, N, N, N, N, N, N, _, _, O],
         ];
         const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
-        const node: CoerceoNode = new CoerceoNode(state);
+        const node: CoerceoNode = CoerceoNode.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(2);
     });
 

@@ -44,7 +44,7 @@ describe('AwaleScoreMinimax', () => {
             [4, 4, 4, 4, 4, 1],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
@@ -60,7 +60,7 @@ describe('AwaleScoreMinimax', () => {
             [0, 0, 0, 0, 1, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
@@ -76,7 +76,7 @@ describe('AwaleScoreMinimax', () => {
             [0, 1, 0, 0, 0, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = MancalaNode.root(state);
 
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);

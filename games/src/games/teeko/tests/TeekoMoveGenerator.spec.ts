@@ -22,7 +22,7 @@ describe('TeekoMoveGenerator', () => {
     it('should have all move options in drop phase', () => {
         // Given an initial node
         const initialState: TeekoState = TeekoRules.get().getInitialState();
-        const node: TeekoNode = new TeekoNode(initialState);
+        const node: TeekoNode = TeekoNode.root(initialState);
 
         // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -41,7 +41,7 @@ describe('TeekoMoveGenerator', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 8);
-        const node: TeekoNode = new TeekoNode(state);
+        const node: TeekoNode = TeekoNode.root(state);
 
         // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -63,7 +63,7 @@ describe('TeekoMoveGenerator', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 8);
-        const node: TeekoNode = new TeekoNode(state);
+        const node: TeekoNode = TeekoNode.root(state);
 
         // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node, customConfig);

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
@@ -123,7 +122,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState);
+            const node: TeekoNode = TeekoNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -151,7 +150,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState);
+            const node: TeekoNode = TeekoNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -179,7 +178,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState);
+            const node: TeekoNode = TeekoNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -207,7 +206,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, MGPOptional.of(move));
+            const node: TeekoNode = TeekoNode.root(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -418,7 +417,7 @@ describe('TeekoRules', () => {
                 [_, _, _, X, O],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state);
+            const node: TeekoNode = TeekoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -435,7 +434,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state);
+            const node: TeekoNode = TeekoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -452,7 +451,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state);
+            const node: TeekoNode = TeekoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -469,7 +468,7 @@ describe('TeekoRules', () => {
                 [_, _, _, O, X],
             ];
             const state: TeekoState = new TeekoState(board, 10);
-            const node: TeekoNode = new TeekoNode(state);
+            const node: TeekoNode = TeekoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

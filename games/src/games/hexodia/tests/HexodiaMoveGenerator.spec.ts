@@ -24,7 +24,7 @@ describe('HexodiaMoveGenerator', () => {
         // Given the initial node
         const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
         const size: number = state.getWidth();
-        const node: HexodiaNode = new HexodiaNode(state);
+        const node: HexodiaNode = HexodiaNode.root(state);
 
         // When listing the moves
         const moves: HexodiaMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -62,7 +62,7 @@ describe('HexodiaMoveGenerator', () => {
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
-        const node: HexodiaNode = new HexodiaNode(state);
+        const node: HexodiaNode = HexodiaNode.root(state);
 
         // When listing the moves
         const moves: HexodiaMove[] = moveGenerator.getListMoves(node, defaultConfig);

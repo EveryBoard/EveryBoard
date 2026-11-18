@@ -7,6 +7,7 @@ import { Table } from '@everyboard/games';
 import { KamisadoColor } from '@everyboard/games/kamisado';
 import { KamisadoMove } from '@everyboard/games/kamisado';
 import { KamisadoPiece } from '@everyboard/games/kamisado';
+import { KamisadoRules } from '@everyboard/games/kamisado';
 import { KamisadoState } from '@everyboard/games/kamisado';
 import { KamisadoFailure } from '@everyboard/games/kamisado';
 import { MGPOptional } from '@everyboard/lib';
@@ -214,12 +215,13 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _],
             [R, B, _, _, _, _, _, _],
         ];
-        const state: KamisadoState =
+        const previousState: KamisadoState =
             new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const previousMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+        const state: KamisadoState = KamisadoRules.get().applyLegalMove(previousMove, previousState, {}, undefined);
 
         // When displaying it
-        await testUtils.setupState(state, { previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // Then it should display last move
         testUtils.expectElementToHaveClass('#last-move-start-0-7', 'last-move-stroke');

@@ -4,5 +4,5 @@ export { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../gam
 export { CoerceoMoveGenerator } from '../games/coerceo/CoerceoMoveGenerator';
 export { CoerceoPiecesThreatsTilesHeuristic } from '../games/coerceo/CoerceoPiecesThreatsTilesHeuristic';
 export { CoerceoPiecesTilesFreedomHeuristic } from '../games/coerceo/CoerceoPiecesTilesFreedomHeuristic';
-export { CoerceoConfig, CoerceoNode, CoerceoRules } from '../games/coerceo/CoerceoRules';
+export { CoerceoConfig, CoerceoRules } from '../games/coerceo/CoerceoRules';
 export { CoerceoState } from '../games/coerceo/CoerceoState';

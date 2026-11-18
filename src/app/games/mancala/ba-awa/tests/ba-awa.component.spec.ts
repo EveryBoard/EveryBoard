@@ -140,7 +140,7 @@ describe('BaAwaComponent', () => {
                 width: 4,
             };
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // Then the board width should match the configured number of houses
             const removedHouses: number = defaultConfig.width - customConfig.width;
@@ -154,7 +154,7 @@ describe('BaAwaComponent', () => {
                 passByPlayerStore: true,
             };
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
@@ -174,7 +174,7 @@ describe('BaAwaComponent', () => {
                 [0, 0, 8, 0, 0, 0],
                 [1, 0, 1, 1, 1, 0],
             ], 10, PlayerNumberMap.of(0, 0));
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
 
             // When doing the second distribution

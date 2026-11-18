@@ -378,7 +378,7 @@ describe('KamisadoRules', () => {
             ];
             const state: KamisadoState =
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-            const node: KamisadoNode = new KamisadoNode(state);
+            const node: KamisadoNode = KamisadoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -399,7 +399,7 @@ describe('KamisadoRules', () => {
             ];
             const state: KamisadoState =
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-            const node: KamisadoNode = new KamisadoNode(state);
+            const node: KamisadoNode = KamisadoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -422,7 +422,7 @@ describe('KamisadoRules', () => {
             ];
             const state: KamisadoState =
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-            const node: KamisadoNode = new KamisadoNode(state);
+            const node: KamisadoNode = KamisadoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO

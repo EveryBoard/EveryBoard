@@ -178,7 +178,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                await testUtils.setupState(state, { previousMove, previousState });
+                await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
                 testUtils.expectElementToHaveClass('#piece-stroke-1-0-0', 'last-move-stroke');
 
                 // When clicking on a piece on the board
@@ -525,7 +525,7 @@ describe('HiveComponent', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q], [q]],
         ], 2);
-        await testUtils.setupState(state, { previousState, previousMove });
+        await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
         // When starting and then canceling a move
         await testUtils.expectClickSuccess('#piece-0-0-0');

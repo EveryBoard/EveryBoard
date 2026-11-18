@@ -39,7 +39,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
     it('should have all 3-step move options at first turn', () => {
         // Given the initial node
-        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+        const node: DiaballikNode = DiaballikNode.root(DiaballikRules.get().getInitialState());
 
         // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -60,7 +60,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
         it(`should have only the requested length moves (n = ${moveLength})`, () => {
             const moveGenerator: DiaballikFilteredMoveGenerator = new DiaballikFilteredMoveGenerator(moveLength);
             // Given a node
-            const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+            const node: DiaballikNode = DiaballikNode.root(DiaballikRules.get().getInitialState());
 
             // When listing the moves
             const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);

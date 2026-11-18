@@ -978,7 +978,7 @@ describe('YinshComponent', () => {
             // Given a state where two pre-captures are possible
             const state: YinshState = new YinshState([
                 [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, A, _, _, B, B, A, _],
+                [N, N, N, N, A, _, _, B, B, _, _],
                 [N, N, N, A, _, _, b, B, _, A, _],
                 [N, N, _, A, _, _, _, _, _, B, _],
                 [N, _, _, _, _, a, _, _, B, _, _],
@@ -1029,7 +1029,7 @@ describe('YinshComponent', () => {
             );
             const state: YinshState = new YinshState([
                 [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, A, _, _, B, B, A, _],
+                [N, N, N, N, A, _, _, B, B, _, _],
                 [N, N, N, _, _, _, b, B, _, A, _],
                 [N, N, _, a, A, _, _, _, _, B, _],
                 [N, _, _, _, _, _, _, _, B, _, _],
@@ -1039,10 +1039,10 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ], PlayerNumberMap.of(0, 0), 11);
+            ], PlayerNumberMap.of(2, 0), 11);
 
             // When rendering state
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then 10 different captures should be displayed and 2 rings taken
             for (const capture of previousMove.initialCaptures) {

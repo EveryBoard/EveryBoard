@@ -16,7 +16,7 @@ describe('ApagosMoveGenerator', () => {
     it('should have all 8 drop as possible move at first turn', () => {
         // Given initial node
         const initialState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
-        const node: ApagosNode = new ApagosNode(initialState);
+        const node: ApagosNode = ApagosNode.root(initialState);
 
         // When listing the moves
         const moves: ApagosMove[] = moveGenerator.getListMoves(node, defaultConfig);

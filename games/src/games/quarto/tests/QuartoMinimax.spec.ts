@@ -59,7 +59,7 @@ describe('QuartoMinimax', () => {
                     [____, ____, ____, ____],
                 ];
                 const state: QuartoState = new QuartoState(board, 3, QuartoPiece.ABBB);
-                const node: QuartoNode = new QuartoNode(state);
+                const node: QuartoNode = QuartoNode.root(state);
 
                 // When computing the best move
                 const chosenMove: QuartoMove = minimax.chooseNextMove(node, minimaxOptions, level2v2Config);
@@ -79,7 +79,7 @@ describe('QuartoMinimax', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 4, QuartoPiece.ABBB);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
             const asymetricConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
@@ -101,7 +101,7 @@ describe('QuartoMinimax', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 4, QuartoPiece.ABBB);
-            const node: QuartoNode = new QuartoNode(state);
+            const node: QuartoNode = QuartoNode.root(state);
             const asymetricConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,

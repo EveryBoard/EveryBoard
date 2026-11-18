@@ -280,7 +280,7 @@ describe('SixComponent', () => {
             ];
             const state: SixState = SixState.ofRepresentation(board, 9);
             const config: SixConfig = { piecesPerPlayer: 5 };
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, config);
 
             // When displaying it
             // Then the score should be 0 and 1 pieces to drop
@@ -324,7 +324,7 @@ describe('SixComponent', () => {
             const state: SixState = SixState.ofRepresentation(board, 10);
 
             // When clicking on empty space after first click of 10th turn
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // Then it should fail
             await testUtils.expectClickFailure('#neighbor-1-1', SixFailure.CAN_NO_LONGER_DROP());
@@ -345,7 +345,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 10);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // When moving a piece after 10th turn
             await testUtils.expectClickSuccess('#piece-0-0');

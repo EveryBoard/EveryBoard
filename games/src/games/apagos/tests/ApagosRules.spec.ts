@@ -132,7 +132,7 @@ describe('ApagosRules', () => {
         it('should be ongoing if there are still non-full squares', () => {
             // Given a state with non-full squares
             const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
-            const node: ApagosNode = new ApagosNode(state);
+            const node: ApagosNode = ApagosNode.root(state);
 
             // When checking the game status
             // Then it should be ongoing
@@ -146,7 +146,7 @@ describe('ApagosRules', () => {
                 [0, 5, 3, 0],
                 [7, 5, 3, 1],
             ], 0, 0);
-            const node: ApagosNode = new ApagosNode(state);
+            const node: ApagosNode = ApagosNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -160,7 +160,7 @@ describe('ApagosRules', () => {
                 [0, 5, 2, 1],
                 [7, 5, 3, 1],
             ], 0, 0);
-            const node: ApagosNode = new ApagosNode(state);
+            const node: ApagosNode = ApagosNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -174,7 +174,7 @@ describe('ApagosRules', () => {
                 [0, 5, 2, 1],
                 [7, 5, 3, 2],
             ], 0, 0);
-            const node: ApagosNode = new ApagosNode(state);
+            const node: ApagosNode = ApagosNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -188,7 +188,7 @@ describe('ApagosRules', () => {
                 [4, 3, 2, 1],
                 [8, 6, 4, 2],
             ], 0, 0);
-            const node: ApagosNode = new ApagosNode(state);
+            const node: ApagosNode = ApagosNode.root(state);
 
             // When checking the game status
             // Then it should be a draw

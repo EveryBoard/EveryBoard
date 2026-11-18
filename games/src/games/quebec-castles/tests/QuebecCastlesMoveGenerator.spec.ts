@@ -29,7 +29,7 @@ describe('QuebecCastlesMoveGenerator', () => {
     it('should have all drop options at first turn', () => {
         // Given an initial node
         const initialState: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
-        const node: QuebecCastlesNode = new QuebecCastlesNode(initialState);
+        const node: QuebecCastlesNode = QuebecCastlesNode.root(initialState);
 
         // When listing the moves
         const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -42,7 +42,7 @@ describe('QuebecCastlesMoveGenerator', () => {
         // Given an initial node
         const initialState: QuebecCastlesState =
             QuebecCastlesRules.get().getInitialState(defaultConfig).incrementTurn();
-        const node: QuebecCastlesNode = new QuebecCastlesNode(initialState);
+        const node: QuebecCastlesNode = QuebecCastlesNode.root(initialState);
 
         // When listing the moves
         const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -76,7 +76,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, O, _],
                         [_, _, _, _, _, _, _, _, _],
                     ], 1, defaultCastles);
-                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+                    const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
                     // When listing the moves
                     const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
@@ -106,7 +106,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
                     ], 5, defaultCastles);
-                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+                    const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
                     // When listing the possible move of generator
                     const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
@@ -137,7 +137,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
                     ], 6, defaultCastles);
-                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+                    const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
                     // When listing the possible move of generator
                     const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
@@ -175,7 +175,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
                     ], 5, defaultCastles);
-                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+                    const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
                     // When listing the possible move of generator
                     const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
