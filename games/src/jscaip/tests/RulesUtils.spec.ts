@@ -11,11 +11,13 @@ import { GameState } from '../state/GameState';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    L,
-                                    C extends RulesConfig>(
+    public static expectMoveSuccess<
+        R extends SuperRules<M, S, C, L>,
+        M extends Move,
+        S extends GameState,
+        L,
+        C extends RulesConfig
+    >(
         rules: R,
         state: S,
         move: M,
