@@ -9,7 +9,6 @@ import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { GipfMove, GipfPlacement } from '@everyboard/games/gipf';
-import { GipfRules } from '@everyboard/games/gipf';
 import { GipfState } from '@everyboard/games/gipf';
 import { GipfFailure } from '@everyboard/games/gipf';
 import { MGPOptional } from '@everyboard/lib';
@@ -137,7 +136,17 @@ describe('GipfComponent', () => {
                 [_, _, _, A, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const previousState: GipfState = GipfRules.get().getInitialState();
+            const previousBoard: Table<FourStatePiece> = [
+                [N, N, N, _, _, _, _],
+                [N, N, _, B, _, _, _],
+                [N, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, N],
+                [_, _, _, _, _, N, N],
+                [_, _, _, A, N, N, N],
+            ];
+            const previousState: GipfState =
+                new GipfState(previousBoard, P0Turn - 1, PlayerNumberMap.of(5, 6), PlayerNumberMap.of(0, 0));
             const previousPlacement: GipfPlacement =
                 new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN));
             const previousMove: GipfMove = new GipfMove(previousPlacement, [], []);

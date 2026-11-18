@@ -480,7 +480,7 @@ describe('AbaloneComponent', () => {
                 [_, _, _, _, _, _, _, _, N],
                 [_, _, _, _, _, _, _, N, N],
                 [O, O, O, O, O, O, N, N, N],
-                [_, O, O, O, O, N, N, N, N],
+                [_, X, X, X, O, N, N, N, N],
             ];
             const previousState: AbaloneState = new AbaloneState(previousBoard, 1);
             const previousMove: AbaloneMove =

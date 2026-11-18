@@ -130,16 +130,16 @@ describe('SaharaComponent', () => {
             // Given a board with a last move
             const board: Table<FourStatePiece> = [
                 [N, N, _, X, _, _, _, O, X, N, N],
-                [N, _, O, _, _, _, _, _, _, _, N],
+                [N, _, _, O, _, _, _, _, _, _, N],
                 [X, _, _, _, _, _, _, _, _, _, O],
                 [O, _, _, _, _, _, _, _, _, _, X],
                 [N, _, _, _, _, _, _, X, _, _, N],
                 [N, N, X, O, _, _, _, _, O, N, N],
             ];
             const state: SaharaState = new SaharaState(board, 3);
-            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
+            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(3, 1)).get();
             const previousBoard: FourStatePiece[][] = [
-                [N, N, X, _, _, _, _, O, X, N, N],
+                [N, N, _, X, _, _, _, O, X, N, N],
                 [N, _, O, _, _, _, _, _, _, _, N],
                 [X, _, _, _, _, _, _, _, _, _, O],
                 [O, _, _, _, _, _, _, _, _, _, X],

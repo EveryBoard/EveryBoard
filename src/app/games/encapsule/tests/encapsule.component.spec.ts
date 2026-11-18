@@ -397,11 +397,11 @@ describe('EncapsuleComponent', () => {
             // Given a state with a last move
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [_X_, ___, ___],
+                [_O_, ___, ___],
                 [___, ___, ___],
             ];
-            const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumLight, new Coord(0, 1));
-            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([], [1, 1]);
+            const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumDark, new Coord(0, 1));
+            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 1, 2], [2, 2, 2]);
             await testUtils.setupStateWithPreviousMove(
                 new EncapsuleState(board, 1, remainingPieces, 3),
                 rules.getInitialState(defaultConfig),

@@ -92,7 +92,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, X, X, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -102,7 +102,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             await testUtils.setupState(state);
 
             // When clicking on them
@@ -154,7 +154,7 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, X, X, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -164,10 +164,10 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
-            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
+            ], 2);
+            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(10, 9), new Coord(11, 9)]);
             const previousState: FourStatePieceGameStateWithTable =
-                new FourStatePieceGameStateWithTable(emptyBoard, 0);
+                new FourStatePieceGameStateWithTable(boardAfterFirstMove, 1);
             await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When doing a first click
@@ -379,13 +379,13 @@ describe('HexodiaComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            ], 2);
             const previousMove: HexodiaMove =
                 HexodiaMove.of([new Coord(10, 9), new Coord(11, 9)]);
 
             // When displaying it
             const previousState: FourStatePieceGameStateWithTable =
-                new FourStatePieceGameStateWithTable(boardAfterFirstMove, 0);
+                new FourStatePieceGameStateWithTable(boardAfterFirstMove, 1);
             await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then last piece should have the highlight

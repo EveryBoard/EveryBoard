@@ -235,7 +235,7 @@ describe('DiaballikComponent', () => {
             [_, _, _, _, _, _, _],
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
-        ], 0);
+        ], 1);
         const previousMove: DiaballikMove =
             new DiaballikMove(
                 DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
