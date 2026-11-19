@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { GoNode } from '../../AbstractGoRules';

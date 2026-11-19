@@ -4,7 +4,7 @@ import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';

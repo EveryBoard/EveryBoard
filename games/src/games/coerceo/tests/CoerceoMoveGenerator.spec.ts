@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoState } from '../CoerceoState';

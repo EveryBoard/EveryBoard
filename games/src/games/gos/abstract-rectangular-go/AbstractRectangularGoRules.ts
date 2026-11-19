@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';

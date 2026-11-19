@@ -1,4 +1,4 @@
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneState } from '../LodestoneState';
 

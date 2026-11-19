@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { Player, PlayerOrNone } from '@everyboard/games';
+import { Player } from '@everyboard/games';
 import { ApagosFailure } from '@everyboard/games/apagos';
 import { ApagosFullBoardHeuristic } from '@everyboard/games/apagos';
 import { ApagosMove } from '@everyboard/games/apagos';
@@ -163,7 +163,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         if (player === Player.ZERO) {
             return nbPiecePlayer - 1;
         } else {
-            const totalPieces: number = square.count(PlayerOrNone.NONE);
+            const totalPieces: number = square.getCapacity();
             return totalPieces - nbPiecePlayer;
         }
     }
@@ -206,10 +206,10 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public getCircleTransform(i: number, square: ApagosSquare): string {
         const x: number = this.SPACE_SIZE / 2;
         const y: number = this.SPACE_SIZE / 2;
-        if (square.count(PlayerOrNone.NONE) === 1) {
+        if (square.getCapacity() === 1) {
             return this.getSVGTranslation(x, y);
         }
-        const nbCircle: number = square.count(PlayerOrNone.NONE);
+        const nbCircle: number = square.getCapacity();
         const angle: number = (i * 2 * Math.PI / nbCircle) - (Math.PI / 2);
         const radius: number = this.SPACE_SIZE * 0.30;
         const deltaX: number = radius * Math.cos(angle);
@@ -273,7 +273,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                 else one++;
             }
         }
-        const neutral: number = square.count(PlayerOrNone.NONE) - (one + zero);
+        const neutral: number = square.getCapacity() - (one + zero);
         const pieceColor: string = this.getPieceColor(i, zero, neutral);
         if (pieceColor !== '') {
             classes.push(pieceColor);

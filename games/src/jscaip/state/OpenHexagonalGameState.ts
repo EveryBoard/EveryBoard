@@ -46,15 +46,18 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
             height: maxHeight + 1 - minHeight,
         };
     }
+
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
+
     public getOccupiedNeighbors(coord: Coord): CoordSet {
         const neighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });
     }
+
     public getGroups(): Set<CoordSet> {
         let visited: CoordSet = new CoordSet();
         let groups: Set<CoordSet> = new Set();
@@ -78,4 +81,10 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
         }
         return groups;
     }
+
+    public getPiecesOf(type: T): CoordSet {
+        const pieces: Set<Coord> = this.pieces.reverse().get(type).getOrElse(new CoordSet());
+        return new CoordSet(pieces.toList());
+    }
+
 }

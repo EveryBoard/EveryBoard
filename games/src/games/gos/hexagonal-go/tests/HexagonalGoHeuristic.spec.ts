@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';

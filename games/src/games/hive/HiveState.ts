@@ -4,6 +4,7 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
 import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
@@ -84,22 +85,22 @@ class HiveStateUpdate {
     private constructor(
         public readonly pieces: ReversibleMap<Coord, HivePieceStack>,
         public readonly remainingPieces: HiveRemainingPieces,
-        public readonly queenBees: MGPMap<Player, Coord>,
+        public readonly queenBees: PlayerMap<MGPOptional<Coord>>,
         public readonly turn: number,
     ) {}
 
     public setAt(coord: Coord, stack: HivePieceStack): HiveStateUpdate {
-        const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
+        const queenBees: PlayerMap<MGPOptional<Coord>> = this.queenBees.getCopy();
         for (const player of Player.PLAYERS) {
             // If there was a queen bee here, we remove it from the cache
             if (queenBees.get(player).equalsValue(coord)) {
-                queenBees.delete(player);
+                queenBees.put(player, MGPOptional.empty());
             }
         }
         for (const piece of stack.pieces) {
             // Add any queen added here to the cache
             if (piece.kind === 'QueenBee') {
-                queenBees.put(piece.owner, coord);
+                queenBees.put(piece.owner, MGPOptional.of(coord));
             }
         }
         const pieces: ReversibleMap<Coord, HivePieceStack> = this.pieces.getCopy();
@@ -127,7 +128,10 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     ): HiveState {
         const pieces: ReversibleMap<Coord, HivePieceStack> = new ReversibleMap<Coord, HivePieceStack>();
         let remainingPieces: HiveRemainingPieces = HiveRemainingPieces.getInitial();
-        const queenBees: MGPMap<Player, Coord> = new MGPMap();
+        const queenBees: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+        );
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (board[y][x].length > 0) {
@@ -136,7 +140,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
                     const queenBee: MGPOptional<HivePiece> =
                         MGPOptional.ofNullable(board[y][x].find((piece: HivePiece) => piece.kind === 'QueenBee'));
                     if (queenBee.isPresent()) {
-                        queenBees.set(queenBee.get().owner, adaptedCoord);
+                        queenBees.put(queenBee.get().owner, MGPOptional.of(adaptedCoord));
                     }
                     for (const piece of board[y][x]) {
                         remainingPieces = remainingPieces.remove(piece);
@@ -150,17 +154,17 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     public constructor(
         pieces: ReversibleMap<Coord, HivePieceStack>,
         public readonly remainingPieces: HiveRemainingPieces,
-        public readonly queenBees: MGPMap<Player, Coord>,
+        public readonly queenBees: PlayerMap<MGPOptional<Coord>>,
         turn: number,
     ) {
         super(pieces, turn);
         this.queenBees = queenBees.getCopy();
-        for (const player of queenBees.getKeyList()) {
+        for (const player of Player.PLAYERS) {
             // If the offset computed by the parent's constructor is not (0, 0),
             // We will need to adapt the position of the queen bees.
             // The position of the pieces has already been adapted by the parent's constructor
-            const oldCoord: Coord = queenBees.get(player).get();
-            this.queenBees.replace(player, oldCoord);
+            const oldCoord: MGPOptional<Coord> = queenBees.get(player);
+            this.queenBees.put(player, oldCoord);
         }
         this.queenBees.makeImmutable();
     }

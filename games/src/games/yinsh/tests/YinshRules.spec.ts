@@ -5,7 +5,7 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { YinshFailure } from '../YinshFailure';

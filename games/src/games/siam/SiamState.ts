@@ -1,5 +1,5 @@
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 import { SiamPiece } from './SiamPiece';
