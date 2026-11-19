@@ -60,7 +60,7 @@ describe('DemoCardWrapperComponent', () => {
         // Then it should display the game
         const game: DebugElement = testUtils.findElement('app-gipf');
         expect(game).withContext('game component should be displayed').toBeTruthy();
-        expect(testUtils.findElement('.board').attributes.transform)
+        expect(testUtils.getTransform('.board'))
             .withContext(`board should be displayed from the current player's point of view`)
             .toBe('rotate(180)');
         // With interactivity on, but without allowing the observer to play

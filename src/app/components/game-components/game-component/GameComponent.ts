@@ -85,6 +85,10 @@ export abstract class GameComponent<
     });
     protected readonly rotation: Signal<string> = computed(() => `rotate(${ this.rotationAngle() })`);
 
+    protected getRotationAround(centerX: number, centerY: number, angle: number = this.rotationAngle()): string {
+        return `rotate(${ angle } ${ centerX } ${ centerY })`;
+    }
+
     public tutorial: TutorialStep[];
 
     public isPlayerTurn: () => boolean;

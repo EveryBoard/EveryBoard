@@ -353,7 +353,7 @@ export class MartianChessComponent extends RectangularGameComponent<
 
     public getBoardTransformation(): string {
         const translation: string = this.getSVGTranslation(this.SPACE_SIZE, 0);
-        const rotation: string = 'rotate(' + this.rotationAngle() + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
+        const rotation: string = this.getRotationAround(this.HORIZONTAL_CENTER, this.VERTICAL_CENTER);
         return translation + ' ' + rotation;
     }
 

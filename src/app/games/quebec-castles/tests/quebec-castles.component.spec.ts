@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '@everyboard/games';
@@ -143,9 +142,7 @@ describe('QuebecCastlesComponent', () => {
         // Given a board in standard rhombic config
         // When displaying it
         // Then it should have a transform on the board
-        const board: DebugElement = testUtils.findElement('#quebec');
-        const boardTransform: string = board.attributes.transform as string;
-        expect(boardTransform).toBe('rotate(45, 450, 450)');
+        expect(testUtils.getTransform('#quebec')).toBe('rotate(45, 450, 450)');
     }));
 
     describe('custom config', () => {
@@ -165,9 +162,7 @@ describe('QuebecCastlesComponent', () => {
                 await testUtils.setupState(state, { config: customConfig });
 
                 // Then it should not have a transform on the board
-                const board: DebugElement = testUtils.findElement('#quebec');
-                const boardTransform: string = board.attributes.transform as string;
-                expect(boardTransform).toBe('rotate(0, 450, 450)');
+                expect(testUtils.getTransform('#quebec')).toBe('rotate(0, 450, 450)');
             }));
 
         });

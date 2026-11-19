@@ -357,6 +357,10 @@ export class SimpleComponentTestUtils<T> {
     public setInput(input: string, value: unknown): void {
         this.fixture.componentRef.setInput(input, value);
     }
+
+    public getTransform(element: string): string {
+        return Utils.getNonNullable(this.findElement(element).attributes.transform);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
@@ -684,6 +688,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         selectLevel.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick(0);
+    }
+
+    public selectHumanPlayer(player: Player): void {
+        const playerIndex: number = player.getValue();
+        this.selectChildElementOfDropDown(`#player-select-${playerIndex}`, `player-${playerIndex}-human`);
     }
 
 }

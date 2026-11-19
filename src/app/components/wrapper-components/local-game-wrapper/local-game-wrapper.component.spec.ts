@@ -83,7 +83,7 @@ describe('LocalGameWrapperComponent (game without config)', () => {
         testUtils.selectAIPlayer(Player.ZERO);
 
         // Then the rendered board is rotated so that player one, the human, stays below
-        expect(testUtils.findElement('.board').attributes.transform).toBe('rotate(180)');
+        expect(testUtils.getTransform('.board')).toBe('rotate(180)');
         tick(LocalGameWrapperComponent.AI_TIMEOUT);
     }));
 
@@ -93,14 +93,10 @@ describe('LocalGameWrapperComponent (game without config)', () => {
         tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
         // When selecting a human as player zero again
-        const selectAI: HTMLSelectElement = testUtils.findElement('#player-select-0').nativeElement;
-        selectAI.value = 'human';
-        selectAI.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
-        tick(0);
+        testUtils.selectHumanPlayer(Player.ZERO);
 
         // Then the rendered board returns to its original orientation
-        expect(testUtils.findElement('.board').attributes.transform).toBe('rotate(0)');
+        expect(testUtils.getTransform('.board')).toBe('rotate(0)');
     }));
 });
 
@@ -108,35 +104,6 @@ describe('LocalGameWrapperComponent (game without config)', () => {
 describe('LocalGameWrapperComponent (game phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
-
-    function chooseAIOrHuman(player: Player, strategy: 'human' | 'minimax' | 'iterative-deepening' | 'mcts'): void {
-        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
-        const selectAI: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
-        selectAI.value = strategy;
-        selectAI.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
-        tick(0);
-    }
-
-    function chooseFirstAILevel(player: Player): void {
-        const profileSelector: string = `#ai-profile-select-${player.getValue()}`;
-        const profileElements: DebugElement[] = testUtils.findElements(profileSelector);
-        if (profileElements.length === 1) {
-            const selectProfile: HTMLSelectElement = profileElements[0].nativeElement;
-            selectProfile.value = selectProfile.options[1].value;
-            selectProfile.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            tick(0);
-        }
-        const dropDownName: string = `#ai-option-select-${player.getValue()}`;
-        const selectLevel: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
-        // We select the first available level in a way that works for any level name.
-        // Element 0 of the option = 'Pick the level', element 1 = first actual level
-        selectLevel.value = selectLevel.options[1].value;
-        selectLevel.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
-        tick(0);
-    }
 
     function expectTurnToBe(turn: number): void {
         testUtils.expectTextToBe('#infos > .subtitle', 'Turn n°' + (turn+1));
@@ -371,7 +338,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementToExist('#ai-option-select-0');
 
             // When switching to a player type with no available profile
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
+            testUtils.selectHumanPlayer(Player.ZERO);
 
             // Then selecting MCTS again shows that the previous profile was cleared
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
@@ -456,7 +423,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementToExist('#ai-option-select-0');
 
             // When selecting a human
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
+            testUtils.selectHumanPlayer(Player.ZERO);
 
             // Then no AI configuration is displayed
             testUtils.expectElementNotToExist('#ai-profile-select-0');
@@ -477,7 +444,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When setting player zero as human
-            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
+            testUtils.selectHumanPlayer(Player.ZERO);
 
             // Then human players should be named explicitly
             expect(wrapper['getPlayerName'](Player.ZERO)).toBe('Human');
@@ -527,14 +494,13 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting player zero as AI and letting it play
             const component: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            chooseAIOrHuman(Player.ZERO, 'minimax');
             spyOn(component, 'proposeAIToPlay').and.callThrough();
-            chooseFirstAILevel(Player.ZERO);
+            testUtils.selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then proposeAIToPlay should have been called, so that IA play
-            expect(component.proposeAIToPlay).toHaveBeenCalledTimes(3);
-            // Once per AI selector change, once after the AI move and check who is next
+            expect(component.proposeAIToPlay).toHaveBeenCalledTimes(4);
+            // Once per AI selector change (strategy, profile, and level), once after the AI move to check who is next
         }));
 
         it('should not let a previously selected AI play after changing it to human', fakeAsync(async() => {
@@ -542,7 +508,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectAIPlayer(Player.ZERO);
 
             // When changing that player to human before the AI timeout expires
-            chooseAIOrHuman(Player.ZERO, 'human');
+            testUtils.selectHumanPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then the stale AI callback should not advance the displayed turn
