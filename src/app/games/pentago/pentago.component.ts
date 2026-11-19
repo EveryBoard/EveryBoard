@@ -30,11 +30,12 @@ interface ArrowInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class PentagoComponent extends RectangularGameComponent<PentagoRules,
-                                                               PentagoMove,
-                                                               PentagoState,
-                                                               PlayerOrNone>
-{
+export class PentagoComponent extends RectangularGameComponent<
+    PentagoRules,
+    PentagoMove,
+    PentagoState,
+    PlayerOrNone
+> {
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
     public readonly PIECE_SEPARATION: number;

@@ -11,10 +11,12 @@ import { SaharaState } from '../SaharaState';
 
 class SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends Minimax<SaharaMove, SaharaState> {
     public constructor() {
-        super('Capture > Captured Freedom > All Freedoms',
-              SaharaRules.get(),
-              new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
-              new SaharaMoveGenerator());
+        super(
+            'Capture > Captured Freedom > All Freedoms',
+            SaharaRules.get(),
+            new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
+            new SaharaMoveGenerator(),
+        );
     }
 }
 

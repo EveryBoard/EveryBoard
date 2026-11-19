@@ -45,9 +45,11 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
         this.heuristic.startSearchingVictorySources();
         while (this.heuristic.hasNextVictorySource()) {
             this.heuristic.currentVictorySource = this.heuristic.getNextVictorySource();
-            const boardInfo: BoardInfo = this.heuristic.searchVictoryOnly(this.heuristic.currentVictorySource,
-                                                                          fakeDropMove,
-                                                                          hypotheticalState);
+            const boardInfo: BoardInfo = this.heuristic.searchVictoryOnly(
+                this.heuristic.currentVictorySource,
+                fakeDropMove,
+                hypotheticalState,
+            );
             if (boardInfo.status === AlignmentStatus.VICTORY) {
                 return true;
             }

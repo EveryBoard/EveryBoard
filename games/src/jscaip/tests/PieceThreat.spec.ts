@@ -9,10 +9,14 @@ describe('PieceThreat', () => {
             new CoordSet(),
             new CoordSet([new Coord(1, 2)]),
         );
-        const differentThreat: PieceThreat = new PieceThreat(new CoordSet([new Coord(2, 2)]),
-                                                             new CoordSet([new Coord(1, 2)]));
-        const otherDifferentThreat: PieceThreat = new PieceThreat(new CoordSet(),
-                                                                  new CoordSet([new Coord(3, 2)]));
+        const differentThreat: PieceThreat = new PieceThreat(
+            new CoordSet([new Coord(2, 2)]),
+            new CoordSet([new Coord(1, 2)]),
+        );
+        const otherDifferentThreat: PieceThreat = new PieceThreat(
+            new CoordSet(),
+            new CoordSet([new Coord(3, 2)]),
+        );
         expect(threat.equals(differentThreat)).toBeFalse();
         expect(threat.equals(otherDifferentThreat)).toBeFalse();
     });

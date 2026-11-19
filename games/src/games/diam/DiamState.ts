@@ -22,8 +22,10 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                 }
             }
         }
-        Utils.assert(pieces.every((remaining: number) => 0 <= remaining),
-                     'Invalid DiamState representation uses too many pieces');
+        Utils.assert(
+            pieces.every((remaining: number) => 0 <= remaining),
+            'Invalid DiamState representation uses too many pieces',
+        );
         return new DiamState(board, pieces, turn);
     }
     public static pieceIndex(piece: DiamPiece): number {
@@ -37,9 +39,11 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
         }
     }
 
-    public constructor(board: Table<DiamPiece>,
-                       public readonly remainingPieces: Readonly<[number, number, number, number]>,
-                       turn: number) {
+    public constructor(
+        board: Table<DiamPiece>,
+        public readonly remainingPieces: Readonly<[number, number, number, number]>,
+        turn: number,
+    ) {
         super(board, turn);
     }
     public getRemainingPiecesOf(piece: DiamPiece): number {

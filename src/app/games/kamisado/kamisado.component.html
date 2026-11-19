@@ -59,10 +59,11 @@
     }
     <!-- Highlight selected piece -->
     @if (chosen.isPresent()) {
-        <circle id="selected-piece"
-                [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
-                [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
+        @let chosenCoord = chosen.get();
+        <circle id="selected-piece-{{ chosenCoord.x }}-{{ chosenCoord.y }}"
+                [attr.cx]="SPACE_SIZE / 2 + (chosenCoord.x * SPACE_SIZE)"
+                [attr.cy]="SPACE_SIZE / 2 + (chosenCoord.y * SPACE_SIZE)"
                 [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                class="base mid-stroke no-fill selected-stroke"/>
+                class="base mid-stroke no-fill selected-stroke selected-data"/>
     }
 </svg>

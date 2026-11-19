@@ -65,5 +65,6 @@ export namespace TeekoMove {
             [
                 TeekoDropMove.encoder,
                 TeekoTranslationMove.encoder,
-            ]);
+            ],
+        );
 }

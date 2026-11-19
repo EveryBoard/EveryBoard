@@ -33,10 +33,12 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
                             rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
-                                const move: YinshMove = new YinshMove(initialCaptures,
-                                                                      ringMove.start,
-                                                                      MGPOptional.of(ringMove.end),
-                                                                      finalCaptures);
+                                const move: YinshMove = new YinshMove(
+                                    initialCaptures,
+                                    ringMove.start,
+                                    MGPOptional.of(ringMove.end),
+                                    finalCaptures,
+                                );
                                 moves.push(move);
                             });
                     });

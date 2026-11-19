@@ -9,8 +9,7 @@ import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasPositionalHeuristic
-    extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
-{
+    extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig> {
 
     public getBoardValue(node: EpaminondasNode, _config: EpaminondasConfig): BoardValue {
         return BoardValue.of(this.getPieceCountThenSupportThenAdvancement(node.gameState));

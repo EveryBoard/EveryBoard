@@ -100,11 +100,15 @@ describe('ReversiHeuristic', () => {
 
         // When computing the board value
         // Then the control of the corner should be preferred
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.empty(),
-                                                               strongerState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakerState,
+            MGPOptional.empty(),
+            strongerState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
 });

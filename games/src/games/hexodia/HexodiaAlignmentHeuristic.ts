@@ -5,11 +5,12 @@ import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePi
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from './HexodiaRules';
 
-export class HexodiaAlignmentHeuristic extends Heuristic<HexodiaMove,
-                                                         FourStatePieceGameStateWithTable,
-                                                         BoardValue,
-                                                         HexodiaConfig>
-{
+export class HexodiaAlignmentHeuristic extends Heuristic<
+    HexodiaMove,
+    FourStatePieceGameStateWithTable,
+    BoardValue,
+    HexodiaConfig
+> {
     public getBoardValue(node: HexodiaNode, config: HexodiaConfig): BoardValue {
         const state: FourStatePieceGameStateWithTable = node.gameState;
         let score: number = 0;

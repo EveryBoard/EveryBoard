@@ -32,8 +32,10 @@ export class DiamPiece {
         }
         return DiamPiece.EMPTY;
     }
-    private constructor(public readonly owner: PlayerOrNone,
-                        public readonly otherPieceType: boolean) {
+    private constructor(
+        public readonly owner: PlayerOrNone,
+        public readonly otherPieceType: boolean,
+    ) {
     }
     public toString(): string {
         return `DiamPiece(${this.owner}, ${this.otherPieceType})`;

@@ -25,7 +25,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
 {
-
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
 
     public EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;

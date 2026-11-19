@@ -10,69 +10,71 @@ export type TutorialPredicate = (move: Move, previousState: GameState, resulting
 
 export abstract class TutorialStep {
 
-    public static fromMove(title: string,
-                           instruction: string,
-                           state: GameState,
-                           acceptedMoves: ReadonlyArray<Move>,
-                           successMessage: string,
-                           failureMessage: string,
-                           config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : TutorialStep
-    {
+    public static fromMove(
+        title: string,
+        instruction: string,
+        state: GameState,
+        acceptedMoves: ReadonlyArray<Move>,
+        successMessage: string,
+        failureMessage: string,
+        config: MGPOptional<RulesConfig> = MGPOptional.empty(),
+    ): TutorialStep {
         return new TutorialStepMove(title, instruction, state, acceptedMoves, successMessage, failureMessage, config);
     }
 
-    public static forClick(title: string,
-                           instruction: string,
-                           state: GameState,
-                           acceptedClicks: ReadonlyArray<string>,
-                           successMessage: string,
-                           failureMessage: string,
-                           config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : TutorialStep
-    {
+    public static forClick(
+        title: string,
+        instruction: string,
+        state: GameState,
+        acceptedClicks: ReadonlyArray<string>,
+        successMessage: string,
+        failureMessage: string,
+        config: MGPOptional<RulesConfig> = MGPOptional.empty(),
+    ): TutorialStep {
         return new TutorialStepClick(title, instruction, state, acceptedClicks, successMessage, failureMessage, config);
     }
 
-    public static anyMove(title: string,
-                          instruction: string,
-                          state: GameState,
-                          solutionMove: Move,
-                          successMessage: string,
-                          config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : TutorialStep
-    {
+    public static anyMove(
+        title: string,
+        instruction: string,
+        state: GameState,
+        solutionMove: Move,
+        successMessage: string,
+        config: MGPOptional<RulesConfig> = MGPOptional.empty(),
+    ): TutorialStep {
         return new TutorialStepAnyMove(title, instruction, state, solutionMove, successMessage, config);
     }
 
-    public static fromPredicate(title: string,
-                                instruction: string,
-                                state: GameState,
-                                solutionMove: Move,
-                                predicate: TutorialPredicate,
-                                successMessage: string,
-                                config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : TutorialStep
-    {
+    public static fromPredicate(
+        title: string,
+        instruction: string,
+        state: GameState,
+        solutionMove: Move,
+        predicate: TutorialPredicate,
+        successMessage: string,
+        config: MGPOptional<RulesConfig> = MGPOptional.empty(),
+    ): TutorialStep {
         return new TutorialStepPredicate(title, instruction, state, solutionMove, predicate, successMessage, config);
     }
 
-    public static informational(title: string,
-                                instruction: string,
-                                state: GameState,
-                                config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : TutorialStep
-    {
+    public static informational(
+        title: string,
+        instruction: string,
+        state: GameState,
+        config: MGPOptional<RulesConfig> = MGPOptional.empty(),
+    ): TutorialStep {
         return new TutorialStepInformational(title, instruction, state, config);
     }
 
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
     public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
 
-    protected constructor(public readonly title: string,
-                          public readonly instruction: string,
-                          public readonly state: GameState,
-                          public readonly config: MGPOptional<RulesConfig>) {
+    protected constructor(
+        public readonly title: string,
+        public readonly instruction: string,
+        public readonly state: GameState,
+        public readonly config: MGPOptional<RulesConfig>,
+    ) {
     }
 
     public isMove(): this is TutorialStepMove {
@@ -111,12 +113,13 @@ export abstract class TutorialStep {
 
 export abstract class TutorialStepWithSolution extends TutorialStep {
 
-    public constructor(title: string,
-                       instruction: string,
-                       state: GameState,
-                       private readonly successMessage: string,
-                       config: MGPOptional<RulesConfig>)
-    {
+    public constructor(
+        title: string,
+        instruction: string,
+        state: GameState,
+        private readonly successMessage: string,
+        config: MGPOptional<RulesConfig>,
+    ) {
         super(title, instruction, state, config);
     }
 
@@ -134,14 +137,15 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
 
 export class TutorialStepMove extends TutorialStepWithSolution {
 
-    public constructor(title: string,
-                       instruction: string,
-                       state: GameState,
-                       public readonly acceptedMoves: ReadonlyArray<Move>,
-                       successMessage: string,
-                       private readonly failureMessage: string,
-                       config: MGPOptional<RulesConfig>)
-    {
+    public constructor(
+        title: string,
+        instruction: string,
+        state: GameState,
+        public readonly acceptedMoves: ReadonlyArray<Move>,
+        successMessage: string,
+        private readonly failureMessage: string,
+        config: MGPOptional<RulesConfig>,
+    ) {
         super(title, instruction, state, successMessage, config);
         Utils.assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
@@ -162,12 +166,14 @@ export class TutorialStepMove extends TutorialStepWithSolution {
 
 export class TutorialStepAnyMove extends TutorialStepWithSolution {
 
-    public constructor(title: string,
-                       instruction: string,
-                       state: GameState,
-                       private readonly solutionMove: Move,
-                       successMessage: string,
-                       config: MGPOptional<RulesConfig>) {
+    public constructor(
+        title: string,
+        instruction: string,
+        state: GameState,
+        private readonly solutionMove: Move,
+        successMessage: string,
+        config: MGPOptional<RulesConfig>,
+    ) {
         super(title, instruction, state, successMessage, config);
     }
 
@@ -183,14 +189,15 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
 
 export class TutorialStepClick extends TutorialStepWithSolution {
 
-    public constructor(title: string,
-                       instruction: string,
-                       state: GameState,
-                       public readonly acceptedClicks: ReadonlyArray<string>,
-                       successMessage: string,
-                       private readonly failureMessage: string,
-                       config: MGPOptional<RulesConfig>)
-    {
+    public constructor(
+        title: string,
+        instruction: string,
+        state: GameState,
+        public readonly acceptedClicks: ReadonlyArray<string>,
+        successMessage: string,
+        private readonly failureMessage: string,
+        config: MGPOptional<RulesConfig>,
+    ) {
         super(title, instruction, state, successMessage, config);
     }
 
@@ -210,14 +217,15 @@ export class TutorialStepClick extends TutorialStepWithSolution {
 
 export class TutorialStepPredicate extends TutorialStepWithSolution {
 
-    public constructor(title: string,
-                       instruction: string,
-                       state: GameState,
-                       private readonly solutionMove: Move,
-                       public readonly predicate: TutorialPredicate,
-                       successMessage: string,
-                       config: MGPOptional<RulesConfig>)
-    {
+    public constructor(
+        title: string,
+        instruction: string,
+        state: GameState,
+        private readonly solutionMove: Move,
+        public readonly predicate: TutorialPredicate,
+        successMessage: string,
+        config: MGPOptional<RulesConfig>,
+    ) {
         super(title, instruction, state, successMessage, config);
     }
 

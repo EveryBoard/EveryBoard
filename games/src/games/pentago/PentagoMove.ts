@@ -17,26 +17,29 @@ export class PentagoMove extends MoveCoord {
     public static of(coord: Coord, blockTurned: MGPOptional<number>, turnedClockwise: boolean): PentagoMove {
         return new PentagoMove(coord.x, coord.y, blockTurned, turnedClockwise);
     }
-    public static withRotation(x: number,
-                               y: number,
-                               blockTurned: number,
-                               turnedClockwise: boolean)
-    : PentagoMove
-    {
+    public static withRotation(
+        x: number,
+        y: number,
+        blockTurned: number,
+        turnedClockwise: boolean,
+    ): PentagoMove {
         Utils.assert(0 <= blockTurned && blockTurned <= 3, 'This block does not exist: ' + blockTurned);
         return new PentagoMove(x, y, MGPOptional.of(blockTurned), turnedClockwise);
     }
     public static rotationless(x: number, y: number): PentagoMove {
         return new PentagoMove(x, y, MGPOptional.empty());
     }
-    private constructor(x: number,
-                        y: number,
-                        public readonly blockTurned: MGPOptional<number>,
-                        public readonly turnedClockwise: boolean = false)
-    {
+    private constructor(
+        x: number,
+        y: number,
+        public readonly blockTurned: MGPOptional<number>,
+        public readonly turnedClockwise: boolean = false,
+    ) {
         super(x, y);
-        Utils.assert(PentagoState.isOnBoard(this.coord),
-                     'The board is a ' + PentagoState.SIZE + ' space wide square, invalid coord: ' + this.coord.toString());
+        Utils.assert(
+            PentagoState.isOnBoard(this.coord),
+            'The board is a ' + PentagoState.SIZE + ' space wide square, invalid coord: ' + this.coord.toString(),
+        );
     }
     public override toString(): string {
         if (this.blockTurned.isPresent()) {

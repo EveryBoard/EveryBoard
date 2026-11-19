@@ -156,9 +156,11 @@ describe('CoerceoComponent', () => {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
 
             // Then it should fail
-            await testUtils.expectMoveFailure('#pyramid-6-9',
-                                              CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
-                                              move);
+            await testUtils.expectMoveFailure(
+                '#pyramid-6-9',
+                CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
+                move,
+            );
         }));
 
         it('should show captured piece and used tiles when doing tiles exchange', fakeAsync(async() => {
@@ -316,8 +318,10 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToHaveClass('#last-start-8-9', 'last-move-stroke');
 
             // When applying a tile exchange
-            await testUtils.expectMoveSuccess('#pyramid-6-9',
-                                              CoerceoTileExchangeMove.of(new Coord(6, 9)));
+            await testUtils.expectMoveSuccess(
+                '#pyramid-6-9',
+                CoerceoTileExchangeMove.of(new Coord(6, 9)),
+            );
 
             // Then the start and end of penultimate move should be gone
             testUtils.expectElementNotToExist('#last-end-6-9');

@@ -141,4 +141,8 @@ export class Set<T extends Comparable> implements ComparableObject {
         return result;
     }
 
+    public slice(start?: number, end?: number): this {
+        return this.provideInstance<T>(this.values.slice(start, end));
+    }
+
 }

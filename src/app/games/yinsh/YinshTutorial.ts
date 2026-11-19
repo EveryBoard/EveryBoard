@@ -53,7 +53,8 @@ export class YinshTutorial extends Tutorial {
         You're playing Dark, put one of your ring on the board by clicking the space where you want to place it.`,
             new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(5, 5), 0),
             new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
-            TutorialStepMessage.CONGRATULATIONS()),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
         TutorialStep.anyMove(
             $localize`Putting a marker`,
             $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board.
@@ -77,7 +78,8 @@ export class YinshTutorial extends Tutorial {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], PlayerNumberMap.of(0, 0), 20),
             new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
-            TutorialStepMessage.CONGRATULATIONS()),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
         TutorialStep.fromPredicate(
             $localize`Getting a ring by aligning 5 markers`,
             $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
@@ -99,8 +101,12 @@ export class YinshTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], PlayerNumberMap.of(0, 0), 20),
-            new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
-                          [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))]),
+            new YinshMove(
+                [],
+                new Coord(4, 4),
+                MGPOptional.of(new Coord(7, 4)),
+                [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))],
+            ),
             (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 1) {
                     return MGPValidation.SUCCESS;
@@ -108,7 +114,8 @@ export class YinshTutorial extends Tutorial {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE());
                 }
             },
-            TutorialStepMessage.CONGRATULATIONS()),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
         TutorialStep.fromPredicate(
             $localize`Compound captures`,
             $localize`During a turn, you could have to choose between multiple captures,
@@ -128,12 +135,15 @@ export class YinshTutorial extends Tutorial {
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], PlayerNumberMap.of(0, 0), 10),
-            new YinshMove([
-                YinshCapture.of(new Coord(5, 4), new Coord(1, 8), MGPOptional.of(new Coord(3, 2))),
-                YinshCapture.of(new Coord(5, 9), new Coord(5, 5), MGPOptional.of(new Coord(3, 3))),
-            ],
-                          new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
-                          []),
+            new YinshMove(
+                [
+                    YinshCapture.of(new Coord(5, 4), new Coord(1, 8), MGPOptional.of(new Coord(3, 2))),
+                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), MGPOptional.of(new Coord(3, 3))),
+                ],
+                new Coord(4, 1),
+                MGPOptional.of(new Coord(4, 2)),
+                [],
+            ),
             (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 2) {
                     return MGPValidation.SUCCESS;
@@ -141,6 +151,7 @@ export class YinshTutorial extends Tutorial {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO());
                 }
             },
-            TutorialStepMessage.CONGRATULATIONS()),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
     ];
 }
