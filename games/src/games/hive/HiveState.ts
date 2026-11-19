@@ -130,7 +130,8 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         let remainingPieces: HiveRemainingPieces = HiveRemainingPieces.getInitial();
         const queenBees: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
             MGPOptional.empty(),
-            MGPOptional.empty());
+            MGPOptional.empty(),
+        );
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (board[y][x].length > 0) {

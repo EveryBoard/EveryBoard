@@ -15,8 +15,10 @@ export class ApagosSquare {
         return MGPFallible.success(validSquare);
     }
 
-    private constructor(private readonly containing: PlayerNumberMap,
-                        private readonly capacity: number) {}
+    private constructor(
+        private readonly containing: PlayerNumberMap,
+        private readonly capacity: number,
+    ) {}
 
     public getCapacity(): number {
         return this.capacity;

@@ -22,7 +22,7 @@ export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, Dv
             const playerStacks: number = pieces.filter((c: Coord): boolean =>
                 state.getPieceAt(c).belongsTo(player)).length;
             const oldScore: number = scores.get(player);
-            metrics.set(player, [oldScore * playerStacks / numberOfStacks]);
+            metrics.put(player, [oldScore * playerStacks / numberOfStacks]);
         }
         return metrics;
     }

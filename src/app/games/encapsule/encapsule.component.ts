@@ -50,7 +50,8 @@ export class EncapsuleComponent extends RectangularGameComponent<
     protected readonly ringStrokeWidth: WritableSignal<number> = signal(this.STROKE_WIDTH);
     protected readonly chosenCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly chosenPiece: WritableSignal<MGPOptional<EncapsulePiece>> = signal(MGPOptional.empty());
-    private readonly remainingPieceCenterCoords: WritableSignal<PlayerMap<Coord[]>> = signal(PlayerMap.ofValues([], []));
+    private readonly remainingPieceCenterCoords: WritableSignal<PlayerMap<Coord[]>> =
+        signal(PlayerMap.ofValues([], []));
     protected readonly victoryCoords: WritableSignal<ReadonlyArray<Coord>> = signal([]);
     protected readonly boardPieces: WritableSignal<Table<SquareData>> = signal([]);
     protected readonly pieceSizeToRadius: WritableSignal<MGPMap<EncapsulePiece, number>> = signal(new MGPMap());
