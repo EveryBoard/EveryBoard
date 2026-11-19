@@ -668,24 +668,27 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public selectAIPlayer(player: Player, strategy: 'minimax' | 'iterative-deepening' | 'mcts' = 'minimax'): void {
         const playerIndex: number = player.getValue();
-        const selectAI: HTMLSelectElement = this.findElement(`#player-select-${playerIndex}`).nativeElement;
-        selectAI.value = strategy;
-        selectAI.dispatchEvent(new Event('change'));
-        this.detectChanges();
-        tick(0);
 
-        const profileElements: DebugElement[] = this.findElements(`#ai-profile-select-${playerIndex}`);
-        if (profileElements.length === 1) {
-            const selectProfile: HTMLSelectElement = profileElements[0].nativeElement;
-            selectProfile.value = selectProfile.options[1].value;
-            selectProfile.dispatchEvent(new Event('change'));
-            this.detectChanges();
-            tick(0);
+        this.selectValue(`#player-select-${playerIndex}`, strategy);
+        this.selectFirstOptionIfPresent(`#ai-profile-select-${playerIndex}`);
+        this.selectFirstOption(`#ai-option-select-${playerIndex}`);
+    }
+
+    private selectFirstOptionIfPresent(selector: string): void {
+        if (this.findElements(selector).length > 0) {
+            this.selectFirstOption(selector);
         }
+    }
 
-        const selectLevel: HTMLSelectElement = this.findElement(`#ai-option-select-${playerIndex}`).nativeElement;
-        selectLevel.value = selectLevel.options[1].value;
-        selectLevel.dispatchEvent(new Event('change'));
+    private selectFirstOption(selector: string): void {
+        const select: HTMLSelectElement = this.findElement(selector).nativeElement;
+        this.selectValue(selector, select.options[1].value);
+    }
+
+    private selectValue(selector: string, value: string): void {
+        const select: HTMLSelectElement = this.findElement(selector).nativeElement;
+        select.value = value;
+        select.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick(0);
     }

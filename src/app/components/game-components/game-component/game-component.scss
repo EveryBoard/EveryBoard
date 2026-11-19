@@ -209,6 +209,10 @@
 .text-center {
     text-anchor: middle;
 }
+.transform-origin-center {
+    transform-box: fill-box;
+    transform-origin: center;
+}
 .black-fill {
     fill: black;
 }
