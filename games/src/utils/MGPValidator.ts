@@ -19,7 +19,7 @@ export class MGPValidators {
 
 export class MGPValidatorsFailure {
 
-    public static readonly VALUE_IS_TOO_SMALL: (value: number, minimum: number) => string = (v: number, m: number) => $localize`${ v } is too small, the minimum is ${ m }`;
+    public static readonly VALUE_IS_TOO_SMALL: (value: number, minimum: number) => string = (v: number, m: number) => $localize`${ v } is too small, the minimum is ${ m }.`;
 
-    public static readonly VALUE_IS_TOO_HIGH: (value: number, maximum: number) => string = (v: number, m: number) => $localize`${ v } is too big, the maximum is ${ m }`;
+    public static readonly VALUE_IS_TOO_HIGH: (value: number, maximum: number) => string = (v: number, m: number) => $localize`${ v } is too big, the maximum is ${ m }.`;
 }

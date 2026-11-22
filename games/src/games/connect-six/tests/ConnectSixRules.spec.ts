@@ -9,10 +9,10 @@ import { Direction } from '../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
-import { TorusShape } from '../../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
+import { RectangularBoardShape } from '../../../jscaip/shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/shape/TopologicBoardShape';
+import { ToricBoardShape } from '../../../jscaip/shape/ToricBoardShape';
+import { TriangularBoardShape } from '../../../jscaip/shape/TriangularBoardShape';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -43,7 +43,7 @@ describe('ConnectSixRules (with default config)', () => {
 
     let rules: ConnectSixRules;
     const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-    const defaultShape: TopologicShape<EightDirection> = new RectangularShape(
+    const defaultShape: TopologicBoardShape<EightDirection> = new RectangularBoardShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
         defaultTopology,
@@ -587,7 +587,7 @@ describe('ConnectSixRules (with hexagonal config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new RectangularShape(19, 19, hexagonalTopology),
+            new RectangularBoardShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -630,7 +630,7 @@ describe('ConnectSixRules (with hexagonal config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new RectangularShape(19, 19, hexagonalTopology),
+            new RectangularBoardShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -673,7 +673,7 @@ describe('ConnectSixRules (with hexagonal config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new RectangularShape(19, 19, hexagonalTopology),
+            new RectangularBoardShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -717,7 +717,7 @@ describe('ConnectSixRules (with hexagonal config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new RectangularShape(19, 19, hexagonalTopology),
+            new RectangularBoardShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -760,7 +760,7 @@ describe('ConnectSixRules (with triangular config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
-            new TriangularShape(5, triangularTopology),
+            new TriangularBoardShape(5, triangularTopology),
             gameState,
         );
         const node: ConnectSixNode = new ConnectSixNode(state);
@@ -787,7 +787,7 @@ describe('ConnectSixRules (with triangular config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
-            new TriangularShape(5, triangularTopology),
+            new TriangularBoardShape(5, triangularTopology),
             gameState,
         );
         // const move: ConnectSixMove =
@@ -819,7 +819,7 @@ describe('ConnectSixRules (with triangular config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, TriangularDirection> = new TopologicGameStateWithTable(
             triangularTopology,
-            new TriangularShape(6, triangularTopology),
+            new TriangularBoardShape(6, triangularTopology),
             gameState,
         );
         // const move: ConnectSixMove =
@@ -857,7 +857,7 @@ describe('ConnectSixRules (with triangular config)', () => {
         const actualInitialState: TopologicGameState<FourStatePiece, TriangularDirection> =
             new TopologicGameStateWithTable(
                 triangularTopology,
-                new TriangularShape(5, triangularTopology),
+                new TriangularBoardShape(5, triangularTopology),
                 gameState,
             );
         expect(actualInitialState).toEqual(expectedInitialState);
@@ -906,7 +906,7 @@ describe('ConnectSixRules (with rectangular torus config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
-            new TorusShape(19, 19, squareTopology),
+            new ToricBoardShape(19, 19, squareTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -952,7 +952,7 @@ describe('ConnectSixRules (with rectangular torus config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
-            new TorusShape(19, 19, squareTopology),
+            new ToricBoardShape(19, 19, squareTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -997,7 +997,7 @@ describe('ConnectSixRules (with rectangular torus config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
-            new TorusShape(19, 19, squareTopology),
+            new ToricBoardShape(19, 19, squareTopology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -1027,7 +1027,7 @@ describe('ConnectSixRules (with rectangular torus config)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece, EightDirection> = new TopologicGameStateWithTable(
             squareTopology,
-            new TorusShape(3, 3, squareTopology),
+            new ToricBoardShape(3, 3, squareTopology),
             gameState,
         );
         const move: ConnectSixMove = ConnectSixMove.of([new Coord(0, 0), new Coord(0, 1)]);

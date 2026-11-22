@@ -5,7 +5,7 @@ import { Coord } from '../../Coord';
 import { EightDirection } from '../../direction/EightDirection';
 import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquareTopology';
 import { Topology } from '../../topology/Topology';
-import { RectangularShape } from '../RectangularShape';
+import { RectangularBoardShape } from '../RectangularBoardShape';
 
 describe('RectangularShape', () => {
 
@@ -13,16 +13,16 @@ describe('RectangularShape', () => {
 
     describe('getCenters', () => {
 
-        it('should return the center for side 1', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(1, 1, topology);
+        it('should return the center for sideLength=1', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(1, 1, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(0, 0),
             ]);
         });
 
-        it('should return all coords center for side 2', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(2, 2, topology);
+        it('should return all coords center for sideLength=2', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(2, 2, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -30,8 +30,8 @@ describe('RectangularShape', () => {
             expectEquality(expectedCenters, actualCenters);
         });
 
-        it('should return the center for side 3', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(3, 3, topology);
+        it('should return the center for sideLength=3', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(3, 3, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -41,8 +41,8 @@ describe('RectangularShape', () => {
             expectEquality(expectedCenters, actualCenters);
         });
 
-        it('should return the 4 center for side 4', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(4, 4, topology);
+        it('should return the 4 center for sideLength=4', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(4, 4, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -57,16 +57,16 @@ describe('RectangularShape', () => {
 
     describe('getAllCoords', () => {
 
-        it('should return the correct coordinates for side 1', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(1, 1, topology);
+        it('should return the correct coordinates for sideLength=1', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(1, 1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
             ]);
         });
 
-        it('should return the correct coordinates for side 2', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(2, 2, topology);
+        it('should return the correct coordinates for sideLength=2', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(2, 2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
 
@@ -77,8 +77,8 @@ describe('RectangularShape', () => {
             expectEquality(expectedSet, actualSet);
         });
 
-        it('should return the correct coordinates for side 3', () => {
-            const shape: RectangularShape<EightDirection> = new RectangularShape(3, 3, topology);
+        it('should return the correct coordinates for sideLength=3', () => {
+            const shape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(3, 3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([

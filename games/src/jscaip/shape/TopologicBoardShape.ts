@@ -4,10 +4,10 @@ import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { Shape } from './Shape';
+import { BoardShape } from './BoardShape';
 
 
-export abstract class TopologicShape<D extends Direction> implements Shape<D> {
+export abstract class TopologicBoardShape<D extends Direction> implements BoardShape<D> {
 
     public constructor(private readonly topology: Topology<D>) { }
 

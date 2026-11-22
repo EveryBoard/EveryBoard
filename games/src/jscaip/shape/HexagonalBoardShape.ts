@@ -4,12 +4,12 @@ import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './TopologicShape';
+import { TopologicBoardShape } from './TopologicBoardShape';
 
-export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
+export class HexagonalBoardShape<D extends Direction> extends TopologicBoardShape<D> {
 
     public constructor(
-        private readonly side: number,
+        private readonly sideLength: number,
         topology: Topology<D>,
     ) {
         super(topology);
@@ -17,13 +17,13 @@ export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
 
     public getCenters(): Coord[] {
         return [
-            new Coord(this.side - 1, this.side - 1),
+            new Coord(this.sideLength - 1, this.sideLength - 1),
         ];
     }
 
     public getAllCoords(): Coord[] {
         const coords: Coord[] = [];
-        const maxIndex: number = (this.side - 1) * 2;
+        const maxIndex: number = (this.sideLength - 1) * 2;
         for (let x: number = 0; x <= maxIndex; x++) {
             for (let y: number = 0; y <= maxIndex; y++) {
                 const coord: Coord = new Coord(x, y);
@@ -47,7 +47,7 @@ export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
 
         const x: number = coord.x;
         const y: number = coord.y;
-        const minyx: number = this.side - 1;
+        const minyx: number = this.sideLength - 1;
         const maxXOrY: number = minyx * 2;
         const maxyx: number = 3 * minyx;
         return 0 <= x && x <= maxXOrY &&
@@ -58,7 +58,7 @@ export class HexagonalShape<D extends Direction> extends TopologicShape<D> {
     public isNotOnBoard(coord: Coord): boolean {
         const x: number = coord.x;
         const y: number = coord.y;
-        const minyx: number = this.side - 1;
+        const minyx: number = this.sideLength - 1;
         const maxXOrY: number = minyx * 2;
         const maxyx: number = 3 * minyx;
         return maxXOrY < x || x < 0 ||

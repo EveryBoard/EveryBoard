@@ -6,8 +6,8 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Direction } from '../../../jscaip/direction/Direction';
-import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
+import { RectangularBoardShape } from '../../../jscaip/shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/shape/TopologicBoardShape';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -38,7 +38,7 @@ describe('ConnectSixAlignmentMinimax', () => {
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
     const defaultTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
     const defaultConfig: ConnectSixConfig = ConnectSixRules.get().getDefaultRulesConfig();
-    const defaultShape: TopologicShape<Direction> = new RectangularShape(
+    const defaultShape: TopologicBoardShape<Direction> = new RectangularBoardShape(
         defaultConfig.boardSize,
         defaultConfig.boardSize,
         defaultTopology,

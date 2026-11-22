@@ -4,6 +4,7 @@ import { Coord } from '../Coord';
 import { HexaDirection } from '../direction/HexaDirection';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 export class HexagonalTopology implements Topology<HexaDirection> {
 
@@ -15,6 +16,10 @@ export class HexagonalTopology implements Topology<HexaDirection> {
         HexaDirection.LEFT,
         HexaDirection.UP,
     ]);
+
+    public getId(): TopologyID {
+        return 'HEXAGONAL';
+    }
 
     public getDirections(): Set<HexaDirection> {
         return this.directions;

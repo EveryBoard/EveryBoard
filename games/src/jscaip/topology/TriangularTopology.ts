@@ -5,6 +5,7 @@ import { Vector } from '../Vector';
 import { TriangularDirection } from '../direction/TriangularDirection';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 export class TriangularTopology implements Topology<TriangularDirection> {
 
@@ -16,6 +17,10 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         TriangularDirection.DOWN_RIGHT,
         TriangularDirection.DOWN_LEFT,
     ]);
+
+    public getId(): TopologyID {
+        return 'TRIANGULAR';
+    }
 
     public getDirections(): Set<TriangularDirection> {
         return this.directions;

@@ -29,7 +29,6 @@ import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
 
-
 /**
  * All method are to be implemented by the "final" GameComponent classes
  * Except chooseMove which must be set by the GameWrapper

@@ -4,6 +4,7 @@ import { Coord } from '../Coord';
 import { Orthogonal } from '../direction/Orthogonal';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 
 export class OrthogonalSquareTopology implements Topology<Orthogonal> {
@@ -14,6 +15,10 @@ export class OrthogonalSquareTopology implements Topology<Orthogonal> {
         Orthogonal.DOWN,
         Orthogonal.LEFT,
     ]);
+
+    public getId(): TopologyID {
+        return 'SQUARE (4)';
+    }
 
     public getDirections(): Set<Orthogonal> {
         return this.directions;

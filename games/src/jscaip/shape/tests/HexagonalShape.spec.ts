@@ -6,7 +6,7 @@ import { Coord } from '../../Coord';
 import { HexaDirection } from '../../direction/HexaDirection';
 import { HexagonalTopology } from '../../topology/HexagonalTopology';
 import { Topology } from '../../topology/Topology';
-import { HexagonalShape } from '../HexagonalShape';
+import { HexagonalBoardShape } from '../HexagonalBoardShape';
 
 describe('HexagonalShape', () => {
 
@@ -14,24 +14,24 @@ describe('HexagonalShape', () => {
 
     describe('getCenters', () => {
 
-        it('should return the center for side 1', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(1, topology);
+        it('should return the center for sideLength=1', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(1, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(0, 0),
             ]);
         });
 
-        it('should return the center for side 2', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(2, topology);
+        it('should return the center for sideLength=2', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(2, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(1, 1),
             ]);
         });
 
-        it('should return the center for side 3', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(3, topology);
+        it('should return the center for sideLength=3', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(3, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(2, 2),
@@ -42,16 +42,16 @@ describe('HexagonalShape', () => {
 
     describe('getAllCoords', () => {
 
-        it('should return the correct coordinates for side 1', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(1, topology);
+        it('should return the correct coordinates for sideLength=1', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
             ]);
         });
 
-        it('should return the correct coordinates for side 2', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(2, topology);
+        it('should return the correct coordinates for sideLength=2', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([
@@ -62,8 +62,8 @@ describe('HexagonalShape', () => {
             expectEquality(expectedSet, actualSet);
         });
 
-        it('should return the correct coordinates for side 3', () => {
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(3, topology);
+        it('should return the correct coordinates for sideLength=3', () => {
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([
@@ -83,7 +83,7 @@ describe('HexagonalShape', () => {
         it('should include the good coords', () => {
             // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
             // and whose value are wether or not that coord should count as on board on a side=2 hexagon
-            const shape: HexagonalShape<HexaDirection> = new HexagonalShape(2, topology);
+            const shape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(2, topology);
             const allCoords: Coord[] = shape.getAllCoords();
             const matrix: boolean[][] = [
                 [false, false, false, false, false],

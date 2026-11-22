@@ -3,7 +3,11 @@ import { Set } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 
+import { TopologyID } from './TopologyMapper';
+
 export interface Topology<T extends Direction> {
+
+    getId(): TopologyID; // TODO: TopologyId non :D ? là aussi
 
     // So Up and Down are the axe "vertical" of which your provide only one of the two
     getDirections(): Set<T>;

@@ -25,37 +25,37 @@ import { QuebecCastlesState } from './QuebecCastlesState';
 
 export class QuebecCastlesFailure {
 
-    public static readonly INVALID_INVADER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 2 for invader, not ${ distance }`;
+    public static readonly INVALID_INVADER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 2 for invader, not ${ distance }!`;
 
-    public static readonly INVALID_DEFENDER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 1 for defender, not ${ distance }`;
+    public static readonly INVALID_DEFENDER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 1 for defender, not ${ distance }!`;
 
-    public static readonly MUST_DROP_IN_YOUR_TERRITORY: Localized = () => $localize`You must drop in your own territory`;
+    public static readonly MUST_DROP_IN_YOUR_TERRITORY: Localized = () => $localize`You must drop in your own territory!`;
 
-    public static readonly CANNOT_DROP_IN_MOVE_PHASE: Localized = () => $localize`You cannot drop in move phase`;
+    public static readonly CANNOT_DROP_IN_MOVE_PHASE: Localized = () => $localize`You cannot drop in move phase!`;
 
-    public static readonly CANNOT_MOVE_IN_DROP_PHASE: Localized = () => $localize`You cannot move in drop phase`;
+    public static readonly CANNOT_MOVE_IN_DROP_PHASE: Localized = () => $localize`You cannot move in drop phase!`;
 
-    public static readonly MUST_DROP_ALL_YOUR_PIECES: Localized = () => $localize`You must drop all your pieces`;
+    public static readonly MUST_DROP_ALL_YOUR_PIECES: Localized = () => $localize`You must drop all your pieces!`;
 
-    public static readonly MUST_DROP_ALL_YOUR_REMAINING_PIECES: Localized = () => $localize`You must drop all your remaining pieces, not more not less`;
+    public static readonly MUST_DROP_ALL_YOUR_REMAINING_PIECES: Localized = () => $localize`You must drop all your remaining pieces, not more not less!`;
 
-    public static readonly CANNOT_DROP_THAT_MANY_PIECES: Localized = () => $localize`You cannot drop that many pieces`;
+    public static readonly CANNOT_DROP_THAT_MANY_PIECES: Localized = () => $localize`You cannot drop that many pieces!`;
 
-    public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one`;
+    public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one!`;
 
-    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE: Localized = () => $localize`You cannot land or drop on your castle`;
+    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE: Localized = () => $localize`You cannot land or drop on your castle!`;
 
-    public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle`;
+    public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle!`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as invader)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as invader)!`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as defender)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as defender)!`;
 
     public static readonly TOO_MANY_LINES_FOR_TERRITORY: Localized = () => $localize`Too many lines for territory, your opponent lines would merge with yours!`;
 
 }
 
-export type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
+export type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH';
 
 export const DropModes: Record<DropMode, Localized> = {
     'AUTO': () => $localize`Automatic`,

@@ -1,6 +1,6 @@
 import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
-import { TopologicShape } from '../shape/TopologicShape';
+import { TopologicBoardShape } from '../shape/TopologicBoardShape';
 import { Topology } from '../topology/Topology';
 
 import { GameStateWithTable } from './GameStateWithTable';
@@ -12,7 +12,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>, D exten
 
     public constructor(
         topology: Topology<D>,
-        shape: TopologicShape<D>,
+        shape: TopologicBoardShape<D>,
         private readonly gameStateWithTable: GameStateWithTable<P>,
     ) {
         super(gameStateWithTable.turn, topology, shape);

@@ -13,11 +13,11 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
 import { Direction } from '../../jscaip/direction/Direction';
-import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
-import { RectangularShape } from '../../jscaip/shape/RectangularShape';
-import { TopologicShape } from '../../jscaip/shape/TopologicShape';
-import { TorusShape } from '../../jscaip/shape/TorusShape';
-import { TriangularShape } from '../../jscaip/shape/TriangularShape';
+import { HexagonalBoardShape } from '../../jscaip/shape/HexagonalBoardShape';
+import { RectangularBoardShape } from '../../jscaip/shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../jscaip/shape/TopologicBoardShape';
+import { ToricBoardShape } from '../../jscaip/shape/ToricBoardShape';
+import { TriangularBoardShape } from '../../jscaip/shape/TriangularBoardShape';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
@@ -106,7 +106,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
     public static getHelper(config: ConnectSixConfig): TopologicNInARowHelper<FourStatePiece, Direction> {
         if (ConnectSixRules.helpers.get(config).isAbsent()) {
             const topology: Topology<Direction> = ConnectSixRules.getTopology(config);
-            const shape: TopologicShape<Direction> = ConnectSixRules.getShape(config, topology);
+            const shape: TopologicBoardShape<Direction> = ConnectSixRules.getShape(config, topology);
             const helper: TopologicNInARowHelper<FourStatePiece, Direction> =
                 new TopologicNInARowHelper<FourStatePiece, Direction>(
                     (piece: FourStatePiece) => piece.getPlayer(),
@@ -122,17 +122,17 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
         return TopologyMapper.topologyMap.get(config.topology).get();
     }
 
-    private static getShape(config: ConnectSixConfig, topology: Topology<Direction>): TopologicShape<Direction> {
+    private static getShape(config: ConnectSixConfig, topology: Topology<Direction>): TopologicBoardShape<Direction> {
         switch (config.shape) {
             case 'SQUARE':
-                return new RectangularShape(config.boardSize, config.boardSize, topology);
+                return new RectangularBoardShape(config.boardSize, config.boardSize, topology);
             case 'HEXAGONAL':
-                return new HexagonalShape(config.boardSize, topology);
+                return new HexagonalBoardShape(config.boardSize, topology);
             case 'TORIC':
-                return new TorusShape(config.boardSize, config.boardSize, topology);
+                return new ToricBoardShape(config.boardSize, config.boardSize, topology);
             default:
                 Utils.expectToBe(config.shape, 'TRIANGULAR');
-                return new TriangularShape(config.boardSize, topology);
+                return new TriangularBoardShape(config.boardSize, topology);
         }
     }
 
@@ -197,7 +197,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
 
     public override getInitialState(config: ConnectSixConfig): TopologicGameState<FourStatePiece, Direction> {
         const topology: Topology<Direction> = ConnectSixRules.getTopology(config);
-        const shape: TopologicShape<Direction> = ConnectSixRules.getShape(config, topology);
+        const shape: TopologicBoardShape<Direction> = ConnectSixRules.getShape(config, topology);
         let maxX: number = 0;
         let maxY: number = 0;
         for (const coord of shape.getAllCoords()) {

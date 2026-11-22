@@ -7,7 +7,9 @@ import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
 
 export class PylosMoveFailure {
+
     public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;
+
 }
 
 type PylosFields = [MGPOptional<PylosCoord>, PylosCoord, MGPOptional<PylosCoord>, MGPOptional<PylosCoord>];

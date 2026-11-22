@@ -5,7 +5,7 @@ import { EightDirection } from './direction/EightDirection';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
-        return `The coordinate ${ coord.toString() } is not on the board`;
+        return `The coordinate ${ coord.toString() } is not on the board.`;
     }
 }
 
