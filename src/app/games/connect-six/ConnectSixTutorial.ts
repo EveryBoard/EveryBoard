@@ -1,8 +1,8 @@
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
-import { RectangularShape } from '@everyboard/games';
-import { TopologicShape } from '@everyboard/games';
+import { RectangularBoardShape } from '@everyboard/games';
+import { TopologicBoardShape } from '@everyboard/games';
 import { GameStateWithTable } from '@everyboard/games';
 import { TopologicGameStateWithTable } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
@@ -18,7 +18,7 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ConnectSixConfig = ConnectSixRules.get().getDefaultRulesConfig();
 const defaultTopology: Topology<Direction> = new EightDirectionSquareTopology();
-const defaultShape: TopologicShape<Direction> = new RectangularShape(
+const defaultShape: TopologicBoardShape<Direction> = new RectangularBoardShape(
     defaultConfig.boardSize,
     defaultConfig.boardSize,
     defaultTopology,

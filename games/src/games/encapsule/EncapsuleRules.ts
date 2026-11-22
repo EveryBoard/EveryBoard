@@ -48,7 +48,7 @@ export class EncapsuleRules extends ConfigurableRules<
 > {
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
-    private static readonly helpers: MGPMap<number, NInARowHelper<EncapsuleSpace>> = new MGPMap();
+    private static readonly helpers: MGPMap<number, EightDirectionNInARowHelper<EncapsuleSpace>> = new MGPMap();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EncapsuleConfig> =
         new RulesConfigDescription<EncapsuleConfig>({
@@ -100,9 +100,9 @@ export class EncapsuleRules extends ConfigurableRules<
         return PlayerMap.ofValues(playerZero, playerOne);
     }
 
-    public getHelper(config: EncapsuleConfig): NInARowHelper<EncapsuleSpace> {
+    public getHelper(config: EncapsuleConfig): EightDirectionNInARowHelper<EncapsuleSpace> {
         if (EncapsuleRules.helpers.containsKey(config.nInARow) === false) {
-            const helper: NInARowHelper<EncapsuleSpace> = new NInARowHelper<EncapsuleSpace>(
+            const helper: EightDirectionNInARowHelper<EncapsuleSpace> = new EightDirectionNInARowHelper<EncapsuleSpace>(
                 (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
                 config.nInARow,
             );

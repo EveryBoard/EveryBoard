@@ -10,7 +10,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>, D exten
     public constructor(
         turn: number,
         private readonly topology: Topology<D>,
-        private readonly shape: TopologicBoardShape<D>,
+        private readonly boardShape: TopologicBoardShape<D>,
     ) {
         super(turn);
     }
@@ -19,8 +19,8 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>, D exten
         return this.topology;
     }
 
-    public getShape(): TopologicBoardShape<D> {
-        return this.shape;
+    public getBoardShape(): TopologicBoardShape<D> {
+        return this.boardShape;
     }
 
     public abstract getCoordsAndContents(): { coord: Coord; content: P }[];

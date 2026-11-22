@@ -1,7 +1,6 @@
-
 import { computed, Signal } from '@angular/core';
 
-import { Coord, Shape } from '@everyboard/games';
+import { Coord, BoardShape } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { SuperRules } from '@everyboard/games';
@@ -26,7 +25,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
 
     protected readonly topologicTranslationMap: Signal<MGPMap<Coord, string>> = computed(() => {
         const map: MGPMap<Coord, string> = new MGPMap(
-            this.shape()
+            this.boardShape()
                 .getAllCoords()
                 .map((coord: Coord) => {
                     return {
@@ -41,7 +40,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
 
     protected readonly topologicPolygonMap: Signal<MGPMap<Coord, string>> = computed(() => {
         const map: MGPMap<Coord, string> = new MGPMap(
-            this.shape()
+            this.boardShape()
                 .getAllCoords()
                 .map((coord: Coord) => {
                     return {
@@ -56,7 +55,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
 
     protected readonly topologicCellIdMap: Signal<MGPMap<Coord, string>> = computed(() => {
         const map: MGPMap<Coord, string> = new MGPMap(
-            this.shape()
+            this.boardShape()
                 .getAllCoords()
                 .map((coord: Coord) => {
                     return {
@@ -69,8 +68,8 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
         return map;
     });
 
-    private readonly shape: Signal<Shape<Direction>> = computed(() => {
-        return this.state().getShape();
+    private readonly boardShape: Signal<BoardShape<Direction>> = computed(() => {
+        return this.state().getBoardShape();
     });
 
     private readonly topology: Signal<Topology<Direction>> = computed(() => {

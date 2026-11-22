@@ -106,7 +106,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
     public static getHelper(config: ConnectSixConfig): TopologicNInARowHelper<FourStatePiece, Direction> {
         if (ConnectSixRules.helpers.get(config).isAbsent()) {
             const topology: Topology<Direction> = ConnectSixRules.getTopology(config);
-            const shape: TopologicBoardShape<Direction> = ConnectSixRules.getShape(config, topology);
+            const shape: TopologicBoardShape<Direction> = ConnectSixRules.getBoardShape(config, topology);
             const helper: TopologicNInARowHelper<FourStatePiece, Direction> =
                 new TopologicNInARowHelper<FourStatePiece, Direction>(
                     (piece: FourStatePiece) => piece.getPlayer(),
@@ -122,7 +122,10 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
         return TopologyMapper.topologyMap.get(config.topology).get();
     }
 
-    private static getShape(config: ConnectSixConfig, topology: Topology<Direction>): TopologicBoardShape<Direction> {
+    private static getBoardShape(
+        config: ConnectSixConfig,
+        topology: Topology<Direction>,
+    ): TopologicBoardShape<Direction> {
         switch (config.shape) {
             case 'SQUARE':
                 return new RectangularBoardShape(config.boardSize, config.boardSize, topology);
@@ -145,7 +148,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
                 return piece.getPlayer();
             },
             config.n,
-            state.getShape(),
+            state.getBoardShape(),
         ).getVictoriousCoord(state);
     }
 
@@ -198,7 +201,7 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
 
     public override getInitialState(config: ConnectSixConfig): TopologicGameState<FourStatePiece, Direction> {
         const topology: Topology<Direction> = ConnectSixRules.getTopology(config);
-        const shape: TopologicBoardShape<Direction> = ConnectSixRules.getShape(config, topology);
+        const shape: TopologicBoardShape<Direction> = ConnectSixRules.getBoardShape(config, topology);
         let maxX: number = 0;
         let maxY: number = 0;
         for (const coord of shape.getAllCoords()) {
