@@ -126,6 +126,7 @@ module.exports = [{
                 },
             },
         ],
+        '@stylistic/ts/function-paren-newline': ['error', 'multiline-arguments'],
         '@typescript-eslint/no-unnecessary-condition': ['warn'],
         '@typescript-eslint/no-unnecessary-type-arguments': ['warn'],
         '@typescript-eslint/no-unnecessary-type-assertion': ['warn'],

@@ -24,8 +24,10 @@ export class GameStateWithTable<P extends NonNullable<unknown>> extends GameStat
     }
 
     public getPieceAt(coord: Coord): P {
-        Utils.assert(this.isOnBoard(coord),
-                     'Accessing coord not on board ' + coord + '.');
+        Utils.assert(
+            this.isOnBoard(coord),
+            'Accessing coord not on board ' + coord + '.',
+        );
         return this.getUnsafe(coord);
     }
 

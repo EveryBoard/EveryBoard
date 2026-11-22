@@ -17,11 +17,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly phase: GoPhase;
 
-    public constructor(board: Table<GoPiece>,
-                       captured: PlayerNumberMap,
-                       turn: number,
-                       koCoord: MGPOptional<Coord>,
-                       phase: GoPhase,
+    public constructor(
+        board: Table<GoPiece>,
+        captured: PlayerNumberMap,
+        turn: number,
+        koCoord: MGPOptional<Coord>,
+        phase: GoPhase,
     ) {
         super(board, turn);
         this.captured = captured;

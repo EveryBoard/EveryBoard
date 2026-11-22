@@ -43,11 +43,15 @@ describe('P4Heuristic', () => {
         ];
         const strongState: P4State = new P4State(strongBoard, 0);
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
     it('should count three point for the corner', () => {

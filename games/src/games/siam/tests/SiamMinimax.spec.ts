@@ -22,8 +22,7 @@ const d: SiamPiece = SiamPiece.DARK_DOWN;
 
 class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
     public constructor() {
-        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator(),
-        );
+        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
     }
 }
 

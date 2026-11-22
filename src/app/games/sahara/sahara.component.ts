@@ -25,11 +25,12 @@ import { TriangularGameComponent } from '../../components/game-components/game-c
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class SaharaComponent extends TriangularGameComponent<SaharaRules,
-                                                             SaharaMove,
-                                                             SaharaState,
-                                                             FourStatePiece>
-{
+export class SaharaComponent extends TriangularGameComponent<
+    SaharaRules,
+    SaharaMove,
+    SaharaState,
+    FourStatePiece
+> {
     protected override computeViewBox(): ViewBox {
         const state: SaharaState = this.state();
         const width: number = ((state.getWidth() + 1) / 2) * this.SPACE_SIZE;

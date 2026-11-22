@@ -9,13 +9,14 @@ import { GameStateWithTable } from './GameStateWithTable';
 
 export abstract class HexagonalGameState<P extends NonNullable<Comparable>> extends GameStateWithTable<P> {
 
-    public constructor(turn: number,
-                       board: Table<P>,
-                       public readonly width: number,
-                       public readonly height: number,
-                       public readonly excludedSpaces: ReadonlyArray<number>,
-                       public readonly empty: P)
-    {
+    public constructor(
+        turn: number,
+        board: Table<P>,
+        public readonly width: number,
+        public readonly height: number,
+        public readonly excludedSpaces: ReadonlyArray<number>,
+        public readonly empty: P,
+    ) {
         super(board, turn);
         Utils.assert(this.excludedSpaces.length < (this.height / 2) + 1, 'Invalid excluded spaces specification for HexagonalGameState.');
     }
@@ -107,9 +108,11 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
             coord = coord.getNext(dir);
         }
         const failure: MGPValidation =
-            Utils.logError('HexagonalGameState.findEntranceFrom',
-                           'could not find a board entrance, board must be invalid',
-                           { start: start.toString(), line: line.toString() });
+            Utils.logError(
+                'HexagonalGameState.findEntranceFrom',
+                'could not find a board entrance, board must be invalid',
+                { start: start.toString(), line: line.toString() },
+            );
         throw new Error(failure.getReason());
     }
 

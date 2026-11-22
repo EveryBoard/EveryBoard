@@ -52,13 +52,15 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with a better score for Player.ONE should be deemer
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   equalityState,
-                                                                   MGPOptional.empty(),
-                                                                   oneDominatedState,
-                                                                   MGPOptional.empty(),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                equalityState,
+                MGPOptional.empty(),
+                oneDominatedState,
+                MGPOptional.empty(),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
     });

@@ -9,10 +9,15 @@ import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneG
 
 export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
 
-    public constructor(board: Table<PlayerOrNone>,
-                       turn: number,
-                       public readonly castles: PlayerMap<MGPOptional<Coord>>)
-    {
+    public static of(oldState: QuebecCastlesState, newBoard: Table<PlayerOrNone>): QuebecCastlesState {
+        return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
+    }
+
+    public constructor(
+        board: Table<PlayerOrNone>,
+        turn: number,
+        public readonly castles: PlayerMap<MGPOptional<Coord>>,
+    ) {
         super(board, turn);
         this.castles.makeImmutable();
     }
@@ -30,9 +35,7 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
             this,
             coord,
             value,
-            (oldState: QuebecCastlesState, newBoard: Table<PlayerOrNone>) => {
-                return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
-            },
+            QuebecCastlesState.of,
         );
     }
 

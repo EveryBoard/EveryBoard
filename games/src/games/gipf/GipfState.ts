@@ -7,11 +7,12 @@ import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
 
 export class GipfState extends HexagonalGameState<FourStatePiece> {
 
-    public constructor(board: Table<FourStatePiece>,
-                       turn: number,
-                       public readonly sidePieces: PlayerNumberMap,
-                       public readonly capturedPieces: PlayerNumberMap)
-    {
+    public constructor(
+        board: Table<FourStatePiece>,
+        turn: number,
+        public readonly sidePieces: PlayerNumberMap,
+        public readonly capturedPieces: PlayerNumberMap,
+    ) {
         super(turn, board, 7, 7, [3, 2, 1], FourStatePiece.EMPTY);
     }
 

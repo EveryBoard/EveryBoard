@@ -15,6 +15,7 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         private readonly N: number,
         private readonly directions: ReadonlyArray<D>,
     ) {
+        // The aim of this loop is to count down and up as only one axe
         const axes: D[] = [];
         for (const direction of this.directions) {
             if (axes.includes(direction) || axes.includes(direction.getOpposite())) {
@@ -90,11 +91,12 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         return score;
     }
 
-    private getNumberOfFreeSpacesAndPlayers(state: GameStateWithCoords<T>,
-                                            i: Coord,
-                                            dir: D,
-                                            player: Player,
-    ) : { freeSpaces: Coord[]; alignedPlayers: Coord[] } {
+    private getNumberOfFreeSpacesAndPlayers(
+        state: GameStateWithCoords<T>,
+        i: Coord,
+        dir: D,
+        player: Player,
+    ): { freeSpaces: Coord[]; alignedPlayers: Coord[] } {
         /**
          * for a square at the coord i, containing 'player'
          * we go through the board from this coord in the direction dir

@@ -93,6 +93,18 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         ], 1),
         move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     },
+    tripleFlyingCaptureTest: {
+        state: EvenCheckersState.of([
+            [__, __, __, __, __, __, __],
+            [__, __, __, __, __, _V, __],
+            [__, __, __, __, __, __, __],
+            [__, __, __, _V, __, __, __],
+            [__, __, __, __, __, __, __],
+            [__, _V, __, __, __, __, __],
+            [_U, __, __, __, __, __, __],
+        ], 0),
+        move: CheckersMove.fromCapture([new Coord(0, 6), new Coord(2, 4), new Coord(4, 2), new Coord(6, 0)]),
+    },
     promotionTest: {
         state: EvenCheckersState.of([
             [__, __, __, __, _V, __, _V],

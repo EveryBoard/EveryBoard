@@ -111,17 +111,19 @@ export class SquarzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
-        ).withPreviousMove(SquarzMove.from(new Coord(3, 1), new Coord(3, 2)).get(),
-                           new SquarzState([
-                               [X, X, X, X, X, X, X, X],
-                               [O, O, O, O, O, O, O, O],
-                               [O, O, O, _, O, O, O, O],
-                               [O, O, O, O, O, O, O, O],
-                               [X, X, X, _, X, X, X, X],
-                               [X, X, X, X, X, X, X, X],
-                               [X, X, X, X, X, X, X, X],
-                               [O, O, O, O, O, O, O, O],
-                           ], 2)),
+        ).withPreviousMove(
+            SquarzMove.from(new Coord(3, 1), new Coord(3, 2)).get(),
+            new SquarzState([
+                [X, X, X, X, X, X, X, X],
+                [O, O, O, O, O, O, O, O],
+                [O, O, O, _, O, O, O, O],
+                [O, O, O, O, O, O, O, O],
+                [X, X, X, _, X, X, X, X],
+                [X, X, X, X, X, X, X, X],
+                [X, X, X, X, X, X, X, X],
+                [O, O, O, O, O, O, O, O],
+            ], 2),
+        ),
 
     ];
 

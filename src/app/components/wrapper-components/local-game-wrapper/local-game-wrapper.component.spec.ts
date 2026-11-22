@@ -608,10 +608,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
             const minimax: Minimax<P4Move, P4State, P4Config> =
-                new Minimax($localize`Minimax`,
-                            P4Rules.get(),
-                            new P4Heuristic(),
-                            new P4OrderedMoveGenerator());
+                new Minimax(
+                    $localize`Minimax`,
+                    P4Rules.get(),
+                    new P4Heuristic(),
+                    new P4OrderedMoveGenerator(),
+                );
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.of(0));
 
             // When it is the turn of the bugged AI

@@ -14,10 +14,12 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamCo
         for (const coordAndContent of node.gameState.getCoordsAndContents()) {
             const piece: SiamPiece = coordAndContent.content;
             if (piece.belongsTo(currentPlayer)) {
-                moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState,
-                                                                  piece,
-                                                                  coordAndContent.coord.x,
-                                                                  coordAndContent.coord.y));
+                moves = moves.concat(SiamRules.get().getMovesFrom(
+                    node.gameState,
+                    piece,
+                    coordAndContent.coord.x,
+                    coordAndContent.coord.y,
+                ));
             }
         }
         if (node.gameState.countCurrentPlayerPawn() < config.numberOfPiece) {

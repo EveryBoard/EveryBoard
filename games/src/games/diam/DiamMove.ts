@@ -22,9 +22,10 @@ export class DiamMoveDrop extends DiamMove {
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
     );
-    public constructor(public readonly target: number,
-                       public readonly piece: DiamPiece)
-    {
+    public constructor(
+        public readonly target: number,
+        public readonly piece: DiamPiece,
+    ) {
         super();
         if (piece === DiamPiece.EMPTY) {
             throw new Error('Cannot drop an empty piece');
@@ -59,8 +60,10 @@ export class DiamMoveShift extends DiamMove {
         // In the representation, the y axis is reverted, so 3 - y gives the real y on board
         return new DiamMoveShift(new Coord(representationStart.x, 3 - representationStart.y), moveDirection);
     }
-    public constructor(public readonly start: Coord,
-                       public readonly moveDirection: DiamShiftDirection) {
+    public constructor(
+        public readonly start: Coord,
+        public readonly moveDirection: DiamShiftDirection,
+    ) {
         super();
     }
     public getTarget(): number {

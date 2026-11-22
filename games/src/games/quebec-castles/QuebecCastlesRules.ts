@@ -140,9 +140,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return QuebecCastlesRules.singleton.get();
     }
 
-    private static isThereEnoughPlaceForPiece(player: Player, config: QuebecCastlesConfig, numberOfPiece: number)
-    : MGPValidation
-    {
+    private static isThereEnoughPlaceForPiece(
+        player: Player,
+        config: QuebecCastlesConfig,
+        numberOfPiece: number,
+    ): MGPValidation {
         // Got to subtract 1 as the castle is not included
         const spaceForPiece: number = QuebecCastlesRules.get().getValidDropCoords(player, config).length - 1;
         if (spaceForPiece < numberOfPiece) {
@@ -195,9 +197,10 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return state;
     }
 
-    private getLineDirectionAndIndex(player: Player, config: QuebecCastlesConfig)
-    : { lineDirection: number; lineToFillIndex: number }
-    {
+    private getLineDirectionAndIndex(
+        player: Player,
+        config: QuebecCastlesConfig,
+    ): { lineDirection: number; lineToFillIndex: number } {
         const lineToFillRange: { min: number; max: number } = this.getLegalRangeIndex(player, config);
         if (player === Player.ZERO) {
             return { lineDirection: -1, lineToFillIndex: lineToFillRange.max };
@@ -284,11 +287,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return this.getExpectedDropsThisTurn(state, config) > 0;
     }
 
-    public override isLegal(move: QuebecCastlesMove,
-                            state: QuebecCastlesState,
-                            config: QuebecCastlesConfig)
-    : MGPValidation
-    {
+    public override isLegal(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): MGPValidation {
         if (this.isDropPhase(state, config)) {
             return this.isLegalDrop(move, state, config);
         } else {
@@ -361,9 +364,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return 0;
     }
 
-    private isLegalDrop(move: QuebecCastlesMove, state: QuebecCastlesState, config: QuebecCastlesConfig)
-    : MGPValidation
-    {
+    private isLegalDrop(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): MGPValidation {
         if (QuebecCastlesMove.isTranslation(move)) {
             return MGPValidation.failure(QuebecCastlesFailure.CANNOT_MOVE_IN_DROP_PHASE());
         }
@@ -378,9 +383,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return state.turn < 2 && config.playersPlaceCastle;
     }
 
-    private isLegalCastlePlacement(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
-    : MGPValidation
-    {
+    private isLegalCastlePlacement(
+        move: QuebecCastlesDrop,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): MGPValidation {
         if (move.coords.size() === 1) {
             return this.getDropLegality(move.coords.getAnyElement().get(), state, config, false);
         } else {
@@ -388,9 +395,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private isLegalPieceDrop(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
-    : MGPValidation
-    {
+    private isLegalPieceDrop(
+        move: QuebecCastlesDrop,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): MGPValidation {
         if (config.dropMode === 'PIECE_BY_PIECE') {
             if (this.isLastDrop(state, config)) {
                 const player: Player = state.getCurrentPlayer();
@@ -435,9 +444,12 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         // Then you must now drop them all at once
     }
 
-    private getDropLegality(coord: Coord, state: QuebecCastlesState, config: QuebecCastlesConfig, isCastle: boolean)
-    : MGPValidation
-    {
+    private getDropLegality(
+        coord: Coord,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+        isCastle: boolean,
+    ): MGPValidation {
         if (state.isOnBoard(coord) === false) {
             return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
         }
@@ -501,18 +513,21 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private getLegalRangeFromMaximum(player: Player, config: QuebecCastlesConfig, max: number)
-    : { min: number; max: number }
-    {
+    private getLegalRangeFromMaximum(
+        player: Player,
+        config: QuebecCastlesConfig,
+        max: number,
+    ): { min: number; max: number } {
         return {
             min: player === Player.ZERO ? (max + 1) - config.linesForTerritory : 0,
             max: player === Player.ZERO ? max : config.linesForTerritory - 1,
         };
     }
 
-    private isLegalTranslation(move: QuebecCastlesMove, state: QuebecCastlesState)
-    : MGPValidation
-    {
+    private isLegalTranslation(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+    ): MGPValidation {
         if (QuebecCastlesMove.isDrop(move)) {
             return MGPValidation.failure(QuebecCastlesFailure.CANNOT_DROP_IN_MOVE_PHASE());
         }
@@ -584,11 +599,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: QuebecCastlesMove,
-                                   state: QuebecCastlesState,
-                                   config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    public override applyLegalMove(
+        move: QuebecCastlesMove,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         if (this.isDropPhase(state, config)) {
             return this.applyLegalDrop(move as QuebecCastlesDrop, state, config);
         } else {
@@ -596,11 +611,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private applyLegalDrop(move: QuebecCastlesDrop,
-                           state: QuebecCastlesState,
-                           config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    private applyLegalDrop(
+        move: QuebecCastlesDrop,
+        state: QuebecCastlesState,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.mustPlaceCastle(state, config)) {
             const castles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
@@ -631,11 +646,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private placeCastlesAndMovePiece(state: QuebecCastlesState,
-                                     castles: PlayerMap<MGPOptional<Coord>>,
-                                     config: QuebecCastlesConfig)
-    : QuebecCastlesState
-    {
+    private placeCastlesAndMovePiece(
+        state: QuebecCastlesState,
+        castles: PlayerMap<MGPOptional<Coord>>,
+        config: QuebecCastlesConfig,
+    ): QuebecCastlesState {
         const initialState: QuebecCastlesState = this.getInitialState(config);
         let newState: QuebecCastlesState = this.doCastlePlacement(initialState, castles, Player.ZERO);
         if (state.getCurrentPlayer() === Player.ZERO) {
@@ -650,9 +665,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return newState;
     }
 
-    private doCastlePlacement(initialState: QuebecCastlesState, castles: PlayerMap<MGPOptional<Coord>>, player: Player)
-    : QuebecCastlesState
-    {
+    private doCastlePlacement(
+        initialState: QuebecCastlesState,
+        castles: PlayerMap<MGPOptional<Coord>>,
+        player: Player,
+    ): QuebecCastlesState {
         const actualCastle: Coord = castles.get(player).get();
         const defaultCastle: Coord = initialState.castles.get(player).get();
         if (initialState.getPieceAt(actualCastle).isPlayer()) {
@@ -704,9 +721,10 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    public getPossibleMovesFor(coord: Coord, state: QuebecCastlesState)
-    : QuebecCastlesMove[]
-    {
+    public getPossibleMovesFor(
+        coord: Coord,
+        state: QuebecCastlesState,
+    ): QuebecCastlesMove[] {
         const owner: Player = state.getPieceAt(coord) as Player;
         const stepSize: number = this.getPlayerStepSize(owner);
         const moves: QuebecCastlesMove[] = [];

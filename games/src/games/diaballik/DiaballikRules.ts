@@ -27,10 +27,11 @@ export class VictoryCoord extends VictoryOrDefeatCoords {
     }
 }
 export class DefeatCoords extends VictoryOrDefeatCoords {
-    public constructor(loser: Player,
-                       public readonly allLoserPieces: Coord[],
-                       public readonly opponentPiecesInContact: Coord[])
-    {
+    public constructor(
+        loser: Player,
+        public readonly allLoserPieces: Coord[],
+        public readonly opponentPiecesInContact: Coord[],
+    ) {
         super(loser.getOpponent());
     }
 }
@@ -176,12 +177,12 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return MGPFallible.success(new DiaballikState(updatedBoard, state.turn));
     }
 
-    public override applyLegalMove(_move: DiaballikMove,
-                                   state: DiaballikState,
-                                   _config: EmptyRulesConfig,
-                                   stateAfterSubMoves: DiaballikState)
-    : DiaballikState
-    {
+    public override applyLegalMove(
+        _move: DiaballikMove,
+        state: DiaballikState,
+        _config: EmptyRulesConfig,
+        stateAfterSubMoves: DiaballikState,
+    ): DiaballikState {
         // All submoves have already been applied and are stored in stateAfterSubMoves
         // We only have to update the turn
         return new DiaballikState(stateAfterSubMoves.board, state.turn + 1);
@@ -269,12 +270,12 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
     }
 
-    private getConnectedPieceCoord(x: number,
-                                   opponentsConnected: CoordSet,
-                                   state: DiaballikState,
-                                   player: Player)
-    : ConnectionInfos
-    {
+    private getConnectedPieceCoord(
+        x: number,
+        opponentsConnected: CoordSet,
+        state: DiaballikState,
+        player: Player,
+    ): ConnectionInfos {
         for (let y: number = 0; y < state.getHeight(); y++) {
             const coord: Coord = new Coord(x, y);
             if (state.getPieceAt(coord).owner === player) {
@@ -309,12 +310,12 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return false;
     }
 
-    private addConnectedOpponents(coord: Coord,
-                                  opponentsConnected: CoordSet,
-                                  state: DiaballikState,
-                                  player: Player)
-    : CoordSet
-    {
+    private addConnectedOpponents(
+        coord: Coord,
+        opponentsConnected: CoordSet,
+        state: DiaballikState,
+        player: Player,
+    ): CoordSet {
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.coordIsOwnedBy(neighbor, player.getOpponent())) {

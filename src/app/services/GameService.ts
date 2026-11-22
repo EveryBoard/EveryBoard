@@ -10,12 +10,14 @@ import { GameEvent, Game } from '../domain/Game';
 import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractGameService {
+
     /** Subscribe to the game, giving callbacks that will be called upon certain events */
-    public abstract subscribeTo(gameId: string,
-                                gameUpdate: (game: Game) => Promise<void>,
-                                gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-                                error: (reason: string) => void)
-    : Promise<Subscription>;
+    public abstract subscribeTo(
+        gameId: string,
+        gameUpdate: (game: Game) => Promise<void>,
+        gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+        error: (reason: string) => void,
+    ): Promise<Subscription>;
 
     /** Create a game. Return the id of the created game, or an error. */
     public abstract createGame(gameName: string): Promise<MGPFallible<string>>;
@@ -119,11 +121,12 @@ export abstract class AbstractGameService {
 export class GameService extends AbstractGameService {
     private readonly backendService: BackendService = inject(BackendService);
 
-    public override async subscribeTo(gameId: string,
-                                      gameUpdate: (game: Game) => Promise<void>,
-                                      gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-                                      error: (reason: string) => void)
-    : Promise<Subscription> {
+    public override async subscribeTo(
+        gameId: string,
+        gameUpdate: (game: Game) => Promise<void>,
+        gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+        error: (reason: string) => void,
+    ): Promise<Subscription> {
         const gameUpdateSubscription: Subscription =
             this.backendService.setCallback('GameUpdate', (message: BackendMessage): void => {
                 void gameUpdate(message.getArgument('game'));

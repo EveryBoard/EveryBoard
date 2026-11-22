@@ -23,12 +23,13 @@ import { TopologicGameComponent } from '../../components/game-components/topolog
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class ConnectSixComponent extends TopologicGameComponent<ConnectSixRules,
-                                                              ConnectSixMove,
-                                                              TopologicGameState<FourStatePiece, Direction>,
-                                                              FourStatePiece,
-                                                              ConnectSixConfig>
-{
+export class ConnectSixComponent extends TopologicGameComponent<
+    ConnectSixRules,
+    ConnectSixMove,
+    TopologicGameState<FourStatePiece, Direction>,
+    FourStatePiece,
+    ConnectSixConfig
+> {
     protected coordsAndContents: WritableSignal<{ coord: Coord; content: FourStatePiece }[]> = signal([]);
 
     protected readonly droppedCoords: WritableSignal<Set<Coord>> = signal(new Set());

@@ -55,12 +55,14 @@ describe('GameService', () => {
             // Given a service which has subscribed to a game
             let game: MGPOptional<Game> = MGPOptional.empty();
             const subscription: Subscription =
-                await gameService.subscribeTo('gameId',
-                                              async(update: Game): Promise<void> => {
-                                                  game = MGPOptional.of(update);
-                                              },
-                                              ignore,
-                                              ignore);
+                await gameService.subscribeTo(
+                    'gameId',
+                    async(update: Game): Promise<void> => {
+                        game = MGPOptional.of(update);
+                    },
+                    ignore,
+                    ignore,
+                );
 
             // When there is a game update
             const updatedGame: Game = GameMocks.STARTED;
@@ -77,13 +79,15 @@ describe('GameService', () => {
             let event: MGPOptional<GameEvent> = MGPOptional.empty();
             let serverTime: MGPOptional<number> = MGPOptional.empty();
             const subscription: Subscription =
-                await gameService.subscribeTo('gameId',
-                                              ignore,
-                                              async(e: GameEvent, time: number): Promise<void> => {
-                                                  event = MGPOptional.of(e);
-                                                  serverTime = MGPOptional.of(time);
-                                              },
-                                              ignore);
+                await gameService.subscribeTo(
+                    'gameId',
+                    ignore,
+                    async(e: GameEvent, time: number): Promise<void> => {
+                        event = MGPOptional.of(e);
+                        serverTime = MGPOptional.of(time);
+                    },
+                    ignore,
+                );
 
             // When there is a game event
             const receivedEvent: GameEvent = {
@@ -107,12 +111,14 @@ describe('GameService', () => {
             // Given a service which has subscribed to a game
             let error: MGPOptional<string> = MGPOptional.empty();
             const subscription: Subscription =
-                await gameService.subscribeTo('gameId',
-                                              ignore,
-                                              ignore,
-                                              (reason: string): void => {
-                                                  error = MGPOptional.of(reason);
-                                              });
+                await gameService.subscribeTo(
+                    'gameId',
+                    ignore,
+                    ignore,
+                    (reason: string): void => {
+                        error = MGPOptional.of(reason);
+                    },
+                );
 
             // When there is a game update
             const receivedError: string = 'unknown-message';
@@ -128,16 +134,18 @@ describe('GameService', () => {
             // Given a service which has subscribed to a game, then unsubscribed
             let observedSomething: boolean = false;
             const subscription: Subscription =
-                await gameService.subscribeTo('gameId',
-                                              async(_game: Game): Promise<void> => {
-                                                  observedSomething = true;
-                                              },
-                                              async(_event: GameEvent, _time: number): Promise<void> => {
-                                                  observedSomething = true;
-                                              },
-                                              (): void => {
-                                                  observedSomething = true;
-                                              });
+                await gameService.subscribeTo(
+                    'gameId',
+                    async(_game: Game): Promise<void> => {
+                        observedSomething = true;
+                    },
+                    async(_event: GameEvent, _time: number): Promise<void> => {
+                        observedSomething = true;
+                    },
+                    (): void => {
+                        observedSomething = true;
+                    },
+                );
             subscription.unsubscribe();
 
             // When there is any update
@@ -165,7 +173,8 @@ describe('GameService', () => {
                 async(_message: JSONValue, _replyTag: string): Promise<MGPFallible<BackendMessage>> => {
                     // When the backend receives the game creation message, it creates the game and replies with the id
                     return MGPFallible.success(new BackendMessage('GameCreated', { gameId: gameIdFromBackend }));
-                });
+                },
+            );
             const gameId: MGPFallible<string> = await gameService.createGame('P4');
 
             // Then it should return the created game
@@ -180,7 +189,8 @@ describe('GameService', () => {
                 async(_message: JSONValue, _replyTag: string): Promise<MGPFallible<BackendMessage>> => {
                     // When the backend receives the game creation message, it creates the game and replies with the id
                     return MGPFallible.failure('some-reason');
-                });
+                },
+            );
             const gameId: MGPFallible<string> = await gameService.createGame('P4');
 
             // Then it should return the error

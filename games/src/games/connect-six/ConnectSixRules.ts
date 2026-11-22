@@ -153,8 +153,9 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
         return ConnectSixRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override applyLegalMove(move: ConnectSixMove,
-                                   state: TopologicGameState<FourStatePiece, Direction>,
+    public override applyLegalMove(
+        move: ConnectSixMove,
+        state: TopologicGameState<FourStatePiece, Direction>,
     ): TopologicGameState<FourStatePiece, Direction> {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         let resultingState: TopologicGameState<FourStatePiece, Direction> = state;

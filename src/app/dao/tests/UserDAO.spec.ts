@@ -56,8 +56,10 @@ describe('UserDAO', () => {
             // Given an authenticated visitor without the corresponding user in DB
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                                    FireAuth.GoogleAuthProvider.credential(token));
+                await FireAuth.signInWithCredential(
+                    FireAuth.getAuth(),
+                    FireAuth.GoogleAuthProvider.credential(token),
+                );
 
             // When setting the user in DB
             const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false });
@@ -103,8 +105,10 @@ describe('UserDAO', () => {
             // Given a non-verified user, with a username
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                                    FireAuth.GoogleAuthProvider.credential(token));
+                await FireAuth.signInWithCredential(
+                    FireAuth.getAuth(),
+                    FireAuth.GoogleAuthProvider.credential(token),
+                );
             await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
 
             // When marking the user as verified
@@ -118,8 +122,10 @@ describe('UserDAO', () => {
             // Given a non-verified user, without a username
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(FireAuth.getAuth(),
-                                                    FireAuth.GoogleAuthProvider.credential(token));
+                await FireAuth.signInWithCredential(
+                    FireAuth.getAuth(),
+                    FireAuth.GoogleAuthProvider.credential(token),
+                );
             await userDAO.set(credential.user.uid, { verified: false });
 
             // When marking the user as verified
@@ -132,9 +138,11 @@ describe('UserDAO', () => {
         it('should forbid setting the user to verified if it has no verified email', async() => {
             // Given a email user that has not verified its email
             const credential: FireAuth.UserCredential =
-                await FireAuth.createUserWithEmailAndPassword(FireAuth.getAuth(),
-                                                              'foo@bar.com',
-                                                              'jeanjaja123');
+                await FireAuth.createUserWithEmailAndPassword(
+                    FireAuth.getAuth(),
+                    'foo@bar.com',
+                    'jeanjaja123',
+                );
             await userDAO.set(credential.user.uid, { verified: false, username: 'foo' });
 
             // When marking the user as verified
