@@ -7,7 +7,7 @@ import { EightDirectionSquareTopology } from '../../topology/EightDirectionSquar
 import { Topology } from '../../topology/Topology';
 import { RectangularBoardShape } from '../RectangularBoardShape';
 
-describe('RectangularShape', () => {
+describe(RectangularBoardShape.name, () => {
 
     const topology: Topology<EightDirection> = new EightDirectionSquareTopology();
 

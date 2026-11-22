@@ -8,7 +8,7 @@ import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { TriangularBoardShape } from '../TriangularBoardShape';
 
-describe('TriangularShape', () => {
+describe(TriangularBoardShape.name, () => {
 
     const topology: Topology<TriangularDirection> = new TriangularTopology();
 

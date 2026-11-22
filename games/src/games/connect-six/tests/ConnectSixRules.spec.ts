@@ -5,14 +5,14 @@ import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RectangularBoardShape } from '../../../jscaip/board-shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
+import { ToricBoardShape } from '../../../jscaip/board-shape/ToricBoardShape';
+import { TriangularBoardShape } from '../../../jscaip/board-shape/TriangularBoardShape';
 import { Direction } from '../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
-import { RectangularBoardShape } from '../../../jscaip/shape/RectangularBoardShape';
-import { TopologicBoardShape } from '../../../jscaip/shape/TopologicBoardShape';
-import { ToricBoardShape } from '../../../jscaip/shape/ToricBoardShape';
-import { TriangularBoardShape } from '../../../jscaip/shape/TriangularBoardShape';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -790,11 +790,7 @@ describe('ConnectSixRules (with triangular config)', () => {
             new TriangularBoardShape(5, triangularTopology),
             gameState,
         );
-        // const move: ConnectSixMove =
-            // ConnectSixMove.of([new Coord(0, 0), new Coord(3, 3)]);
-        // const previousNode: ConnectSixNode = new ConnectSixNode(state);
         const node: ConnectSixNode = new ConnectSixNode(state);
-            // new ConnectSixNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
 
         // When checking the game status
         // Then it should be a victory for Player.ONE
@@ -865,7 +861,7 @@ describe('ConnectSixRules (with triangular config)', () => {
 });
 
 
-describe('ConnectSixRules (with rectangular torus config)', () => {
+describe('ConnectSixRules (with rectangular toric config)', () => {
 
     let rules: ConnectSixRules;
     const squareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();

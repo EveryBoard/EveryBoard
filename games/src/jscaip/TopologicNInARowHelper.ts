@@ -4,7 +4,7 @@ import { Coord } from './Coord';
 import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
 import { Direction } from './direction/Direction';
-import { TopologicBoardShape } from './shape/TopologicBoardShape';
+import { TopologicBoardShape } from './board-shape/TopologicBoardShape';
 
 export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Direction>
     extends NInARowHelper<T, D>

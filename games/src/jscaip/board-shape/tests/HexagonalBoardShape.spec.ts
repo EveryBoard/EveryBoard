@@ -8,7 +8,7 @@ import { HexagonalTopology } from '../../topology/HexagonalTopology';
 import { Topology } from '../../topology/Topology';
 import { HexagonalBoardShape } from '../HexagonalBoardShape';
 
-describe('HexagonalShape', () => {
+describe(HexagonalBoardShape.name, () => {
 
     const topology: Topology<HexaDirection> = new HexagonalTopology();
 

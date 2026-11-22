@@ -11,7 +11,7 @@ import { Topology } from '../../topology/Topology';
 import { TriangularTopology } from '../../topology/TriangularTopology';
 import { ToricBoardShape } from '../ToricBoardShape';
 
-describe('TorusShape (with Square Topology)', () => {
+describe(ToricBoardShape.name + ' (with Square Topology)', () => {
 
     const topology: Topology<EightDirection> = new EightDirectionSquareTopology();
 

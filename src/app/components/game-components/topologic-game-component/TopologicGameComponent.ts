@@ -3,24 +3,17 @@ import { computed, Signal } from '@angular/core';
 
 import { Coord, Shape } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
-import { FlatHexaOrientation } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { SuperRules } from '@everyboard/games';
 import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
-import { HexagonalTopology } from '@everyboard/games';
-import { EightDirectionSquareTopology } from '@everyboard/games';
-import { OrthogonalSquareTopology } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
-import { TriangularTopology } from '@everyboard/games';
-import { MGPMap, Utils } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
-import { HexaLayout } from '../layout/HexaLayout';
 import { Layout } from '../layout/Layout';
-import { SquareLayout } from '../layout/SquareLayout';
-import { TriangularLayout } from '../layout/TriangularLayout';
+import { LayoutMap } from '../layout/LayoutMap';
 
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,
@@ -30,15 +23,6 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              L = void>
     extends GameComponent<R, M, S, C, L>
 {
-    private readonly squareLayout: SquareLayout = new SquareLayout(this.SPACE_SIZE);
-
-    private readonly triangularLayout: TriangularLayout = new TriangularLayout(this.SPACE_SIZE * 1.2);
-
-    private readonly hexagonalLayout: HexaLayout = new HexaLayout(
-        this.SPACE_SIZE * 0.6,
-        new Coord(0, 0),
-        FlatHexaOrientation.INSTANCE,
-    );
 
     protected readonly topologicTranslationMap: Signal<MGPMap<Coord, string>> = computed(() => {
         const map: MGPMap<Coord, string> = new MGPMap(
@@ -94,17 +78,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
     });
 
     private readonly layout: Signal<Layout> = computed(() => {
-        const topology: Topology<Direction> = this.topology();
-        if (topology instanceof EightDirectionSquareTopology ||
-            topology instanceof OrthogonalSquareTopology
-        ) {
-            return this.squareLayout;
-        } else if (topology instanceof TriangularTopology) {
-            return this.triangularLayout;
-        } else {
-            Utils.expectToBe(topology instanceof HexagonalTopology, true);
-            return this.hexagonalLayout;
-        }
+        return LayoutMap.getLayout(this.topology().getId());
     });
 
     protected computeViewBox(): ViewBox {

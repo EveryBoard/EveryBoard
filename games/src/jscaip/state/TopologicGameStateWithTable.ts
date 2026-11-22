@@ -1,6 +1,6 @@
 import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
-import { TopologicBoardShape } from '../shape/TopologicBoardShape';
+import { TopologicBoardShape } from '../board-shape/TopologicBoardShape';
 import { Topology } from '../topology/Topology';
 
 import { GameStateWithTable } from './GameStateWithTable';

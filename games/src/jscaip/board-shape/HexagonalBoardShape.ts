@@ -36,15 +36,6 @@ export class HexagonalBoardShape<D extends Direction> extends TopologicBoardShap
     }
 
     public isOnBoard(coord: Coord): boolean {
-        // const x: number = coord.x;
-        // const y: number = coord.y;
-        // const minyx: number = this.side - 1;
-        // const maxyx: number = 3 * minyx;
-        // return 0 <= x &&
-        //        0 <= y &&
-        //        minyx <= x + y &&
-        //        x + y <= maxyx;
-
         const x: number = coord.x;
         const y: number = coord.y;
         const minyx: number = this.sideLength - 1;
