@@ -5,8 +5,24 @@ import { Coord } from '../../Coord';
 import { Direction } from '../../direction/Direction';
 import { EightDirection } from '../../direction/EightDirection';
 import { HexagonalTopology } from '../HexagonalTopology';
+import { TopologyID } from '../TopologyMapper';
 
 describe('HexagonalTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: HexagonalTopology = new HexagonalTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('HEXAGONAL');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 

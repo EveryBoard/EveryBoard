@@ -5,9 +5,25 @@ import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { TriangularDirection } from '../../direction/TriangularDirection';
+import { TopologyID } from '../TopologyMapper';
 import { TriangularTopology } from '../TriangularTopology';
 
 describe('TriangularTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: TriangularTopology = new TriangularTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('SQUARE (4)');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 

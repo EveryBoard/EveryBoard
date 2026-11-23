@@ -4,8 +4,24 @@ import { Set } from '@everyboard/lib';
 import { Coord } from '../../Coord';
 import { EightDirection } from '../../direction/EightDirection';
 import { EightDirectionSquareTopology } from '../EightDirectionSquareTopology';
+import { TopologyID } from '../TopologyMapper';
 
 describe('EightDirectionSquareTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('SQUARE (8)');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 
