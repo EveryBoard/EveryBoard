@@ -26,7 +26,7 @@ describe('ConnectSixMove', () => {
             it('should throw move when there is not coords', () => {
                 expect(() => {
                     ConnectSixMove.of([]);
-                }).toThrow(`Should not create move with zero drops`);
+                }).toThrow(new Error(`Should not create move with zero drops.`));
             });
 
         });

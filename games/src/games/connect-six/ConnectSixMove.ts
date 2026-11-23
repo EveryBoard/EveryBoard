@@ -13,7 +13,7 @@ export class ConnectSixMove extends Move {
 
     public static of(coords: Coord[]): ConnectSixMove {
         if (coords.length === 0) {
-            throw new Error(`Should not create move with zero drops`);
+            throw new Error(`Should not create move with zero drops.`);
         }
         return new ConnectSixMove(new Set(coords));
     }

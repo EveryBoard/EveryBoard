@@ -22,7 +22,7 @@ export class ToricBoardShape<D extends Direction> extends TopologicBoardShape<D>
                 Math.floor(this.width / 2),
                 Math.floor(this.height / 2),
             ),
-        ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
+        ];
     }
 
     public getAllCoords(): Coord[] {
