@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord, HexaDirection } from '@everyboard/games';
+import { Coord, HexaDirection, Orthogonal, OrthogonalSquareTopology, ToricBoardShape } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -27,13 +27,14 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectSixConfig = ConnectSixRules.get().getDefaultRulesConfig();
-const squareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+const eightDirectionTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+const orthogonalSquareTopology: OrthogonalSquareTopology = new OrthogonalSquareTopology();
 const triangularTopology: TriangularTopology = new TriangularTopology();
 const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
 const rectangularShape: TopologicBoardShape<Direction> = new RectangularBoardShape(
     defaultConfig.boardSize,
     defaultConfig.boardSize,
-    squareTopology,
+    eightDirectionTopology,
 );
 
 describe('ConnectSixComponent', () => {
@@ -85,7 +86,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -120,7 +121,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -158,7 +159,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -201,7 +202,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -240,7 +241,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -279,7 +280,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -322,7 +323,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 7);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -367,7 +368,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -405,7 +406,7 @@ describe('ConnectSixComponent', () => {
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                     ], 1);
                 const state: TopologicGameState<FourStatePiece, Direction> = new TopologicGameStateWithTable(
-                    squareTopology,
+                    eightDirectionTopology,
                     rectangularShape,
                     gameState,
                 );
@@ -518,6 +519,57 @@ describe('ConnectSixComponent', () => {
             testUtils.expectElementToHaveClass('#click-6-4', 'victory-stroke');
             testUtils.expectElementToHaveClass('#click-7-4', 'victory-stroke');
             testUtils.expectElementToHaveClass('#click-8-4', 'victory-stroke');
+        }));
+
+    });
+
+    describe('ConnectSixComponent (TORIC)', () => {
+
+        let testUtils: ComponentTestUtils<ConnectSixComponent>;
+
+        beforeEach(fakeAsync(async() => {
+            testUtils = await ComponentTestUtils.forGame<ConnectSixComponent>('ConnectSix');
+        }));
+
+
+        it('should show highlight when victory occur (toric)', fakeAsync(async() => {
+            // Given a board where current player is about to win on a toric config
+            const customConfig: ConnectSixConfig = {
+                ...ConnectSixRules.get().getDefaultRulesConfig(),
+                topology: 'SQUARE (4)',
+                shape: 'TORIC',
+                boardSize: 8,
+            };
+            const gameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable<FourStatePiece>([
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [O, _, _, _, _, O, O, O],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                ], 8);
+            const state: TopologicGameState<FourStatePiece, Orthogonal> = new TopologicGameStateWithTable(
+                orthogonalSquareTopology,
+                new ToricBoardShape(8, 8, orthogonalSquareTopology),
+                gameState,
+            );
+            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.expectClickSuccess('#click-2-2');
+
+            // When finishing the move
+            const move: ConnectSixMove = ConnectSixMove.of([new Coord(2, 2), new Coord(1, 2)]);
+
+            // Then the victory squares should be highlighted
+            await testUtils.expectMoveSuccess('#click-1-2', move);
+            testUtils.expectElementToHaveClass('#click-0-2', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-1-2', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-2-2', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-5-2', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-6-2', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-7-2', 'victory-stroke');
         }));
 
     });
