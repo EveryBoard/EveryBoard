@@ -290,7 +290,7 @@ describe('ConnectSixComponent', () => {
                 await testUtils.expectClickFailure('#click-8-8');
 
                 // Then the previous move should be displayed again
-                testUtils.expectElementToHaveClasses('#click-9-9', ['base', 'player0-fill']);
+                testUtils.expectElementToHaveClasses('#click-9-9', ['base', 'player0-fill', 'last-move-stroke']);
             }));
 
         });

@@ -12,12 +12,12 @@ import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
-import { Direction } from '../../jscaip/direction/Direction';
 import { HexagonalBoardShape } from '../../jscaip/board-shape/HexagonalBoardShape';
 import { RectangularBoardShape } from '../../jscaip/board-shape/RectangularBoardShape';
 import { TopologicBoardShape } from '../../jscaip/board-shape/TopologicBoardShape';
 import { ToricBoardShape } from '../../jscaip/board-shape/ToricBoardShape';
 import { TriangularBoardShape } from '../../jscaip/board-shape/TriangularBoardShape';
+import { Direction } from '../../jscaip/direction/Direction';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
@@ -168,12 +168,12 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove,
         return resultingState.incrementTurn();
     }
 
-    public override isLegal(move: ConnectSixMove,
-                            state: TopologicGameState<FourStatePiece, Direction>,
-                            config: ConnectSixConfig,
+    public override isLegal(
+        move: ConnectSixMove,
+        state: TopologicGameState<FourStatePiece, Direction>,
+        config: ConnectSixConfig,
     ): MGPFallible<void> {
-        // TODO: check move with exactly zero move, they will work but should not !
-        if (state.turn === 0 && move.coords.size() > 1) {
+        if (state.turn === 0 && move.coords.size() !== 1) {
             return MGPFallible.failure(ConnectSixFailure.YOU_MUST_DROP_ONE_AT_FIRST_TURN());
         }
         const remainingDrops: number = this.countRemainingDrops(state);

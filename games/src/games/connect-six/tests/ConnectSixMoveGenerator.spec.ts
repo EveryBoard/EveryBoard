@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { RectangularBoardShape } from '../../../jscaip/board-shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
 import { Direction } from '../../../jscaip/direction/Direction';
-import { RectangularBoardShape } from '../../../jscaip/shape/RectangularBoardShape';
-import { TopologicBoardShape } from '../../../jscaip/shape/TopologicBoardShape';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -34,7 +34,8 @@ describe('ConnectSixMoveGenerator', () => {
         // Given the initial node
         const width: number = defaultConfig.boardSize;
         const height: number = defaultConfig.boardSize;
-        const state: TopologicGameState<FourStatePiece, Direction> = ConnectSixRules.get().getInitialState(defaultConfig);
+        const state: TopologicGameState<FourStatePiece, Direction> =
+            ConnectSixRules.get().getInitialState(defaultConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When listing the moves

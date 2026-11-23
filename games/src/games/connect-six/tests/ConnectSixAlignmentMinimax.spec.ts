@@ -5,9 +5,9 @@ import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { RectangularBoardShape } from '../../../jscaip/board-shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
 import { Direction } from '../../../jscaip/direction/Direction';
-import { RectangularBoardShape } from '../../../jscaip/shape/RectangularBoardShape';
-import { TopologicBoardShape } from '../../../jscaip/shape/TopologicBoardShape';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -22,10 +22,11 @@ class ConnectSixAlignmentMinimax
 {
 
     public constructor() {
-        super($localize`Alignment`,
-              ConnectSixRules.get(),
-              new ConnectSixAlignmentHeuristic(),
-              new ConnectSixMoveGenerator(),
+        super(
+            $localize`Alignment`,
+            ConnectSixRules.get(),
+            new ConnectSixAlignmentHeuristic(),
+            new ConnectSixMoveGenerator(),
         );
     }
 }
@@ -212,7 +213,8 @@ describe('ConnectSixAlignmentMinimax', () => {
             shape: 'HEXAGONAL',
             boardSize: 5,
         };
-        const state: TopologicGameState<FourStatePiece, Direction> = ConnectSixRules.get().getInitialState(customConfig);
+        const state: TopologicGameState<FourStatePiece, Direction> =
+            ConnectSixRules.get().getInitialState(customConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When asking and applying best move
