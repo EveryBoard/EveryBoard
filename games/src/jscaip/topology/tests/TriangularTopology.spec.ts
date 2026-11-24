@@ -8,6 +8,8 @@ import { TriangularDirection } from '../../direction/TriangularDirection';
 import { TopologyID } from '../TopologyMapper';
 import { TriangularTopology } from '../TriangularTopology';
 
+import { GetNextCoordTestCase } from './GetNextCoordTestCase';
+
 describe('TriangularTopology', () => {
 
     describe('getId', () => {
@@ -20,14 +22,14 @@ describe('TriangularTopology', () => {
             const id: TopologyID = topology.getId();
 
             // Then should return the correct id
-            expect(id).toEqual('SQUARE (4)');
+            expect(id).toEqual('TRIANGULAR');
         });
 
     });
 
     describe('getNextCoord', () => {
 
-        const testCases: { start: Coord; distance: number; direction: TriangularDirection; expectedDestination: Coord }[] = [
+        const testCases: GetNextCoordTestCase<TriangularDirection>[] = [
             // Even coords:
             //     - left & up-left are the same at distance 1
             { start: new Coord(8, 8), distance: 1, direction: TriangularDirection.LEFT, expectedDestination: new Coord(7, 8) },
@@ -76,6 +78,20 @@ describe('TriangularTopology', () => {
 
                 // Then the result should be correct
                 expect(result).toEqual(testCase.expectedDestination);
+            });
+
+            it(`${ testCase.expectedDestination.toString() } - ${ testCase.distance } * ${ testCase.direction.toString() } = ${ testCase.start.toString() }`, () => {
+                // Given callResult.start as our coord
+                //       callResult.direction as our direction
+                // and triangular topology
+                const topology: TriangularTopology = new TriangularTopology();
+
+                // When evaluating next coord back and forth
+                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction, testCase.distance);
+                const original: Coord = topology.getNextCoord(result, testCase.direction, -1 * testCase.distance);
+
+                // Then the result should be correct
+                expect(original).toEqual(testCase.start);
             });
         }
     });

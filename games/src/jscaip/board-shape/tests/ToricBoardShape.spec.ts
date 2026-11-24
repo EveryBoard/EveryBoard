@@ -63,9 +63,49 @@ describe(ToricBoardShape.name + ' (with Square Topology)', () => {
 
     });
 
+    describe('isOnBoard / isNotOnBoard / getAllCoords', () => {
+
+        it('should include the good coords', () => {
+            // Given a matrix where (0, 0) will be interpreted as the coord (-1, -1)
+            // and whose value are wether or not that coord should count as on board on a side=2 hexagon
+            const shape: ToricBoardShape<EightDirection> = new ToricBoardShape(2, 2, topology);
+            const allCoords: Coord[] = shape.getAllCoords();
+            const matrix: boolean[][] = [
+                [false, false, false, false],
+                [false, true, true, false],
+                [false, true, true, false],
+                [false, false, false, false],
+            ];
+
+            // When checking each coord if they're on board
+            // Then reality should map this map
+            for (let y: number = 0; y < matrix.length; y++) {
+                for (let x: number = 0; x < matrix[y].length; x++) {
+                    const expected: boolean = matrix[y][x];
+                    const coord: Coord = new Coord(x - 1, y - 1);
+                    const coordIsAmongstAllCoord: boolean = allCoords.some((c: Coord) => c.equals(coord));
+                    const isOnBoard: boolean = shape.isOnBoard(coord);
+                    const isNotOnBoard: boolean = shape.isNotOnBoard(coord);
+                    const message: string = expected ?
+                        `${ coord.toString() } should be part of ${ JSON.stringify(allCoords) } but is not` :
+                        `${ coord.toString() } should not be part of ${ JSON.stringify(allCoords) } but is`;
+                    expect(coordIsAmongstAllCoord)
+                        .withContext(message)
+                        .toBe(expected);
+                    expect(isOnBoard)
+                        .withContext(`isOnBoard(${ coord.toString() }) should be ${ expected }`)
+                        .toBe(expected);
+                    expect(isNotOnBoard)
+                        .withContext(`isNotOnBoard(${ coord.toString() }) should be ${ !expected }`)
+                        .toBe(!expected);
+                }
+            }
+        });
+    });
+
 });
 
-describe('TorusShape (with Triangular Topology)', () => {
+describe(ToricBoardShape.name + ' (with Triangular Topology)', () => {
 
     const topology: Topology<TriangularDirection> = new TriangularTopology();
 
@@ -135,7 +175,7 @@ describe('TorusShape (with Triangular Topology)', () => {
 
 });
 
-describe('TorusShape (with Hexagonal Topology)', () => {
+describe(ToricBoardShape.name + ' (with Hexagonal Topology)', () => {
 
     const topology: Topology<HexaDirection> = new HexagonalTopology();
 
