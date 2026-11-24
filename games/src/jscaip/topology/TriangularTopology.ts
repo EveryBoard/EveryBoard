@@ -27,7 +27,6 @@ export class TriangularTopology implements Topology<TriangularDirection> {
     }
 
     public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
-        console.log('getNextCoord(', coord.toString(), ', ', direction.toString(), ', ', distance, ')')
         if (distance === 0) {
             return coord;
         } else {
@@ -39,7 +38,6 @@ export class TriangularTopology implements Topology<TriangularDirection> {
     }
 
     private getNextImmediateNeighborCoord(coord: Coord, direction: TriangularDirection, distance: 1 | -1): Coord {
-        console.log('getNextImmediateNeighborCoord(', coord.toString(), ', ', direction.toString(), ', ', distance, ')')
         if (distance === -1) {
             return this.getNextImmediateNeighborCoord(coord, direction.getOpposite(), 1);
         }
