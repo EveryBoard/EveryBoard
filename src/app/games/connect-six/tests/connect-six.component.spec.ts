@@ -256,7 +256,7 @@ describe('ConnectSixComponent', () => {
             }));
 
             it('should show last move again when cancelling move', fakeAsync(async() => {
-                // Given a component where player already dropped their first piece
+                // Given a component with a last move where player already dropped their first piece
                 const gameState: GameStateWithTable<FourStatePiece> =
                     new GameStateWithTable<FourStatePiece>([
                         [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -284,7 +284,8 @@ describe('ConnectSixComponent', () => {
                     rectangularShape,
                     gameState,
                 );
-                await testUtils.setupState(state);
+                const previousMove: ConnectSixMove = ConnectSixMove.of([new Coord(9, 9)]);
+                await testUtils.setupState(state, { previousMove });
                 await testUtils.expectClickSuccess('#click-8-8');
 
                 // When clicking on a piece dropped during this turn
@@ -292,6 +293,7 @@ describe('ConnectSixComponent', () => {
 
                 // Then the previous move should be displayed again
                 testUtils.expectElementToHaveClasses('#click-9-9', ['base', 'player0-fill', 'last-move-stroke']);
+                testUtils.expectElementToHaveClasses('#last-drop-9-9', ['base', 'player0-fill', 'moved-stroke', 'last-move-stroke']);
             }));
 
         });
