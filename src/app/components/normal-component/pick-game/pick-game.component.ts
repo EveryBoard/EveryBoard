@@ -1,9 +1,9 @@
 /* eslint-disable no-multi-spaces */
-import { Component, OutputEmitterRef, inject, output } from '@angular/core';
+import { Component, OutputEmitterRef, Signal, inject, output } from '@angular/core';
 import Fuse, { FuseResult } from 'fuse.js';
 
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
-import { ThemeService } from '../../../services/ThemeService';
+import { Theme, ThemeService } from '../../../services/ThemeService';
 
 import { GameInfo } from './GameInfo';
 
@@ -16,7 +16,7 @@ export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.getAllGames();
 
-    public readonly theme: 'dark' | 'light' = inject(ThemeService).getTheme();
+    public readonly theme: Signal<Theme> = inject(ThemeService).theme;
 
     public matchingGames: GameInfo[] = this.games;
 

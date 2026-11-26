@@ -18,7 +18,6 @@ import { OnlineGameCreationComponent } from './components/normal-component/onlin
 import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
@@ -32,7 +31,6 @@ import { setupEmulators } from './utils/tests/TestUtils.spec';
 export const routingSpecification: [string, Type<any>][] = [
     ['login', LoginComponent],
     ['lobby', LobbyComponent],
-    ['settings', SettingsComponent],
     ['account', AccountComponent],
     ['register', RegisterComponent],
     ['reset-password', ResetPasswordComponent],

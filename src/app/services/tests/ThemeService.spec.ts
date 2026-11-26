@@ -43,7 +43,7 @@ describe('ThemeService', () => {
 
             // Then the CSS has been changed
             expect(getThemeElement().href).toMatch('/dark.css$');
-            expect(themeService.getTheme()).toBe('dark');
+            expect(themeService.theme()).toBe('dark');
         });
     });
     it('should use the stored theme if there is one', fakeAsync(async() => {

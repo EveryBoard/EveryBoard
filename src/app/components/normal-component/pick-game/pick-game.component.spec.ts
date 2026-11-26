@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 
+import { Theme, ThemeService } from '../../../services/ThemeService';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
 import { PickGameComponent } from './pick-game.component';
@@ -25,6 +26,21 @@ describe('PickGameComponent', () => {
         expect(testUtils.getComponent().pickGame.emit)
             .toHaveBeenCalledWith('P4');
     }));
+
+    it('should update game images when the theme changes', () => {
+        // Given a pick-game component using the active theme
+        const themeService: ThemeService = TestBed.inject(ThemeService);
+        const newTheme: Theme = themeService.theme() === 'dark' ? 'light' : 'dark';
+        testUtils.detectChanges();
+
+        // When the active theme changes
+        themeService.loadTheme(newTheme);
+        testUtils.detectChanges();
+
+        // Then game images use the new theme
+        const image: HTMLImageElement = testUtils.findElement('#image-P4').nativeElement;
+        expect(image.getAttribute('src')).toBe(`assets/images/${newTheme}/P4.png`);
+    });
 
     it('should filter results based on typed characters', fakeAsync(async() => {
         // Given a pick-game page with games
