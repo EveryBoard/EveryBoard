@@ -30,7 +30,6 @@ export class ConnectSixComponent extends TopologicGameComponent<
     FourStatePiece,
     ConnectSixConfig
 > {
-    protected coordsAndContents: WritableSignal<{ coord: Coord; content: FourStatePiece }[]> = signal([]);
 
     protected readonly droppedCoords: WritableSignal<Set<Coord>> = signal(new Set());
 

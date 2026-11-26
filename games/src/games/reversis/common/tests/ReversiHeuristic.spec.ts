@@ -8,7 +8,7 @@ import { Table } from '../../../../jscaip/TableUtils';
 import { RectangularBoardShape } from '../../../../jscaip/board-shape/RectangularBoardShape';
 import { Direction } from '../../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../../jscaip/direction/EightDirection';
-import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../../jscaip/state/GameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
@@ -41,7 +41,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, X],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -59,7 +59,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -77,7 +77,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -96,7 +96,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const weakerGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(weakerBoard, 2);
+        const weakerGameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(weakerBoard, 2);
         const weakerState: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, weakerGameState);
         const strongerBoard: Table<FourStatePiece> = [
             [O, O, O, _, _, _, _, _],
@@ -108,7 +108,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const strongerGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(strongerBoard, 2);
+        const strongerGameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(strongerBoard, 2);
         const strongerState: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, strongerGameState);
 
         // When computing the board value

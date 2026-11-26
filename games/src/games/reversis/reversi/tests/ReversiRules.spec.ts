@@ -13,7 +13,7 @@ import { TriangleShape } from '../../../../jscaip/board-shape/TriangleShape';
 import { Direction } from '../../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../../jscaip/direction/HexaDirection';
-import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../../jscaip/state/GameStateWithTable';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { HexagonalTopology } from '../../../../jscaip/topology/HexagonalTopology';
@@ -66,8 +66,8 @@ describe('ReversiRules', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ];
-        const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable(expectedBoard, 1);
+        const expectedGameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(expectedBoard, 1);
         const expectedState: ReversiState<Direction> =
             new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
         const node: ReversiNode = new ReversiNode(expectedState);
@@ -123,7 +123,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, X, _, _, _],
             [_, _, _, _, O, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const state: ReversiState<Direction> =
             new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
 
@@ -131,7 +131,7 @@ describe('ReversiRules', () => {
         const move: ReversiMove = ReversiMove.PASS;
 
         // Then the move should succeed
-        const expectedGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const expectedGameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const expectedState: ReversiState<EightDirection> =
             new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -160,12 +160,12 @@ describe('ReversiRules', () => {
                 [O, X, O, O, O, O, O, O],
                 [X, X, X, X, X, X, X, O],
             ];
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 59);
+            const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 59);
             const state: ReversiState<Direction> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable(expectedBoard, 60);
+            const expectedGameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable(expectedBoard, 60);
             const expectedState: ReversiState<EightDirection> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -194,12 +194,12 @@ describe('ReversiRules', () => {
                 [X, O, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, X],
             ];
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 60);
+            const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 60);
             const state: ReversiState<Direction> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable(expectedBoard, 61);
+            const expectedGameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable(expectedBoard, 61);
             const expectedState: ReversiState<EightDirection> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -228,12 +228,12 @@ describe('ReversiRules', () => {
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
             ];
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 60);
+            const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 60);
             const state: ReversiState<Direction> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, gameState);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable(expectedBoard, 61);
+            const expectedGameState: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable(expectedBoard, 61);
             const expectedState: ReversiState<EightDirection> =
                 new ReversiState(eightDirectionSquareTopology, squareShape, expectedGameState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -267,7 +267,7 @@ describe('ReversiRules', () => {
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
                 ];
-                const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+                const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
                 const state: ReversiState<Direction> =
                     new ReversiState(eightDirectionSquareTopology, toricShape, gameState);
 
@@ -285,8 +285,8 @@ describe('ReversiRules', () => {
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
                 ];
-                const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable(expectedBoard, 2);
+                const expectedGameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable(expectedBoard, 2);
                 const expectedState: ReversiState<EightDirection> =
                     new ReversiState(eightDirectionSquareTopology, toricShape, expectedGameState);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
@@ -304,7 +304,7 @@ describe('ReversiRules', () => {
                     [_, _, _, _, X, _, _, _],
                     [_, _, _, _, X, _, _, _],
                 ];
-                const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 2);
+                const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 2);
                 const state: ReversiState<Direction> =
                     new ReversiState(eightDirectionSquareTopology, toricShape, gameState);
 
@@ -322,8 +322,8 @@ describe('ReversiRules', () => {
                     [_, _, _, _, O, _, _, _],
                     [_, _, _, _, O, _, _, _],
                 ];
-                const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable(expectedBoard, 3);
+                const expectedGameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable(expectedBoard, 3);
                 const expectedState: ReversiState<EightDirection> =
                     new ReversiState(eightDirectionSquareTopology, toricShape, expectedGameState);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
@@ -334,14 +334,14 @@ describe('ReversiRules', () => {
         describe('Hexagonal Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-            const hexagonalShape: HexagonalBoardShape<HexaDirection> = new TriangleShape(5, hexagonalTopology);
+            const hexagonalShape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(5, hexagonalTopology);
 
             it('should have initial board with a hole', () => {
                 // Given hexagonal shaped board with odd size
                 const customConfig: ReversiConfig = {
                     ...defaultConfig,
                     shape: 'HEXAGON',
-                    topology: 'HEXAGON',
+                    topology: 'HEXAGONAL',
                     boardSize: 5,
                 };
 
@@ -360,8 +360,8 @@ describe('ReversiRules', () => {
                     [_, _, _, _, _, _, N, N, N],
                     [_, _, _, _, _, N, N, N, N],
                 ];
-                const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable(expectedBoard, 0);
+                const expectedGameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable(expectedBoard, 0);
                 const expectedState: ReversiState<Direction> = new ReversiState(
                     hexagonalTopology,
                     hexagonalShape,
@@ -382,7 +382,7 @@ describe('ReversiRules', () => {
                 const customConfig: ReversiConfig = {
                     ...defaultConfig,
                     shape: 'TRIANGLE',
-                    topology: 'TRIANGLE',
+                    topology: 'TRIANGULAR',
                     boardSize: 6,
                 };
 
@@ -398,8 +398,8 @@ describe('ReversiRules', () => {
                     [N, N, _, _, _, O, N, O, _, _, _, N],
                     [N, _, _, _, _, _, _, _, _, _, _, _],
                 ];
-                const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
-                    new SimpleGameStateWithTable(expectedBoard, 0);
+                const expectedGameState: GameStateWithTable<FourStatePiece> =
+                    new GameStateWithTable(expectedBoard, 0);
                 const expectedState: ReversiState<Direction> = new ReversiState(
                     hexagonalTopology,
                     hexagonalShape,

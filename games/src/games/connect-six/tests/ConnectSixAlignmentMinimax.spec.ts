@@ -17,6 +17,7 @@ import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 import { ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { ConnectSixConfig, ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
+
 class ConnectSixAlignmentMinimax
     extends Minimax<ConnectSixMove, TopologicGameState<FourStatePiece, Direction>, ConnectSixConfig>
 {
@@ -30,7 +31,6 @@ class ConnectSixAlignmentMinimax
         );
     }
 }
-
 
 describe('ConnectSixAlignmentMinimax', () => {
 

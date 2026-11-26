@@ -3,7 +3,7 @@ import { EightDirection } from '../../../../jscaip/EightDirection';
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RectangularBoardShape } from '../../../../jscaip/board-shape/rere';
-import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../../jscaip/state/GameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiNode } from '../AbstractReversiRules';
@@ -37,7 +37,7 @@ describe('ReversiOrderedMoveGenerator', () => {
             [_, _, _, _, _, O, _, _],
             [_, _, _, _, X, O, X, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 2);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 2);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         const node: ReversiNode = new ReversiNode(state);
 

@@ -1,4 +1,4 @@
-import { FourStatePiece, SimpleGameStateWithTable } from '@everyboard/games';
+import { FourStatePiece, GameStateWithTable } from '@everyboard/games';
 import { EightDirection } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
@@ -32,7 +32,7 @@ export class ToricReversiTutorial extends Tutorial {
             new ReversiState(
                 eightDirectionTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
@@ -53,7 +53,7 @@ export class ToricReversiTutorial extends Tutorial {
             new ReversiState(
                 eightDirectionTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
@@ -74,7 +74,7 @@ export class ToricReversiTutorial extends Tutorial {
             new ReversiState(
                 eightDirectionTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [_, _, _, _, _, _, _, X],
                     [_, _, _, _, _, _, X, _],
                     [_, _, _, X, _, X, _, _],

@@ -3,7 +3,7 @@ import { EightDirection } from '../../../../jscaip/EightDirection';
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RectangularBoardShape } from '../../../../jscaip/board-shape/rere';
-import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
+import { GameStateWithTable } from '../../../../jscaip/state/GameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ToricReversiRules } from '../../toric-reversi/ToricReversiRules';
@@ -54,7 +54,7 @@ describe('ReversiMoveGenerator', () => {
                     [_, _, _, _, X, _, _, _],
                     [_, _, _, _, O, _, _, _],
                 ];
-                const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+                const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
                 const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
                 const node: ReversiNode = new ReversiNode(state);
                 const moves: ReversiMove[] = moveGenerator.getListMoves(node);

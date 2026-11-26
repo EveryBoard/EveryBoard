@@ -1,6 +1,6 @@
 import { EightDirection, EightDirectionSquareTopology, FourStatePiece } from '@everyboard/games';
 import { RectangularBoardShape } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { ReversiConfig } from '@everyboard/games/reversi';
 import { ReversiMove } from '@everyboard/games/reversi';
 import { ReversiState } from '@everyboard/games/reversi';
@@ -24,7 +24,7 @@ export class ReversiTutorial extends Tutorial {
             new ReversiState(
                 ordinalTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [O, O, O, O, O, O, O, O],
                     [O, X, X, X, X, X, X, O],
                     [O, X, X, X, X, X, X, O],
@@ -49,7 +49,7 @@ export class ReversiTutorial extends Tutorial {
             new ReversiState(
                 ordinalTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
@@ -70,7 +70,7 @@ export class ReversiTutorial extends Tutorial {
             new ReversiState(
                 ordinalTopology,
                 squareShape,
-                new SimpleGameStateWithTable([
+                new GameStateWithTable([
                     [X, O, O, O, O, O, X, O],
                     [O, X, X, X, X, X, X, O],
                     [O, X, X, X, X, X, X, O],

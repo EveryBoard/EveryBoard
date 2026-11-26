@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { Direction, EightDirection } from '@everyboard/games';
 import { RectangularBoardShape } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { ReversiConfig } from '@everyboard/games/reversi';
@@ -46,7 +46,7 @@ fdescribe('ReversiComponent', () => {
             [_, _, X, _, _, _, _, _],
             [_, _, _, O, _, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 0);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 0);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
         await testUtils.setupState(state);
 
@@ -82,7 +82,7 @@ fdescribe('ReversiComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
             ];
-            const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+            const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
             const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
             await testUtils.setupState(state, { previousState, previousMove });
 
@@ -107,7 +107,7 @@ fdescribe('ReversiComponent', () => {
             [_, _, _, _, _, _, _, _],
             [O, X, _, _, _, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 1);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 1);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, gameState);
 
         // When displaying the board

@@ -3,7 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 
 import { Direction, EightDirection, EightDirectionSquareTopology, FourStatePiece, Table } from '@everyboard/games';
-import { SimpleGameStateWithTable } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { ToricBoardShape } from '@everyboard/games';
 import { ReversiMove } from '@everyboard/games/toric-reversi';
 import { ReversiState } from '@everyboard/games/toric-reversi';
@@ -38,7 +38,7 @@ describe('ToricReversiComponent', () => {
             [_, X, _, _, _, _, _, _],
             [_, _, O, _, _, _, _, _],
         ];
-        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(board, 0);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 0);
         const state: ReversiState<Direction> = new ReversiState(ordinalTopology, torusShape, gameState);
         await testUtils.setupState(state);
 

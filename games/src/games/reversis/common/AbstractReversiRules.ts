@@ -20,15 +20,17 @@ import { Direction } from '../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Topology } from '../../../jscaip/topology/Topology';
-import { TopologyID } from '../../../jscaip/topology/TopologyMapper';
+import { TopologyID, TopologyMapper } from '../../../jscaip/topology/TopologyMapper';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 
 import { ReversiFailure } from './ReversiFailure';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 
 export type ReversiLegalityInformation = Set<Coord>;
 
@@ -46,8 +48,8 @@ export class ReversiNode extends GameNode<ReversiMove, ReversiState<Direction>> 
 export const ReversiTopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE (4)': () => $localize`Square (4)`,
     'SQUARE (8)': () => $localize`Square (8)`,
-    'HEXAGON': () => $localize`Hexagon`,
-    'TRIANGLE': () => $localize`Triangle`,
+    'HEXAGONAL': () => $localize`Hexagon`,
+    'TRIANGULAR': () => $localize`Triangle`,
 };
 
 export type ReversiShapeEnum = 'SQUARE' | 'HEXAGON' | 'TRIANGLE' | 'TORUS';
@@ -92,17 +94,17 @@ export abstract class TopologicReversiRules extends ConfigurableRules<
             board[coord.y][coord.x] = FourStatePiece.EMPTY;
         }
         board = this.fillInitialPiece(config, board);
-        const gameStateWithTable: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable(board, 0);
+        const gameStateWithTable: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(board, 0);
         return new ReversiState(topology, shape, gameStateWithTable);
-    } // TODO: create getSimpleGameStateWithTable in parent class and reuse it in Reversi
+    } // TODO: create getGameStateWithTable in parent class and reuse it in Reversi
 
     private fillInitialPiece(config: ReversiConfig, board: FourStatePiece[][]): FourStatePiece[][] {
         const topology: Topology<Direction> = this.getTopology(config);
         const shape: TopologicBoardShape<Direction> = this.getShape(config, topology);
         const centers: Coord[] = shape.getCenters();
         switch (config.topology) {
-            case 'HEXAGON':
+            case 'HEXAGONAL':
                 return this.getInitialHexagonalBoard(
                     topology,
                     shape,
@@ -201,7 +203,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<
     }
 
     private getTopology(config: ReversiConfig): Topology<Direction> {
-        return topologyMap.get(config.topology).get();
+        return TopologyMapper.topologyMap.get(config.topology).get();
     }
 
     private getShape<DIR extends Direction>(config: ReversiConfig, topology: Topology<DIR>): TopologicBoardShape<DIR> {
@@ -224,21 +226,21 @@ export abstract class TopologicReversiRules extends ConfigurableRules<
         state: ReversiState<Direction>,
         _: ReversiConfig,
         info: ReversiLegalityInformation,
-    ): ReversiState {
+    ): ReversiState<Direction> {
         const turn: number = state.turn;
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const board: FourStatePiece[][] = state.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
-            const sameGameStateDifferentTurn: SimpleGameStateWithTable<FourStatePiece> =
-                new SimpleGameStateWithTable(board, turn + 1);
+            const sameGameStateDifferentTurn: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable(board, turn + 1);
             return new ReversiState(state.getTopology(), state.getBoardShape(), sameGameStateDifferentTurn);
         }
         for (const s of info) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;
-        const resultingGameState: SimpleGameStateWithTable<FourStatePiece> =
-            new SimpleGameStateWithTable(board, turn + 1);
+        const resultingGameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(board, turn + 1);
         return new ReversiState(state.getTopology(), state.getBoardShape(), resultingGameState);
     }
 
@@ -338,7 +340,7 @@ export abstract class TopologicReversiRules extends ConfigurableRules<
         const nextState: ReversiState<DIR> = new ReversiState(
             state.getTopology(),
             state.getBoardShape(),
-            new SimpleGameStateWithTable(nextBoard, nextTurn),
+            new GameStateWithTable(nextBoard, nextTurn),
         );
         return this.playerCanOnlyPass(nextState);
     }
@@ -388,7 +390,10 @@ export abstract class TopologicReversiRules extends ConfigurableRules<
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState<Direction>): MGPFallible<ReversiLegalityInformation> {
+    public override isLegal(
+        move: ReversiMove,
+        state: ReversiState<Direction>,
+    ): MGPFallible<ReversiLegalityInformation> {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!

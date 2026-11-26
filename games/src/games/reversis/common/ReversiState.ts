@@ -7,6 +7,7 @@ import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
 import { Direction } from '../../../jscaip/direction/Direction';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { Topology } from '../../../jscaip/topology/Topology';
 
@@ -15,7 +16,7 @@ export class ReversiState<D extends Direction> extends TopologicGameStateWithTab
     public constructor(
         topology: Topology<D>,
         shape: TopologicBoardShape<D>,
-        gameStateWithTable: SimpleGameStateWithTable<FourStatePiece>,
+        gameStateWithTable: GameStateWithTable<FourStatePiece>,
     ) {
         super(topology, shape, gameStateWithTable);
     }
