@@ -3,9 +3,9 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 import { AlignmentHeuristic, AlignmentStatus, BoardInfo } from '../../jscaip/AI/AlignmentHeuristic';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
-import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 
 import { SixMove } from './SixMove';
 import { SixVictorySource, SixNode, SixConfig, SixRules } from './SixRules';

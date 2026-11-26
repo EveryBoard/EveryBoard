@@ -18,9 +18,9 @@ import { HexagonalGoConfig, HexagonalGoRules } from '@everyboard/games/hexagonal
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { HexaLayout } from '../../../components/game-components/HexaLayout';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from '../../../components/game-components/layout/HexaLayout';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -430,13 +430,13 @@
         <source>There is no such configuration element</source>
         <target>Cet élément de configuration n'existe pas</target>
       </trans-unit>
-      <trans-unit id="4408456168772857996" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
-        <target><x id="PH" equiv-text="value"/> est trop petit, le minimum est <x id="PH_1" equiv-text="min"/></target>
+      <trans-unit id="5529421279620298552" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/>.</source>
+        <target><x id="PH" equiv-text="value"/> est trop petit, le minimum est <x id="PH_1" equiv-text="min"/>.</target>
       </trans-unit>
-      <trans-unit id="701935636628882602" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
-        <target><x id="PH" equiv-text="value"/> est trop grand, le maximum est <x id="PH_1" equiv-text="max"/></target>
+      <trans-unit id="4467803935027184817" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/>.</source>
+        <target><x id="PH" equiv-text="value"/> est trop grand, le maximum est <x id="PH_1" equiv-text="max"/>.</target>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
@@ -1809,6 +1809,26 @@
         <source>Pieces &gt; Tiles &gt; Freedom</source>
         <target>Pièces &gt; Tuiles &gt; Libertés</target>
       </trans-unit>
+      <trans-unit id="7769232724012528086" datatype="html">
+        <source>At your first turn, you must drop exactly one piece!</source>
+        <target>Le premier tour doit contenir exactmenent une pièce !</target>
+      </trans-unit>
+      <trans-unit id="8366240299234525015" datatype="html">
+        <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
+        <target>Vous devez placer exactement <x id="PH" equiv-text="numberOfPiece"/> pièces.</target>
+      </trans-unit>
+      <trans-unit id="6623830127801606607" datatype="html">
+        <source>Square (4)</source>
+        <target>Carré (4)</target>
+      </trans-unit>
+      <trans-unit id="8278187099465500134" datatype="html">
+        <source>Square (8)</source>
+        <target>Carré (8)</target>
+      </trans-unit>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
+        <target>Carré</target>
+      </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
         <target>Alignement</target>
@@ -2686,6 +2706,30 @@
         <source>Hexagonal</source>
         <target>Hexagonal</target>
       </trans-unit>
+      <trans-unit id="5440587977382249688" datatype="html">
+        <source>Triangular</source>
+        <target>Triangulaire</target>
+      </trans-unit>
+      <trans-unit id="2986159287834234807" datatype="html">
+        <source>N</source>
+        <target>N</target>
+      </trans-unit>
+      <trans-unit id="7983083284666629806" datatype="html">
+        <source>Drop after first turn</source>
+        <target>Pièce par tour (après le 1er)</target>
+      </trans-unit>
+      <trans-unit id="4214033760774511143" datatype="html">
+        <source>Space shape</source>
+        <target>Forme des cases</target>
+      </trans-unit>
+      <trans-unit id="4461597806169026629" datatype="html">
+        <source>Board shape</source>
+        <target>Forme du plateau</target>
+      </trans-unit>
+      <trans-unit id="5227736435972200196" datatype="html">
+        <source>Toric board with triangle space should have even width</source>
+        <target>Les plateau toriques avec des cases triangulaire doivent avoir des largeur paires</target>
+      </trans-unit>
       <trans-unit id="5964817756364095565" datatype="html">
         <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
         <target>Le Go Triangulaire est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
@@ -2790,8 +2834,8 @@
         <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
         <target>Ici, le coin 1-1 constitue un suicide au zoom 2, et une capture au zoom 1, ce qui ne suffit pas à rendre le coup légal. Mais puisque cette capture au zoom 1 capturerait une partie des pierres qui provoquent le suicide au zoom 2, il s&apos;agit alors d&apos;un faux suicide, et le coup est donc légal.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres claires. Effectuez cette capture.</target>
       </trans-unit>
-      <trans-unit id="6317794074367608738" datatype="html">
-        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      <trans-unit id="5766641929783301287" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom!</source>
         <target>Félicitations. Pour qu&apos;un coup soit légal, il faut qu&apos;après l&apos;avoir joué et effectué les captures, la pierre que vous avez placée possède au moins une liberté à chaque zoom !</target>
       </trans-unit>
       <trans-unit id="7696235060281000608" datatype="html">
@@ -3079,8 +3123,8 @@
         <source>Flying capture is forbidden for normal pieces!</source>
         <target>Les pièces normales ne peuvent pas faire de capture volantes !</target>
       </trans-unit>
-      <trans-unit id="5556528437720213364" datatype="html">
-        <source>No piece is allowed to do a long jump</source>
+      <trans-unit id="4763870366232813427" datatype="html">
+        <source>No piece is allowed to do a long jump!</source>
         <target>Aucune pièce ne peut se déplacer de plus d'un pas !</target>
       </trans-unit>
       <trans-unit id="7678886963795480068" datatype="html">
@@ -3994,10 +4038,6 @@
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
-      <trans-unit id="8336049305072615544" datatype="html">
-        <source>Square</source>
-        <target>Carré</target>
-      </trans-unit>
       <trans-unit id="517712097339838490" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
@@ -4092,61 +4132,61 @@
       <trans-unit id="2467449610168621115" datatype="html">
         <source>Wrong, you could have won by making a square.</source>
         <target>Raté, vous auriez pu gagner en formant un carré.</target>
-      </trans-unit><trans-unit id="5604193951980576244" datatype="html">
-        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
-        <target>La distance du déplacement doit être de 2 pour l'envahisseur, pas <x id="PH" equiv-text="distance"/></target>
+      </trans-unit><trans-unit id="5053155935588906761" datatype="html">
+        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/>!</source>
+        <target>La distance du déplacement doit être de 2 pour l'envahisseur, pas <x id="PH" equiv-text="distance"/> !</target>
       </trans-unit>
-      <trans-unit id="4809301322027947242" datatype="html">
-        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
-        <target>La distance du déplacement doit être de 1 pour le défenseur, pas <x id="PH" equiv-text="distance"/></target>
+      <trans-unit id="2806990295115685056" datatype="html">
+        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/>!</source>
+        <target>La distance du déplacement doit être de 1 pour le défenseur, pas <x id="PH" equiv-text="distance"/> !</target>
       </trans-unit>
-      <trans-unit id="941976348970067109" datatype="html">
-        <source>You must drop in your own territory</source>
-        <target>Déposez la pièce dans votre territoire</target>
+      <trans-unit id="7269225998142254933" datatype="html">
+        <source>You must drop in your own territory!</source>
+        <target>Déposez la pièce dans votre territoire !</target>
       </trans-unit>
-      <trans-unit id="2561363337853886115" datatype="html">
-        <source>You cannot drop in move phase</source>
-        <target>Vous ne pouvez pas déposer de pièce dans la phase de déplacement</target>
+      <trans-unit id="3747296969081660201" datatype="html">
+        <source>You cannot drop in move phase!</source>
+        <target>Vous ne pouvez pas déposer de pièce dans la phase de déplacement !</target>
       </trans-unit>
-      <trans-unit id="6838858844517047193" datatype="html">
-        <source>You cannot move in drop phase</source>
-        <target>Vous ne pouvez pas déplacer de pièce en phase de placement</target>
+      <trans-unit id="7366440229341518339" datatype="html">
+        <source>You cannot move in drop phase!</source>
+        <target>Vous ne pouvez pas déplacer de pièce en phase de placement !</target>
       </trans-unit>
-      <trans-unit id="4933773936312573082" datatype="html">
-        <source>You must drop all your pieces</source>
-        <target>Vous devez déposer toutes vos pièces</target>
+      <trans-unit id="1592387238040094575" datatype="html">
+        <source>You must drop all your pieces!</source>
+        <target>Vous devez déposer toutes vos pièces !</target>
       </trans-unit>
-      <trans-unit id="1577452622903571200" datatype="html">
-        <source>You must drop all your remaining pieces, not more not less</source>
-        <target>Vous devez déposez toutes vos pièces restantes, ni plus ni moins</target>
+      <trans-unit id="1552617274446105779" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less!</source>
+        <target>Vous devez déposez toutes vos pièces restantes, ni plus ni moins !</target>
       </trans-unit>
-      <trans-unit id="8012565028574700911" datatype="html">
-        <source>You cannot drop that many pieces</source>
-        <target>Vous ne pouvez pas déposer autant de pièces</target>
+      <trans-unit id="8964234200977171524" datatype="html">
+        <source>You cannot drop that many pieces!</source>
+        <target>Vous ne pouvez pas déposer autant de pièces !</target>
       </trans-unit>
-      <trans-unit id="8952465701867689047" datatype="html">
-        <source>You must drop pieces one by one</source>
-        <target>Vous devez déposer les pièces une par une</target>
+      <trans-unit id="7266359490849295875" datatype="html">
+        <source>You must drop pieces one by one!</source>
+        <target>Vous devez déposer les pièces une par une !</target>
       </trans-unit>
-      <trans-unit id="7497498388753121757" datatype="html">
-        <source>You cannot land or drop on your castle</source>
-        <target>Vous ne pouvez atterrir sur votre château</target>
+      <trans-unit id="6071028912782172737" datatype="html">
+        <source>You cannot land or drop on your castle!</source>
+        <target>Vous ne pouvez atterrir sur votre château !</target>
       </trans-unit>
-      <trans-unit id="5963846295180517656" datatype="html">
-        <source>You must only place your castle</source>
-        <target>Vous devez seulement placer votre château</target>
+      <trans-unit id="8895930259031738837" datatype="html">
+        <source>You must only place your castle!</source>
+        <target>Vous devez seulement placer votre château !</target>
       </trans-unit>
-      <trans-unit id="5637364645971249040" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant qu'envahisseur)</target>
+      <trans-unit id="7923349377164139455" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)!</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant qu'envahisseur) !</target>
       </trans-unit>
-      <trans-unit id="984815225652827868" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant que défenseur)</target>
+      <trans-unit id="4249056676993437561" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)!</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant que défenseur) !</target>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>
-        <target>Trop de lignes pour le territoire, les lignes adverses et les vôtres se chevauchent!</target>
+        <target>Trop de lignes pour le territoire, les lignes adverses et les vôtres se chevauchent !</target>
       </trans-unit>
       <trans-unit id="810888510148304696" datatype="html">
         <source>Automatic</source>
@@ -4306,7 +4346,7 @@
       </trans-unit>
       <trans-unit id="6387064828361949367" datatype="html">
         <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
-        <target>Vous avez sauté trop loin ! La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas!</target>
+        <target>Vous avez sauté trop loin ! La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas !</target>
       </trans-unit>
       <trans-unit id="323770883664351270" datatype="html">
         <source>Jump Size</source>
@@ -4542,8 +4582,8 @@
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
         <target>Votre poussée est invalide : elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
       </trans-unit>
-      <trans-unit id="6641065739366631527" datatype="html">
-        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+      <trans-unit id="2028782600820940105" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece.</source>
         <target>Vous devez sélectionner une destination valide (mise en évidence sur le plateau) pour votre pièce.</target>
       </trans-unit>
       <trans-unit id="3129880366808972802" datatype="html">

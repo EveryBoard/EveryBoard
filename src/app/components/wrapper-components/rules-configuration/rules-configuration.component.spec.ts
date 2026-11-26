@@ -292,7 +292,7 @@ describe('RulesConfigurationComponent', () => {
                         setConfigValue('nombre', 0);
 
                         // Then error reason should have been displayed
-                        expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1');
+                        expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1.');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                         expectConfigToBeSelected(component.CUSTOM_CONFIG_NAME);
@@ -309,7 +309,7 @@ describe('RulesConfigurationComponent', () => {
                         setConfigValue('nombre', 100);
 
                         // Then error reason should have been displayed
-                        expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('100 is too big, the maximum is 99');
+                        expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('100 is too big, the maximum is 99.');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                         expectConfigToBeSelected(component.CUSTOM_CONFIG_NAME);

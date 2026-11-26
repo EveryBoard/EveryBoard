@@ -3,7 +3,7 @@ import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
+import { DirectionFailure } from '../../../jscaip/direction/Direction';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 
 describe('LinesOfActionMove', () => {

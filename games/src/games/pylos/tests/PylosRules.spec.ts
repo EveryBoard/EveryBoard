@@ -24,7 +24,7 @@ describe('PylosRules', () => {
         rules = PylosRules.get();
     });
 
-    it(`should forbid move who'se landing coord is not empty`, () => {
+    it(`should forbid move whose landing coord is not empty`, () => {
         const board: PlayerOrNone[][][] = [
             [
                 [O, _, _, _],
@@ -105,7 +105,7 @@ describe('PylosRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
+    it(`should forbid move whose landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: PlayerOrNone[][][] = [
             [
                 [_, _, _, _],

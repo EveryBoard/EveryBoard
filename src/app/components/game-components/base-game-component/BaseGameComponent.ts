@@ -7,9 +7,11 @@ import { BaseComponent } from '../../BaseComponent';
  * We can't define these in GameComponent itself, as they are required
  * by sub components which themselves are not GameComponent subclasses
  */
+
+export const SPACE_SIZE: number = 100;
 export abstract class BaseGameComponent extends BaseComponent {
 
-    public SPACE_SIZE: number = 100;
+    public SPACE_SIZE: number = SPACE_SIZE;
 
     public readonly STROKE_WIDTH: number = 8;
 

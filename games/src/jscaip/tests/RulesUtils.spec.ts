@@ -16,7 +16,7 @@ export class RulesUtils {
         M extends Move,
         S extends GameState,
         L,
-        C extends RulesConfig
+        C extends RulesConfig = EmptyRulesConfig
     >(
         rules: R,
         state: S,

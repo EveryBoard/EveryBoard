@@ -235,7 +235,7 @@ describe('RulesConfigDescription', () => {
         // When checking the validity of an illegal field
         // Then it should be valid
         expect(rulesConfigDescription.isValid('width', 200)).toBeFalse();
-        expect(rulesConfigDescription.getValidityError('width', 200)).toEqual('200 is too big, the maximum is 99');
+        expect(rulesConfigDescription.getValidityError('width', 200)).toEqual('200 is too big, the maximum is 99.');
     });
 
     it('should detect the invalidity of an ill-typed config field', () => {

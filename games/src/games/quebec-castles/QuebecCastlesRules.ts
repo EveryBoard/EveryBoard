@@ -8,15 +8,15 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { DirectionFailure } from '../../jscaip/Direction';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { DirectionFailure } from '../../jscaip/direction/Direction';
+import { EightDirection } from '../../jscaip/direction/EightDirection';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
@@ -25,37 +25,37 @@ import { QuebecCastlesState } from './QuebecCastlesState';
 
 export class QuebecCastlesFailure {
 
-    public static readonly INVALID_INVADER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 2 for invader, not ${ distance }`;
+    public static readonly INVALID_INVADER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 2 for invader, not ${ distance }!`;
 
-    public static readonly INVALID_DEFENDER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 1 for defender, not ${ distance }`;
+    public static readonly INVALID_DEFENDER_DISTANCE: (distance: number) => string = (distance: number) => $localize`Move distance must be 1 for defender, not ${ distance }!`;
 
-    public static readonly MUST_DROP_IN_YOUR_TERRITORY: Localized = () => $localize`You must drop in your own territory`;
+    public static readonly MUST_DROP_IN_YOUR_TERRITORY: Localized = () => $localize`You must drop in your own territory!`;
 
-    public static readonly CANNOT_DROP_IN_MOVE_PHASE: Localized = () => $localize`You cannot drop in move phase`;
+    public static readonly CANNOT_DROP_IN_MOVE_PHASE: Localized = () => $localize`You cannot drop in move phase!`;
 
-    public static readonly CANNOT_MOVE_IN_DROP_PHASE: Localized = () => $localize`You cannot move in drop phase`;
+    public static readonly CANNOT_MOVE_IN_DROP_PHASE: Localized = () => $localize`You cannot move in drop phase!`;
 
-    public static readonly MUST_DROP_ALL_YOUR_PIECES: Localized = () => $localize`You must drop all your pieces`;
+    public static readonly MUST_DROP_ALL_YOUR_PIECES: Localized = () => $localize`You must drop all your pieces!`;
 
-    public static readonly MUST_DROP_ALL_YOUR_REMAINING_PIECES: Localized = () => $localize`You must drop all your remaining pieces, not more not less`;
+    public static readonly MUST_DROP_ALL_YOUR_REMAINING_PIECES: Localized = () => $localize`You must drop all your remaining pieces, not more not less!`;
 
-    public static readonly CANNOT_DROP_THAT_MANY_PIECES: Localized = () => $localize`You cannot drop that many pieces`;
+    public static readonly CANNOT_DROP_THAT_MANY_PIECES: Localized = () => $localize`You cannot drop that many pieces!`;
 
-    public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one`;
+    public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one!`;
 
-    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE: Localized = () => $localize`You cannot land or drop on your castle`;
+    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE: Localized = () => $localize`You cannot land or drop on your castle!`;
 
-    public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle`;
+    public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle!`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as invader)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as invader)!`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as defender)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as defender)!`;
 
     public static readonly TOO_MANY_LINES_FOR_TERRITORY: Localized = () => $localize`Too many lines for territory, your opponent lines would merge with yours!`;
 
 }
 
-export type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
+export type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH';
 
 export const DropModes: Record<DropMode, Localized> = {
     'AUTO': () => $localize`Automatic`,
@@ -192,7 +192,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private fillBoardFor(player: Player, state: QuebecCastlesState, config: QuebecCastlesConfig): QuebecCastlesState {
         const initialCoords: Coord[] = this.getInitialCoords(player, state, config);
         for (const coord of initialCoords) {
-            state = state.setPieceAt(coord, player);
+            state = state.withPieceAt(coord, player);
         }
         return state;
     }
@@ -220,7 +220,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public getInitialCoords(player: Player, state: QuebecCastlesState, config: QuebecCastlesConfig): Coord[] {
         let pieceToDrop: number = this.getNumberOfPieces(player, config);
-        const coordDirection: Ordinal = config.isRhombic ? Ordinal.UP_RIGHT : Ordinal.RIGHT;
+        const coordDirection: EightDirection = config.isRhombic ? EightDirection.UP_RIGHT : EightDirection.RIGHT;
         const lineDirectionAndIndex: { lineDirection: number; lineToFillIndex: number } =
             this.getLineDirectionAndIndex(player, config);
         const lineDirection: number = lineDirectionAndIndex.lineDirection;
@@ -257,7 +257,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private getAvailableSpacesAtLine(line: number, state: QuebecCastlesState, config: QuebecCastlesConfig): Coord[] {
         let defaultAvailableSpace: number;
         let coord: Coord;
-        let direction: Ordinal;
+        let direction: EightDirection;
         const coords: Coord[] = [];
         if (config.isRhombic) {
             const xMax: number = config.width - 1;
@@ -267,11 +267,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             const xInitial: number = Math.max(line - yMax, 0);
             const yInitial: number = Math.min(line, yMax);
             coord = new Coord(xInitial, yInitial);
-            direction = Ordinal.UP_RIGHT;
+            direction = EightDirection.UP_RIGHT;
         } else {
             defaultAvailableSpace = config.width;
             coord = new Coord(0, line);
-            direction = Ordinal.RIGHT;
+            direction = EightDirection.RIGHT;
         }
         while (defaultAvailableSpace > 0) {
             if (state.isCastleAt(coord) === false) {
@@ -577,7 +577,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private getMiddleValidity(state: QuebecCastlesState, move: MoveCoordToCoord): MGPValidation {
-        const direction: MGPFallible<Ordinal> = move.getDirection();
+        const direction: MGPFallible<EightDirection> = move.getDirection();
         if (direction.isFailure()) {
             return MGPValidation.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
         }
@@ -640,7 +640,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         } else {
             let resultingState: QuebecCastlesState = state;
             for (const drop of move.coords) {
-                resultingState = resultingState.setPieceAt(drop, currentPlayer);
+                resultingState = resultingState.withPieceAt(drop, currentPlayer);
             }
             return resultingState.incrementTurn();
         }
@@ -656,7 +656,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (state.getCurrentPlayer() === Player.ZERO) {
             initialState.forEachCoord((coord: Coord, content: PlayerOrNone) => {
                 if (content === Player.ONE) {
-                    newState = newState.setPieceAt(coord, PlayerOrNone.NONE);
+                    newState = newState.withPieceAt(coord, PlayerOrNone.NONE);
                 }
             });
         } else {
@@ -675,9 +675,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (initialState.getPieceAt(actualCastle).isPlayer()) {
             // The castle has been placed where a piece is on initial state
             // So we remove the "initial piece" where the actual castle is put
-            initialState = initialState.setPieceAt(actualCastle, PlayerOrNone.NONE);
+            initialState = initialState.withPieceAt(actualCastle, PlayerOrNone.NONE);
             // And move it to the place we know is by defaut empty: the default castle's spalce
-            initialState = initialState.setPieceAt(defaultCastle, player);
+            initialState = initialState.withPieceAt(defaultCastle, player);
         }
         return initialState;
     }
@@ -685,8 +685,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private applyLegalNormalMove(move: MoveCoordToCoord, state: QuebecCastlesState): QuebecCastlesState {
         const currentPlayer: Player = state.getCurrentPlayer();
         return state
-            .setPieceAt(move.getStart(), PlayerOrNone.NONE)
-            .setPieceAt(move.getEnd(), currentPlayer)
+            .withPieceAt(move.getStart(), PlayerOrNone.NONE)
+            .withPieceAt(move.getEnd(), currentPlayer)
             .incrementTurn();
     }
 
@@ -728,7 +728,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         const owner: Player = state.getPieceAt(coord) as Player;
         const stepSize: number = this.getPlayerStepSize(owner);
         const moves: QuebecCastlesMove[] = [];
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const step: Coord = coord.getNext(direction);
             if (state.isOnBoard(step)) {
                 if (stepSize === 1) {

@@ -4,12 +4,12 @@ import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { Debug } from '../../../utils/Debug';
 
 import { ReversiFailure } from './ReversiFailure';
@@ -41,12 +41,12 @@ export type ReversiConfig = RulesConfig & {
 
 export interface BoardMode {
 
-    getNextCoord: (coord: Coord, direction: Ordinal, state: ReversiState) => Coord;
+    getNextCoord: (coord: Coord, direction: EightDirection, state: ReversiState) => Coord;
 
 }
 class RectangularBoardMode implements BoardMode {
 
-    public getNextCoord(coord: Coord, direction: Ordinal, _: ReversiState): Coord {
+    public getNextCoord(coord: Coord, direction: EightDirection, _: ReversiState): Coord {
         return coord.getNext(direction);
     }
 
@@ -54,7 +54,7 @@ class RectangularBoardMode implements BoardMode {
 
 class ToricBoardMode implements BoardMode {
 
-    public getNextCoord(coord: Coord, direction: Ordinal, state: ReversiState): Coord {
+    public getNextCoord(coord: Coord, direction: EightDirection, state: ReversiState): Coord {
         return coord.getNextToric(direction, state.getWidth(), state.getHeight());
     }
 
@@ -123,7 +123,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
         const opponent: Player = player.getOpponent();
 
         const boardMode: BoardMode = this.getBoardMode(config);
-        for (const direction of Ordinal.ORDINALS) {
+        for (const direction of EightDirection.EIGHT_DIRECTIONS) {
             const firstSpace: Coord = boardMode.getNextCoord(move.coord, direction, state);
             if (state.hasPieceAt(firstSpace, opponent)) {
                 // let's test this direction
@@ -138,11 +138,11 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
 
     public getSandwicheds(
         capturer: Player,
-        direction: Ordinal,
+        direction: EightDirection,
         start: Coord,
         state: ReversiState,
         config: ReversiConfig,
-    ) : Coord[] {
+    ): Coord[] {
         /**
           * expected that 'start' is in range, and is captured
           * if we don't reach another capturer, returns []

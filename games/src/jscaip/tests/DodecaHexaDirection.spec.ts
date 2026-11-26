@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { DodecaHexaDirection } from '../DodecaHexaDirection';
+import { DodecaHexaDirection } from '../direction/DodecaHexaDirection';
 
 describe('DodecaHexaDirection', () => {
 
@@ -27,7 +27,7 @@ describe('DodecaHexaDirection', () => {
 
     });
 
-    it('should stringify "orthogonally" the 8 "Ordinal" directions', () => {
+    it('should stringify "orthogonally" the 8 "EightDirection" directions', () => {
         expect(DodecaHexaDirection.DIRECTION_000.toString()).toEqual('UP');
         expect(DodecaHexaDirection.DIRECTION_060.toString()).toEqual('UP_RIGHT');
         expect(DodecaHexaDirection.DIRECTION_120.toString()).toEqual('RIGHT');

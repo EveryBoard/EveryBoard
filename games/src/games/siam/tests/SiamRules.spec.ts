@@ -2,10 +2,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SiamFailure } from '../SiamFailure';
 import { SiamMove } from '../SiamMove';

@@ -4,8 +4,8 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { HexaLine } from '../../../jscaip/HexaLine';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { GipfMove, GipfPlacement } from '../GipfMove';
 
 describe('GipfCapture', () => {

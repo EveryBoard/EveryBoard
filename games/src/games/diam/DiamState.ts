@@ -28,6 +28,7 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
         );
         return new DiamState(board, pieces, turn);
     }
+
     public static pieceIndex(piece: DiamPiece): number {
         switch (piece) {
             case DiamPiece.ZERO_FIRST: return 0;
@@ -49,6 +50,7 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
     public getRemainingPiecesOf(piece: DiamPiece): number {
         return this.remainingPieces[DiamState.pieceIndex(piece)];
     }
+
     public getStackHeight(x: number): number {
         let size: number = 0;
         for (let y: number = 0; y < DiamState.HEIGHT; y++) {
@@ -59,4 +61,5 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
         }
         return size;
     }
+
 }

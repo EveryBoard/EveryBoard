@@ -2,9 +2,9 @@
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneMove } from '../AbaloneMove';

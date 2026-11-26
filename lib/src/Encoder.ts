@@ -10,7 +10,7 @@ export abstract class Encoder<T> {
     public static fromFunctions<U>(
         toJSON: (value: U) => JSONValueWithoutArray,
         fromJSON: (json: JSONValueWithoutArray) => U,
-    ) : Encoder<U> {
+    ): Encoder<U> {
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
                 return toJSON(value);

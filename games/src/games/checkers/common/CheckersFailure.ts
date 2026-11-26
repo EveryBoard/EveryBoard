@@ -18,7 +18,7 @@ export class CheckersFailure {
 
     public static readonly FLYING_CAPTURE_IS_FORBIDDEN_FOR_NORMAL_PIECES: Localized = () => $localize`Flying capture is forbidden for normal pieces!`;
 
-    public static readonly NO_PIECE_CAN_DO_LONG_JUMP: Localized = () => $localize`No piece is allowed to do a long jump`;
+    public static readonly NO_PIECE_CAN_DO_LONG_JUMP: Localized = () => $localize`No piece is allowed to do a long jump!`;
 
     public static readonly CANNOT_MOVE_ORTHOGONALLY: Localized = () => $localize`You cannot move orthogonally!`;
 
