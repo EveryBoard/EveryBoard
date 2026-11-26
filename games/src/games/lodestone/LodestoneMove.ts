@@ -29,16 +29,20 @@ export class LodestoneMove extends MoveCoord {
             Utils.assert(casted.direction != null, 'Invalid encoded LodestoneMove');
             Utils.assert(casted.orientation != null, 'Invalid encoded LodestoneMove');
             Utils.assert(casted.captures != null, 'Invalid encoded LodestoneMove');
-            return new LodestoneMove(Coord.encoder.decode(casted.coord),
-                                     casted.direction as LodestoneDirection,
-                                     casted.orientation as LodestoneOrientation,
-                                     casted.captures as LodestoneCaptures);
+            return new LodestoneMove(
+                Coord.encoder.decode(casted.coord),
+                casted.direction as LodestoneDirection,
+                casted.orientation as LodestoneOrientation,
+                casted.captures as LodestoneCaptures,
+            );
         }
     };
-    public constructor(coord: Coord,
-                       public readonly direction: LodestoneDirection,
-                       public readonly orientation: LodestoneOrientation,
-                       public readonly captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 }) {
+    public constructor(
+        coord: Coord,
+        public readonly direction: LodestoneDirection,
+        public readonly orientation: LodestoneOrientation,
+        public readonly captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 },
+    ) {
         super(coord.x, coord.y);
     }
     public override toString(): string {

@@ -2,11 +2,26 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
-import { Direction } from '../../direction/Direction';
 import { EightDirection } from '../../direction/EightDirection';
 import { EightDirectionSquareTopology } from '../EightDirectionSquareTopology';
+import { TopologyID } from '../TopologyMapper';
 
 describe('EightDirectionSquareTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('SQUARE (8)');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 
@@ -14,10 +29,10 @@ describe('EightDirectionSquareTopology', () => {
             // Given a topology, a coord, and a direction
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.UP;
+            const direction: EightDirection = EightDirection.UP;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction);
+            const result: Coord = topology.getNextCoord(coord, direction);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(2, 2));
@@ -27,11 +42,11 @@ describe('EightDirectionSquareTopology', () => {
             // Given eight direction topology and negative distance
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.RIGHT;
+            const direction: EightDirection = EightDirection.RIGHT;
             const distance: number = 3;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(5, 3));
@@ -41,11 +56,11 @@ describe('EightDirectionSquareTopology', () => {
             // Given eight direction topology and negative distance
             const topology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
             const coord: Coord = new Coord(2, 3);
-            const direction: Direction = EightDirection.UP;
+            const direction: EightDirection = EightDirection.UP;
             const distance: number = -2;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(2, 5));

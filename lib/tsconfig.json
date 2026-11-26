@@ -15,6 +15,12 @@
         "experimentalDecorators": true,
         "types": ["jasmine"]
     },
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs",
+            "moduleResolution": "node"
+        }
+    },
     "include": ["src/**/*.ts"],
     "exclude": ["src/**/*.spec.ts"]
 }

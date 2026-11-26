@@ -38,17 +38,22 @@ describe('MancalaScoreHeuristic', () => {
 
             // When comparing both
             // Then the bigger score should be better
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ZERO,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ZERO,
+                defaultConfig,
+            );
         });
 
         it('should define heuristic bounds', () => {
             // Given the heuristic
             // When computing its bounds on the default config
             const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+
             // Then it should be the maximal score (48) for each player
             expect(bounds.player0Best).toEqual(BoardValue.ofSingle(48, 0));
             expect(bounds.player1Best).toEqual(BoardValue.ofSingle(0, 48));

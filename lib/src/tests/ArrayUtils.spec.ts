@@ -10,6 +10,7 @@ describe('ArrayUtils', () => {
         it('should create an array of the given size only containing the element', () => {
             // When creating an array of a given size with a given initial value
             const array: number[] = ArrayUtils.create(4, 42);
+
             // Then the array has the size and value
             expect(array.length).toBe(4);
             expect(array).toEqual([42, 42, 42, 42]);
@@ -21,8 +22,10 @@ describe('ArrayUtils', () => {
             // Given the copy of an array
             const array: number[] = ArrayUtils.create(4, 0);
             const copy: number[] = ArrayUtils.copy(array);
+
             // When modifying the copy
             copy[1] = 42;
+
             // Then it should not have modified the original array
             expect(array[1]).toBe(0);
         });
@@ -33,8 +36,10 @@ describe('ArrayUtils', () => {
             // Given an array and a key function
             const array: number[] = [0, 1, 2, 4, 2];
             const key: (n: number) => number = Utils.identity;
+
             // When sorting the array according to the key
             ArrayUtils.sortByDescending(array, key);
+
             // Then it should be sorted
             expect(array).toEqual([4, 2, 2, 1, 0]);
         });
@@ -80,8 +85,10 @@ describe('ArrayUtils', () => {
         it('should compare numbers to sort by smaller first', () => {
             // Given an array
             const array: number[] = [3, 2, 1, 0];
+
             // When sorting it with smallerFirst order
             array.sort(ArrayUtils.smallerFirst);
+
             // Then it should be sorted in increasing size
             expect(array).toEqual([0, 1, 2, 3]);
         });
@@ -98,8 +105,10 @@ describe('ArrayUtils', () => {
             // Given an array and a metric
             const array: number[] = [0, 3, 1, 2, 3];
             const metric: (value: number) => number = Utils.identity;
+
             // When extracting the maximums
             const maximums: number[] = ArrayUtils.maximumsBy(array, metric);
+
             // Then it should return all the maximum elements
             expect(maximums).toEqual([3, 3]);
         });
@@ -109,8 +118,10 @@ describe('ArrayUtils', () => {
         it('should count the given value', () => {
             // Given an array
             const array: number[] = [0, 1, 2, 3, 3];
+
             // When counting the number of times an element is present
             const count: number = ArrayUtils.count(array, 3);
+
             // Then it should return the correct value
             expect(count).toBe(2);
         });
@@ -120,11 +131,13 @@ describe('ArrayUtils', () => {
         it('should count the given value', () => {
             // Given an array
             const array: number[] = [0, 1, 2, 3, 4];
+
             // When counting the number of times a number pass the predicate
             const count: number = ArrayUtils.countByPredicate(
                 array,
                 (value: number) => value % 2 === 0,
             );
+
             // Then it should return the correct value
             expect(count).toBe(3);
         });
@@ -243,8 +256,10 @@ describe('ArrayUtils', () => {
             // Given a list smaller than another
             const smaller: number[] = [1];
             const greater: number[] = [2];
+
             // When taking the min
             const result: ReadonlyArray<number> = ArrayUtils.min(smaller, greater);
+
             // Then it should take the smallest
             expect(result).toEqual(smaller);
         });
@@ -252,8 +267,10 @@ describe('ArrayUtils', () => {
             // Given a list smaller than another
             const smaller: number[] = [1];
             const greater: number[] = [2];
+
             // When taking the min
             const result: ReadonlyArray<number> = ArrayUtils.min(greater, smaller);
+
             // Then it should take the smallest
             expect(result).toEqual(smaller);
         });
@@ -264,8 +281,10 @@ describe('ArrayUtils', () => {
             // Given a list greater than another
             const smaller: number[] = [1];
             const greater: number[] = [2];
+
             // When taking the max
             const result: ReadonlyArray<number> = ArrayUtils.max(smaller, greater);
+
             // Then it should take the smallest
             expect(result).toEqual(greater);
         });
@@ -273,8 +292,10 @@ describe('ArrayUtils', () => {
             // Given a list greater than another
             const smaller: number[] = [1];
             const greater: number[] = [2];
+
             // When taking the max
             const result: ReadonlyArray<number> = ArrayUtils.max(greater, smaller);
+
             // Then it should take the smallest
             expect(result).toEqual(greater);
         });

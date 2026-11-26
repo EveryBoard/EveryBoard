@@ -43,7 +43,8 @@ describe('MoveCoordToCoord', () => {
         it('should have a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(
                 MoveWithTwoCoords.getFallibleEncoder(myMoveConstructor),
-                new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
+                new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)),
+            );
         });
     });
 

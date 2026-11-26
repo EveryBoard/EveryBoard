@@ -31,12 +31,12 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         return new AbstractState([[]], 0);
     }
 
-    public override applyLegalMove(move: P4Move,
-                                   state: AbstractState,
-                                   _config: RulesConfig,
-                                   _legality: void)
-    : AbstractState
-    {
+    public override applyLegalMove(
+        move: P4Move,
+        state: AbstractState,
+        _config: RulesConfig,
+        _legality: void,
+    ): AbstractState {
         const board: readonly number[] = state.board[0];
         return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
@@ -83,6 +83,7 @@ describe('Rules', () => {
 
             // When checking if the move is legal
             const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove, defaultConfig);
+
             // Then it should fail with the expected reason
             expect(legality.isFailure()).toBeTrue();
             expect(legality.getReason()).toEqual('some reason');

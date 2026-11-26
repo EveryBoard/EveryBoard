@@ -62,6 +62,7 @@ describe('TeekoComponent', () => {
             // Given a board with a last move that is a drop
             const move: TeekoMove = TeekoDropMove.from(new Coord(2, 2));
             await testUtils.expectMoveSuccess('#click-2-2', move);
+
             // When rendering the board
             // Then the last move should be highlighted
             testUtils.expectElementToHaveClasses('#piece-2-2', ['base', 'player0-fill', 'last-move-stroke']);

@@ -29,9 +29,11 @@ describe('AwaleScoreMinimax', () => {
     it('should not throw at first choice', () => {
         const node: MancalaNode = rules.getInitialNode(defaultConfig);
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
-        const legality: MGPValidation = rules.isLegal(bestMove,
-                                                      node.gameState,
-                                                      defaultConfig);
+        const legality: MGPValidation = rules.isLegal(
+            bestMove,
+            node.gameState,
+            defaultConfig,
+        );
         expect(legality.isSuccess()).toBeTrue();
     });
 
@@ -43,8 +45,10 @@ describe('AwaleScoreMinimax', () => {
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
         const node: MancalaNode = new MancalaNode(state);
+
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
+
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2, 0)));
     });
@@ -57,8 +61,10 @@ describe('AwaleScoreMinimax', () => {
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
         const node: MancalaNode = new MancalaNode(state);
+
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
+
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(4, 0)));
     });
@@ -71,8 +77,10 @@ describe('AwaleScoreMinimax', () => {
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
         const node: MancalaNode = new MancalaNode(state);
+
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
+
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0, 0)));
     });

@@ -9,8 +9,7 @@ import { GoPiece } from './GoPiece';
 import { GoState } from './GoState';
 
 export abstract class AbstractGoHeuristic<C extends AbstractGoConfig>
-    extends PlayerMetricHeuristic<GoMove, GoState, C>
-{
+    extends PlayerMetricHeuristic<GoMove, GoState, C> {
 
     public constructor(private readonly rules: AbstractGoRules<C>) {
         super();

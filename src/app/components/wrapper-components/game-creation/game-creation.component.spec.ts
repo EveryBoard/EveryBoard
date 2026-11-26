@@ -106,6 +106,7 @@ describe('GameCreationComponent', () => {
     it('should initialize properly', fakeAsync(async() => {
         // Given a component
         expect(component).toBeTruthy();
+
         // When it is loaded
         // Then it should not trigger any error
         await awaitComponentInitialization();
@@ -123,7 +124,8 @@ describe('GameCreationComponent', () => {
             async() => {
                 await receiveError('already-subscribed');
                 await expectValidRouting(router, ['/'], WelcomeComponent);
-            });
+            },
+        );
     }));
 
     it('should go to /notFound if it receives unknown-game from the server', fakeAsync(async() => {
@@ -164,7 +166,8 @@ describe('GameCreationComponent', () => {
             async() => {
                 await receiveError('unknown-message');
                 await expectValidRouting(router, ['/'], WelcomeComponent);
-            });
+            },
+        );
 
     }));
 
@@ -210,6 +213,7 @@ describe('GameCreationComponent', () => {
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     await clickElement('#play-against-ai');
                 });
+
                 // Then it should navigate to local game
                 await expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
             }));
@@ -297,6 +301,7 @@ describe('GameCreationComponent', () => {
                 expect(findElement('#proposeConfig').nativeElement.disabled).withContext(contextBefore).toBeTruthy();
 
                 spyOn(configRoomService, 'selectOpponent');
+
                 // When choosing the opponent
                 await chooseOpponent();
                 testUtils.detectChanges();
@@ -557,7 +562,8 @@ describe('GameCreationComponent', () => {
                 // Given a game creation where the config has been proposed
                 await awaitComponentInitialization();
                 configRoomService.mockConfigRoomUpdate(
-                    ConfigRoomMocks.withProposedConfig(defaultConfig));
+                    ConfigRoomMocks.withProposedConfig(defaultConfig),
+                );
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');
@@ -634,7 +640,8 @@ describe('GameCreationComponent', () => {
                 async() => {
                     await receiveCancellation();
                     await expectValidRouting(router, ['/'], WelcomeComponent);
-                });
+                },
+            );
         }));
 
         it('should update the view accordingly when receiving blitz update', fakeAsync(async() => {

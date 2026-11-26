@@ -47,6 +47,7 @@ describe('DvonnScoreHeuristic', () => {
         // Given the heuristic
         // When computing its bounds on the default config
         const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+
         // Then it should be the maximal score (49) for each player
         expect(bounds.player0Best).toEqual(BoardValue.ofSingle(49, 0));
         expect(bounds.player1Best).toEqual(BoardValue.ofSingle(0, 49));

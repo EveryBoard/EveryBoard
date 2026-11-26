@@ -2,7 +2,7 @@ import { FourStatePiece, SimpleGameStateWithTable } from '@everyboard/games';
 import { EightDirection } from '@everyboard/games';
 import { Topology } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
-import { RectangleShape } from '@everyboard/games';
+import { RectangularBoardShape } from '@everyboard/games';
 import { ReversiConfig } from '@everyboard/games/toric-reversi';
 import { ReversiMove } from '@everyboard/games/toric-reversi';
 import { ReversiState } from '@everyboard/games/toric-reversi';
@@ -17,7 +17,7 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ToricReversiRules.get().getDefaultRulesConfig();
 const eightDirectionTopology: Topology<EightDirection> = new EightDirectionSquareTopology();
-const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, eightDirectionTopology);
+const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, eightDirectionTopology);
 
 export class ToricReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

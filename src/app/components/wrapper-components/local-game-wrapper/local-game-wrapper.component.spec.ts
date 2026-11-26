@@ -147,6 +147,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Given the initial board
         // When doing a move
         await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+
         // Then the turn should be incremented
         expectTurnToBe(1);
     }));
@@ -186,8 +187,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         ];
         const state: P4State = new P4State(board, 41);
         await testUtils.setupState(state);
+
         // When finishing the game
         await testUtils.expectMoveSuccess('#click-0-0', P4Move.of(0));
+
         // Then it should not be possible to click again
         await testUtils.expectClickFailure('#click-3-0', GameWrapperMessages.GAME_HAS_ENDED());
     }));
@@ -576,6 +579,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+
             // When clicking on AI then its level
             testUtils.selectChildElementOfDropDown('#player-select-1', 'player-1-ai-minimax');
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
@@ -604,10 +608,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
             const minimax: Minimax<P4Move, P4State, P4Config> =
-                new Minimax($localize`Minimax`,
-                            P4Rules.get(),
-                            new P4Heuristic(),
-                            new P4OrderedMoveGenerator());
+                new Minimax(
+                    $localize`Minimax`,
+                    P4Rules.get(),
+                    new P4Heuristic(),
+                    new P4OrderedMoveGenerator(),
+                );
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.of(0));
 
             // When it is the turn of the bugged AI
@@ -895,8 +901,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given the component with AI infos enabled and at least one turn played
             localStorage.setItem('displayAIInfo', 'true');
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+
             // When clicking on "view tree from current node"
             await testUtils.clickElement('#viewTreeFromCurrentNode');
+
             // Then it should open an external URL
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];
@@ -924,8 +932,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             chooseAIOrHuman(Player.ZERO, 'mcts');
             chooseFirstAILevel(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
+
             // When clicking on "view tree from current node"
             await testUtils.clickElement('#viewTreeFromCurrentNode');
+
             // Then it should open an external URL
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - 1/1 = 100%", style=filled, fillcolor="white"];
@@ -940,8 +950,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             localStorage.setItem('displayAIInfo', 'true');
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+
             // When clicking on "view tree from previous node"
             await testUtils.clickElement('#viewTreeFromPreviousNode');
+
             // Then it should open an external URL
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];

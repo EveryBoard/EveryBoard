@@ -2,7 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Direction, EightDirection } from '@everyboard/games';
-import { RectangleShape } from '@everyboard/games';
+import { RectangularBoardShape } from '@everyboard/games';
 import { EightDirectionSquareTopology } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
@@ -25,7 +25,7 @@ fdescribe('ReversiComponent', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-    const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
+    const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, ordinalTopology);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');

@@ -17,14 +17,14 @@ import { MGPMap, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib'
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { TopologicGameComponent } from '../../../components/game-components/topologic-game-component/TopologicGameComponent';
 
-export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
-    extends TopologicGameComponent<R,
-                                   ReversiMove,
-                                   ReversiState<Direction>,
-                                   FourStatePiece,
-                                   ReversiConfig,
-                                   ReversiLegalityInformation>
-{
+export abstract class AbstractReversiComponent<R extends TopologicReversiRules> extends TopologicGameComponent<
+    R,
+    ReversiMove,
+    ReversiState<Direction>,
+    FourStatePiece,
+    ReversiConfig,
+    ReversiLegalityInformation
+> {
     protected readonly lastMove: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
     private readonly captured: WritableSignal<Set<Coord>> = signal(new Set());
@@ -55,19 +55,19 @@ export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        console.log('updateBoard')
+        console.log('updateBoard');
         const state: ReversiState<Direction> = this.state();
 
         // this.board = state.getCopiedBoard();
 
-        console.log('couilles de mers')
+        console.log('couilles de mers');
         this.scores = MGPOptional.of(state.countScore());
-        console.log('crotenpobit')
+        console.log('crotenpobit');
         this.canPass = this.rules.playerCanOnlyPass(state);
     }
 
     protected override async showLastMove(move: ReversiMove): Promise<void> {
-        console.log('showLastMove setting', move.coord.toString())
+        console.log('showLastMove setting', move.coord.toString());
         this.lastMove.set(MGPOptional.of(move.coord));
         const player: Player = this.state().getCurrentOpponent();
         this.captured.set(
@@ -76,7 +76,7 @@ export abstract class AbstractReversiComponent<R extends TopologicReversiRules>
     }
 
     public override hideLastMove(): void {
-        console.log('hideLastMove')
+        console.log('hideLastMove');
         this.captured.set(new Set());
         this.lastMove.set(MGPOptional.empty());
     }

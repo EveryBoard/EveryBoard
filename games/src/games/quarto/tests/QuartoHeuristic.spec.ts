@@ -37,6 +37,7 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+
         // Then the heuristic should assign 0 as board value
         const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state), defaultConfig);
         expect(boardValue.metrics).toEqual([0]);
@@ -52,12 +53,15 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+
         // Then the heuristic should detect the previctory
-        HeuristicUtils.expectStateToBePreVictory(state,
-                                                 new QuartoMove(1, 0, AAAA),
-                                                 Player.ONE,
-                                                 [heuristic],
-                                                 defaultConfig);
+        HeuristicUtils.expectStateToBePreVictory(
+            state,
+            new QuartoMove(1, 0, AAAA),
+            Player.ONE,
+            [heuristic],
+            defaultConfig,
+        );
     });
 
     it('should recognize "3 3" as pre-victory', () => {

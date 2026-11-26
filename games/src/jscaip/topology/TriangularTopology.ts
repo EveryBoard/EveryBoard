@@ -5,6 +5,7 @@ import { Vector } from '../Vector';
 import { TriangularDirection } from '../direction/TriangularDirection';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 export class TriangularTopology implements Topology<TriangularDirection> {
 
@@ -17,11 +18,30 @@ export class TriangularTopology implements Topology<TriangularDirection> {
         TriangularDirection.DOWN_LEFT,
     ]);
 
+    public getId(): TopologyID {
+        return 'TRIANGULAR';
+    }
+
     public getDirections(): Set<TriangularDirection> {
         return this.directions;
     }
 
-    public getTopologyNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
+    // TODO FOR REVIEW: rename getTopologicNextCoord so we know NOT to use it outside BoardShape class ?
+    public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
+        if (distance === 0) {
+            return coord;
+        } else {
+            const distanceSign: 1 | -1 = distance < 0 ? -1 : +1;
+            const nextCoord: Coord = this.getNextImmediateNeighborCoord(coord, direction, distanceSign);
+            const nextDistance: number = distance - distanceSign;
+            return this.getNextCoord(nextCoord, direction, nextDistance);
+        }
+    }
+
+    private getNextImmediateNeighborCoord(coord: Coord, direction: TriangularDirection, distance: 1 | -1): Coord {
+        if (distance === -1) {
+            return this.getNextImmediateNeighborCoord(coord, direction.getOpposite(), 1);
+        }
         if (direction.y === 0) {
             return coord.getNext(direction, distance);
         }

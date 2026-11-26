@@ -77,6 +77,7 @@ describe('SixState', () => {
                 [O, _, _, _, _],
             ];
             const state: SixState = SixState.ofRepresentation(representation, 40);
+
             // When trying to switch an empty coord
             // Then it should throw and call logError
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

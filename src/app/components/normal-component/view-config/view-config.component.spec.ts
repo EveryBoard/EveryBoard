@@ -45,8 +45,10 @@ describe('ViewConfigComponent', () => {
         // Given a game with default config
         testUtils.setInput('rulesConfig', defaultConfig);
         testUtils.expectElementNotToExist('#rules-config-component');
+
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
+
         // Then it should show rules config, with the default config selected
         testUtils.expectElementToExist('#rules-config-component');
         const rulesConfigurationComponent: RulesConfigurationComponent =
@@ -60,8 +62,10 @@ describe('ViewConfigComponent', () => {
         testUtils.expectElementNotToExist('#rules-config-component');
         await testUtils.clickElement('#show-config');
         testUtils.expectElementToExist('#rules-config-component');
+
         // When clicking on "close config" button
         await testUtils.clickElement('#close-config');
+
         // Then it should close rules config
         testUtils.expectElementNotToExist('#rules-config-component');
     }));
@@ -69,8 +73,10 @@ describe('ViewConfigComponent', () => {
     it('should show config when clicking on "show config" (custom config)', fakeAsync(async() => {
         // Given a game with custom config
         testUtils.setInput('rulesConfig', customConfig);
+
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
+
         // Then it should rules config, with the custom config selected
         const rulesConfigurationComponent: RulesConfigurationComponent =
             testUtils.findElementByDirective(RulesConfigurationComponent).componentInstance;

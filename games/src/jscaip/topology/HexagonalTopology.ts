@@ -4,6 +4,7 @@ import { Coord } from '../Coord';
 import { HexaDirection } from '../direction/HexaDirection';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 export class HexagonalTopology implements Topology<HexaDirection> { // TODO: Hexagon or Hexagonal ?
 
@@ -16,18 +17,22 @@ export class HexagonalTopology implements Topology<HexaDirection> { // TODO: Hex
         HexaDirection.UP,
     ]);
 
+    public getId(): TopologyID {
+        return 'HEXAGONAL';
+    }
+
     public getDirections(): Set<HexaDirection> {
         return this.directions;
     }
 
-    public getTopologyNextCoord(coord: Coord, direction: HexaDirection, distance: number = 1): Coord {
+    public getNextCoord(coord: Coord, direction: HexaDirection, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: HexaDirection) => this.getTopologyNextCoord(coord, direction),
+                (direction: HexaDirection) => this.getNextCoord(coord, direction),
             ),
         ]);
     }

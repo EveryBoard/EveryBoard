@@ -3,8 +3,8 @@ import { MGPOptional } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { NInARowHelper } from './NInARowHelper';
 import { PlayerOrNone } from './Player';
+import { TopologicBoardShape } from './board-shape/TopologicBoardShape';
 import { Direction } from './direction/Direction';
-import { TopologicShape } from './shape/TopologicShape';
 
 export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Direction>
     extends NInARowHelper<T, D>
@@ -13,7 +13,7 @@ export class TopologicNInARowHelper<T extends NonNullable<unknown>, D extends Di
     public constructor(
         getOwner: (piece: T) => PlayerOrNone,
         N: number,
-        public readonly shape: TopologicShape<D>,
+        public readonly shape: TopologicBoardShape<D>,
     ) {
         super(getOwner, N, shape.getTopology().getDirections().toList());
     }

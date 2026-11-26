@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 
-export interface Shape<D extends Direction> {
+export interface BoardShape<D extends Direction> {
 
     getCenters(): Coord[];
 

@@ -53,13 +53,15 @@ describe('LobbyComponent', () => {
                 TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
             testUtils.detectChanges();
             tick(0);
+
             // When it receives an already-subscribed error from the backend
             // Then it should toast and redirect to /
             await testUtils.expectToDisplayCriticalMessage(
                 GameActionFailure.YOU_ALREADY_HAVE_ANOTHER_TAB(),
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'already-subscribed' });
-                });
+                },
+            );
             await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
 
@@ -69,13 +71,15 @@ describe('LobbyComponent', () => {
                 TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
             testUtils.detectChanges();
             tick(0);
+
             // When it receives an error from the backend
             // Then it should toast and redirect to /
             await testUtils.expectToDisplayCriticalMessage(
                 GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'),
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'some-error' });
-                });
+                },
+            );
             await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
     });

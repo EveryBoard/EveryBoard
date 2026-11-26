@@ -43,11 +43,15 @@ describe('P4Heuristic', () => {
         ];
         const strongState: P4State = new P4State(strongBoard, 0);
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
     it('should count three point for the corner', () => {
@@ -134,6 +138,7 @@ describe('P4Heuristic', () => {
         // Given the default config
         // When computing the bounds
         const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+
         // Then it should 2 * the number of squares
         const expectedHeuristicValue: number = 2 * defaultConfig.width * defaultConfig.height;
         const expectedBounds: HeuristicBounds<BoardValue> = {

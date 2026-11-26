@@ -3,9 +3,9 @@ import { HexaOrientation } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-import { BaseLayout } from './Layout';
+import { Layout } from './Layout';
 
-export class HexaLayout extends BaseLayout {
+export class HexaLayout extends Layout {
 
     public constructor(
         public readonly size: number,

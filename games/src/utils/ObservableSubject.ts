@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs'; // TODO: create ticket to mo
 export class ObservableSubject<T> {
     public constructor(
         public subject: BehaviorSubject<T>,
-        public observable: Observable<T>) {
+        public observable: Observable<T>,
+    ) {
     }
 }

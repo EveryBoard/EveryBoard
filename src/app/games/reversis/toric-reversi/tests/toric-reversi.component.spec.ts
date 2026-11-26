@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Direction, EightDirection, EightDirectionSquareTopology, FourStatePiece, Table } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
-import { TorusShape } from '@everyboard/games';
+import { ToricBoardShape } from '@everyboard/games';
 import { ReversiMove } from '@everyboard/games/toric-reversi';
 import { ReversiState } from '@everyboard/games/toric-reversi';
 
@@ -20,7 +20,7 @@ describe('ToricReversiComponent', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-    const torusShape: TorusShape<EightDirection> = new TorusShape(8, 8, ordinalTopology);
+    const torusShape: ToricBoardShape<EightDirection> = new ToricBoardShape(8, 8, ordinalTopology);
     // TODO: toric shape, not torus shape
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ToricReversiComponent>('ToricReversi');

@@ -64,6 +64,7 @@ describe('TaflPieceHeuristic', () => {
         // Given the default config
         // When computing the bounds
         const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+
         // Then it should 2 * the number of squares
         const expectedBounds: HeuristicBounds<BoardValue> = {
             player0Best: BoardValue.ofSingle(24, 0),

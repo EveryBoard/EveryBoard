@@ -4,9 +4,9 @@ import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './TopologicShape';
+import { TopologicBoardShape } from './TopologicBoardShape';
 
-export class RectangleShape<D extends Direction> extends TopologicShape<D> {
+export class RectangularBoardShape<D extends Direction> extends TopologicBoardShape<D> {
 
     public constructor(
         public readonly width: number,
@@ -63,7 +63,7 @@ export class RectangleShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
-        const next: Coord = this.getTopology().getTopologyNextCoord(coord, direction, distance);
+        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
         if (this.isOnBoard(next)) {
             return MGPOptional.of(next);
         } else {

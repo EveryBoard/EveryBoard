@@ -217,12 +217,14 @@ describe('ZoomedGoComponent', () => {
         // Then it should have 1 zoom 1
         testUtils.expectElementToExist('#zoom-0');
         testUtils.expectElementToExist('#zoom-0-zx-0-zy-0');
+
         // Then it should have 4 zoom 1
         testUtils.expectElementToExist('#zoom-1');
         testUtils.expectElementToExist('#zoom-1-zx-0-zy-0');
         testUtils.expectElementToExist('#zoom-1-zx-0-zy-1');
         testUtils.expectElementToExist('#zoom-1-zx-1-zy-0');
         testUtils.expectElementToExist('#zoom-1-zx-1-zy-1');
+
         // Then it should have 9 zoom 1
         testUtils.expectElementToExist('#zoom-2');
         testUtils.expectElementToExist('#zoom-2-zx-0-zy-0');

@@ -11,10 +11,11 @@ export class ReversiMinimax<R extends TopologicReversiRules>
     extends Minimax<ReversiMove, ReversiState<Direction>, ReversiConfig, ReversiLegalityInformation>
 {
     public constructor(rules: R) {
-        super($localize`Minimax`,
-              rules,
-              new ReversiHeuristic(rules),
-              new ReversiMoveGenerator(rules),
+        super(
+            $localize`Minimax`,
+            rules,
+            new ReversiHeuristic(rules),
+            new ReversiMoveGenerator(rules),
         );
     }
 }

@@ -40,9 +40,11 @@ describe('PentagoMoveGenerator', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)),
-                                                  MGPOptional.of(PentagoMove.rotationless(0, 0)));
+        const node: PentagoNode = new PentagoNode(
+            state,
+            MGPOptional.of(rules.getInitialNode(defaultConfig)),
+            MGPOptional.of(PentagoMove.rotationless(0, 0)),
+        );
         /*
          * when calculating the list of moves, then there should be 105
          * so: 35 without any rotation
@@ -67,8 +69,10 @@ describe('PentagoMoveGenerator', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)));
+        const node: PentagoNode = new PentagoNode(
+            state,
+            MGPOptional.of(rules.getInitialNode(defaultConfig)),
+        );
         /*
          * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
@@ -91,8 +95,10 @@ describe('PentagoMoveGenerator', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)));
+        const node: PentagoNode = new PentagoNode(
+            state,
+            MGPOptional.of(rules.getInitialNode(defaultConfig)),
+        );
 
         /*
          * when calculating the list of moves

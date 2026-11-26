@@ -46,11 +46,15 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, O, X, _, _, _, O, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ZERO,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ZERO,
+                defaultConfig,
+            );
         });
 
         it(`at equal number of surrounded ennemies, should prefer that surrounded ennemy than to have less freedom`, () => {
@@ -74,11 +78,15 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, X, O, _, _, _, X, O, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ONE,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ONE,
+                defaultConfig,
+            );
         });
 
         it(`should prefer to have more freedoms for other pieces (at equal number of freedoms for surrounded ennemies)`, () => {
@@ -102,11 +110,15 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                 [N, N, O, X, _, _, O, _, X, N, N],
             ];
             const strongState: SaharaState = new SaharaState(strongBoard, 1);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                                   weakState, MGPOptional.empty(),
-                                                                   strongState, MGPOptional.empty(),
-                                                                   Player.ZERO,
-                                                                   defaultConfig);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+                heuristic,
+                weakState,
+                MGPOptional.empty(),
+                strongState,
+                MGPOptional.empty(),
+                Player.ZERO,
+                defaultConfig,
+            );
         });
 
     });

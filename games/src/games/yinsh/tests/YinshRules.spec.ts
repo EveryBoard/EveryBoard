@@ -35,6 +35,7 @@ describe('YinshRules', () => {
         it('should initially allow placing rings', () => {
             // Given the initial state
             const state: YinshState = YinshRules.get().getInitialState();
+
             // When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
@@ -186,6 +187,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When moving a ring over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 5)), []);
 
@@ -224,6 +226,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When moving the ring over the empty space and then over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
@@ -339,12 +342,17 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a capture but not taking a ring
-            const move: YinshMove = new YinshMove([],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 7)),
-                                                  [YinshCapture.of(new Coord(3, 2),
-                                                                   new Coord(3, 6),
-                                                                   MGPOptional.of(new Coord(6, 3)))]);
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 7)),
+                [YinshCapture.of(
+                    new Coord(3, 2),
+                    new Coord(3, 6),
+                    MGPOptional.of(new Coord(6, 3)),
+                )],
+            );
+
             // Then the move should be illegal
             const reason: string = YinshFailure.CAPTURE_SHOULD_TAKE_RING();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -367,13 +375,19 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When performing a capture
-            const move: YinshMove = new YinshMove([],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 7)),
-                                                  [YinshCapture.of(new Coord(3, 2),
-                                                                   new Coord(3, 6),
-                                                                   MGPOptional.of(new Coord(5, 3)))]);
+            const move: YinshMove = new YinshMove(
+                [],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 7)),
+                [YinshCapture.of(
+                    new Coord(3, 2),
+                    new Coord(3, 6),
+                    MGPOptional.of(new Coord(5, 3)),
+                )],
+            );
+
             // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
@@ -409,13 +423,18 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When performing multiple captures in one move
-            const move: YinshMove = new YinshMove([
-                YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(6, 2))),
-                YinshCapture.of(new Coord(4, 2), new Coord(4, 6), MGPOptional.of(new Coord(7, 2))),
-            ],
-                                                  new Coord(5, 2), MGPOptional.of(new Coord(5, 3)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [
+                    YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(6, 2))),
+                    YinshCapture.of(new Coord(4, 2), new Coord(4, 6), MGPOptional.of(new Coord(7, 2))),
+                ],
+                new Coord(5, 2),
+                MGPOptional.of(new Coord(5, 3)),
+                [],
+            );
+
             // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
@@ -503,12 +522,17 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When aligning 5 of the opponent's markers and trying to capture them
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
-                                                                   new Coord(3, 7),
-                                                                   MGPOptional.of(new Coord(4, 2)))],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(3, 3)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(
+                    new Coord(3, 3),
+                    new Coord(3, 7),
+                    MGPOptional.of(new Coord(4, 2)),
+                )],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(3, 3)),
+                [],
+            );
+
             // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -532,12 +556,17 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a move that cannot capture anything, and yet trying to capture something
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
-                                                                   new Coord(3, 7),
-                                                                   MGPOptional.of(new Coord(4, 2)))],
-                                                  new Coord(3, 2),
-                                                  MGPOptional.of(new Coord(4, 2)),
-                                                  []);
+            const move: YinshMove = new YinshMove(
+                [YinshCapture.of(
+                    new Coord(3, 3),
+                    new Coord(3, 7),
+                    MGPOptional.of(new Coord(4, 2)),
+                )],
+                new Coord(3, 2),
+                MGPOptional.of(new Coord(4, 2)),
+                [],
+            );
+
             // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -564,6 +593,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -585,6 +615,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -606,6 +637,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -627,6 +659,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             // Then there should be exactly one capture
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
@@ -650,8 +683,10 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
+
             // Then there should be exactly 2 captures
             expect(captures.length).toBe(2);
             expect(captures.some((c: YinshCapture): boolean =>
@@ -676,8 +711,10 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When looking for possible captures
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
+
             // Then there should be exactly one
             expect(captures.length).toBe(1);
         });

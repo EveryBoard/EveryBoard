@@ -15,6 +15,7 @@ describe('OptimizedSet', () => {
         it('should create empty set', () => {
             // When creating an empty set
             const set: PairSet = new PairSet();
+
             // Then it should be created with the right number of elements
             expect(set).toBeDefined();
             expect(set.size()).toBe(0);
@@ -23,6 +24,7 @@ describe('OptimizedSet', () => {
         it('should create unitary set', () => {
             // When creating a unitary set
             const set: PairSet = new PairSet([new Pair(1, 1)]);
+
             // Then it should be created with the right number of elements
             expect(set).toBeDefined();
             expect(set.size()).toBe(1);
@@ -31,6 +33,7 @@ describe('OptimizedSet', () => {
         it('should create unitary set with duplicate elements', () => {
             // When creating set with h duplicate elements
             const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 1)]);
+
             // Then it should be created with the right number of elements
             expect(set).toBeDefined();
             expect(set.size()).toBe(1);
@@ -39,6 +42,7 @@ describe('OptimizedSet', () => {
         it('should create set with multiple elements', () => {
             // When creating a set with multiple elements
             const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 2)]);
+
             // Then it should be created with the right number of elements
             expect(set).toBeDefined();
             expect(set.size()).toBe(2);
@@ -50,8 +54,10 @@ describe('OptimizedSet', () => {
             // Given a set
             const set: PairSet = new PairSet([new Pair(1, 1)]);
             expect(set.size()).toBe(1);
+
             // When adding an element to it
             const otherSet: PairSet = set.addElement(new Pair(1, 2));
+
             // Then the new element should be added
             expect(otherSet.size()).toBe(2);
         });
@@ -61,6 +67,7 @@ describe('OptimizedSet', () => {
         it('should find elements in the set', () => {
             // Given a set with elements
             const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 2)]);
+
             // When checking if it contains something
             // Then it should find the elements contained in the set
             expect(set.contains(new Pair(1, 1))).toBeTrue();
@@ -74,6 +81,7 @@ describe('OptimizedSet', () => {
         it('should iterate over the set elements', () => {
             // Given a set with elements
             const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 2)]);
+
             // When iterating over the elements
             // Then it should go over all elements
             const elementsSeen: Pair[] = [];

@@ -480,6 +480,7 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, O, O, O],
                     [_, _, _, _, _, O, O, O, _],
                 ], 2, defaultCastles);
+
                 // When trying normal jump
                 const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
 

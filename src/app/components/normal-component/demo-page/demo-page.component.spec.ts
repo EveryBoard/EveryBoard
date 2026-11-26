@@ -43,6 +43,7 @@ describe('DemoPageComponent', () => {
         testUtils.getComponent().numberOfColumns.setValue(newNumberOfColumns);
         testUtils.detectChanges();
         tick(1);
+
         // Then the right number of columns should have been regenerated
         expect(testUtils.findElements('.column').length).toBe(newNumberOfColumns);
     }));

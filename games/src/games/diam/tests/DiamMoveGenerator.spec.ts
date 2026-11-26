@@ -35,6 +35,7 @@ describe('DiamMoveGenerator', () => {
             [A1, __, __, __, __, __, __, A2],
         ], 4);
         const node: DiamNode = new DiamNode(state);
+
         // Then there are 16 + 4 move
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(20);
     });
@@ -48,6 +49,7 @@ describe('DiamMoveGenerator', () => {
             [__, __, __, __, __, __, __, B2],
         ], 4);
         const node: DiamNode = new DiamNode( state);
+
         // Then there are 14 + 4 move
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(18);
     });

@@ -1,17 +1,34 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines-per-function */
-
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { TriangularDirection } from '../../direction/TriangularDirection';
+import { TopologyID } from '../TopologyMapper';
 import { TriangularTopology } from '../TriangularTopology';
+
+import { GetNextCoordTestCase } from './GetNextCoordTestCase';
 
 describe('TriangularTopology', () => {
 
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: TriangularTopology = new TriangularTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('TRIANGULAR');
+        });
+
+    });
+
     describe('getNextCoord', () => {
 
-        const testCases: { start: Coord; distance: number; direction: TriangularDirection; expectedDestination: Coord }[] = [
+        const testCases: GetNextCoordTestCase<TriangularDirection>[] = [
             // Even coords:
             //     - left & up-left are the same at distance 1
             { start: new Coord(8, 8), distance: 1, direction: TriangularDirection.LEFT, expectedDestination: new Coord(7, 8) },
@@ -49,17 +66,31 @@ describe('TriangularTopology', () => {
             { start: new Coord(7, 8), distance: 2, direction: TriangularDirection.DOWN_RIGHT, expectedDestination: new Coord(8, 9) },
         ];
         for (const testCase of testCases) {
-            it(`${ testCase.start.toString() } + ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
+            it(`${ testCase.start.toString() } + ${ testCase.distance } * ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
                 // Given callResult.start as our coord
                 //       callResult.direction as our direction
                 // and triangular topology
                 const topology: TriangularTopology = new TriangularTopology();
 
                 // When evaluating next coord
-                const result: Coord = topology.getTopologyNextCoord(testCase.start, testCase.direction);
+                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction, testCase.distance);
 
                 // Then the result should be correct
                 expect(result).toEqual(testCase.expectedDestination);
+            });
+
+            it(`${ testCase.expectedDestination.toString() } - ${ testCase.distance } * ${ testCase.direction.toString() } = ${ testCase.start.toString() }`, () => {
+                // Given callResult.start as our coord
+                //       callResult.direction as our direction
+                // and triangular topology
+                const topology: TriangularTopology = new TriangularTopology();
+
+                // When evaluating next coord back and forth
+                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction, testCase.distance);
+                const original: Coord = topology.getNextCoord(result, testCase.direction, -1 * testCase.distance);
+
+                // Then the result should be correct
+                expect(original).toEqual(testCase.start);
             });
         }
     });

@@ -48,10 +48,10 @@ export class OGWCTimeManagerService {
     // Whether the game is finished
     private gameEnd: boolean = false;
 
-    public setTimers(moveTimers: [TimerComponent, TimerComponent],
-                     gameTimers: [TimerComponent, TimerComponent])
-    : void
-    {
+    public setTimers(
+        moveTimers: [TimerComponent, TimerComponent],
+        gameTimers: [TimerComponent, TimerComponent],
+    ): void {
         this.moveTimers = moveTimers;
         this.gameTimers = gameTimers;
         this.allTimers = moveTimers.concat(gameTimers);

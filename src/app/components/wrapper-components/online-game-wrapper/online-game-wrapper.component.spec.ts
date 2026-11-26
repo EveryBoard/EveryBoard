@@ -142,8 +142,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('should have a GameCreationComponent before starting', fakeAsync(async() => {
             // Given a component without accepted config
             await prepareComponent(false);
+
             // When the game is not started yet
             expect(wrapper.gameStarted()).toBeFalse();
+
             // Then game creation should exist
             const gameCreationId: DebugElement = testUtils.findElement('#gameCreation');
             expect(gameCreationId).withContext('GameCreationComponent id should be present after ngOnInit').toBeTruthy();
@@ -155,8 +157,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('should not have game tags before starting', fakeAsync(async() => {
             // Given a component where the game is not started
             await prepareComponent(false);
+
             // When the game is not started yet
             expect(wrapper.gameStarted()).toBeFalse();
+
             // Then the p4 and chat tags should not be present
             testUtils.expectElementNotToExist('app-p4');
             testUtils.expectElementNotToExist('app-chat');
@@ -172,6 +176,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component loaded with non creator
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await prepareComponent(true);
+
             // When it is loaded
             testUtils.detectChanges();
 

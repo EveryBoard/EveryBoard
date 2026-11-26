@@ -41,13 +41,18 @@ describe('DvonnMaxStacksHeuristic', () => {
             [_, _, _, _, _, _, _, _, _, _, N],
             [_, _, _, _, _, _, _, _, _, N, N],
         ], 0, false);
+
         // When computing their values
         // Then it should prefer having more stacks
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ONE,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ONE,
+            defaultConfig,
+        );
     });
 
 });

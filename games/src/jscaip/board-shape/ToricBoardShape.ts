@@ -4,9 +4,9 @@ import { Coord } from '../Coord';
 import { Direction } from '../direction/Direction';
 import { Topology } from '../topology/Topology';
 
-import { TopologicShape } from './TopologicShape';
+import { TopologicBoardShape } from './TopologicBoardShape';
 
-export class TorusShape<D extends Direction> extends TopologicShape<D> {
+export class ToricBoardShape<D extends Direction> extends TopologicBoardShape<D> {
 
     public constructor(
         public readonly width: number,
@@ -22,7 +22,7 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
                 Math.floor(this.width / 2),
                 Math.floor(this.height / 2),
             ),
-        ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
+        ];
     }
 
     public getAllCoords(): Coord[] {
@@ -48,7 +48,7 @@ export class TorusShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
-        const next: Coord = this.getTopology().getTopologyNextCoord(coord, direction, distance);
+        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
         const nextX: number = ((next.x % this.width) + this.width) % this.width;
         const nextY: number = ((next.y % this.height) + this.height) % this.height;
         return MGPOptional.of(new Coord(nextX, nextY));

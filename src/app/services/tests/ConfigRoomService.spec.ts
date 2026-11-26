@@ -65,18 +65,21 @@ describe('ConfigRoomService', () => {
             // Given a service with which we joined a config room
             let configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             (update: ConfigRoom): void => {
-                                                 configRoom = MGPOptional.of(update);
-                                             },
-                                             ignore,
-                                             ignore,
-                                             ignore,
-                                             ignore);
+                await configRoomService.join(
+                    'gameId',
+                    (update: ConfigRoom): void => {
+                        configRoom = MGPOptional.of(update);
+                    },
+                    ignore,
+                    ignore,
+                    ignore,
+                    ignore,
+                );
 
             // When there are config room updates
             const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
+
             // Then we are notified about it
             expect(configRoom.isPresent()).toBeTrue();
             expect(configRoom.get()).toEqual(updatedConfigRoom);
@@ -87,17 +90,20 @@ describe('ConfigRoomService', () => {
             // Given a service with which we joined a config room
             let deleted: boolean = false;
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             ignore,
-                                             (): void => {
-                                                 deleted = true;
-                                             },
-                                             ignore,
-                                             ignore,
-                                             ignore);
+                await configRoomService.join(
+                    'gameId',
+                    ignore,
+                    (): void => {
+                        deleted = true;
+                    },
+                    ignore,
+                    ignore,
+                    ignore,
+                );
 
             // When there is a config room deletion
             deleteConfigRoom('gameId');
+
             // Then we are notified about it
             expect(deleted).toBeTrue();
             subscription.unsubscribe();
@@ -107,18 +113,21 @@ describe('ConfigRoomService', () => {
             // Given a service with which we joined a config room
             const candidates: MinimalUser[] = [];
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             ignore,
-                                             ignore,
-                                             (candidate: Candidate): void => {
-                                                 candidates.push(candidate.user);
-                                             },
-                                             ignore,
-                                             ignore);
+                await configRoomService.join(
+                    'gameId',
+                    ignore,
+                    ignore,
+                    (candidate: Candidate): void => {
+                        candidates.push(candidate.user);
+                    },
+                    ignore,
+                    ignore,
+                );
 
             // When a candidate joins
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             addCandidate(candidate);
+
             // Then we are notified about it
             expect(candidates.length).toBe(1);
             expect(candidates[0]).toEqual(candidate);
@@ -129,17 +138,19 @@ describe('ConfigRoomService', () => {
             // Given a service with which we joined a config room and observed a candidate joining
             let candidates: MinimalUser[] = [];
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             ignore,
-                                             ignore,
-                                             (candidate: Candidate): void => {
-                                                 candidates.push(candidate.user);
-                                             },
-                                             (candidate: MinimalUser): void => {
-                                                 candidates = candidates.filter((c: MinimalUser): boolean =>
-                                                     c.id !== candidate.id);
-                                             },
-                                             ignore);
+                await configRoomService.join(
+                    'gameId',
+                    ignore,
+                    ignore,
+                    (candidate: Candidate): void => {
+                        candidates.push(candidate.user);
+                    },
+                    (candidate: MinimalUser): void => {
+                        candidates = candidates.filter((c: MinimalUser): boolean =>
+                            c.id !== candidate.id);
+                    },
+                    ignore,
+                );
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             addCandidate(candidate);
             expect(candidates.length).toBe(1);
@@ -156,16 +167,20 @@ describe('ConfigRoomService', () => {
             // Given a service with which we joined a config room
             let errorsSeen: number = 0;
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             ignore,
-                                             ignore,
-                                             ignore,
-                                             ignore,
-                                             (_reason: string): void => {
-                                                 errorsSeen += 1;
-                                             });
+                await configRoomService.join(
+                    'gameId',
+                    ignore,
+                    ignore,
+                    ignore,
+                    ignore,
+                    (_reason: string): void => {
+                        errorsSeen += 1;
+                    },
+                );
+
             // When an error occurs
             sendError('some error');
+
             // Then we are notified about it
             expect(errorsSeen).toBe(1);
             subscription.unsubscribe();
@@ -178,13 +193,16 @@ describe('ConfigRoomService', () => {
                 observedSomething = true;
             }
             const subscription: Subscription =
-                await configRoomService.join('gameId',
-                                             recordObservation,
-                                             recordObservation,
-                                             recordObservation,
-                                             recordObservation,
-                                             recordObservation);
+                await configRoomService.join(
+                    'gameId',
+                    recordObservation,
+                    recordObservation,
+                    recordObservation,
+                    recordObservation,
+                    recordObservation,
+                );
             subscription.unsubscribe();
+
             // When anything occurs on the backend
             const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
@@ -193,6 +211,7 @@ describe('ConfigRoomService', () => {
             removeCandidate(candidate);
             sendError('some error');
             deleteConfigRoom('gameId');
+
             // Then we are NOT notified about it
             expect(observedSomething).toBeFalse();
         }));
@@ -209,8 +228,10 @@ describe('ConfigRoomService', () => {
                 rulesConfig: {},
             };
             spyOn(backendService, 'send').and.callThrough();
+
             // When we propose it
             await configRoomService.proposeConfig(proposal);
+
             // Then it should send ProposeConfig with our config to the backend
             expect(backendService.send).toHaveBeenCalledOnceWith(['ProposeConfig', { config: proposal }]);
         }));
@@ -221,8 +242,10 @@ describe('ConfigRoomService', () => {
             // Given an opponent
             const opponent: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             spyOn(backendService, 'send').and.callThrough();
+
             // When selecting them
             await configRoomService.selectOpponent(opponent);
+
             // Then it should send SelectOpponent with the opponent
             expect(backendService.send).toHaveBeenCalledOnceWith(['SelectOpponent', { opponent }]);
         }));
@@ -232,8 +255,10 @@ describe('ConfigRoomService', () => {
         it('should send a ReviewConfig message', fakeAsync(async() => {
             // Given a config we want to review (managed by the backend)
             spyOn(backendService, 'send').and.callThrough();
+
             // When we ask to review it
             await configRoomService.reviewConfig();
+
             // Then it should send the ReviewConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['ReviewConfig']);
         }));
@@ -244,8 +269,10 @@ describe('ConfigRoomService', () => {
         it('should send an AcceptConfig message', fakeAsync(async() => {
             // Given a config we want to accept (managed by the backend)
             spyOn(backendService, 'send').and.callThrough();
+
             // When we ask to accept it
             await configRoomService.acceptConfig();
+
             // Then it should send the AcceptConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['AcceptConfig']);
         }));

@@ -48,13 +48,18 @@ describe('LodestoneScoreHeuristic', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ], 0, noLodestones, allPressurePlates);
+
         // When computing their value
         // Then it should prefer having more pieces (i.e., a higher score)
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
 
     });
 

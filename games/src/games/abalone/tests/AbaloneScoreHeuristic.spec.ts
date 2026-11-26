@@ -47,15 +47,18 @@ describe('AbaloneScoreHeuristic', () => {
             [O, O, O, O, O, O, N, N, N],
             [O, O, O, O, O, N, N, N, N],
         ];
+
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               new AbaloneState(boardWithLessPieces, 0),
-                                                               MGPOptional.empty(),
-                                                               new AbaloneState(boardWithMorePieces, 0),
-                                                               MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            new AbaloneState(boardWithLessPieces, 0),
+            MGPOptional.empty(),
+            new AbaloneState(boardWithMorePieces, 0),
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
 });

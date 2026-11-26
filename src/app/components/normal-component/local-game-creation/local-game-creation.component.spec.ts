@@ -18,8 +18,10 @@ describe('LocalGameCreationComponent', () => {
         // Given a local game creation component
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
+
         // When picking a game
         await testUtils.getComponent().pickGame('whateverGame');
+
         // Then we should navigate to that game
         expect(router.navigate).toHaveBeenCalledOnceWith(['/local', 'whateverGame', 'config']);
     }));

@@ -620,6 +620,7 @@ describe('ConspirateursRules', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
+
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });

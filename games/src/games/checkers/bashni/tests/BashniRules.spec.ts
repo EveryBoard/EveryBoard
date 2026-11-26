@@ -690,8 +690,10 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 1);
+
             // When evaluating its value
             const node: CheckersNode = new CheckersNode(expectedState);
+
             // Then the current Player.ZERO should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });

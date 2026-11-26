@@ -11,9 +11,13 @@ import { GoPiece } from './GoPiece';
 
 export class GoState extends GameStateWithTable<GoPiece> {
 
-    // public static of(oldState: GoState, newBoard: Table<GoPiece>): GoState {
-    //     return oldState.withBoard(newBoard);
-    // }
+    public static of(oldState: GoState, newBoard: Table<GoPiece>): GoState {
+        return oldState.withBoard(newBoard);
+    }
+
+    public static getStartingBoard(width: number, height: number): GoPiece[][] {
+        return TableUtils.create(width, height, GoPiece.EMPTY);
+    }
 
     public readonly koCoord: MGPOptional<Coord>;
 
@@ -21,11 +25,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly phase: GoPhase;
 
-    public constructor(board: Table<GoPiece>,
-                       captured: PlayerNumberMap,
-                       turn: number,
-                       koCoord: MGPOptional<Coord>,
-                       phase: GoPhase,
+    public constructor(
+        board: Table<GoPiece>,
+        captured: PlayerNumberMap,
+        turn: number,
+        koCoord: MGPOptional<Coord>,
+        phase: GoPhase,
     ) {
         super(board, turn);
         this.captured = captured;
@@ -36,10 +41,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public getCapturedCopy(): PlayerNumberMap {
         return this.captured.getCopy();
-    }
-
-    public static getStartingBoard(width: number, height: number): GoPiece[][] {
-        return TableUtils.create(width, height, GoPiece.EMPTY);
     }
 
     public isDead(coord: Coord): boolean {
@@ -111,9 +112,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
             this,
             coord,
             value,
-            (oldState: GoState, newBoard: Table<GoPiece>) => {
-                return oldState.withBoard(newBoard);
-            },
+            GoState.of,
         );
     }
 

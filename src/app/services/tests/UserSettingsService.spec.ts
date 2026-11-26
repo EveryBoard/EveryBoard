@@ -54,8 +54,10 @@ describe('UserSettingsService', () => {
         it('should rely on local storage to know the language', () => {
             // Given that the stored language is 'fr'
             localStorage.setItem('locale', 'fr');
+
             // When getting the language
             const language: string = userSettingsService.getLanguage();
+
             // Then the language is 'fr'
             expect(language).toBe('fr');
         });

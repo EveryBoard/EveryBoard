@@ -5,8 +5,24 @@ import { Coord } from '../../Coord';
 import { Direction } from '../../direction/Direction';
 import { EightDirection } from '../../direction/EightDirection';
 import { HexagonalTopology } from '../HexagonalTopology';
+import { TopologyID } from '../TopologyMapper';
 
 describe('HexagonalTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: HexagonalTopology = new HexagonalTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('HEXAGONAL');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 
@@ -17,7 +33,7 @@ describe('HexagonalTopology', () => {
             const direction: Direction = EightDirection.UP;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction);
+            const result: Coord = topology.getNextCoord(coord, direction);
 
             // Then
             expect(result).toEqual(new Coord(2, 2));
@@ -31,7 +47,7 @@ describe('HexagonalTopology', () => {
             const distance: number = 3;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should be the correct coord
             expect(result).toEqual(new Coord(5, 3));
@@ -45,7 +61,7 @@ describe('HexagonalTopology', () => {
             const distance: number = -2;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should be the correct coord
             expect(result).toEqual(new Coord(2, 5));

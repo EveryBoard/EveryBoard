@@ -26,10 +26,12 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // Given a user that registered through google
-            const authUser: AuthUser = new AuthUser('kd5457d',
-                                                    MGPOptional.of('jeanjaja@gmail.com'),
-                                                    MGPOptional.empty(),
-                                                    true);
+            const authUser: AuthUser = new AuthUser(
+                'kd5457d',
+                MGPOptional.of('jeanjaja@gmail.com'),
+                MGPOptional.empty(),
+                true,
+            );
             ConnectedUserServiceMock.setUser(authUser);
             testUtils.detectChanges();
         });
@@ -55,6 +57,7 @@ describe('VerifyAccountComponent', () => {
         }));
         it('should show error if setting the username fails', fakeAsync(async() => {
             const failure: string = 'Invalid username';
+
             // When an invalid username is picked
             spyOn(connectedUserService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
             testUtils.fillInput('#username', 'jeanjiji');
@@ -71,10 +74,12 @@ describe('VerifyAccountComponent', () => {
     describe('email user', () => {
         beforeEach(() => {
             // Given a user that registered through its email
-            const user: AuthUser = new AuthUser('jeanjaja8946sd54q',
-                                                MGPOptional.of('jean@jaja.europe'),
-                                                MGPOptional.of('jeanjaja'),
-                                                false);
+            const user: AuthUser = new AuthUser(
+                'jeanjaja8946sd54q',
+                MGPOptional.of('jean@jaja.europe'),
+                MGPOptional.of('jeanjaja'),
+                false,
+            );
             ConnectedUserServiceMock.setUser(user);
             testUtils.detectChanges();
         });
@@ -104,6 +109,7 @@ describe('VerifyAccountComponent', () => {
         }));
         it('should not finalize verification if the user did not verify its email', fakeAsync(async() => {
             spyOn(window, 'open').and.returnValue(null);
+
             // When the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 

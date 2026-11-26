@@ -1,6 +1,6 @@
 import { Coord } from '../Coord';
+import { TopologicBoardShape } from '../board-shape/TopologicBoardShape';
 import { Direction } from '../direction/Direction';
-import { TopologicShape } from '../shape/TopologicShape';
 import { Topology } from '../topology/Topology';
 
 import { GameState } from './GameState';
@@ -10,7 +10,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>, D exten
     public constructor(
         turn: number,
         private readonly topology: Topology<D>,
-        private readonly shape: TopologicShape<D>,
+        private readonly boardShape: TopologicBoardShape<D>,
     ) {
         super(turn);
     }
@@ -19,8 +19,8 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>, D exten
         return this.topology;
     }
 
-    public getShape(): TopologicShape<D> {
-        return this.shape;
+    public getBoardShape(): TopologicBoardShape<D> {
+        return this.boardShape;
     }
 
     public abstract getCoordsAndContents(): { coord: Coord; content: P }[];

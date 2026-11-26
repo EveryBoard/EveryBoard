@@ -70,6 +70,7 @@ describe('DemoCardWrapperComponent', () => {
             click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
             config: LodestoneRules.get().getDefaultRulesConfig(),
         });
+
         // Then it should have performed a click
         testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .data-lodestone-main-circle', 'selected-stroke');
     }));
@@ -102,6 +103,7 @@ describe('DemoCardWrapperComponent', () => {
         // Given any starting state of component
         // When passing
         const result: void = await testUtils.getComponent().onCancelMove('not even necessary');
+
         // Then nothing should have happen (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
@@ -139,6 +141,7 @@ describe('DemoCardWrapperComponent', () => {
         // When calling onLegalUserMove
         const reason: string = 'DemoCardWrapper should not call applyLegalMove, as it does no move';
         await testUtils.getComponent().onLegalUserMove(null as unknown as P4Move);
+
         // Then it should throw
         expect(Utils.assert).toHaveBeenCalledOnceWith(false, reason);
     }));

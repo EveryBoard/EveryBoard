@@ -27,12 +27,13 @@ import { GameComponent } from '../../components/game-components/game-component/G
  * The generic base class is `GameComponent`.
  * If you have a rectangular game, you might want to use `RectangularGameComponent` instead.
  */
-export class NewGameComponent extends GameComponent<NewGameRules,
-                                                    NewGameMove,
-                                                    NewGameState,
-                                                    RulesConfig,
-                                                    NewGameLegalityInfo>
-{
+export class NewGameComponent extends GameComponent<
+    NewGameRules,
+    NewGameMove,
+    NewGameState,
+    RulesConfig,
+    NewGameLegalityInfo
+> {
     /**
      * The component constructor always takes the same parameters.
      * It must set up the `rules`, `encoder`, `node`, and `aiConfig` fields.

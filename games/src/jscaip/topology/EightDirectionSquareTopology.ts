@@ -4,6 +4,7 @@ import { Coord } from '../Coord';
 import { EightDirection } from '../direction/EightDirection';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 export class EightDirectionSquareTopology implements Topology<EightDirection> {
 
@@ -18,18 +19,22 @@ export class EightDirectionSquareTopology implements Topology<EightDirection> {
         EightDirection.UP_LEFT,
     ]);
 
+    public getId(): TopologyID {
+        return 'SQUARE (8)';
+    }
+
     public getDirections(): Set<EightDirection> {
         return this.directions;
     }
 
-    public getTopologyNextCoord(coord: Coord, direction: EightDirection, distance: number = 1): Coord {
+    public getNextCoord(coord: Coord, direction: EightDirection, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: EightDirection) => this.getTopologyNextCoord(coord, direction),
+                (direction: EightDirection) => this.getNextCoord(coord, direction),
             ),
         ]);
     }

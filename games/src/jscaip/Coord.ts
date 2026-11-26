@@ -5,7 +5,7 @@ import { EightDirection } from './direction/EightDirection';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
-        return `The coordinate ${ coord.toString() } is not on the board`;
+        return `The coordinate ${ coord.toString() } is not on the board.`;
     }
 }
 
@@ -108,8 +108,10 @@ export class Coord extends Vector {
 
     // If asked not to check alignment, a knight move would count as 2
     public getDistanceToward(c: Coord, checkAlignment: boolean = false): number {
-        Utils.assert(checkAlignment === false || c.isAlignedWith(this),
-                     'Cannot calculate distance with non aligned coords.');
+        Utils.assert(
+            checkAlignment === false || c.isAlignedWith(this),
+            'Cannot calculate distance with non aligned coords.',
+        );
         const dx: number = Math.abs(c.x - this.x);
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);

@@ -73,7 +73,8 @@ export class DiaballikMove extends Move {
 
     private static readonly subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
         [isTranslation, isBallPass],
-        [DiaballikTranslation.encoder, DiaballikBallPass.encoder]);
+        [DiaballikTranslation.encoder, DiaballikBallPass.encoder],
+    );
 
     private static readonly subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
         MGPOptional.getEncoder(DiaballikMove.subMoveEncoder);
@@ -86,9 +87,10 @@ export class DiaballikMove extends Move {
         },
     );
 
-    private static countPassesAndTranslations(subMove: DiaballikSubMove, passesAndTranslations: PassesAndTranslations)
-    : void
-    {
+    private static countPassesAndTranslations(
+        subMove: DiaballikSubMove,
+        passesAndTranslations: PassesAndTranslations,
+    ): void {
         if (subMove instanceof DiaballikBallPass) {
             passesAndTranslations.passes++;
         } else {
@@ -96,10 +98,11 @@ export class DiaballikMove extends Move {
         }
     }
 
-    public constructor(public readonly first: DiaballikSubMove,
-                       public readonly second: MGPOptional<DiaballikSubMove>,
-                       public readonly third: MGPOptional<DiaballikSubMove>)
-    {
+    public constructor(
+        public readonly first: DiaballikSubMove,
+        public readonly second: MGPOptional<DiaballikSubMove>,
+        public readonly third: MGPOptional<DiaballikSubMove>,
+    ) {
         super();
         if (third.isPresent()) {
             Utils.assert(second.isPresent(), 'DiaballikMove should have two first actions to have a third one');

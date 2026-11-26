@@ -19,10 +19,14 @@ export abstract class TaflMove extends MoveCoordToCoord {
     protected constructor(start: Coord, end: Coord) {
         super(start, end);
         const maximalDistance: number = this.getMaximalDistance();
-        Utils.assert(start.isInRange(maximalDistance, maximalDistance),
-                     'Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
-        Utils.assert(end.isInRange(maximalDistance, maximalDistance),
-                     'Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
+        Utils.assert(
+            start.isInRange(maximalDistance, maximalDistance),
+            'Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.',
+        );
+        Utils.assert(
+            end.isInRange(maximalDistance, maximalDistance),
+            'Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.',
+        );
     }
 
     public override toString(): string {

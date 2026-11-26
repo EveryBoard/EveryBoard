@@ -87,6 +87,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Perdu.',
                 ),
             ];
+
             // When starting tutorial
             await wrapper.startTutorial(tutorial);
 
@@ -146,6 +147,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     QuartoRules.get().getInitialState(defaultConfig),
                 ),
             ];
+
             // When page rendered
             await wrapper.startTutorial(tutorial);
 
@@ -331,6 +333,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
+
             // When doing another move, then clicking retry
             await testUtils.expectClickSuccess('#click-piece-15');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -426,6 +429,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Reperdu.',
                 ),
             ];
+
             // When clicking "Skip"
             await testUtils.clickElement('#nextButton');
 
@@ -1197,6 +1201,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
+
             // When clicking "Next Button"
             const nextButtonMessage: string =
                 testUtils.findElement('#nextButton').nativeElement.textContent;
@@ -1379,6 +1384,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     MGPOptional.of(customConfig),
                 ),
             ];
+
             // When starting tutorial
             await wrapper.startTutorial(tutorial);
 

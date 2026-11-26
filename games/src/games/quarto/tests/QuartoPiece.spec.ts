@@ -36,6 +36,7 @@ describe('QuartoPiece', () => {
         it('should throw if called with invalid number', () => {
             // Given an invalid number
             const piece: number = -1;
+
             // When calling QuartoPiece.ofInt
             // Then it should throw
             expect(() => QuartoPiece.ofInt(piece)).toThrowError('Invalid piece (' + piece + ')');

@@ -30,9 +30,11 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 capturesNeededToWin: new NumberConfig(10, () => $localize`Captured stones needed to win`, MGPValidators.range(1, 123456)),
-                nInARow: new NumberConfig(5,
-                                          RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
-                                          MGPValidators.range(3, 99)),
+                nInARow: new NumberConfig(
+                    5,
+                    RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
+                    MGPValidators.range(3, 99),
+                ),
                 sizeOfSandwich: new NumberConfig(2, () => $localize`Size of captures`, MGPValidators.range(1, 99)),
             },
         });
@@ -47,9 +49,11 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
     }
 
     public override getInitialState(config: PenteConfig): PenteState {
-        const board: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                          config.height,
-                                                          PlayerOrNone.NONE);
+        const board: PlayerOrNone[][] = TableUtils.create(
+            config.width,
+            config.height,
+            PlayerOrNone.NONE,
+        );
         const cx: number = Math.floor(config.width / 2);
         const cy: number = Math.floor(config.height / 2);
         board[cy][cx] = PlayerOrNone.ONE;
@@ -70,9 +74,12 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, config: PenteConfig, _info: void)
-    : PenteState
-    {
+    public override applyLegalMove(
+        move: PenteMove,
+        state: PenteState,
+        config: PenteConfig,
+        _info: void,
+    ): PenteState {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
@@ -117,8 +124,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
-        if (victoriousCoord.length > 0) {
+        const victoriousCoords: Coord[] = this.getHelper(config).getVictoriousCoord(state);
+        if (victoriousCoords.length > 0) {
             return GameStatus.getVictory(opponent);
         }
         if (this.stillHaveEmptySquare(state)) {

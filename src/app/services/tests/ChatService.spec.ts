@@ -40,6 +40,7 @@ describe('ChatService', () => {
             // Given a chat
             // When sending a message
             await chatService.sendMessage('hello');
+
             // Then the message is forwarded to the backend
             expect(backendService.send).toHaveBeenCalledOnceWith(['ChatSend', { message: 'hello' }]);
         }));
@@ -53,9 +54,11 @@ describe('ChatService', () => {
             chatService.subscribeToMessages((m: Message): void => {
                 receivedMessages.push(m);
             });
+
             // When a message is received by the backend
             backendService.mockReceivedMessage('ChatMessage', { message: message });
             tick(1);
+
             // Then we receive it too
             expect(receivedMessages.length).toBe(1);
         }));
@@ -63,8 +66,10 @@ describe('ChatService', () => {
         it('should unsubscribe from callback upon unsubscription', fakeAsync(async() => {
             // Given a chat where we subscribed to the messages
             const subscription: Subscription = chatService.subscribeToMessages(() => {});
+
             // When we unsubscribe
             subscription.unsubscribe();
+
             // Then the subscription should be unsubscribed
             expect(subscription.closed).toBe(true);
         }));

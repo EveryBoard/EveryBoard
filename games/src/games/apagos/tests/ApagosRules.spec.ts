@@ -66,8 +66,10 @@ describe('ApagosRules', () => {
     it('should slide piece down', () => {
         // Given a board with a movable piece
         const state: ApagosState = stateWithOneFullSquare;
+
         // When sliding it
         const move: ApagosMove = ApagosMove.transfer(2, 1).get();
+
         // Then it should have been moved down
         const expectedState: ApagosState = ApagosState.fromRepresentation(4, [
             [0, 0, 2, 0],
@@ -96,8 +98,10 @@ describe('ApagosRules', () => {
     it('should drop piece when on low square', () => {
         // Given the initial board
         const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+
         // When dropping piece on one of the 3 low squares
         const move: ApagosMove = ApagosMove.drop(1, Player.ZERO);
+
         // Then the square should climb one place up
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [
             [0, 0, 1, 0],
@@ -110,8 +114,10 @@ describe('ApagosRules', () => {
     it('should drop piece when on higher square', () => {
         // Given the initial board
         const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+
         // When dropping piece on one of the 3 low squares
         const move: ApagosMove = ApagosMove.drop(3, Player.ZERO);
+
         // Then the square should not move
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [
             [0, 0, 0, 1],
@@ -127,6 +133,7 @@ describe('ApagosRules', () => {
             // Given a state with non-full squares
             const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -154,6 +161,7 @@ describe('ApagosRules', () => {
                 [7, 5, 3, 1],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
@@ -167,6 +175,7 @@ describe('ApagosRules', () => {
                 [7, 5, 3, 2],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
@@ -200,6 +209,7 @@ describe('ApagosRules', () => {
             // When creating initial state with it
             const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
             const actualTotalSpace: number[] = state.board.map((value: ApagosSquare) => value.getCapacity());
+
             // Then the actual total space per square should look like this: [4, 3, 2, 1]
             expect([4, 3, 2, 1]).toEqual(actualTotalSpace);
         });

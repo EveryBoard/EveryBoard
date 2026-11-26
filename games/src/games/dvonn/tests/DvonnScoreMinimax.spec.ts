@@ -12,10 +12,12 @@ import { DvonnState } from '../DvonnState';
 class DvonnScoreMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public constructor() {
-        super($localize`Score`,
-              DvonnRules.get(),
-              new DvonnScoreHeuristic(),
-              new DvonnMoveGenerator());
+        super(
+            $localize`Score`,
+            DvonnRules.get(),
+            new DvonnScoreHeuristic(),
+            new DvonnMoveGenerator(),
+        );
     }
 
 }

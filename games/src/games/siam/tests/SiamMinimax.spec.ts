@@ -22,8 +22,7 @@ const d: SiamPiece = SiamPiece.DARK_DOWN;
 
 class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
     public constructor() {
-        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator(),
-        );
+        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
     }
 }
 
@@ -50,8 +49,10 @@ describe('SiamMinimax', () => {
             ];
             const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
+
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
             // Then it should go for victory
             const bestMove: SiamMove = SiamMove.of(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);
@@ -68,8 +69,10 @@ describe('SiamMinimax', () => {
             ];
             const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
+
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
             // Then it should push
             const bestMove: SiamMove = SiamMove.of(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);
@@ -86,8 +89,10 @@ describe('SiamMinimax', () => {
             ];
             const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
+
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
+
             // Then the best move should push from outside
             const bestMove: SiamMove = SiamMove.of(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);

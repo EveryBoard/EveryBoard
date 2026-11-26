@@ -5,9 +5,8 @@ import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
 import { Direction } from '../../../jscaip/direction/Direction';
-import { TopologicShape } from '../../../jscaip/shape/TopologicShape';
-import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { Topology } from '../../../jscaip/topology/Topology';
 
@@ -15,7 +14,7 @@ export class ReversiState<D extends Direction> extends TopologicGameStateWithTab
 
     public constructor(
         topology: Topology<D>,
-        shape: TopologicShape<D>,
+        shape: TopologicBoardShape<D>,
         gameStateWithTable: SimpleGameStateWithTable<FourStatePiece>,
     ) {
         super(topology, shape, gameStateWithTable);
@@ -24,13 +23,13 @@ export class ReversiState<D extends Direction> extends TopologicGameStateWithTab
     public getNeighboringPawnLike(searchedValue: Player, center: Coord): Set<Coord> {
         const result: Coord[] = [];
         for (const direction of this.getTopology().getDirections()) {
-            const landingCoord: MGPOptional<Coord> = this.getShape().getNextCoord(center, direction, 1);
+            const landingCoord: MGPOptional<Coord> = this.getBoardShape().getNextCoord(center, direction, 1);
             // console.log('>>>>>', direction)
             // console.log(landingCoord)
             // console.log(landingCoord.isPresent() ? 'is present' : 'is absent')
             // if (landingCoord.isPresent()) {
-                // console.log('is ', landingCoord.get(), ' on board ? ', this.isOnBoard(landingCoord.get()))
-                // console.log('actually containing', this.getPieceAt(landingCoord.get()))
+            // console.log('is ', landingCoord.get(), ' on board ? ', this.isOnBoard(landingCoord.get()))
+            // console.log('actually containing', this.getPieceAt(landingCoord.get()))
             // }
             if (landingCoord.isPresent() &&
                 this.isOnBoard(landingCoord.get()) &&

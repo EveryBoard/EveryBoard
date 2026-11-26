@@ -47,13 +47,14 @@ type AbaloneArrowInfo = {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass, HexArrowComponent],
 })
-export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
-                                                             AbaloneMove,
-                                                             AbaloneState,
-                                                             FourStatePiece,
-                                                             AbaloneConfig,
-                                                             AbaloneLegalityInformation>
-{
+export class AbaloneComponent extends HexagonalGameComponent<
+    AbaloneRules,
+    AbaloneMove,
+    AbaloneState,
+    FourStatePiece,
+    AbaloneConfig,
+    AbaloneLegalityInformation
+> {
     public moveds: Coord[] = [];
 
     public captureds: CapturedInfo[] = [];
@@ -96,9 +97,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
         const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
         const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
-                                         hexaLayoutStartingCoord,
-                                         PointyHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE,
+            hexaLayoutStartingCoord,
+            PointyHexaOrientation.INSTANCE,
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -232,10 +235,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoretical, state, config);
             if (isLegal.isSuccess()) {
                 const arrow: Arrow<HexaDirection> =
-                    new Arrow<HexaDirection>(startToEnd.start,
-                                             startToEnd.pointed,
-                                             dir,
-                                             (c: Coord) => this.hexaLayout.getCenterAt(c));
+                    new Arrow<HexaDirection>(
+                        startToEnd.start,
+                        startToEnd.pointed,
+                        dir,
+                        (c: Coord) => this.hexaLayout.getCenterAt(c),
+                    );
                 this.directions.push(arrow);
             }
         }

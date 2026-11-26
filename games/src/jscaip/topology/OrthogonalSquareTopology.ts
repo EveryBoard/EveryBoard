@@ -4,6 +4,7 @@ import { Coord } from '../Coord';
 import { Orthogonal } from '../direction/Orthogonal';
 
 import { Topology } from './Topology';
+import { TopologyID } from './TopologyMapper';
 
 
 export class OrthogonalSquareTopology implements Topology<Orthogonal> {
@@ -15,18 +16,22 @@ export class OrthogonalSquareTopology implements Topology<Orthogonal> {
         Orthogonal.LEFT,
     ]);
 
+    public getId(): TopologyID {
+        return 'SQUARE (4)';
+    }
+
     public getDirections(): Set<Orthogonal> {
         return this.directions;
     }
 
-    public getTopologyNextCoord(coord: Coord, direction: Orthogonal, distance: number = 1): Coord {
+    public getNextCoord(coord: Coord, direction: Orthogonal, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: Orthogonal) => this.getTopologyNextCoord(coord, direction),
+                (direction: Orthogonal) => this.getNextCoord(coord, direction),
             ),
         ]);
     }

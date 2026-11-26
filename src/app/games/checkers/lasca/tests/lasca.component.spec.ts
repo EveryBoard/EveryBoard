@@ -93,6 +93,18 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         ], 1),
         move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     },
+    tripleFlyingCaptureTest: {
+        state: EvenCheckersState.of([
+            [__, __, __, __, __, __, __],
+            [__, __, __, __, __, _V, __],
+            [__, __, __, __, __, __, __],
+            [__, __, __, _V, __, __, __],
+            [__, __, __, __, __, __, __],
+            [__, _V, __, __, __, __, __],
+            [_U, __, __, __, __, __, __],
+        ], 0),
+        move: CheckersMove.fromCapture([new Coord(0, 6), new Coord(2, 4), new Coord(4, 2), new Coord(6, 0)]),
+    },
     promotionTest: {
         state: EvenCheckersState.of([
             [__, __, __, __, _V, __, _V],
@@ -219,6 +231,7 @@ describe('LascaComponent', () => {
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-6', move);
+
             // Then a stack of three piece should exist
             testUtils.expectElementToExist('#square-6-6-piece-0');
             testUtils.expectElementToExist('#square-6-6-piece-1');
@@ -256,6 +269,7 @@ describe('LascaComponent', () => {
             // Given a state
             // When it is interactive
             testUtils.getGameComponent().interactive.set(true);
+
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-0-4', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-2-4', 'clickable-stroke');

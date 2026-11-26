@@ -3,10 +3,11 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
-import { EightDirection } from '../../../../jscaip/EightDirection';
 import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangleShape } from '../../../../jscaip/shape/rere';
+import { RectangularBoardShape } from '../../../../jscaip/board-shape/RectangularBoardShape';
+import { Direction } from '../../../../jscaip/direction/Direction';
+import { EightDirection } from '../../../../jscaip/direction/EightDirection';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
@@ -19,7 +20,7 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
+const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, ordinalTopology);
 
 describe('ReversiHeuristic', () => {
 
@@ -109,13 +110,18 @@ describe('ReversiHeuristic', () => {
         ];
         const strongerGameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable(strongerBoard, 2);
         const strongerState: ReversiState<Direction> = new ReversiState(ordinalTopology, squareShape, strongerGameState);
+
         // When computing the board value
         // Then the control of the corner should be preferred
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.empty(),
-                                                               strongerState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakerState,
+            MGPOptional.empty(),
+            strongerState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
 });

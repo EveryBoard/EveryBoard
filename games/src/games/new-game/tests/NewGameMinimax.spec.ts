@@ -17,10 +17,11 @@ import { NewGameState } from '../NewGameState';
 class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
 
     public constructor() {
-        super('Dummy',
-              NewGameRules.get(),
-              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
-              new NewGameMoveGenerator(),
+        super(
+            'Dummy',
+            NewGameRules.get(),
+            new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
+            new NewGameMoveGenerator(),
         );
     }
 }
@@ -41,6 +42,7 @@ describe('NewGameMinimax', () => {
 
         // When selecting the best move
         const bestMove: NewGameMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);
+
         // Then it should be the move I want it to be
         expect(bestMove).toBeTruthy();
     });

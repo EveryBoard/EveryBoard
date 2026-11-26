@@ -122,6 +122,7 @@ describe('BackendService', () => {
             // Given a backend service
             // When connecting
             const subscription: Subscription = await connect();
+
             // Then it should established the connection to the websocket of the server with the identity token
             expect(webSocketInstances.length).toBe(1);
             const ws: WebSocket = webSocketInstances[0];
@@ -437,9 +438,11 @@ describe('BackendService', () => {
             const subscription: Subscription = await connect();
             const ws: WebSocket = webSocketInstances[0];
             spyOn(ws, 'send').and.callThrough();
+
             // When subscribing to a game
             await backendService.subscribeToGame('game123');
             tick(0);
+
             // Then it should send the appropriate message
             expect(ws.send).toHaveBeenCalledOnceWith(JSON.stringify(['SubscribeGame', { gameId: 'game123' }]));
             subscription.unsubscribe();
@@ -450,9 +453,11 @@ describe('BackendService', () => {
             const subscription: Subscription = await connect();
             const ws: WebSocket = webSocketInstances[0];
             spyOn(ws, 'send').and.callThrough();
+
             // When subscribing to a config room
             await backendService.subscribeToConfigRoom('game123');
             tick(0);
+
             // Then it should send the appropriate message
             expect(ws.send).toHaveBeenCalledOnceWith(JSON.stringify(['SubscribeConfigRoom', { gameId: 'game123' }]));
             subscription.unsubscribe();
@@ -463,9 +468,11 @@ describe('BackendService', () => {
             const subscription: Subscription = await connect();
             const ws: WebSocket = webSocketInstances[0];
             spyOn(ws, 'send').and.callThrough();
+
             // When subscribing to the lobby
             await backendService.subscribeToLobby();
             tick(0);
+
             // Then it should send the appropriate message
             expect(ws.send).toHaveBeenCalledOnceWith(JSON.stringify(['SubscribeLobby']));
             subscription.unsubscribe();
@@ -478,9 +485,11 @@ describe('BackendService', () => {
             spyOn(ws, 'send').and.callThrough();
             const gameSubscription: Subscription = await backendService.subscribeToGame('game123');
             tick(0);
+
             // When unsubscribing from the game
             gameSubscription.unsubscribe();
             tick(0);
+
             // Then it should send the appropriate message
             expect(ws.send).toHaveBeenCalledWith(JSON.stringify(['Unsubscribe']));
             subscription.unsubscribe();
@@ -493,8 +502,10 @@ describe('BackendService', () => {
             const subscription: Subscription = await connect();
             const ws: WebSocket = webSocketInstances[0];
             spyOn(ws, 'close').and.callThrough();
+
             // When unsubscribing from it
             subscription.unsubscribe();
+
             // Then it should close the websocket connection
             expect(ws.close).toHaveBeenCalledOnceWith();
             ws.onclose!(new CloseEvent('close')); // onclose is therefore called
@@ -508,8 +519,10 @@ describe('BackendService', () => {
             const ws: WebSocket = webSocketInstances[0];
             spyOn(ws, 'close').and.callThrough();
             subscription.unsubscribe();
+
             // When connecting again
             const otherSubscription: Subscription = await connect();
+
             // Then it should be able to do it and open a new connection
             expect(webSocketInstances.length).toBe(2);
             otherSubscription.unsubscribe();
@@ -523,8 +536,10 @@ describe('BackendService', () => {
             const promise: Promise<void> = backendService.waitForConnection().then(() => {
                 connectionReady = true;
             });
+
             // When the service is connected
             const subscription: Subscription = await connect();
+
             // Then the promise mshould be resolved
             await promise;
             expect(connectionReady).toBeTrue();

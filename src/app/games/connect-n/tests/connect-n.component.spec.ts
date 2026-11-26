@@ -4,9 +4,9 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord, EightDirection, HexaDirection } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
-import { HexagonShape } from '@everyboard/games';
-import { RectangleShape } from '@everyboard/games';
-import { TopologicShape } from '@everyboard/games';
+import { HexagonalBoardShape } from '@everyboard/games';
+import { RectangularBoardShape } from '@everyboard/games';
+import { TopologicBoardShape } from '@everyboard/games';
 import { TriangleShape } from '@everyboard/games';
 import { SimpleGameStateWithTable } from '@everyboard/games';
 import { TopologicGameState } from '@everyboard/games';
@@ -29,7 +29,7 @@ const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig(
 const squareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
 const triangularTopology: TriangularTopology = new TriangularTopology();
 const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-const rectangularShape: TopologicShape<EightDirection> = new RectangleShape(
+const rectangularShape: TopologicBoardShape<EightDirection> = new RectangularBoardShape(
     defaultConfig.boardSize,
     defaultConfig.boardSize,
     squareTopology,
@@ -501,7 +501,7 @@ describe('ConnectNComponent', () => {
                 ], 8);
             const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
                 hexagonalTopology,
-                new HexagonShape(5, hexagonalTopology),
+                new HexagonalBoardShape(5, hexagonalTopology),
                 gameState,
             );
             await testUtils.setupState(state, { config: customConfig });
@@ -604,7 +604,7 @@ describe('ConnectNComponent (HEXAGON)', () => {
             ], 8);
         const state: TopologicGameState<FourStatePiece, HexaDirection> = new TopologicGameStateWithTable(
             hexagonalTopology,
-            new HexagonShape(5, hexagonalTopology),
+            new HexagonalBoardShape(5, hexagonalTopology),
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { EightDirection } from '../../../../jscaip/EightDirection';
+import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangleShape } from '../../../../jscaip/shape/rere';
+import { RectangularBoardShape } from '../../../../jscaip/board-shape/rere';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';
@@ -16,7 +16,7 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, ordinalTopology);
+const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, ordinalTopology);
 
 describe('ReversiMoveGenerator', () => {
 

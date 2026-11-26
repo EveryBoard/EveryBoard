@@ -6,13 +6,13 @@ import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { Table } from '../../../../jscaip/TableUtils';
+import { HexagonalBoardShape } from '../../../../jscaip/board-shape/HexagonalBoardShape';
+import { RectangularBoardShape } from '../../../../jscaip/board-shape/RectangularBoardShape';
+import { ToricBoardShape } from '../../../../jscaip/board-shape/ToricBoardShape';
+import { TriangleShape } from '../../../../jscaip/board-shape/TriangleShape';
 import { Direction } from '../../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../../jscaip/direction/HexaDirection';
-import { HexagonShape } from '../../../../jscaip/shape/HexagonShape';
-import { RectangleShape } from '../../../../jscaip/shape/RectangleShape';
-import { TorusShape } from '../../../../jscaip/shape/TorusShape';
-import { TriangleShape } from '../../../../jscaip/shape/TriangleShape';
 import { SimpleGameStateWithTable } from '../../../../jscaip/state/SimpleGameStateWithTable';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
@@ -30,7 +30,7 @@ describe('ReversiRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     const eightDirectionSquareTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
-    const squareShape: RectangleShape<EightDirection> = new RectangleShape(8, 8, eightDirectionSquareTopology);
+    const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, eightDirectionSquareTopology);
     const defaultInitialState: ReversiState<EightDirection> =
         ReversiRules.get().getInitialState(ReversiRules.get().getDefaultRulesConfig()) as ReversiState<EightDirection>;
 
@@ -247,7 +247,7 @@ describe('ReversiRules', () => {
 
         describe('Toric Board', () => {
 
-            const toricShape: TorusShape<EightDirection> = new TorusShape(8, 8, eightDirectionSquareTopology);
+            const toricShape: ToricBoardShape<EightDirection> = new ToricBoardShape(8, 8, eightDirectionSquareTopology);
 
             const toricConfig: ReversiConfig = {
                 ...defaultConfig,
@@ -334,7 +334,7 @@ describe('ReversiRules', () => {
         describe('Hexagonal Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-            const hexagonalShape: HexagonShape<HexaDirection> = new TriangleShape(5, hexagonalTopology);
+            const hexagonalShape: HexagonalBoardShape<HexaDirection> = new TriangleShape(5, hexagonalTopology);
 
             it('should have initial board with a hole', () => {
                 // Given hexagonal shaped board with odd size
@@ -375,7 +375,7 @@ describe('ReversiRules', () => {
         describe('Triangular Board', () => {
 
             const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-            const hexagonalShape: HexagonShape<HexaDirection> = new HexagonShape(6, hexagonalTopology);
+            const hexagonalShape: HexagonalBoardShape<HexaDirection> = new HexagonalBoardShape(6, hexagonalTopology);
             // TODO: test size 5 and 7 ?
             it('should have initial board packed', () => {
                 // Given hexagonal shaped board with odd size

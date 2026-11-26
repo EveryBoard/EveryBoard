@@ -4,8 +4,24 @@ import { Set } from '@everyboard/lib';
 import { Coord } from '../../Coord';
 import { Orthogonal } from '../../direction/Orthogonal';
 import { OrthogonalSquareTopology } from '../OrthogonalSquareTopology';
+import { TopologyID } from '../TopologyMapper';
 
 describe('OrthogonalSquareTopology', () => {
+
+    describe('getId', () => {
+
+        it(`should return it's id`, () => {
+            // Given a dev that want to rise topology code coverage
+            const topology: OrthogonalSquareTopology = new OrthogonalSquareTopology();
+
+            // When calling getId
+            const id: TopologyID = topology.getId();
+
+            // Then should return the correct id
+            expect(id).toEqual('SQUARE (4)');
+        });
+
+    });
 
     describe('getNextCoord', () => {
 
@@ -16,7 +32,7 @@ describe('OrthogonalSquareTopology', () => {
             const direction: Orthogonal = Orthogonal.UP;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction);
+            const result: Coord = topology.getNextCoord(coord, direction);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(2, 2));
@@ -30,7 +46,7 @@ describe('OrthogonalSquareTopology', () => {
             const distance: number = 3;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(5, 3));
@@ -44,7 +60,7 @@ describe('OrthogonalSquareTopology', () => {
             const distance: number = -2;
 
             // When evaluating next coord
-            const result: Coord = topology.getTopologyNextCoord(coord, direction, distance);
+            const result: Coord = topology.getNextCoord(coord, direction, distance);
 
             // Then it should return the correct coord
             expect(result).toEqual(new Coord(2, 5));

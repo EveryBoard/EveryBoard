@@ -144,9 +144,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.encoder = HiveMove.encoder;
         this.SPACE_SIZE = 30;
         this.PIECE_HEIGHT = this.SPACE_SIZE / 3;
-        this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,
-                                         new Coord(this.SPACE_SIZE * 2, 0),
-                                         FlatHexaOrientation.INSTANCE);
+        this.hexaLayout = new HexaLayout(
+            this.SPACE_SIZE * 1.5,
+            new Coord(this.SPACE_SIZE * 2, 0),
+            FlatHexaOrientation.INSTANCE,
+        );
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -200,7 +202,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.getRemainingPieceTransformAsCoord(new HivePiece(Player.ZERO, 'QueenBee')).x,
             0,
             this.SPACE_SIZE * 4 * 5,
-            0);
+            0,
+        );
 
         const spaceForRemainingPieces: number = this.SPACE_SIZE * 5.5;
         let spaceForZero: number = 0;
@@ -218,8 +221,10 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             .expandBelow(spaceForOne);
         if (this.inspectedStack.isPresent()) {
             const inspectedStackPosition: Coord =
-                new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
-                          boardAndRemainingViewBox.center().y);
+                new Coord(
+                    boardAndRemainingViewBox.right() + this.SPACE_SIZE,
+                    boardAndRemainingViewBox.center().y,
+                );
             const stackSize: number = this.inspectedStack.get().size();
             // y to get it centered vertically
             const y: number = inspectedStackPosition.y + (stackSize - 1) * 3 * this.PIECE_HEIGHT;

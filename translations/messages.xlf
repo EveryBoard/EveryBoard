@@ -134,8 +134,8 @@
       <trans-unit id="4897086529827321658" datatype="html">
         <source>Flying capture is forbidden for normal pieces!</source>
       </trans-unit>
-      <trans-unit id="5556528437720213364" datatype="html">
-        <source>No piece is allowed to do a long jump</source>
+      <trans-unit id="4763870366232813427" datatype="html">
+        <source>No piece is allowed to do a long jump!</source>
       </trans-unit>
       <trans-unit id="7678886963795480068" datatype="html">
         <source>You cannot move orthogonally!</source>
@@ -176,8 +176,8 @@
       <trans-unit id="5853742640794164153" datatype="html">
         <source>Use small board</source>
       </trans-unit>
-      <trans-unit id="7251690675139944568" datatype="html">
-        <source>At your first turn, you must drop exactly one piece</source>
+      <trans-unit id="7769232724012528086" datatype="html">
+        <source>At your first turn, you must drop exactly one piece!</source>
       </trans-unit>
       <trans-unit id="8366240299234525015" datatype="html">
         <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
@@ -209,8 +209,8 @@
       <trans-unit id="4461597806169026629" datatype="html">
         <source>Board shape</source>
       </trans-unit>
-      <trans-unit id="330049428969329849" datatype="html">
-        <source>Toric Triangle should have even width</source>
+      <trans-unit id="5227736435972200196" datatype="html">
+        <source>Toric board with triangle space should have even width</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -629,44 +629,44 @@
       <trans-unit id="6804516002090214742" datatype="html">
         <source>Player Two Level</source>
       </trans-unit>
-      <trans-unit id="5604193951980576244" datatype="html">
-        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
+      <trans-unit id="5053155935588906761" datatype="html">
+        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/>!</source>
       </trans-unit>
-      <trans-unit id="4809301322027947242" datatype="html">
-        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
+      <trans-unit id="2806990295115685056" datatype="html">
+        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/>!</source>
       </trans-unit>
-      <trans-unit id="941976348970067109" datatype="html">
-        <source>You must drop in your own territory</source>
+      <trans-unit id="7269225998142254933" datatype="html">
+        <source>You must drop in your own territory!</source>
       </trans-unit>
-      <trans-unit id="2561363337853886115" datatype="html">
-        <source>You cannot drop in move phase</source>
+      <trans-unit id="3747296969081660201" datatype="html">
+        <source>You cannot drop in move phase!</source>
       </trans-unit>
-      <trans-unit id="6838858844517047193" datatype="html">
-        <source>You cannot move in drop phase</source>
+      <trans-unit id="7366440229341518339" datatype="html">
+        <source>You cannot move in drop phase!</source>
       </trans-unit>
-      <trans-unit id="4933773936312573082" datatype="html">
-        <source>You must drop all your pieces</source>
+      <trans-unit id="1592387238040094575" datatype="html">
+        <source>You must drop all your pieces!</source>
       </trans-unit>
-      <trans-unit id="1577452622903571200" datatype="html">
-        <source>You must drop all your remaining pieces, not more not less</source>
+      <trans-unit id="1552617274446105779" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less!</source>
       </trans-unit>
-      <trans-unit id="8012565028574700911" datatype="html">
-        <source>You cannot drop that many pieces</source>
+      <trans-unit id="8964234200977171524" datatype="html">
+        <source>You cannot drop that many pieces!</source>
       </trans-unit>
-      <trans-unit id="8952465701867689047" datatype="html">
-        <source>You must drop pieces one by one</source>
+      <trans-unit id="7266359490849295875" datatype="html">
+        <source>You must drop pieces one by one!</source>
       </trans-unit>
-      <trans-unit id="7497498388753121757" datatype="html">
-        <source>You cannot land or drop on your castle</source>
+      <trans-unit id="6071028912782172737" datatype="html">
+        <source>You cannot land or drop on your castle!</source>
       </trans-unit>
-      <trans-unit id="5963846295180517656" datatype="html">
-        <source>You must only place your castle</source>
+      <trans-unit id="8895930259031738837" datatype="html">
+        <source>You must only place your castle!</source>
       </trans-unit>
-      <trans-unit id="5637364645971249040" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
+      <trans-unit id="7923349377164139455" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)!</source>
       </trans-unit>
-      <trans-unit id="984815225652827868" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
+      <trans-unit id="4249056676993437561" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)!</source>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>
@@ -749,8 +749,8 @@
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
-      <trans-unit id="6641065739366631527" datatype="html">
-        <source>You must select a valid destination (highlighted on the board) for your piece</source>
+      <trans-unit id="2028782600820940105" datatype="html">
+        <source>You must select a valid destination (highlighted on the board) for your piece.</source>
       </trans-unit>
       <trans-unit id="3129880366808972802" datatype="html">
         <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
@@ -893,9 +893,6 @@
       <trans-unit id="5146449464465539521" datatype="html">
         <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>
       </trans-unit>
-      <trans-unit id="7542102025019708759" datatype="html">
-        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
-      </trans-unit>
       <trans-unit id="7484306131506665789" datatype="html">
         <source>You have selected a piece of the opponent. You must pick one of your pieces.</source>
       </trans-unit>
@@ -995,11 +992,14 @@
       <trans-unit id="6608381869213568684" datatype="html">
         <source><x id="PH" equiv-text="n"/> stacks under control</source>
       </trans-unit>
-      <trans-unit id="4408456168772857996" datatype="html">
-        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>
+      <trans-unit id="7542102025019708759" datatype="html">
+        <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
       </trans-unit>
-      <trans-unit id="701935636628882602" datatype="html">
-        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/></source>
+      <trans-unit id="5529421279620298552" datatype="html">
+        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/>.</source>
+      </trans-unit>
+      <trans-unit id="4467803935027184817" datatype="html">
+        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/>.</source>
       </trans-unit>
       <trans-unit id="4894728399261164928" datatype="html">
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
@@ -1339,9 +1339,6 @@
       </trans-unit>
       <trans-unit id="9017157884114080234" datatype="html">
         <source>Zoomed Go</source>
-      </trans-unit>
-      <trans-unit id="8533145452055627385" datatype="html">
-        <source>Connect N</source>
       </trans-unit>
       <trans-unit id="7680170577317084701" datatype="html">
         <source>Search game</source>
@@ -2640,8 +2637,8 @@
       <trans-unit id="6661043680356597257" datatype="html">
         <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
       </trans-unit>
-      <trans-unit id="6317794074367608738" datatype="html">
-        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      <trans-unit id="5766641929783301287" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom!</source>
       </trans-unit>
       <trans-unit id="7696235060281000608" datatype="html">
         <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
@@ -2837,8 +2834,8 @@
       <trans-unit id="2751983125977182742" datatype="html">
         <source>Tie</source>
       </trans-unit>
-      <trans-unit id="7055933300672028135" datatype="html">
-        <source>In the special case where a move ends up connecting all pieces of both player, simultaneously,
+      <trans-unit id="2774863554848881347" datatype="html">
+        <source>In the special case where a move ends up connecting all pieces of both players, simultaneously,
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
@@ -3151,8 +3148,8 @@
       <trans-unit id="4805475752093007535" datatype="html">
         <source>End game (by clock)</source>
       </trans-unit>
-      <trans-unit id="3700959958039999617" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the last move.</source>
+      <trans-unit id="4704477539850177832" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both players have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the last move.</source>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>

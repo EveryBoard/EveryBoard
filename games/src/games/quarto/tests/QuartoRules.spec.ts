@@ -212,7 +212,7 @@ describe('QuartoRules', () => {
     describe('Level Two Config', () => {
 
         it('should allow player to make victory by strong level victory (square)', () => {
-            // Given a config where both player are level 2 and Player.ONE made a square
+            // Given a config where both players are level 2 and Player.ONE made a square
             const customConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 2,

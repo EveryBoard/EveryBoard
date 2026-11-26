@@ -22,12 +22,13 @@ type NodeAndPath<M extends Move, S extends GameState> = {
  *   - https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/
  *   - https://vgarciasc.github.io/mcts-viz/
  */
-export class MCTS<M extends Move,
-                  S extends GameState,
-                  C extends RulesConfig = EmptyRulesConfig,
-                  L = void>
-implements AI<M, S, AITimeLimitOptions, C>
-{
+export class MCTS<
+    M extends Move,
+    S extends GameState,
+    C extends RulesConfig = EmptyRulesConfig,
+    L = void
+> implements AI<M, S, AITimeLimitOptions, C> {
+
     // The exploration parameter influences the MCTS results.
     // It is chosen "empirically". The generally recommended value from Wikipedia is Math.sqrt(2),
     // but in our case it seems to work much better with a higher exploration parameter.
@@ -42,10 +43,11 @@ implements AI<M, S, AITimeLimitOptions, C>
     // An id unique to this MCTS, used to store/retrieve cached value in nodes without clashing with other AIs
     private readonly uniqueId: string;
 
-    public constructor(public readonly name: string,
-                       private readonly moveGenerator: MoveGenerator<M, S, C>,
-                       private readonly rules: SuperRules<M, S, C, L>)
-    {
+    public constructor(
+        public readonly name: string,
+        private readonly moveGenerator: MoveGenerator<M, S, C>,
+        private readonly rules: SuperRules<M, S, C, L>,
+    ) {
         this.uniqueId = Math.random().toString(36).substring(2, 8);
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
@@ -64,7 +66,9 @@ implements AI<M, S, AITimeLimitOptions, C>
         let iterations: number = 0;
         while (Date.now() < endTime) {
             const expansionResult: NodeAndPath<M, S> = this.expand(
-                this.select({ node: root, path: [root] }, player), config);
+                this.select({ node: root, path: [root] }, player),
+                config,
+            );
             const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime, config);
             this.backpropagate(expansionResult.path, this.score(expansionResult.node, config, gameStatus, player));
             iterations++;
@@ -84,10 +88,12 @@ implements AI<M, S, AITimeLimitOptions, C>
     /**
      * Returns 1 for win, 0 for losses. Must return a result between 0 and 1 otherwise.
      */
-    protected score(_node: GameNode<M, S>,
-                    _config: RulesConfig,
-                    gameStatus: GameStatus,
-                    player: Player): number {
+    protected score(
+        _node: GameNode<M, S>,
+        _config: RulesConfig,
+        gameStatus: GameStatus,
+        player: Player,
+    ): number {
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
@@ -232,9 +238,11 @@ implements AI<M, S, AITimeLimitOptions, C>
         const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
         Utils.assert(legality.isSuccess(), 'heuristic returned illegal move', { move: move.toString() });
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
-        const childNode: GameNode<M, S> = new GameNode(childState,
-                                                       MGPOptional.of(node),
-                                                       MGPOptional.of(move));
+        const childNode: GameNode<M, S> = new GameNode(
+            childState,
+            MGPOptional.of(node),
+            MGPOptional.of(move),
+        );
         return childNode;
     }
 

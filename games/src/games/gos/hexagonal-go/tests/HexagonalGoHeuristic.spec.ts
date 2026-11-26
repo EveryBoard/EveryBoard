@@ -65,11 +65,15 @@ describe('HexagonalGoHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having a larger territory
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO,
-                                                               defaultConfig);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            heuristic,
+            weakState,
+            MGPOptional.empty(),
+            strongState,
+            MGPOptional.empty(),
+            Player.ZERO,
+            defaultConfig,
+        );
     });
 
     it('should count killed piece as two points', () => {
@@ -108,6 +112,7 @@ describe('HexagonalGoHeuristic', () => {
         ];
         const weakState: GoState =
             new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+
         // When computing their value
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);
