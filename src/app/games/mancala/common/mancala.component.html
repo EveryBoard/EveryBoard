@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
      [attr.viewBox]="viewBoxString()"
-     [attr.transform]="rotation"
+     [attr.transform]="rotation()"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0"
           y="0"
@@ -23,7 +23,7 @@
                        [y]="y"
                        [content]="content"
                        [spaceClasses]="getSpaceClasses(x, y)"
-                       [rotation]="getPieceRotation()"
+                       [rotation]="rotation()"
                        [secondaryContent]="getHouseSecondaryContent(x, y)"></g>
                 </g>
             }
@@ -54,7 +54,7 @@
        [y]="-1"
        [content]="getStoreContent(Player.ZERO)"
        [spaceClasses]="getSpaceClasses(-1, -1)"
-       [rotation]="getPieceRotation()"
+       [rotation]="rotation()"
        [secondaryContent]="getStoreSecondaryContent(Player.ZERO)"></g>
     <g id="store-PLAYER_ONE"
        (click)="onStoreClick(Player.ONE)"
@@ -64,6 +64,6 @@
        [y]="1"
        [content]="getStoreContent(Player.ONE)"
        [spaceClasses]="getSpaceClasses(-1, 1)"
-       [rotation]="getPieceRotation()"
+       [rotation]="rotation()"
        [secondaryContent]="getStoreSecondaryContent(Player.ONE)"></g>
 </svg>

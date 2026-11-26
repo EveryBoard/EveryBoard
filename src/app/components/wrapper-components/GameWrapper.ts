@@ -104,7 +104,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private async createGameComponent(component: Type<AbstractGameComponent>): Promise<void> {
-        Utils.assert(this.boardRef != null, 'Board element should be present');
+        Utils.assert(this.boardRef() != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef()).createComponent(component);
@@ -141,7 +141,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
         if (role.isNone()) {
-            this.gameComponent.setPointOfView(Player.ZERO);
+            this.gameComponent.setPointOfView(this.gameComponent.getCurrentPlayer());
         } else {
             this.gameComponent.setPointOfView(role);
         }

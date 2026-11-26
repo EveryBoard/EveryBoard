@@ -357,6 +357,10 @@ export class SimpleComponentTestUtils<T> {
     public setInput(input: string, value: unknown): void {
         this.fixture.componentRef.setInput(input, value);
     }
+
+    public getTransform(element: string): string {
+        return Utils.getNonNullable(this.findElement(element).attributes.transform);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
@@ -662,29 +666,36 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
-    public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {
-        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
-        const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
-        selectAI.dispatchEvent(new Event('change'));
+    public selectAIPlayer(player: Player, strategy: 'minimax' | 'iterative-deepening' | 'mcts' = 'minimax'): void {
+        const playerIndex: number = player.getValue();
+
+        this.selectValue(`#player-select-${playerIndex}`, strategy);
+        this.selectFirstOptionIfPresent(`#ai-profile-select-${playerIndex}`);
+        this.selectFirstOption(`#ai-option-select-${playerIndex}`);
+    }
+
+    private selectFirstOptionIfPresent(selector: string): void {
+        if (this.findElements(selector).length > 0) {
+            this.selectFirstOption(selector);
+        }
+    }
+
+    private selectFirstOption(selector: string): void {
+        const select: HTMLSelectElement = this.findElement(selector).nativeElement;
+        this.selectValue(selector, select.options[1].value);
+    }
+
+    private selectValue(selector: string, value: string): void {
+        const select: HTMLSelectElement = this.findElement(selector).nativeElement;
+        select.value = value;
+        select.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick(0);
     }
 
-    public async choosingAILevel(player: Player): Promise<void> {
-        const profileDropDownName: string = player === Player.ZERO ? '#ai-profile-select-0' : '#ai-profile-select-1';
-        const profileSelect: HTMLSelectElement = this.findElement(profileDropDownName).nativeElement;
-        profileSelect.value = profileSelect.options[1].value;
-        profileSelect.dispatchEvent(new Event('change'));
-        this.detectChanges();
-        tick(0);
-        const boundDropDownName: string = player === Player.ZERO ? '#ai-option-select-0' : '#ai-option-select-1';
-        const selectDepth: HTMLSelectElement = this.findElement(boundDropDownName).nativeElement;
-        selectDepth.value = selectDepth.options[1].value;
-        selectDepth.dispatchEvent(new Event('change'));
-        const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
-        expect(aiDepth).toBe('Level 1');
-        this.detectChanges();
+    public selectHumanPlayer(player: Player): void {
+        const playerIndex: number = player.getValue();
+        this.selectChildElementOfDropDown(`#player-select-${playerIndex}`, `player-${playerIndex}-human`);
     }
 
 }
