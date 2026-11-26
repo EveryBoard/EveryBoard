@@ -4,7 +4,7 @@ import { TestUtils } from '@everyboard/lib/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';

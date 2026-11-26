@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { GipfNode, GipfRules } from '../GipfRules';

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerNumberMap';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';

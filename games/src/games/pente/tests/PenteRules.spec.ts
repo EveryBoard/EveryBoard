@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PenteConfig } from '../PenteConfig';

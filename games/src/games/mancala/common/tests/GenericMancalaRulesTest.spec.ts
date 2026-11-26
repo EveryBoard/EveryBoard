@@ -3,7 +3,7 @@ import { TestUtils } from '@everyboard/lib/testing';
 
 import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerNumberMap';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../MancalaConfig';

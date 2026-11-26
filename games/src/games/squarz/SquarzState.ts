@@ -1,6 +1,6 @@
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';

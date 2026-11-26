@@ -5,7 +5,7 @@ import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { Orthogonal } from '@everyboard/games';
-import { Player, PlayerOrNone } from '@everyboard/games';
+import { Player, PlayerMap, PlayerOrNone } from '@everyboard/games';
 import { EncapsuleFailure } from '@everyboard/games/encapsule';
 import { EncapsuleMove } from '@everyboard/games/encapsule';
 import { EncapsuleMoveGenerator } from '@everyboard/games/encapsule';
@@ -50,7 +50,8 @@ export class EncapsuleComponent extends RectangularGameComponent<
     protected readonly ringStrokeWidth: WritableSignal<number> = signal(this.STROKE_WIDTH);
     protected readonly chosenCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly chosenPiece: WritableSignal<MGPOptional<EncapsulePiece>> = signal(MGPOptional.empty());
-    private readonly remainingPieceCenterCoords: WritableSignal<MGPMap<Player, Coord[]>> = signal(new MGPMap());
+    private readonly remainingPieceCenterCoords: WritableSignal<PlayerMap<Coord[]>> =
+        signal(PlayerMap.ofValues([], []));
     protected readonly victoryCoords: WritableSignal<ReadonlyArray<Coord>> = signal([]);
     protected readonly boardPieces: WritableSignal<Table<SquareData>> = signal([]);
     protected readonly pieceSizeToRadius: WritableSignal<MGPMap<EncapsulePiece, number>> = signal(new MGPMap());
@@ -272,7 +273,7 @@ export class EncapsuleComponent extends RectangularGameComponent<
          * 3 . . .
          *   4 5 6
          */
-        const remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
+        const remainingPieceCenterCoords: PlayerMap<Coord[]> = PlayerMap.ofValues([], []);
         const height: number = this.height();
         const maxX: number = this.width() - 1;
         const maxY: number = height - 1;
@@ -296,13 +297,13 @@ export class EncapsuleComponent extends RectangularGameComponent<
                 const realY: number = this.getPieceCenter(rotatedAbstractCoord.y);
                 playersRemainingPieceLeftPieceCoords.push(new Coord(realX, realY));
             }
-            remainingPieceCenterCoords.set(player, playersRemainingPieceLeftPieceCoords);
+            remainingPieceCenterCoords.put(player, playersRemainingPieceLeftPieceCoords);
         }
         this.remainingPieceCenterCoords.set(remainingPieceCenterCoords);
     }
 
     protected getRemainingPieceTranslate(player: Player, pieceIdX: number): string {
-        const coord: Coord = this.remainingPieceCenterCoords().get(player).get()[pieceIdX];
+        const coord: Coord = this.remainingPieceCenterCoords().get(player)[pieceIdX];
         return this.getSVGTranslationAt(coord);
     }
 

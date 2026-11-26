@@ -2,7 +2,7 @@ import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';

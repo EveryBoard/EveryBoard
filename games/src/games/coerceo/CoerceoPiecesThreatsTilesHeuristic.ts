@@ -5,6 +5,7 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { Vector } from '../../jscaip/Vector';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
@@ -29,7 +30,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
 
     public override getMetrics(node: CoerceoNode, _config: CoerceoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
-        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
+        const pieceMap: PlayerMap<CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
         const safeIndex: number = 0;
@@ -38,7 +39,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0, 0, 0], [0, 0, 0]);
 
         for (const owner of Player.PLAYERS) {
-            for (const coord of pieceMap.get(owner).get()) {
+            for (const coord of pieceMap.get(owner)) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     metrics.add(owner, threatenedIndex, 1);
                 } else {
@@ -50,10 +51,10 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
         return metrics;
     }
 
-    public getThreatMap(state: CoerceoState, pieces: MGPMap<Player, CoordSet>): MGPMap<Coord, PieceThreat> {
+    public getThreatMap(state: CoerceoState, pieces: PlayerMap<CoordSet>): MGPMap<Coord, PieceThreat> {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of Player.PLAYERS) {
-            for (const piece of pieces.get(player).get()) {
+            for (const piece of pieces.get(player)) {
                 const threat: MGPOptional<PieceThreat> = this.getThreat(piece, state);
                 if (threat.isPresent()) {
                     threatMap.set(piece, threat.get());

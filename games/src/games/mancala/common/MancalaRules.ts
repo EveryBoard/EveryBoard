@@ -5,7 +5,7 @@ import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { Localized } from '../../../utils/LocaleUtils';

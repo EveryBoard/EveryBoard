@@ -3,7 +3,7 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';

@@ -1,7 +1,7 @@
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
 

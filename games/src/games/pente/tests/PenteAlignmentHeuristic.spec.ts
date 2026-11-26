@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteConfig } from '../PenteConfig';
 import { PenteRules } from '../PenteRules';

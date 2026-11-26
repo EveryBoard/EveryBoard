@@ -5,7 +5,7 @@ import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerNumberMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';

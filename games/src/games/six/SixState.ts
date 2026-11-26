@@ -4,7 +4,7 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerNumberMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils, Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
