@@ -1,8 +1,9 @@
-import { AbstractNode, GameNode } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { SuperRules } from '@everyboard/games';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 export type Click = string;
 
@@ -66,15 +67,19 @@ export abstract class TutorialStep {
         return new TutorialStepInformational(title, instruction, state, config);
     }
 
-    public previousMove: MGPOptional<Move> = MGPOptional.empty();
-    public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
+    public node: GameNode<Move, GameState>;
 
     protected constructor(
         public readonly title: string,
         public readonly instruction: string,
-        public readonly state: GameState,
+        state: GameState,
         public readonly config: MGPOptional<RulesConfig>,
     ) {
+        this.node = GameNode.root(state);
+    }
+
+    public getState(): GameState {
+        return this.node.gameState;
     }
 
     public isMove(): this is TutorialStepMove {
@@ -101,11 +106,25 @@ export abstract class TutorialStep {
         return false;
     }
 
-    public withPreviousMove(previousMove: Move, previousState?: GameState): this {
-        this.previousMove = MGPOptional.of(previousMove);
-        if (previousState != null) {
-            this.parent = MGPOptional.of(new GameNode(previousState));
-        }
+    public withPreviousMove<
+        M extends Move,
+        S extends GameState,
+        C extends RulesConfig
+    >(
+        rules: SuperRules<M, S, C>,
+        previousMove: M,
+        previousState: S,
+        config: C,
+    ): this {
+        const result: MGPFallible<GameNode<M, S>> =
+            rules.choose(GameNode.root(previousState), previousMove, config);
+        Utils.assert(result.isSuccess(), 'TutorialStep.withPreviousMove: previous move must be legal');
+        const node: GameNode<M, S> = result.get();
+        Utils.assert(
+            JSON.stringify(node.gameState) === JSON.stringify(this.node.gameState),
+            'TutorialStep.withPreviousMove: previous move must lead to declared state',
+        );
+        this.node = node;
         return this;
     }
 

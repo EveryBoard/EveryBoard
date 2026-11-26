@@ -13,6 +13,15 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
+const simpleMovePreviousState: PentagoState = new PentagoState([
+    [_, _, _, _, _, _],
+    [_, O, _, _, X, _],
+    [_, _, _, _, _, _],
+    [_, _, _, _, _, _],
+    [_, _, _, _, O, _],
+    [_, _, _, _, _, _],
+], 9);
+
 export class PentagoTutorial {
 
     public tutorial: TutorialStep[] = [
@@ -32,7 +41,19 @@ export class PentagoTutorial {
                 [O, _, _, _, X, _],
                 [_, _, _, _, _, _],
             ], 10),
-        ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
+        ).withPreviousMove(
+            PentagoRules.get(),
+            PentagoMove.withRotation(1, 1, 0, false),
+            new PentagoState([
+                [O, O, O, O, X, _],
+                [_, _, _, _, _, _],
+                [X, _, _, _, _, _],
+                [O, _, _, _, _, X],
+                [O, _, _, _, X, _],
+                [_, _, _, _, _, _],
+            ], 9),
+            {},
+        ),
         TutorialStep.fromPredicate(
             $localize`Simple move`,
             $localize`At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>You're playing Dark, do a simple move.`,
@@ -53,7 +74,12 @@ export class PentagoTutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
+        ).withPreviousMove(
+            PentagoRules.get(),
+            PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false),
+            simpleMovePreviousState,
+            {},
+        ),
         TutorialStep.fromPredicate(
             $localize`Move with rotation`,
             $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
@@ -75,6 +101,11 @@ export class PentagoTutorial {
                 }
             },
             $localize`Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.`,
-        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
+        ).withPreviousMove(
+            PentagoRules.get(),
+            PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false),
+            simpleMovePreviousState,
+            {},
+        ),
     ];
 }

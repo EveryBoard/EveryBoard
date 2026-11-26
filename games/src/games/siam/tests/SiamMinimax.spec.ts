@@ -48,7 +48,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 1);
-            const node: SiamNode = new SiamNode(state);
+            const node: SiamNode = SiamNode.root(state);
 
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
@@ -68,7 +68,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 1);
-            const node: SiamNode = new SiamNode(state);
+            const node: SiamNode = SiamNode.root(state);
 
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
@@ -88,7 +88,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, U, _],
             ];
             const state: SiamState = new SiamState(board, 1);
-            const node: SiamNode = new SiamNode(state);
+            const node: SiamNode = SiamNode.root(state);
 
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);

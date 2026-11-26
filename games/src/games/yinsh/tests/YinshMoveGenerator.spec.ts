@@ -49,14 +49,14 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 1);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(84);
         });
 
         it('should have no moves at the end of the game', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(3, 2), 20);
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
         });
 
@@ -76,7 +76,7 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(18);
         });
 
@@ -96,7 +96,7 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(11);
         });
 
@@ -116,7 +116,7 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(10);
 
         });
@@ -137,7 +137,7 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(11);
         });
 
@@ -157,7 +157,7 @@ describe('YinshMoveGenerator', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
-            const node: YinshNode = new YinshNode(state);
+            const node: YinshNode = YinshNode.root(state);
             for (const move of moveGenerator.getListMoves(node, defaultConfig)) {
                 move.initialCaptures.forEach((capture: YinshCapture) =>
                     expect(capture.ringTaken.isPresent()).toBeTrue());

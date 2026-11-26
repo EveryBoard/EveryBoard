@@ -512,10 +512,11 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>, R extends
             if (multiDistributionAnimation != null) {
                 it('should wait TIMEOUT_BETWEEN_LAPS before continuing a received multi-distribution move', fakeAsync(async() => {
                     // Given a received move with several distributions
-                    await mancalaTestUtils.testUtils.setupState(multiDistributionAnimation.state, {
-                        previousState: multiDistributionAnimation.previousState,
-                        previousMove: multiDistributionAnimation.move,
-                    });
+                    await mancalaTestUtils.testUtils.setupStateWithPreviousMove(
+                        multiDistributionAnimation.state,
+                        multiDistributionAnimation.previousState,
+                        multiDistributionAnimation.move,
+                    );
                     const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
                     const sleepSpy: jasmine.Spy<(ms: number) => Promise<void>> =
                         spyOn(TimeUtils, 'sleep').and.callFake(async(_ms: number) => Promise.resolve());

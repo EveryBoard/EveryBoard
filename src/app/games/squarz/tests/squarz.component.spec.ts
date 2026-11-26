@@ -70,7 +70,7 @@ describe('SquarzComponent', () => {
             ], 1);
             const previousState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
             const previousMove: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
-            await testUtils.setupState(state, { previousMove, previousState });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
             testUtils.expectElementToHaveClasses('#piece-0-0', ['base', 'player0-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#space-0-0', ['base']);
             testUtils.expectElementToHaveClasses('#piece-1-1', ['base', 'player0-fill', 'last-move-stroke']);
@@ -157,10 +157,11 @@ describe('SquarzComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, O],
             ], 1);
-            await testUtils.setupState(state, {
-                previousState: SquarzRules.get().getInitialState(defaultConfig),
+            await testUtils.setupStateWithPreviousMove(
+                state,
+                SquarzRules.get().getInitialState(defaultConfig),
                 previousMove,
-            });
+            );
             await testUtils.expectClickSuccess('#click-0-7');
 
             // When clicking that piece again

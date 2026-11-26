@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -54,12 +54,10 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            lesserState,
-            MGPOptional.empty(),
-            greaterState,
-            MGPOptional.empty(),
+            GameNode.root(lesserState),
+            GameNode.root(greaterState),
             Player.ONE,
             defaultConfig,
         );
@@ -96,12 +94,10 @@ describe('EpaminondasPositionalHeuristic', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            lesserState,
-            MGPOptional.empty(),
-            greaterState,
-            MGPOptional.empty(),
+            GameNode.root(lesserState),
+            GameNode.root(greaterState),
             Player.ONE,
             defaultConfig,
         );
@@ -123,7 +119,7 @@ describe('EpaminondasPositionalHeuristic', () => {
             [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
         const generator: EpaminondasPhalanxSizeAndFilterMoveGenerator =
             new EpaminondasPhalanxSizeAndFilterMoveGenerator();
         const moves: EpaminondasMove[] = generator.getListMoves(node, defaultConfig);
@@ -136,15 +132,13 @@ describe('EpaminondasPositionalHeuristic', () => {
                    rules.choose(node, move, defaultConfig).get().gameState.countPieceOnBoard(Player.ZERO) ===
                    state.countPieceOnBoard(Player.ZERO);
         })!;
-        const weakState: EpaminondasState = rules.choose(node, weakMove, defaultConfig).get().gameState;
-        const strongState: EpaminondasState = rules.choose(node, strongMove, defaultConfig).get().gameState;
+        const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
+        const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.of(weakMove),
-            strongState,
-            MGPOptional.of(strongMove),
+            weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

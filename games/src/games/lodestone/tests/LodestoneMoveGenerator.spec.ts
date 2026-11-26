@@ -27,7 +27,7 @@ describe('LodestoneMoveGenerator', () => {
 
     it('should propose at least 618 moves at first turn', () => {
         // Given the initial state
-        const node: LodestoneNode = new LodestoneNode(LodestoneRules.get().getInitialState());
+        const node: LodestoneNode = LodestoneNode.root(LodestoneRules.get().getInitialState());
 
         // When listing the moves
         const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -64,7 +64,7 @@ describe('LodestoneMoveGenerator', () => {
             right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
-        const node: LodestoneNode = new LodestoneNode(state);
+        const node: LodestoneNode = LodestoneNode.root(state);
 
         // When listing the moves
         const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -94,7 +94,7 @@ describe('LodestoneMoveGenerator', () => {
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
-        const node: LodestoneNode = new LodestoneNode(state);
+        const node: LodestoneNode = LodestoneNode.root(state);
 
         // When listing the moves
         const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);

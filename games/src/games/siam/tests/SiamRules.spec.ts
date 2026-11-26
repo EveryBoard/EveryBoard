@@ -494,8 +494,7 @@ describe('SiamRules', () => {
             const expectedState: SiamState = new SiamState(expectedBoard, 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero
-            const node: SiamNode =
-                new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            const node: SiamNode = SiamNode.child(expectedState, SiamNode.root(state), move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -523,7 +522,7 @@ describe('SiamRules', () => {
             ];
             const expectedState: SiamState = new SiamState(expectedBoard, 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            const node: SiamNode = SiamNode.child(expectedState, SiamNode.root(state), move);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -555,7 +554,7 @@ describe('SiamRules', () => {
             const expectedState: SiamState = new SiamState(expectedBoard, 3);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
-            const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            const node: SiamNode = SiamNode.child(expectedState, SiamNode.root(state), move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -668,7 +667,7 @@ describe('SiamRules', () => {
             const expectedState: SiamState = new SiamState(expectedBoard, 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
-            const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            const node: SiamNode = SiamNode.child(expectedState, SiamNode.root(state), move);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });
 

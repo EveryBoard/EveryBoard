@@ -61,7 +61,7 @@ describe('EncapsuleMoveGenerator', () => {
             const remainingPieces: EncapsuleRemainingPieces =
                 EncapsuleRules.get().getEncapsulePieceMapFrom([1, 2, 2], [2, 2]);
             const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-            const node: EncapsuleNode = new EncapsuleNode(state);
+            const node: EncapsuleNode = EncapsuleNode.root(state);
 
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, customConfig);
@@ -86,7 +86,7 @@ describe('EncapsuleMoveGenerator', () => {
             const remainingPieces: EncapsuleRemainingPieces =
                 EncapsuleRules.get().getEncapsulePieceMapFrom([1, 2, 2], [2, 2]);
             const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-            const node: EncapsuleNode = new EncapsuleNode(state);
+            const node: EncapsuleNode = EncapsuleNode.root(state);
 
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);

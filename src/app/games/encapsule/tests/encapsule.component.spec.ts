@@ -376,7 +376,7 @@ describe('EncapsuleComponent', () => {
                 nbOfSizes: 5,
             };
             const state: EncapsuleState = rules.getInitialState(customConfig);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
 
             // When checking where is the biggest remaining piece
             const biggestRemainingPiece: DebugElement = testUtils.findElement('#remaining-piece-size-5-PLAYER_ZERO');
@@ -397,14 +397,15 @@ describe('EncapsuleComponent', () => {
             // Given a state with a last move
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [_X_, ___, ___],
+                [_O_, ___, ___],
                 [___, ___, ___],
             ];
-            const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumLight, new Coord(0, 1));
-            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([], [1, 1]);
-            await testUtils.setupState(
+            const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumDark, new Coord(0, 1));
+            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 1, 2], [2, 2, 2]);
+            await testUtils.setupStateWithPreviousMove(
                 new EncapsuleState(board, 1, remainingPieces, 3),
-                { previousMove, previousState: rules.getInitialState(defaultConfig) },
+                rules.getInitialState(defaultConfig),
+                previousMove,
             );
             testUtils.expectElementToHaveClass('#click-0-1', 'moved-fill');
 

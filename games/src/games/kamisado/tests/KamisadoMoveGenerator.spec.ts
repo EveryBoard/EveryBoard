@@ -57,7 +57,7 @@ describe('KamisadoMoveGenerator', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const node: KamisadoNode = new KamisadoNode(state);
+        const node: KamisadoNode = KamisadoNode.root(state);
 
         // When listing the moves
         const moves: KamisadoMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -82,7 +82,7 @@ describe('KamisadoMoveGenerator', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-        const node: KamisadoNode = new KamisadoNode(state);
+        const node: KamisadoNode = KamisadoNode.root(state);
 
         // When listing the moves
         const moves: KamisadoMove[] = moveGenerator.getListMoves(node, defaultConfig);

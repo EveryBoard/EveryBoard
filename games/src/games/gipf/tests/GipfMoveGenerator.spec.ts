@@ -42,7 +42,7 @@ describe('GipfMoveGenerator', () => {
                 [_, X, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state);
+            const node: GipfNode = GipfNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
         });
 
@@ -57,7 +57,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state);
+            const node: GipfNode = GipfNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(19);
         });
 
@@ -73,7 +73,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, _, O, N, N, N],
             ];
             const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state);
+            const node: GipfNode = GipfNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(20);
         });
 
@@ -89,7 +89,7 @@ describe('GipfMoveGenerator', () => {
                 [O, X, O, X, N, N, N],
             ];
             const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state);
+            const node: GipfNode = GipfNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
 
@@ -105,7 +105,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
-            const node: GipfNode = new GipfNode(state);
+            const node: GipfNode = GipfNode.root(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(38);
         });
 

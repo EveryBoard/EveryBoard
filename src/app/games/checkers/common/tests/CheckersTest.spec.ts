@@ -142,7 +142,7 @@ export function DoCheckersTests<
             const secondClick: Coord = entries.firstPlayerSecondClicks[0];
             const previousMove: CheckersMove = CheckersMove.fromStep(firstClick, secondClick);
             const state: CheckersState = rules.applyLegalMove(previousMove, previousState, defaultConfig);
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
         }
 
         describe('First click', () => {
@@ -604,7 +604,7 @@ export function DoCheckersTests<
                 const state: CheckersState = gameComponent.rules.getInitialState(customConfig);
 
                 // When displaying that state
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // Then SVG geometry should be derived from the displayed state
                 const expectedWidth: number = state.getWidth() * gameComponent.mode().parallelogramHeight;

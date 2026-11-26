@@ -29,7 +29,7 @@ describe('SixFilteredMoveGenerator', () => {
             [_, O, O, O, _, _, _],
         ];
         const state: SixState = SixState.ofRepresentation(board, 40);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -47,7 +47,7 @@ describe('SixFilteredMoveGenerator', () => {
             [X, X, X, _],
         ];
         const state: SixState = SixState.ofRepresentation(board, 40);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -65,7 +65,7 @@ describe('SixFilteredMoveGenerator', () => {
             [X, X, O, _],
         ];
         const state: SixState = SixState.ofRepresentation(board, 40);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -80,7 +80,7 @@ describe('SixFilteredMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation([
             [O],
         ], 1);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -96,7 +96,7 @@ describe('SixFilteredMoveGenerator', () => {
             [O, O, O, X, X, X],
             [O, O, O, X, X, X],
         ], 42);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -111,7 +111,7 @@ describe('SixFilteredMoveGenerator', () => {
             [O, O, X, O, X, X, O, X, _],
             [X, X, O, X, _, O, X, O, O],
         ], 43);
-        const node: SixNode = new SixNode(state);
+        const node: SixNode = SixNode.root(state);
 
         // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -130,7 +130,7 @@ describe('SixFilteredMoveGenerator', () => {
                 [O, O, O, X, X, X],
                 [O, O, O, X, X, X],
             ], 22);
-            const node: SixNode = new SixNode(state);
+            const node: SixNode = SixNode.root(state);
             const customCOnfig: SixConfig = {
                 ...defaultConfig,
                 piecesPerPlayer: 10,

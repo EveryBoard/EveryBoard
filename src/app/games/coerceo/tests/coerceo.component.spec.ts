@@ -82,8 +82,8 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, X, O, _, N, N, N],
-                [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
+                [N, N, N, N, N, N, N, N, N, _, O, _, N, N, N],
+                [N, N, N, N, N, N, X, O, X, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
             const previousState: CoerceoState =
@@ -93,7 +93,7 @@ describe('CoerceoComponent', () => {
             const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then we should see removed tiles
             expectCoordToBeOfCapturedFill(8, 6);
@@ -106,20 +106,23 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementNotToExist('#tilesCount1');
         }));
 
-        it('should show removed tiles, and captured piece (after movement)', fakeAsync(async() => {
-            // Given a board with just removed pieces
+        it('should show a removed tile that contained the moving piece', fakeAsync(async() => {
+            // Given a piece whose move empties its tile
             const previousBoard: Table<FourStatePiece> = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, O, X, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, _, _, O, _, N, N, N],
-                [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
-                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, X, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
+            const previousState: CoerceoState =
+                new CoerceoState(previousBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+            const previousMove: CoerceoMove = CoerceoRegularMove.of(new Coord(7, 5), new Coord(8, 6));
             const board: Table<FourStatePiece> = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -127,23 +130,19 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const previousState: CoerceoState =
-                new CoerceoState(previousBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const state: CoerceoState =
-                new CoerceoState(board, 3, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(1, 0));
-            const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
+                new CoerceoState(board, 2, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
 
-            // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            // When rendering the resulting state
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
-            // Then we should see removed tiles
-            expectCoordToBeOfCapturedFill(8, 6);
-            expectCoordToBeOfRemovedFill(10, 7);
+            // Then the tile vacated by the current player's piece is still drawn as removed
+            expectCoordToBeOfRemovedFill(7, 5);
         }));
 
     });
@@ -311,9 +310,24 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+            const expectedState: CoerceoState =
+                new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const previousMove: CoerceoMove = CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9));
-            await testUtils.setupState(state, { previousMove });
+            const previousBoard: FourStatePiece[][] = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            ];
+            const previousState: CoerceoState =
+                new CoerceoState(previousBoard, 0, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+            await testUtils.setupStateWithPreviousMove(expectedState, previousState, previousMove);
             testUtils.expectElementToHaveClass('#last-end-6-9', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#last-start-8-9', 'last-move-stroke');
 

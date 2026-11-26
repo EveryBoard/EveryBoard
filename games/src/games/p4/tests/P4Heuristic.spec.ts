@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -43,12 +42,10 @@ describe('P4Heuristic', () => {
         ];
         const strongState: P4State = new P4State(strongBoard, 0);
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );
@@ -65,7 +62,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, _, _, O],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -85,7 +82,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, _, O, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -105,7 +102,7 @@ describe('P4Heuristic', () => {
             [_, _, _, _, O, _, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
@@ -125,7 +122,7 @@ describe('P4Heuristic', () => {
             [_, _, _, O, _, _, _],
         ];
         const state: P4State = new P4State(board, 1);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
 
         // When counting board value
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;

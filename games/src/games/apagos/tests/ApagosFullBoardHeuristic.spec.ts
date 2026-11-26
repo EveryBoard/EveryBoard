@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { ApagosFullBoardHeuristic } from '../ApagosFullBoardHeuristic';
@@ -31,12 +31,10 @@ describe('ApagosFullBoardHeuristic', () => {
 
         // When computing the value of the boards
         // Then the second state should be deemed advantageous for the current player
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );
@@ -58,12 +56,10 @@ describe('ApagosFullBoardHeuristic', () => {
 
         // When computing the value of the boards
         // Then the second state should be deemed advantageous for the current player
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );

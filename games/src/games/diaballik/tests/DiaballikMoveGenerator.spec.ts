@@ -113,7 +113,7 @@ describe('DiaballikMoveGenerator', () => {
 
     it('should have all move options at first turn', () => {
         // Given the initial node
-        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+        const node: DiaballikNode = DiaballikNode.root(DiaballikRules.get().getInitialState());
 
         // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -128,7 +128,7 @@ describe('DiaballikMoveGenerator', () => {
 
     it('should yield one unique state per move at first turn', () => {
         // Given the initial node
-        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+        const node: DiaballikNode = DiaballikNode.root(DiaballikRules.get().getInitialState());
 
         // When computing the states resulting from the possible moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -153,7 +153,7 @@ describe('DiaballikMoveGenerator', () => {
             [_, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
         ], 0);
-        const node: DiaballikNode = new DiaballikNode(state);
+        const node: DiaballikNode = DiaballikNode.root(state);
 
         // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -177,7 +177,7 @@ describe('DiaballikMoveGenerator', () => {
             [_, _, O, O, _, _, _],
             [O, O, _, _, _, _, _],
         ], 0);
-        const node: DiaballikNode = new DiaballikNode(state);
+        const node: DiaballikNode = DiaballikNode.root(state);
 
         // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -208,7 +208,7 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
 
     it('should have at least all move options at first turn', () => {
         // Given the initial node
-        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+        const node: DiaballikNode = DiaballikNode.root(DiaballikRules.get().getInitialState());
 
         // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);

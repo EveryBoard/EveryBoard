@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -54,19 +54,17 @@ describe('EpaminondasAttackHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );
     });
 
     it('should prefer going into the winning territory', () => {
-        const strongerBoard: Table<PlayerOrNone> = [
+        const weakerBoard: Table<PlayerOrNone> = [
             [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -80,8 +78,8 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        const weakerBoard: Table<PlayerOrNone> = [
+        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
+        const strongerBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -95,13 +93,11 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
             [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            strongerState,
-            MGPOptional.empty(),
-            weakerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ONE,
             defaultConfig,
         );
@@ -123,7 +119,7 @@ describe('EpaminondasAttackHeuristic', () => {
             [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
+        const node: EpaminondasNode = EpaminondasNode.root(state);
         const generator: EpaminondasPhalanxSizeAndFilterMoveGenerator =
             new EpaminondasPhalanxSizeAndFilterMoveGenerator();
         const moves: EpaminondasMove[] = generator.getListMoves(node, defaultConfig);
@@ -136,15 +132,13 @@ describe('EpaminondasAttackHeuristic', () => {
                    rules.choose(node, move, defaultConfig).get().gameState.countPieceOnBoard(Player.ZERO) ===
                    state.countPieceOnBoard(Player.ZERO);
         })!;
-        const weakState: EpaminondasState = rules.choose(node, weakMove, defaultConfig).get().gameState;
-        const strongState: EpaminondasState = rules.choose(node, strongMove, defaultConfig).get().gameState;
+        const weakNode: EpaminondasNode = rules.choose(node, weakMove, defaultConfig).get();
+        const strongNode: EpaminondasNode = rules.choose(node, strongMove, defaultConfig).get();
 
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.of(weakMove),
-            strongState,
-            MGPOptional.of(strongMove),
+            weakNode,
+            strongNode,
             state.getCurrentPlayer(),
             defaultConfig,
         );

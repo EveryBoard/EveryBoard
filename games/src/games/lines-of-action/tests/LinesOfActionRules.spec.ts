@@ -287,7 +287,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        const node: LinesOfActionNode = LinesOfActionNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ONE
@@ -306,7 +306,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        const node: LinesOfActionNode = LinesOfActionNode.root(state);
 
         // When checking the game status
         // Then it should be a victory for Player.ZERO
@@ -338,7 +338,7 @@ describe('LinesOfActionRules', () => {
         ];
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: LinesOfActionNode = new LinesOfActionNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: LinesOfActionNode = LinesOfActionNode.root(expectedState);
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));
     });

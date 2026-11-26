@@ -21,7 +21,7 @@ describe('NewGameMoveGenerator', () => {
     it('should have all move options', () => {
         // Given an initial node
         const initialState: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
-        const node: NewGameNode = new NewGameNode(initialState);
+        const node: NewGameNode = NewGameNode.root(initialState);
 
         // When listing the moves
         const moves: NewGameMove[] = moveGenerator.getListMoves(node, defaultConfig);

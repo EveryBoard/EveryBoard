@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AbstractNode, GameNode } from '@everyboard/games';
+import { AbstractNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
@@ -14,7 +14,7 @@ import { ViewConfigComponent } from '../../normal-component/view-config/view-con
 import { GameWrapper } from '../GameWrapper';
 
 import { TutorialFailure } from './TutorialFailure';
-import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
+import { Click, TutorialStep, TutorialStepMove } from './TutorialStep';
 
 export class TutorialGameWrapperMessages {
 
@@ -173,9 +173,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        const state: GameState = currentStep.state;
-        const node: AbstractNode = new GameNode(state, currentStep.parent, currentStep.previousMove);
-        this.gameComponent.node.set(node);
+        this.gameComponent.node.set(currentStep.node);
         const defaultConfig: RulesConfig = this.gameComponent.rules.getDefaultRulesConfig();
         this.gameComponent.config.set(currentStep.config.getOrElse(defaultConfig));
         // Set role will update view with showCurrentState
@@ -226,9 +224,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public async showSolution(): Promise<void> {
         const step: TutorialStep = this.steps[this.stepIndex];
         Utils.assert(step.hasSolution(), 'step must have solution');
-        const solutionStep: TutorialStepWithSolution | TutorialStepClick =
-            step as TutorialStepWithSolution | TutorialStepClick;
-        const solution: Move | Click = solutionStep.getSolution();
+        const solution: Move | Click = step.getSolution();
         const config: RulesConfig = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
@@ -244,7 +240,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             await Promise.resolve();
             await this.gameComponent.updateBoardAndRedraw(false);
         }
-        this.currentMessage = solutionStep.getSuccessMessage();
+        this.currentMessage = step.getSuccessMessage();
         this.moveAttemptMade = true;
         this.cdr.detectChanges();
     }

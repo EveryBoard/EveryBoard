@@ -619,7 +619,7 @@ describe('ConspirateursRules', () => {
         it('should consider game ongoing as long as both players have not reached the win condition', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
-            const node: ConspirateursNode = new ConspirateursNode(state);
+            const node: ConspirateursNode = ConspirateursNode.root(state);
 
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -646,7 +646,7 @@ describe('ConspirateursRules', () => {
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [X, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            const node: ConspirateursNode = new ConspirateursNode(state);
+            const node: ConspirateursNode = ConspirateursNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -674,7 +674,7 @@ describe('ConspirateursRules', () => {
                 [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            const node: ConspirateursNode = new ConspirateursNode(state);
+            const node: ConspirateursNode = ConspirateursNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

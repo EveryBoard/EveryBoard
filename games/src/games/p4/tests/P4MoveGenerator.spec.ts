@@ -28,7 +28,7 @@ describe('P4MoveGenerator', () => {
             [O, O, X, O, X, O, X],
         ];
         const state: P4State = new P4State(board, 12);
-        const node: P4Node = new P4Node(state);
+        const node: P4Node = P4Node.root(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(6);
     });
 

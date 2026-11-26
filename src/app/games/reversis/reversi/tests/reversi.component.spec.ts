@@ -75,7 +75,7 @@ describe('ReversiComponent', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             const move: ReversiMove = new ReversiMove(5, 4);
             await testUtils.expectMoveSuccess('#click-5-4', move);

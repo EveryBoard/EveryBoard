@@ -332,7 +332,7 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
             ], 1);
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, customConfig);
             await testUtils.expectClickSuccess('#coord-0-2');
 
             // When clicking on an empty square in (+3; 0) of selected piece

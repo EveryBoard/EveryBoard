@@ -66,7 +66,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public rulesConfig: RulesConfig; // Set in constructor and in ngAfterViewInit
 
     protected readonly mustDisplayAIInfo: Signal<boolean> = computed(() => {
-        return this.gameComponent.node().previousMove.isPresent() && this.displayAIInfo();
+        return this.gameComponent.node().hasParent() && this.displayAIInfo();
     });
 
     public constructor()
@@ -559,14 +559,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async takeBack(): Promise<void> {
         let oldNode: AbstractNode = this.gameComponent.node();
-        this.gameComponent.node.set(oldNode.parent.get());
+        this.gameComponent.node.set(oldNode.getParent());
         if (this.isTurnOfPlayingAI()) {
             Utils.assert(
-                this.gameComponent.node().parent.isPresent(),
+                this.gameComponent.node().hasParent(),
                 'Cannot take back in first turn when AI is Player.ZERO',
             );
             oldNode = this.gameComponent.node();
-            this.gameComponent.node.set(oldNode.parent.get());
+            this.gameComponent.node.set(oldNode.getParent());
         }
         await this.showCurrentState(false);
     }
@@ -592,7 +592,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
-        if (this.gameComponent.node().previousMove.isPresent()) {
+        if (this.gameComponent.node().hasParent()) {
             await this.gameComponent.showLastMoveAndRedraw();
         }
     }
@@ -611,7 +611,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public viewTreeFromPreviousNode(): void {
         // Useful to explain why an AI has selected a particular node
-        this.viewTreeFrom(this.gameComponent.node().parent.get());
+        this.viewTreeFrom(this.gameComponent.node().getParent());
     }
 
     private viewTreeFrom(node: AbstractNode): void {

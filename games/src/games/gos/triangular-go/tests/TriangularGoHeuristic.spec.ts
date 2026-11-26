@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
@@ -47,12 +48,10 @@ describe('TriangularGoHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having a larger territory
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

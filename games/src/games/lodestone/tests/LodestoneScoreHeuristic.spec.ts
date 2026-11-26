@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
@@ -51,12 +52,10 @@ describe('LodestoneScoreHeuristic', () => {
 
         // When computing their value
         // Then it should prefer having more pieces (i.e., a higher score)
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ZERO,
             defaultConfig,
         );

@@ -537,7 +537,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState =
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
-            const node: CoerceoNode = new CoerceoNode(state);
+            const node: CoerceoNode = CoerceoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -560,7 +560,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState =
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(17, 18));
-            const node: CoerceoNode = new CoerceoNode(state);
+            const node: CoerceoNode = CoerceoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
@@ -590,7 +590,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState =
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(6, 5));
-            const node: CoerceoNode = new CoerceoNode(state);
+            const node: CoerceoNode = CoerceoNode.root(state);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO

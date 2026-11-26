@@ -42,7 +42,9 @@ describe('NewGameComponent', () => {
      */
     it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
         // Note: we do not want to use `getGameComponent` in game components tests
-        await testUtils.setupState(new NewGameState(0), { previousMove: new NewGameMove() });
+        const previousState: NewGameState = new NewGameState(0);
+        const state: NewGameState = new NewGameState(1);
+        await testUtils.setupStateWithPreviousMove(state, previousState, new NewGameMove());
         await testUtils.getGameComponent().updateBoard(false);
         testUtils.getGameComponent().hideLastMove();
         testUtils.getGameComponent().cancelMoveAttempt();

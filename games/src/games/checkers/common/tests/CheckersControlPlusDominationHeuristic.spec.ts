@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 
+import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
@@ -53,12 +53,10 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with mobile stacks should be considered better
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                immobilizedState,
-                MGPOptional.empty(),
-                mobileState,
-                MGPOptional.empty(),
+                GameNode.root(immobilizedState),
+                GameNode.root(mobileState),
                 Player.ONE,
                 defaultConfig,
             );
@@ -117,12 +115,10 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the one with more dominant pieces should be prefered
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                dominatedState,
-                MGPOptional.empty(),
-                dominatingState,
-                MGPOptional.empty(),
+                GameNode.root(dominatedState),
+                GameNode.root(dominatingState),
                 Player.ONE,
                 defaultConfig,
             );

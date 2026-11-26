@@ -290,11 +290,7 @@ export abstract class AbstractMinimax<
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move at turn ' + node.gameState.turn + ' (' + moveString + '), ' +
                                                'refusal reason: "' + legality.getReasonOr('') + '", this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
-            const newChild: GameNode<M, S> = new GameNode(
-                state,
-                MGPOptional.of(node),
-                MGPOptional.of(move),
-            );
+            const newChild: GameNode<M, S> = GameNode.child(state, node, move);
             node.addChild(newChild);
             this.setScore(newChild, this.computeBoardValue(newChild, config));
             return newChild;

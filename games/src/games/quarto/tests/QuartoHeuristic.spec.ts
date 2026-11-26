@@ -37,9 +37,8 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
-
         // Then the heuristic should assign 0 as board value
-        const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state), defaultConfig);
+        const boardValue: BoardValue = heuristic.getBoardValue(QuartoNode.root(state), defaultConfig);
         expect(boardValue.metrics).toEqual([0]);
     });
 
@@ -53,11 +52,22 @@ describe('QuartoHeuristic', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+        const previousBoard: Table<QuartoPiece> = [
+            [____, ____, AABB, AAAB],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+        ];
+        const previousState: QuartoState = new QuartoState(previousBoard, 2, ABBB);
 
         // Then the heuristic should detect the previctory
-        HeuristicUtils.expectStateToBePreVictory(
+        const node: QuartoNode = QuartoNode.child(
             state,
+            QuartoNode.root(previousState),
             new QuartoMove(1, 0, AAAA),
+        );
+        HeuristicUtils.expectNodeToBePreVictory(
+            node,
             Player.ONE,
             [heuristic],
             defaultConfig,
@@ -74,11 +84,24 @@ describe('QuartoHeuristic', () => {
             [____, ____, ____, ____],
         ];
         const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
+        const previousBoard: Table<QuartoPiece> = [
+            [____, ABBB, AAAB, ____],
+            [BBBB, BAAA, BBBA, ____],
+            [____, ____, ____, ____],
+            [____, ____, ____, ____],
+        ];
+        const previousState: QuartoState = new QuartoState(previousBoard, 9, AAAA);
 
         // When evaluating the board status
         // Then it should be evaluated as Ongoing
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-        HeuristicUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic], defaultConfig);
+        const node: QuartoNode = QuartoNode.child(state, QuartoNode.root(previousState), move);
+        HeuristicUtils.expectNodeToBePreVictory(
+            node,
+            Player.ZERO,
+            [heuristic],
+            defaultConfig,
+        );
     });
 
 });

@@ -27,7 +27,7 @@ describe('SiamMoveGenerator', () => {
 
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
-        const node: SiamNode = new SiamNode(rules.getInitialState(defaultConfig));
+        const node: SiamNode = SiamNode.root(rules.getInitialState(defaultConfig));
 
         // When listing the moves
         const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -46,7 +46,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new SiamNode(state);
+        const node: SiamNode = SiamNode.root(state);
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
@@ -84,7 +84,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 2);
-        const node: SiamNode = new SiamNode(state);
+        const node: SiamNode = SiamNode.root(state);
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);

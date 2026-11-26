@@ -39,7 +39,7 @@ describe('NewGameRules', () => {
 
         // When checking the game status
         // Then it should be a draw
-        const node: NewGameNode = new NewGameNode(state);
+        const node: NewGameNode = NewGameNode.root(state);
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         // Or you could use this
         // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);

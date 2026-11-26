@@ -25,7 +25,7 @@ describe('QuebecCastlesMinimax', () => {
     it('should select some move', () => {
         // Given state
         const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
-        const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+        const node: QuebecCastlesNode = QuebecCastlesNode.root(state);
 
         // When selecting the best move
         const bestMove: QuebecCastlesMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);

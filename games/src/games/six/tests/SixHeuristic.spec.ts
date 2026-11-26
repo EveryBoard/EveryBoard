@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
@@ -38,7 +36,15 @@ describe('SixHeuristic', () => {
             ];
             const state: SixState = SixState.ofRepresentation(board, 9);
             const move: SixMove = SixMove.ofDrop(new Coord(2, 3));
-            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const previousBoard: Table<PlayerOrNone> = [
+                [_, _, O, _, _],
+                [_, _, O, _, _],
+                [_, _, O, _, _],
+                [X, X, _, X, X],
+                [_, _, O, _, _],
+            ];
+            const previousState: SixState = SixState.ofRepresentation(previousBoard, 8);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), move);
 
             // When evaluation its value
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
@@ -48,23 +54,48 @@ describe('SixHeuristic', () => {
         });
 
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
-            const state: SixState = SixState.ofRepresentation([
+            const board: Table<PlayerOrNone> = [
                 [X, X, X, X, X],
-            ], 2);
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(0, 0));
-            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic], defaultConfig);
+            const previousBoard: Table<PlayerOrNone> = [
+                [_, X, X, X, X],
+            ];
+            const previousState: SixState = SixState.ofRepresentation(previousBoard, 1);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), previousMove);
+            HeuristicUtils.expectNodeToBePreVictory(
+                node,
+                Player.ONE,
+                [heuristic],
+                defaultConfig,
+            );
         });
 
         it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
-            const state: SixState = SixState.ofRepresentation([
+            const board: Table<PlayerOrNone> = [
                 [_, O, O, O],
                 [O, O, O, X],
                 [O, X, X, X],
                 [O, X, X, _],
 
-            ], 2);
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(2, 2));
-            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic], defaultConfig);
+            const previousBoard: Table<PlayerOrNone> = [
+                [_, O, O, O],
+                [O, O, O, X],
+                [O, X, _, X],
+                [O, X, X, _],
+            ];
+            const previousState: SixState = SixState.ofRepresentation(previousBoard, 1);
+            const node: SixNode = SixNode.child(state, SixNode.root(previousState), previousMove);
+            HeuristicUtils.expectNodeToBePreVictory(
+                node,
+                Player.ONE,
+                [heuristic],
+                defaultConfig,
+            );
         });
 
     });
@@ -83,12 +114,20 @@ describe('SixHeuristic', () => {
                 [X, X, X, X, _],
                 [O, O, _, _, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            const weakerPreviousState: SixState = SixState.ofRepresentation([
+                [O, O, _, _, _],
+                [X, _, X, _, _],
+                [O, O, _, _, _],
+            ], 6);
+            const strongerPreviousState: SixState = SixState.ofRepresentation([
+                [O, O, _, _, _],
+                [X, _, X, X, _],
+                [O, O, _, _, _],
+            ], 6);
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakerState,
-                MGPOptional.of(move),
-                strongerState,
-                MGPOptional.of(move),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -108,12 +147,22 @@ describe('SixHeuristic', () => {
                 [X, _, O],
                 [X, O, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            const weakerPreviousState: SixState = SixState.ofRepresentation([
+                [_, _, _],
+                [X, _, _],
+                [X, _, O],
+                [X, _, _],
+            ], 6);
+            const strongerPreviousState: SixState = SixState.ofRepresentation([
+                [_, _, _],
+                [X, _, X],
+                [X, _, O],
+                [X, _, _],
+            ], 6);
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakerState,
-                MGPOptional.of(move),
-                strongerState,
-                MGPOptional.of(move),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -131,12 +180,20 @@ describe('SixHeuristic', () => {
                 [_, O, X],
                 [_, X, _],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            const weakerPreviousState: SixState = SixState.ofRepresentation([
+                [_, X, X],
+                [_, O, _],
+                [_, _, _],
+            ], 6);
+            const strongerPreviousState: SixState = SixState.ofRepresentation([
+                [_, X, X],
+                [_, O, _],
+                [_, X, _],
+            ], 6);
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakerState,
-                MGPOptional.of(move),
-                strongerState,
-                MGPOptional.of(move),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -158,12 +215,20 @@ describe('SixHeuristic', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 7);
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            const weakerPreviousState: SixState = SixState.ofRepresentation([
+                [O, O, O, O, O, O],
+                [O, _, X, X, X, O],
+                [O, O, O, O, O, O],
+            ], 6);
+            const strongerPreviousState: SixState = SixState.ofRepresentation([
+                [O, O, O, O, O, O],
+                [_, _, X, X, X, _],
+                [O, O, O, O, O, O],
+            ], 6);
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakerState,
-                MGPOptional.of(move),
-                strongerState,
-                MGPOptional.of(move),
+                SixNode.child(weakerState, SixNode.root(weakerPreviousState), move),
+                SixNode.child(strongerState, SixNode.root(strongerPreviousState), move),
                 Player.ONE,
                 defaultConfig,
             );
@@ -176,8 +241,7 @@ describe('SixHeuristic', () => {
             [X, X, X, X, O, O, O, O, O],
             [X, X, X, X, O, O, O, O, O],
         ], 40);
-        const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-        const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SixNode = SixNode.root(state);
         expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2 * Player.ZERO.getScoreModifier()]);
     });
 
@@ -194,8 +258,7 @@ describe('SixHeuristic', () => {
                 ...defaultConfig,
                 piecesPerPlayer: 10,
             };
-            const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const node: SixNode = SixNode.root(state);
 
             // When evaluating its board value
             const boardValue: BoardValue = heuristic.getBoardValue(node, customConfig);

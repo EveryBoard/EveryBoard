@@ -93,7 +93,7 @@ describe('AbaloneComponent', () => {
                 [_, O, O, O, O, N, N, N, N],
             ];
             const state: AbaloneState = new AbaloneState(board, 1);
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When doing a click
             await testUtils.expectClickSuccess('#space-0-4');
@@ -462,7 +462,7 @@ describe('AbaloneComponent', () => {
             const state: AbaloneState = new AbaloneState(board, 1);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then a "captured" square with the pushed-out piece should be shown
             testUtils.expectElementToHaveClass('#captured-space--1-4', 'captured-fill');
@@ -480,7 +480,7 @@ describe('AbaloneComponent', () => {
                 [_, _, _, _, _, _, _, _, N],
                 [_, _, _, _, _, _, _, N, N],
                 [O, O, O, O, O, O, N, N, N],
-                [_, O, O, O, O, N, N, N, N],
+                [_, X, X, X, O, N, N, N, N],
             ];
             const previousState: AbaloneState = new AbaloneState(previousBoard, 1);
             const previousMove: AbaloneMove =
@@ -499,7 +499,7 @@ describe('AbaloneComponent', () => {
             const state: AbaloneState = new AbaloneState(board, 2);
 
             // When displaying it
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then a "captured" square with the pushed-out piece should be shown
             testUtils.expectElementToHaveClass('#captured-space-1-9', 'captured-fill');

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
+import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
@@ -34,7 +33,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, X],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = ReversiNode.root(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([16]);
     });
@@ -51,7 +50,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = ReversiNode.root(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([4]);
     });
@@ -68,7 +67,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = ReversiNode.root(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([1]);
     });
@@ -100,12 +99,10 @@ describe('ReversiHeuristic', () => {
 
         // When computing the board value
         // Then the control of the corner should be preferred
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakerState,
-            MGPOptional.empty(),
-            strongerState,
-            MGPOptional.empty(),
+            GameNode.root(weakerState),
+            GameNode.root(strongerState),
             Player.ZERO,
             defaultConfig,
         );

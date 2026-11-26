@@ -872,7 +872,7 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 1);
-            const node: CheckersNode = new CheckersNode(expectedState);
+            const node: CheckersNode = CheckersNode.root(expectedState);
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
@@ -892,7 +892,7 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 2);
-            const node: CheckersNode = new CheckersNode(expectedState);
+            const node: CheckersNode = CheckersNode.root(expectedState);
 
             // When checking the game status
             // Then it should be a victory for Player.ONE

@@ -12,7 +12,7 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@every
 import { CoerceoMoveGenerator } from '@everyboard/games/coerceo';
 import { CoerceoPiecesThreatsTilesHeuristic } from '@everyboard/games/coerceo';
 import { CoerceoPiecesTilesFreedomHeuristic } from '@everyboard/games/coerceo';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from '@everyboard/games/coerceo';
+import { CoerceoConfig, CoerceoRules } from '@everyboard/games/coerceo';
 import { CoerceoState } from '@everyboard/games/coerceo';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -163,10 +163,10 @@ export class CoerceoComponent extends TriangularGameComponent<
     }
 
     private wasOpponent(coord: Coord): boolean {
-        const parent: MGPOptional<CoerceoNode> = this.node().parent;
-        if (parent.isPresent()) {
-            const opponent: Player = parent.get().gameState.getCurrentOpponent();
-            return parent.get().gameState.getPieceAt(coord).is(opponent);
+        if (this.node().hasParent()) {
+            const previousState: CoerceoState = this.node().getPreviousState();
+            const opponent: Player = previousState.getCurrentOpponent();
+            return previousState.getPieceAt(coord).is(opponent);
         } else {
             return false;
         }
@@ -194,9 +194,8 @@ export class CoerceoComponent extends TriangularGameComponent<
 
     private wasRemoved(coord: Coord): boolean {
         const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
-        const parent: MGPOptional<CoerceoNode> = this.node().parent;
-        if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
-            const previousState: CoerceoState = parent.get().gameState;
+        if (spaceContent === FourStatePiece.UNREACHABLE && this.node().hasParent()) {
+            const previousState: CoerceoState = this.node().getPreviousState();
             const previousContent: FourStatePiece = previousState.getPieceAt(coord);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(previousState.getCurrentPlayer());
@@ -243,7 +242,7 @@ export class CoerceoComponent extends TriangularGameComponent<
     }
 
     public lastTurnWasTilesExchange(player: Player): boolean {
-        if (this.node().parent.isAbsent()) {
+        if (this.node().hasParent() === false) {
             return false;
         }
         const previousTiles: number = this.getPreviousState().tiles.get(player);

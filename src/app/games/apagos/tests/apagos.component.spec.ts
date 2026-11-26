@@ -88,17 +88,21 @@ describe('ApagosComponent', () => {
 
         it('should hide last move when doing first click', fakeAsync(async() => {
             //  Given a board with a last move
-            const previousState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+            const previousState: ApagosState = ApagosState.fromRepresentation(1, [
+                [0, 0, 0, 0],
+                [0, 0, 1, 0],
+                [7, 5, 3, 1],
+            ], 10, 10);
             const previousMove: ApagosMove = ApagosMove.drop(3, Player.ZERO);
-            const state: ApagosState = ApagosState.fromRepresentation(1, [
+            const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [0, 0, 0, 1],
                 [0, 0, 1, 0],
                 [7, 5, 3, 1],
             ], 9, 10);
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // When clicking on one of your piece
-            await testUtils.expectClickSuccess('#square-2');
+            await testUtils.expectClickSuccess('#square-3');
 
             // Then the last move highlight should be gone
             testUtils.expectElementNotToHaveClass('#square-3-piece-0-out-of-1', 'last-move-stroke');
@@ -219,10 +223,10 @@ describe('ApagosComponent', () => {
                 [2, 0, 2, 0],
                 [5, 0, 0, 0],
                 [7, 5, 3, 1],
-            ], 6, 5);
+            ], 4, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then the switch square should be shown as last move
             testUtils.expectElementToHaveClass('#square-1', 'last-move-stroke');
@@ -244,7 +248,7 @@ describe('ApagosComponent', () => {
             ], 6, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then piece 2 should be "captured" as a left piece, belonging to no one
             testUtils.expectElementNotToHaveClass('#square-3-piece-2-out-of-5', 'player0-fill');
@@ -263,13 +267,13 @@ describe('ApagosComponent', () => {
             ], 6, 5);
             const previousMove: ApagosMove = ApagosMove.transfer(3, 0).get();
             const state: ApagosState = ApagosState.fromRepresentation(2, [
-                [1, 0, 0, 1],
+                [0, 0, 0, 1],
                 [2, 0, 0, 1],
                 [7, 3, 1, 5],
             ], 6, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then piece 1 should be "captured" as a left piece, belonging to no one
             testUtils.expectElementNotToHaveClass('#square-3-piece-3-out-of-5', 'player0-fill');
@@ -280,7 +284,7 @@ describe('ApagosComponent', () => {
         it('should show last dropped piece (from drop by Player.ZERO)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
             const previousState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
-            const previousMove: ApagosMove = ApagosMove.drop(1, Player.ONE);
+            const previousMove: ApagosMove = ApagosMove.drop(3, Player.ZERO);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -288,7 +292,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then the third square should be filled on top by Player.ZERO
             testUtils.expectElementToHaveClass('#square-3-piece-0-out-of-1', 'player0-fill');
@@ -305,7 +309,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then the third square should be filled on top by Player.ZERO
             testUtils.expectElementToHaveClass('#square-3-piece-0-out-of-1', 'last-move-stroke');
@@ -326,7 +330,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, { previousState, previousMove });
+            await testUtils.setupStateWithPreviousMove(state, previousState, previousMove);
 
             // Then the second square should be filled on last emplacement by Player.ONE
             testUtils.expectElementToHaveClass('#square-1-piece-4-out-of-5', 'player1-fill');

@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -40,10 +38,10 @@ describe('PentagoMoveGenerator', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        const node: PentagoNode = new PentagoNode(
+        const node: PentagoNode = PentagoNode.child(
             state,
-            MGPOptional.of(rules.getInitialNode(defaultConfig)),
-            MGPOptional.of(PentagoMove.rotationless(0, 0)),
+            rules.getInitialNode(defaultConfig),
+            PentagoMove.rotationless(0, 0),
         );
         /*
          * when calculating the list of moves, then there should be 105
@@ -69,10 +67,7 @@ describe('PentagoMoveGenerator', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        const node: PentagoNode = new PentagoNode(
-            state,
-            MGPOptional.of(rules.getInitialNode(defaultConfig)),
-        );
+        const node: PentagoNode = PentagoNode.root(state);
         /*
          * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
@@ -95,10 +90,7 @@ describe('PentagoMoveGenerator', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        const node: PentagoNode = new PentagoNode(
-            state,
-            MGPOptional.of(rules.getInitialNode(defaultConfig)),
-        );
+        const node: PentagoNode = PentagoNode.root(state);
 
         /*
          * when calculating the list of moves

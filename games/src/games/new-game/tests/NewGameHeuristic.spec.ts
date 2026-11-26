@@ -1,6 +1,5 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { NewGameHeuristic } from '../NewGameHeuristic';
@@ -25,17 +24,15 @@ describe('NewGameHeuristic', () => {
     it('should have some board value', () => {
         /**
          * To test board values, most of the time you want to rely on
-         * `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
-         * You can include last moves when needed (here there are set to MGPOptional.empty())
+         * `HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor`.
+         * Pass child nodes when the heuristic needs access to their previous moves.
          */
         const weakState: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
         const strongState: NewGameState = new NewGameState(42);
-        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+        HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
             heuristic,
-            weakState,
-            MGPOptional.empty(),
-            strongState,
-            MGPOptional.empty(),
+            GameNode.root(weakState),
+            GameNode.root(strongState),
             Player.ONE,
             defaultConfig,
         );

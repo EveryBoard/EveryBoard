@@ -162,7 +162,7 @@ describe('QuebecCastlesComponent', () => {
                 const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(customConfig);
 
                 // When displaying it
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // Then it should not have a transform on the board
                 const board: DebugElement = testUtils.findElement('#quebec');
@@ -180,7 +180,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-7');
 
                 // When dropping another one
@@ -203,7 +203,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
 
                 // When dropping outside territory
                 await testUtils.expectClickSuccess('#click-3-8');
@@ -218,7 +218,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 testUtils.setInteractive(false);
 
                 // When displaying board
@@ -232,7 +232,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
 
                 // When displaying board
                 // Then it should not have drop-validator
@@ -247,7 +247,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                     defenders: 2,
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-8-7');
 
@@ -266,7 +266,7 @@ describe('QuebecCastlesComponent', () => {
                     linesForTerritory: 4,
                     isRhombic: false,
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-8-7');
 
@@ -297,7 +297,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 1, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
                 await testUtils.expectClickSuccess('#click-0-2');
                 await testUtils.expectClickSuccess('#click-2-0');
 
@@ -315,7 +315,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-7');
 
                 // When clicking on it again
@@ -330,7 +330,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                     defenders: 3,
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-7');
                 await testUtils.expectClickSuccess('#click-6-6');
 
@@ -348,7 +348,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                     defenders: 3,
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-6-8');
 
@@ -366,7 +366,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                     defenders: 3,
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-5-8');
                 await testUtils.expectClickSuccess('#click-6-8');
                 await testUtils.expectClickSuccess('#click-7-8');
@@ -394,7 +394,7 @@ describe('QuebecCastlesComponent', () => {
                     invaders: 3,
                 };
                 const initialState: QuebecCastlesState = rules.getInitialState(customConfig).incrementTurn();
-                await testUtils.setupState(initialState, { config: customConfig });
+                await testUtils.setupState(initialState, customConfig);
                 await testUtils.expectClickSuccess('#click-1-1');
                 await testUtils.expectClickSuccess('#click-2-1');
                 await testUtils.expectClickSuccess('#click-1-2');
@@ -419,7 +419,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
                 await testUtils.expectClickSuccess('#click-7-7');
 
                 // When dropping another one
@@ -440,7 +440,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                 };
-                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.setupState(rules.getInitialState(customConfig), customConfig);
 
                 // When doing single click
                 // Then it should drop
@@ -468,7 +468,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 5, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When dropping all its remaining piece at once
                 const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2)];
@@ -502,7 +502,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 5, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
                 await testUtils.expectClickSuccess('#click-0-2');
                 await testUtils.expectClickSuccess('#click-2-0');
                 await testUtils.expectClickSuccess('#click-2-2');
@@ -535,7 +535,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 5, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When dropping all its remaining piece at once then clicking on a piece
                 await testUtils.expectClickSuccess('#click-0-2');
@@ -567,7 +567,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 5, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When dropping a piece on the castle
                 await testUtils.expectClickSuccess('#click-0-0');
@@ -596,7 +596,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 6, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When doing the first move
                 const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
@@ -625,7 +625,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 5, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When attempting to move a piece that was already dropped
                 await testUtils.expectClickSuccess('#click-0-1');
@@ -654,7 +654,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
                 ], 10, defaultCastles);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When trying capture
                 // Then the move should succeed
@@ -676,7 +676,7 @@ describe('QuebecCastlesComponent', () => {
                     playersPlaceCastle: true,
                 };
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
-                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.setupState(state, customConfig);
 
                 // When clicking inside territory
                 const castle: Coord = new Coord(6, 6);

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -56,12 +55,10 @@ describe('TaflPieceAndControlHeuristic', () => {
             const strongState: TaflState = new TaflState(strongBoard, 1);
 
             // Then the strong board should be preferred
-            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(
+            HeuristicUtils.expectSecondNodeToBeBetterThanFirstFor(
                 heuristic,
-                weakState,
-                MGPOptional.empty(),
-                strongState,
-                MGPOptional.empty(),
+                GameNode.root(weakState),
+                GameNode.root(strongState),
                 Player.ONE,
                 defaultConfig,
             );
