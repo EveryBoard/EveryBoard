@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines-per-function */
-
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
