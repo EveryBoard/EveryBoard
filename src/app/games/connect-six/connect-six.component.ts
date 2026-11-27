@@ -57,7 +57,6 @@ export class ConnectSixComponent extends TopologicGameComponent<
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece, Direction> = this.state();
-        this.coordsAndContents.set(state.getCoordsAndContents());
         this.victoryCoords.set(new Set(
             ConnectSixRules.getVictoriousCoords(state, this.config()),
         ));

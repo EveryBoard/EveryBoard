@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { EightDirection } from '../../../../jscaip/EightDirection';
 import { FourStatePiece } from '../../../../jscaip/FourStatePiece';
 import { Table } from '../../../../jscaip/TableUtils';
-import { RectangularBoardShape } from '../../../../jscaip/board-shape/rere';
+import { RectangularBoardShape } from '../../../../jscaip/board-shape/RectangularBoardShape';
+import { Direction } from '../../../../jscaip/direction/Direction';
+import { EightDirection } from '../../../../jscaip/direction/EightDirection';
 import { GameStateWithTable } from '../../../../jscaip/state/GameStateWithTable';
 import { EightDirectionSquareTopology } from '../../../../jscaip/topology/EightDirectionSquareTopology';
 import { ReversiRules } from '../../reversi/ReversiRules';

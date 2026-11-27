@@ -19,6 +19,7 @@ import { TriangleShape } from '../../../jscaip/board-shape/TriangleShape';
 import { Direction } from '../../../jscaip/direction/Direction';
 import { EightDirection } from '../../../jscaip/direction/EightDirection';
 import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
@@ -30,7 +31,6 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { ReversiFailure } from './ReversiFailure';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
-import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
 
 export type ReversiLegalityInformation = Set<Coord>;
 

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { Direction } from '../../../../jscaip/direction/Direction';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode } from '../AbstractReversiRules';
@@ -10,6 +11,7 @@ import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 import { ReversiState } from '../ReversiState';
 
 const rules: ReversiRules = ReversiRules.get();
+
 class ReversiMinimax extends Minimax<ReversiMove, ReversiState<Direction>, ReversiConfig, ReversiLegalityInformation> {
     public constructor() {
         super(
