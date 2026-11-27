@@ -1,29 +1,34 @@
-/* eslint-disable max-lines-per-function */
+
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '@everyboard/games';
-import { Table } from '@everyboard/games';
+
+import { Direction, EightDirection, EightDirectionSquareTopology, FourStatePiece, Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+import { ToricBoardShape } from '@everyboard/games';
 import { ReversiMove } from '@everyboard/games/toric-reversi';
 import { ReversiState } from '@everyboard/games/toric-reversi';
 
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ToricReversiComponent } from '../toric-reversi.component';
 
+
 describe('ToricReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ToricReversiComponent>;
 
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
-
+    const _: FourStatePiece = FourStatePiece.EMPTY;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
+    const ordinalTopology: EightDirectionSquareTopology = new EightDirectionSquareTopology();
+    const torusShape: ToricBoardShape<EightDirection> = new ToricBoardShape(8, 8, ordinalTopology);
+    // TODO: toric shape, not torus shape
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ToricReversiComponent>('ToricReversi');
     }));
 
     it('should hightlight toric captures', fakeAsync(async() => {
         // Given a board where a toric capture could happend
-        const board: Table<PlayerOrNone> = [
+        const board: Table<FourStatePiece> = [
             [_, _, _, X, _, _, _, _],
             [_, _, X, _, _, _, _, _],
             [_, X, _, _, _, _, _, _],
@@ -33,7 +38,8 @@ describe('ToricReversiComponent', () => {
             [_, X, _, _, _, _, _, _],
             [_, _, O, _, _, _, _, _],
         ];
-        const state: ReversiState = new ReversiState(board, 0);
+        const gameState: GameStateWithTable<FourStatePiece> = new GameStateWithTable(board, 0);
+        const state: ReversiState<Direction> = new ReversiState(ordinalTopology, torusShape, gameState);
         await testUtils.setupState(state);
 
         // When doing that capturing move

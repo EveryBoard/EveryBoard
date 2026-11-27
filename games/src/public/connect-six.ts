@@ -1,5 +1,5 @@
 export { ConnectSixAlignmentHeuristic } from '../games/connect-six/ConnectSixAlignmentHeuristic';
-export { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../games/connect-six/ConnectSixMove';
-export { ConnectSixMoveGenerator } from '../games/connect-six/ConnectSixMoveGenerator';
+export { ConnectSixMove } from '../games/connect-six/ConnectSixMove';
 export { ConnectSixRules } from '../games/connect-six/ConnectSixRules';
-export { ConnectSixState } from '../games/connect-six/ConnectSixState';
+export { ConnectSixConfig } from '../games/connect-six/ConnectSixRules';
+export { ConnectSixMoveGenerator } from '../games/connect-six/ConnectSixMoveGenerator';

@@ -23,11 +23,15 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
     }
 
     public incrementTurn(): QuebecCastlesState {
-        return new QuebecCastlesState(this.getCopiedBoard(), this.turn + 1, this.castles);
+        return new QuebecCastlesState(
+            this.getCopiedBoard(),
+            this.turn + 1,
+            this.castles,
+        );
     }
 
-    public setPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
-        return GameStateWithTable.setPieceAt(
+    public withPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,

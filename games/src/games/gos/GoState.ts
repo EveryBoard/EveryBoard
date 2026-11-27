@@ -15,6 +15,10 @@ export class GoState extends GameStateWithTable<GoPiece> {
         return oldState.withBoard(newBoard);
     }
 
+    public static getStartingBoard(width: number, height: number): GoPiece[][] {
+        return TableUtils.create(width, height, GoPiece.EMPTY);
+    }
+
     public readonly koCoord: MGPOptional<Coord>;
 
     public readonly captured: PlayerNumberMap;
@@ -37,10 +41,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public getCapturedCopy(): PlayerNumberMap {
         return this.captured.getCopy();
-    }
-
-    public static getStartingBoard(width: number, height: number): GoPiece[][] {
-        return TableUtils.create(width, height, GoPiece.EMPTY);
     }
 
     public isDead(coord: Coord): boolean {
@@ -108,7 +108,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
     }
 
     public withPieceAt(coord: Coord, value: GoPiece): GoState {
-        return GameStateWithTable.setPieceAt(
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,

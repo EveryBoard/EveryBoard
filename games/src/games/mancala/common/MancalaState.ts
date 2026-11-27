@@ -22,8 +22,8 @@ export class MancalaState extends GameStateWithTable<number> {
         super(b, turn);
     }
 
-    public setPieceAt(coord: Coord, value: number): MancalaState {
-        return GameStateWithTable.setPieceAt(
+    public withPieceAt(coord: Coord, value: number): MancalaState {
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,
@@ -47,7 +47,7 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public addPieceAt(coord: Coord, value: number): MancalaState {
         const previousValue: number = this.getPieceAt(coord);
-        return this.setPieceAt(coord, previousValue + value);
+        return this.withPieceAt(coord, previousValue + value);
     }
 
     public getTotalRemainingSeeds(): number {
@@ -72,7 +72,7 @@ export class MancalaState extends GameStateWithTable<number> {
             this.turn,
             newScores,
         );
-        return result.setPieceAt(coord, 0);
+        return result.withPieceAt(coord, 0);
     }
 
     public equals(other: MancalaState): boolean {

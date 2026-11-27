@@ -1,22 +1,38 @@
-import { MGPFallible, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
 import { RulesConfig } from '../../../config/RulesConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Player } from '../../../jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
+import { HexagonalBoardShape } from '../../../jscaip/board-shape/HexagonalBoardShape';
+import { RectangularBoardShape } from '../../../jscaip/board-shape/RectangularBoardShape';
+import { TopologicBoardShape } from '../../../jscaip/board-shape/TopologicBoardShape';
+import { ToricBoardShape } from '../../../jscaip/board-shape/ToricBoardShape';
+import { TriangleShape } from '../../../jscaip/board-shape/TriangleShape';
+import { Direction } from '../../../jscaip/direction/Direction';
+import { EightDirection } from '../../../jscaip/direction/EightDirection';
+import { HexaDirection } from '../../../jscaip/direction/HexaDirection';
+import { Orthogonal } from '../../../jscaip/direction/Orthogonal';
+import { TriangularDirection } from '../../../jscaip/direction/TriangularDirection';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
+import { Topology } from '../../../jscaip/topology/Topology';
+import { TopologyID, TopologyMapper } from '../../../jscaip/topology/TopologyMapper';
 import { Debug } from '../../../utils/Debug';
+import { Localized } from '../../../utils/LocaleUtils';
 
 import { ReversiFailure } from './ReversiFailure';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 
-export type ReversiLegalityInformation = Coord[];
+export type ReversiLegalityInformation = Set<Coord>;
 
 export class ReversiMoveWithSwitched {
 
@@ -27,132 +43,253 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
+export class ReversiNode extends GameNode<ReversiMove, ReversiState<Direction>> {}
+
+export const ReversiTopologyNamer: Record<TopologyID, Localized> = {
+    'SQUARE (4)': () => $localize`Square (4)`,
+    'SQUARE (8)': () => $localize`Square (8)`,
+    'HEXAGONAL': () => $localize`Hexagon`,
+    'TRIANGULAR': () => $localize`Triangle`,
+};
+
+export type ReversiShapeEnum = 'SQUARE' | 'HEXAGON' | 'TRIANGLE' | 'TORUS';
+
+export const ReversiShapes: Record<ReversiShapeEnum, Localized> = {
+    'SQUARE': () => $localize`Square`,
+    'HEXAGON': () => $localize`Hexagon`,
+    'TRIANGLE': () => $localize`Triangle`,
+    'TORUS': () => $localize`Torus`,
+};
 
 export type ReversiConfig = RulesConfig & {
 
-    width: number;
+    topology: TopologyID;
 
-    height: number;
+    shape: ReversiShapeEnum;
 
-    toric: boolean;
+    boardSize: number;
 
 };
 
-export interface BoardMode {
-
-    getNextCoord: (coord: Coord, direction: Ordinal, state: ReversiState) => Coord;
-
-}
-class RectangularBoardMode implements BoardMode {
-
-    public getNextCoord(coord: Coord, direction: Ordinal, _: ReversiState): Coord {
-        return coord.getNext(direction);
-    }
-
-}
-
-class ToricBoardMode implements BoardMode {
-
-    public getNextCoord(coord: Coord, direction: Ordinal, state: ReversiState): Coord {
-        return coord.getNextToric(direction, state.getWidth(), state.getHeight());
-    }
-
-}
-
 @Debug.log
-export abstract class AbstractReversiRules extends ConfigurableRules<
+export abstract class TopologicReversiRules extends ConfigurableRules<
     ReversiMove,
-    ReversiState,
+    ReversiState<Direction>,
     ReversiConfig,
     ReversiLegalityInformation
 > {
 
-    private readonly toricBoardMode: BoardMode = new ToricBoardMode();
+    public override getInitialState(config: ReversiConfig): ReversiState<Direction> {
+        const topology: Topology<Direction> = this.getTopology(config);
+        const shape: TopologicBoardShape<Direction> = this.getShape(config, topology);
+        let maxX: number = 0;
+        let maxY: number = 0;
+        for (const coord of shape.getAllCoords()) {
+            maxX = Math.max(maxX, coord.x);
+            maxY = Math.max(maxY, coord.y);
+        }
+        let board: FourStatePiece[][] =
+            TableUtils.create(maxX + 1, maxY + 1, FourStatePiece.UNREACHABLE);
+        for (const coord of shape.getAllCoords()) {
+            board[coord.y][coord.x] = FourStatePiece.EMPTY;
+        }
+        board = this.fillInitialPiece(config, board);
+        const gameStateWithTable: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(board, 0);
+        return new ReversiState(topology, shape, gameStateWithTable);
+    } // TODO: create getGameStateWithTable in parent class and reuse it in Reversi
 
-    private readonly rectangularBoardMode: BoardMode = new RectangularBoardMode();
-
-    private getBoardMode(config: ReversiConfig): BoardMode {
-        if (config.toric) {
-            return this.toricBoardMode;
-        } else {
-            return this.rectangularBoardMode;
+    private fillInitialPiece(config: ReversiConfig, board: FourStatePiece[][]): FourStatePiece[][] {
+        const topology: Topology<Direction> = this.getTopology(config);
+        const shape: TopologicBoardShape<Direction> = this.getShape(config, topology);
+        const centers: Coord[] = shape.getCenters();
+        switch (config.topology) {
+            case 'HEXAGONAL':
+                return this.getInitialHexagonalBoard(
+                    topology,
+                    shape,
+                    centers,
+                    board,
+                );
+            case 'SQUARE (4)':
+                return this.getInitialSquareBoard(
+                    centers,
+                    shape as TopologicBoardShape<Orthogonal>,
+                    board,
+                );
+            case 'SQUARE (8)':
+                return this.getInitialSquareBoard(
+                    centers,
+                    shape as TopologicBoardShape<EightDirection>,
+                    board,
+                );
+            default:
+                Utils.expectToBe(config.topology, 'TRIANGLE');
+                return this.getInitialTriangularBoard(
+                    shape as TopologicBoardShape<TriangularDirection>,
+                    centers,
+                    board,
+                );
         }
     }
 
-    public override getInitialState(config: ReversiConfig): ReversiState {
-        const board: PlayerOrNone[][] = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
-        const downRightCenter: Coord = new Coord(Math.floor(config.width / 2), Math.floor(config.height / 2));
-        board[downRightCenter.y - 1][downRightCenter.x - 1] = Player.ZERO;
-        board[downRightCenter.y][downRightCenter.x] = Player.ZERO;
-        board[downRightCenter.y - 1][downRightCenter.x] = Player.ONE;
-        board[downRightCenter.y][downRightCenter.x - 1] = Player.ONE;
-        return new ReversiState(board, 0);
+    private getInitialSquareBoard(
+        centers: Coord[],
+        shape: TopologicBoardShape<EightDirection | Orthogonal>,
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        const upLeft: Coord = centers[0];
+        if (centers.length === 1) {
+            centers.push(
+                shape.getNextCoord(upLeft, EightDirection.RIGHT, 1).get(),
+                shape.getNextCoord(upLeft, EightDirection.DOWN, 1).get(),
+                shape.getNextCoord(upLeft, EightDirection.DOWN_RIGHT, 1).get(),
+            );
+        }
+        for (const center of centers) {
+            const evenCoord: boolean = (center.x + center.y) % 2 === 0;
+            const pieceToPut: FourStatePiece = evenCoord ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            board[center.y][center.x] = pieceToPut;
+        }
+        return board;
+    }
+
+    private getInitialHexagonalBoard(
+        topology: Topology<HexaDirection>,
+        shape: TopologicBoardShape<HexaDirection>,
+        centers: Coord[],
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        let evenDirection: boolean = false;
+        for (const direction of topology.getDirections()) {
+            const pieceToPut: FourStatePiece = evenDirection ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            const coord: Coord = shape.getNextCoord(centers[0], direction, 1).get();
+            board[coord.y][coord.x] = pieceToPut;
+            evenDirection = !evenDirection;
+        }
+        return board;
+    }
+
+    private getInitialTriangularBoard(
+        shape: TopologicBoardShape<TriangularDirection>,
+        centers: Coord[],
+        board: FourStatePiece[][],
+    ): FourStatePiece[][] {
+        const baseCenter: Coord = centers[0];
+        // console.log(baseCenter.toString());
+        // console.table(board);
+        if (centers.length === 1) {
+            let mirror: Coord;
+            if (TriangularCheckerBoard.isSpaceDark(baseCenter)) {
+                mirror = new Coord(baseCenter.x, baseCenter.y - 1);
+            } else {
+                mirror = new Coord(baseCenter.x, baseCenter.y + 1);
+            }
+            centers.push(
+                mirror,
+                mirror.getNext(EightDirection.RIGHT, 1),
+                mirror.getNext(EightDirection.LEFT, 1),
+                baseCenter.getNext(EightDirection.RIGHT, 1),
+                baseCenter.getNext(EightDirection.LEFT, 1),
+            );
+            // console.log(centers);
+        };
+        for (const center of centers) {
+            const isUpward: boolean = TriangularCheckerBoard.isSpaceDark(center);
+            const pieceToPut: FourStatePiece = isUpward ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            board[center.y][center.x] = pieceToPut;
+        }
+        return board;
+    }
+
+    private getTopology(config: ReversiConfig): Topology<Direction> {
+        return TopologyMapper.topologyMap.get(config.topology).get();
+    }
+
+    private getShape<DIR extends Direction>(config: ReversiConfig, topology: Topology<DIR>): TopologicBoardShape<DIR> {
+        switch (config.shape) {
+            case 'SQUARE': {
+                return new RectangularBoardShape(config.boardSize, config.boardSize, topology);
+            } case 'HEXAGON': {
+                return new HexagonalBoardShape(config.boardSize, topology);
+            } case 'TORUS': {
+                return new ToricBoardShape(config.boardSize, config.boardSize, topology);
+            } default: {
+                Utils.expectToBe(config.shape, 'TRIANGLE');
+                return new TriangleShape(config.boardSize, topology);
+            }
+        }
     }
 
     public override applyLegalMove(
         move: ReversiMove,
-        state: ReversiState,
+        state: ReversiState<Direction>,
         _: ReversiConfig,
         info: ReversiLegalityInformation,
-    ): ReversiState {
+    ): ReversiState<Direction> {
         const turn: number = state.turn;
-        const player: Player = state.getCurrentPlayer();
-        const board: PlayerOrNone[][] = state.getCopiedBoard();
+        const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
+        const board: FourStatePiece[][] = state.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
-            const sameBoardDifferentTurn: ReversiState =
-                new ReversiState(board, turn + 1);
-            return sameBoardDifferentTurn;
+            const sameGameStateDifferentTurn: GameStateWithTable<FourStatePiece> =
+                new GameStateWithTable(board, turn + 1);
+            return new ReversiState(state.getTopology(), state.getBoardShape(), sameGameStateDifferentTurn);
         }
         for (const s of info) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;
-        const resultingState: ReversiState = new ReversiState(board, turn + 1);
-        return resultingState;
+        const resultingGameState: GameStateWithTable<FourStatePiece> =
+            new GameStateWithTable(board, turn + 1);
+        return new ReversiState(state.getTopology(), state.getBoardShape(), resultingGameState);
     }
 
-    public getAllSwitchedCoords(
+    public getAllSwitchedCoords<DIR extends Direction>(
         move: ReversiMove,
         player: Player,
-        state: ReversiState,
-        config: ReversiConfig,
-    ): Coord[] {
+        state: ReversiState<DIR>,
+    ): Set<Coord> {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
         const opponent: Player = player.getOpponent();
 
-        const boardMode: BoardMode = this.getBoardMode(config);
-        for (const direction of Ordinal.ORDINALS) {
-            const firstSpace: Coord = boardMode.getNextCoord(move.coord, direction, state);
-            if (state.hasPieceAt(firstSpace, opponent)) {
-                // let's test this direction
-                const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state, config);
-                for (const switched of switchedInDir) {
-                    switcheds.push(switched);
+        // const boardMode: BoardMode = this.getBoardMode(config);
+        for (const direction of state.getTopology().getDirections()) {
+            // const firstSpace: Coord = boardMode.getNextCoord(move.coord, direction, state);
+            const optionalFirstSpace: MGPOptional<Coord> = state.getBoardShape().getNextCoord(move.coord, direction, 1);
+            if (optionalFirstSpace.isPresent()) {
+                const firstSpace: Coord = optionalFirstSpace.get();
+                if (state.hasPieceAt(firstSpace, FourStatePiece.ofPlayer(opponent))) {
+                    // let's test this direction
+                    const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
+                    for (const switched of switchedInDir) {
+                        switcheds.push(switched);
+                    }
                 }
             }
         }
-        return switcheds;
+        return new Set(switcheds);
     }
 
-    public getSandwicheds(
+    public getSandwicheds<DIR extends Direction>(
         capturer: Player,
-        direction: Ordinal,
+        direction: DIR,
         start: Coord,
-        state: ReversiState,
-        config: ReversiConfig,
+        state: ReversiState<DIR>,
     ) : Coord[] {
         /**
           * expected that 'start' is in range, and is captured
           * if we don't reach another capturer, returns []
           * else : return all the coord between start and the first 'capturer' found (exluded)
           */
-        const boardMode: BoardMode = this.getBoardMode(config);
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
-        let testedCoord: Coord = boardMode.getNextCoord(start, direction, state);
-        while (state.isOnBoard(testedCoord) && testedCoord.equals(start) === false) {
-            const testedCoordContent: PlayerOrNone = state.getPieceAt(testedCoord);
+        let testedCoord: MGPOptional<Coord> = state.getBoardShape().getNextCoord(start, direction, 1);
+        while (
+            testedCoord.isPresent() &&
+            state.isOnBoard(testedCoord.get()) &&
+            testedCoord.equalsValue(start) === false
+        ) {
+            const testedCoordContent: PlayerOrNone = state.getPieceAt(testedCoord.get()).getPlayer();
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
                 return sandwichedsCoord;
@@ -161,21 +298,21 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
                 return [];
             } else {
                 // we found a switched/captured
-                sandwichedsCoord.push(testedCoord); // we add it
-                testedCoord = boardMode.getNextCoord(testedCoord, direction, state);
+                sandwichedsCoord.push(testedCoord.get()); // we add it
+                testedCoord = state.getBoardShape().getNextCoord(testedCoord.get(), direction, 1);
             }
         }
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
 
-    public isGameEnded(state: ReversiState, config: ReversiConfig): boolean {
-        return this.playerCanOnlyPass(state, config) &&
-               this.nextPlayerCanOnlyPass(state, config);
+    public isGameEnded<DIR extends Direction>(state: ReversiState<DIR>): boolean {
+        return this.playerCanOnlyPass(state) &&
+               this.nextPlayerCanOnlyPass(state);
     }
 
-    public override getGameStatus(node: ReversiNode, config: ReversiConfig): GameStatus {
-        const state: ReversiState = node.gameState;
-        const gameIsEnded: boolean = this.isGameEnded(state, config);
+    public override getGameStatus(node: ReversiNode): GameStatus {
+        const state: ReversiState<Direction> = node.gameState;
+        const gameIsEnded: boolean = this.isGameEnded(state);
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
         }
@@ -190,40 +327,57 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
         return GameStatus.DRAW;
     }
 
-    public playerCanOnlyPass(state: ReversiState, config: ReversiConfig): boolean {
-        const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(state, config);
+    public playerCanOnlyPass(state: ReversiState<Direction>): boolean {
+        const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(state);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.length === 1) &&
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
 
-    public nextPlayerCanOnlyPass(reversiState: ReversiState, config: ReversiConfig): boolean {
-        const nextBoard: PlayerOrNone[][] = reversiState.getCopiedBoard();
-        const nextTurn: number = reversiState.turn + 1;
-        const nextState: ReversiState = new ReversiState(nextBoard, nextTurn);
-        return this.playerCanOnlyPass(nextState, config);
+    public nextPlayerCanOnlyPass<DIR extends Direction>(state: ReversiState<DIR>): boolean {
+        const nextBoard: FourStatePiece[][] = state.getCopiedBoard();
+        const nextTurn: number = state.turn + 1;
+        const nextState: ReversiState<DIR> = new ReversiState(
+            state.getTopology(),
+            state.getBoardShape(),
+            new GameStateWithTable(nextBoard, nextTurn),
+        );
+        return this.playerCanOnlyPass(nextState);
     }
 
-    public getListMoves(state: ReversiState, config: ReversiConfig): ReversiMoveWithSwitched[] {
+    public getListMoves<DIR extends Direction>(state: ReversiState<DIR>): ReversiMoveWithSwitched[] {
+        // console.log('0')
         const moves: ReversiMoveWithSwitched[] = [];
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
         for (const coordAndContent of state.getCoordsAndContents()) {
+            // if (coordAndContent.content.isReachable() === false) console.log(coordAndContent.coord.toString(), "ça va sucer des escargots d'bite!")
+            // else console.log(coordAndContent.coord.toString(), "is the shit")
+            // console.clear()
+            // console.log(coordAndContent.coord.toString(), "ça va sucer des escargots d'bite!")
             const coord: Coord = coordAndContent.coord;
-            if (state.getPieceAt(coord).isNone()) {
+            if (state.getPieceAt(coord).equals(FourStatePiece.EMPTY)) {
                 // For each empty spaces
-                const opponentNeighbors: Coord[] = state.getNeighboringPawnLike(opponent, coord);
-                if (opponentNeighbors.length > 0) {
-                    // if one of the 8 neighboring space is an opponent then, there could be a switch,
+                // console.log(0)
+                const opponentNeighbors: Set<Coord> = state.getNeighboringPawnLike(opponent, coord);
+                // console.log(1)
+                // console.log(coord.toString(), 'has', opponentNeighbors.map((c: Coord) => c.toString()));
+                if (opponentNeighbors.size() > 0) {
+                    // if one of the neighboring space is an opponent then, there could be a switch,
                     // and hence a legal move
                     const move: ReversiMove = new ReversiMove(coord.x, coord.y);
-                    const result: Coord[] = this.getAllSwitchedCoords(move, player, state, config);
-                    if (result.length > 0) {
+                    // console.log(2)
+                    const result: Set<Coord> = this.getAllSwitchedCoords(move, player, state);
+                    // console.log(3)
+                    if (result.size() > 0) {
                         // there was switched piece and hence, a legal move
                         for (const switched of result) {
-                            Utils.assert(player !== state.getPieceAt(switched), switched + 'was already switched!');
+                            Utils.assert(
+                                player !== state.getPieceAt(switched).getPlayer(),
+                                switched + 'was already switched!',
+                            );
                         }
-                        moves.push(new ReversiMoveWithSwitched(move, result.length));
+                        moves.push(new ReversiMoveWithSwitched(move, result.size()));
                     }
                 }
             }
@@ -238,15 +392,14 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
 
     public override isLegal(
         move: ReversiMove,
-        state: ReversiState,
-        config: ReversiConfig,
+        state: ReversiState<Direction>,
     ): MGPFallible<ReversiLegalityInformation> {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!
             // else, passing was illegal
-            if (this.playerCanOnlyPass(state, config)) {
-                return MGPFallible.success([]);
+            if (this.playerCanOnlyPass(state)) {
+                return MGPFallible.success(new Set());
             } else {
                 return MGPFallible.failure(RulesFailure.CANNOT_PASS());
             }
@@ -254,12 +407,24 @@ export abstract class AbstractReversiRules extends ConfigurableRules<
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        const switched: Coord[] = this.getAllSwitchedCoords(move, state.getCurrentPlayer(), state, config);
-        if (switched.length === 0) {
+        const switched: Set<Coord> = this.getAllSwitchedCoords(move, state.getCurrentPlayer(), state);
+        if (switched.size() === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {
             return MGPFallible.success(switched);
         }
+    }
+
+    public countUnsandwichableDirections(state: ReversiState<Direction>, coord: Coord): number {
+        let unsandwichableDirectionsCount: number = 0;
+        for (const direction of state.getTopology().getDirections()) {
+            const neighbor: MGPOptional<Coord> = state.getBoardShape().getNextCoord(coord, direction, 1);
+            const oppositeNeigbhro: MGPOptional<Coord> = state.getBoardShape().getNextCoord(coord, direction, -1);
+            if (neighbor.isAbsent() || oppositeNeigbhro.isAbsent()) {
+                unsandwichableDirectionsCount += 1; // Will get counted twice of course
+            }
+        }
+        return unsandwichableDirectionsCount / 2;
     }
 
 }

@@ -1,5 +1,5 @@
 export {
-    AbstractReversiRules,
+    TopologicReversiRules,
     ReversiConfig,
     ReversiLegalityInformation,
 } from '../../games/reversis/common/AbstractReversiRules';

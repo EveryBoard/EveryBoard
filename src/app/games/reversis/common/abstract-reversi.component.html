@@ -2,27 +2,29 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (line of board; track $index; let y = $index) {
-        <g>
-            @for (c of line; track $index; let x = $index) {
-                <g>
-                    <rect id="click-{{ x }}-{{ y }}"
-                          (click)="onClick(x, y)"
-                          [attr.x]="SPACE_SIZE * x"
-                          [attr.y]="SPACE_SIZE * y"
-                          [attr.width]="SPACE_SIZE"
-                          [attr.height]="SPACE_SIZE"
-                          [ngClass]="getRectClasses(x, y)"
-                          class="base"/>
-                    @if (board[y][x] !== PlayerOrNone.NONE) {
-                        <circle [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                                [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                                [ngClass]="getPieceClass(x, y)"
-                                class="base"/>
-                    }
+    <g id="pieces">
+        @for (coordAndContent of coordsAndContents(); track $index) {
+            @let coord = coordAndContent.coord;
+            @if (coordAndContent.content.isReachable()) {
+                <g [attr.transform]="topologicTranslationMap().get(coord).get()">
+                    <polygon [attr.id]="'click-' + topologicCellIdMap().get(coord).get()"
+                             [attr.points]="topologicPolygonMap().get(coord).get()"
+                             (click)="onClick(coord)"
+                             class="base"
+                             [ngClass]="spaceClassesMap().get(coord).get()"
+                    />
                 </g>
             }
-        </g>
+        }
+    </g>
+    @if (lastMove().isPresent()) {
+        @let coord = lastMove().get();
+        <polygon [attr.id]="'last-drop-' + coord.x + '-' + coord.y"
+                 [attr.transform]="topologicTranslationMap().get(coord).get()"
+                 [attr.points]="topologicPolygonMap().get(coord).get()"
+                 class="base"
+                 [ngClass]="spaceClassesMap().get(coord).get()"
+                 class="base moved-stroke"
+        />
     }
 </svg>

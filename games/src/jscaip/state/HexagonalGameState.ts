@@ -1,9 +1,9 @@
 import { Comparable, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { HexaDirection } from '../HexaDirection';
 import { HexaLine } from '../HexaLine';
 import { Table } from '../TableUtils';
+import { HexaDirection } from '../direction/HexaDirection';
 
 import { GameStateWithTable } from './GameStateWithTable';
 

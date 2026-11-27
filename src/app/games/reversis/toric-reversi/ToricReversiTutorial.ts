@@ -1,4 +1,8 @@
-import { PlayerOrNone } from '@everyboard/games';
+import { FourStatePiece, GameStateWithTable } from '@everyboard/games';
+import { EightDirection } from '@everyboard/games';
+import { Topology } from '@everyboard/games';
+import { EightDirectionSquareTopology } from '@everyboard/games';
+import { RectangularBoardShape } from '@everyboard/games';
 import { ReversiConfig } from '@everyboard/games/toric-reversi';
 import { ReversiMove } from '@everyboard/games/toric-reversi';
 import { ReversiState } from '@everyboard/games/toric-reversi';
@@ -7,10 +11,13 @@ import { ToricReversiRules } from '@everyboard/games/toric-reversi';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
-const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: PlayerOrNone = PlayerOrNone.ZERO;
-const X: PlayerOrNone = PlayerOrNone.ONE;
+
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ReversiConfig = ToricReversiRules.get().getDefaultRulesConfig();
+const eightDirectionTopology: Topology<EightDirection> = new EightDirectionSquareTopology();
+const squareShape: RectangularBoardShape<EightDirection> = new RectangularBoardShape(8, 8, eightDirectionTopology);
 
 export class ToricReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -22,16 +29,20 @@ export class ToricReversiTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Left-right connectivity`,
             $localize`On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.<br/><br/>You are playing Dark. Do a capture.`,
-            new ReversiState([
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, O, X, X, X],
-                [_, _, _, X, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-            ], 2),
+            new ReversiState(
+                eightDirectionTopology,
+                squareShape,
+                new GameStateWithTable([
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, O, X, X, X],
+                    [_, _, _, X, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                ], 2),
+            ),
             [new ReversiMove(0, 3)],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`Look at the fourth row: there is a line of dark pieces that wraps around the left edge.`,
@@ -39,16 +50,20 @@ export class ToricReversiTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Top-bottom connectivity`,
             $localize`The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.`,
-            new ReversiState([
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, X, X, _, _, _],
-                [_, _, _, X, O, _, _, _],
-                [_, _, _, O, _, _, _, _],
-                [_, _, _, O, _, _, _, _],
-                [_, _, _, O, _, _, _, _],
-            ], 1),
+            new ReversiState(
+                eightDirectionTopology,
+                squareShape,
+                new GameStateWithTable([
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, X, X, _, _, _],
+                    [_, _, _, X, O, _, _, _],
+                    [_, _, _, O, _, _, _, _],
+                    [_, _, _, O, _, _, _, _],
+                    [_, _, _, O, _, _, _, _],
+                ], 1),
+            ),
             [new ReversiMove(3, 0)],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`Look at the fourth column: the dark piece at the bottom wraps around to the top.`,
@@ -56,16 +71,20 @@ export class ToricReversiTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Diagonal wrapping`,
             $localize`Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?`,
-            new ReversiState([
-                [_, _, _, _, _, _, _, X],
-                [_, _, _, _, _, _, X, _],
-                [_, _, _, X, _, X, _, _],
-                [_, _, _, X, X, _, _, _],
-                [_, _, _, O, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-            ], 2),
+            new ReversiState(
+                eightDirectionTopology,
+                squareShape,
+                new GameStateWithTable([
+                    [_, _, _, _, _, _, _, X],
+                    [_, _, _, _, _, _, X, _],
+                    [_, _, _, X, _, X, _, _],
+                    [_, _, _, X, X, _, _, _],
+                    [_, _, _, O, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                ], 2),
+            ),
             [new ReversiMove(0, 7)],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.`,

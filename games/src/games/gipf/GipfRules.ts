@@ -6,13 +6,13 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { Table } from '../../jscaip/TableUtils';
+import { HexaDirection } from '../../jscaip/direction/HexaDirection';
 
 import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';

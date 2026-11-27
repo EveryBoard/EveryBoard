@@ -6,8 +6,8 @@ import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
+import { EightDirectionNInARowHelper } from '../../jscaip/EightDirectionNInARowHelper';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -48,7 +48,7 @@ export class EncapsuleRules extends ConfigurableRules<
 > {
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
-    private static readonly helpers: MGPMap<number, NInARowHelper<EncapsuleSpace>> = new MGPMap();
+    private static readonly helpers: MGPMap<number, EightDirectionNInARowHelper<EncapsuleSpace>> = new MGPMap();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EncapsuleConfig> =
         new RulesConfigDescription<EncapsuleConfig>({
@@ -100,9 +100,9 @@ export class EncapsuleRules extends ConfigurableRules<
         return PlayerMap.ofValues(playerZero, playerOne);
     }
 
-    public getHelper(config: EncapsuleConfig): NInARowHelper<EncapsuleSpace> {
+    public getHelper(config: EncapsuleConfig): EightDirectionNInARowHelper<EncapsuleSpace> {
         if (EncapsuleRules.helpers.containsKey(config.nInARow) === false) {
-            const helper: NInARowHelper<EncapsuleSpace> = new NInARowHelper<EncapsuleSpace>(
+            const helper: EightDirectionNInARowHelper<EncapsuleSpace> = new EightDirectionNInARowHelper<EncapsuleSpace>(
                 (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
                 config.nInARow,
             );

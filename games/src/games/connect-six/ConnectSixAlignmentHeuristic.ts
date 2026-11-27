@@ -1,19 +1,30 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { GobanConfig } from '../../jscaip/GobanConfig';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+import { Direction } from '../../jscaip/direction/Direction';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
+import { ConnectSixMove } from '../connect-six/ConnectSixMove';
 
-import { ConnectSixMove } from './ConnectSixMove';
-import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixState } from './ConnectSixState';
+import { ConnectSixConfig, ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
 
-export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState, BoardValue, GobanConfig> {
+export class ConnectSixAlignmentHeuristic
+    extends Heuristic<ConnectSixMove, TopologicGameState<FourStatePiece, Direction>, BoardValue, ConnectSixConfig>
+{
 
-    public getBoardValue(node: ConnectSixNode, _config: GobanConfig): BoardValue {
-        const state: ConnectSixState = node.gameState;
+    public getBoardValue(node: ConnectSixNode, config: ConnectSixConfig): BoardValue {
+        const state: TopologicGameState<FourStatePiece, Direction> = node.gameState;
         let score: number = 0;
-        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
-            const squareScore: number =
-                ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
+        const lastPlayer: Player = state.getCurrentOpponent();
+        const lastPlayerCoords: Coord[] = state
+            .getCoordsAndContents()
+            .filter((coordAndContent: { coord: Coord; content: FourStatePiece }) => {
+                return coordAndContent.content.is(lastPlayer);
+            })
+            .map((coordAndContent: { coord: Coord; content: FourStatePiece }) => coordAndContent.coord);
+        for (const coord of lastPlayerCoords) {
+            const squareScore: number = ConnectSixRules.getHelper(config).getSquareScore(state, coord);
             score += squareScore;
         }
         return BoardValue.of(score);
